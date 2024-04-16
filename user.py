@@ -1,2 +1,3 @@
 class User:
-    pass
+    first_name = None
+    

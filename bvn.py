@@ -1,16 +1,16 @@
 class BVN:
-    bvn = None
-    first_name = None
-    middle_name = None
-    last_name = None
-    address = None
-    email = None
-    phone_number = None
-    dob = None
-    nationality = None
-    created_date = None
-    last_updated = None
-    status_code = None
+    bvn = None  # Users Bank Verification Number
+    first_name = None  # user's first name
+    middle_name = None  # user's middle name
+    last_name = None  # user's last name
+    address = None  # user's address
+    email = None  # user's email
+    phone_number = None  # user's phone number
+    dob = None  # user's date of birth
+    nationality = None  # user's country of origin
+    created_date = None  # date this bvn was created
+    last_updated = None  # date this bvn was last updated
+    status_code = None  # user's status code (active, inactive, suspended)
 
     @classmethod
     def register_bvn(cls):

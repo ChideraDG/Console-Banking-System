@@ -6,7 +6,7 @@ class BVN:
     address = None  # user's address
     email = None  # user's email
     phone_number = None  # user's phone number
-    dob = None  # user's date of birth
+    date_of_birth = None  # user's date of birth
     nationality = None  # user's country of origin
     created_date = None  # date this bvn was created
     last_updated = None  # date this bvn was last updated

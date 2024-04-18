@@ -1,5 +1,5 @@
 class User:
-    useranme = None  # Unique identifier for the user's account.
+    username = None  # Unique identifier for the user's account.
     password = None  # Securely stored password for authentication.
     first_name = None  # User's first name.
     middle_name = None  # User's middle name.

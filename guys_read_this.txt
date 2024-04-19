@@ -8,3 +8,5 @@ work with and export it back for us to see import the changes and vice versa.
 Don't forget to pull before coding to see each others change.
 
 AK have you chosen any task? Dozie chose Transaction.
+
+dozie the database rn is in the database folder. I haven't update it yet.

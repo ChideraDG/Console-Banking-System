@@ -10,3 +10,7 @@ Don't forget to pull before coding to see each others change.
 AK have you chosen any task? Dozie chose Transaction.
 
 dozie the database rn is in the database folder. I haven't update it yet.
+
+
+Ak here.
+I've chosen Bank.

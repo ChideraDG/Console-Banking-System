@@ -1,7 +1,7 @@
 class User:
     def __init__(self, username: str = None, password: str = None, first_name: str = None, middle_name: str = None,
                  last_name: str = None, email: str = None, phone_number: str = None, address: str = None,
-                 date_of_birth: str = None, account_type: str = None, account_balance: float = 0.0,
+                 date_of_birth: str = None, account_type: str = None, account_balance: float = None,
                  account_status: str = None, security_question: str = None, security_answer: str = None,
                  authentication_token: str = None, transaction_pin: str = None, linked_accounts: list[str] = [], 
                  last_login_timestamp: str = None):

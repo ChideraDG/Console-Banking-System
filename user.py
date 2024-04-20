@@ -4,7 +4,7 @@ class User:
                  date_of_birth: str = None, account_type: str = None, account_balance: float = None,
                  account_status: str = None, security_question: str = None, security_answer: str = None,
                  authentication_token: str = None, transaction_pin: str = None, linked_accounts: list[str] = [], 
-                 last_login_timestamp: str = None):
+                 last_login_timestamp: str = None, account_open_date: str = None, account_close_date: str = None):
         self.username = username  # Unique identifier for the user's account.
         self.password = password  # Securely stored password for authentication.
         self.first_name = first_name  # User's first name.
@@ -23,6 +23,8 @@ class User:
         self.transaction_pin = transaction_pin  # Pin used for transaction authentication.
         self.linked_acconuts = linked_accounts  # Information about any linked accounts, such as joint accounts or beneficiaries.
         self.last_login_timestamp = last_login_timestamp  # Timestamp indicating the user's last login activity.
+        self.account_open_date = account_open_date  # Date when the account was opened.
+        self.account_close_date = account_close_date  # Date when the account was closed.
 
     def register(self):
         """Method to register a new user with the bank app, including capturing and validating personal information

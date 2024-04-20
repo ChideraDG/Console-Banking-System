@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 17, 2024 at 12:01 PM
+-- Generation Time: Apr 20, 2024 at 01:56 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.17
 
@@ -40,6 +40,34 @@ CREATE TABLE `Bank_Verification_Number` (
   `bank_verification_number` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `User`
+--
+
+CREATE TABLE `User` (
+  `id` int(11) NOT NULL,
+  `username` varchar(20) NOT NULL,
+  `password` varchar(20) NOT NULL,
+  `first_name` varchar(20) NOT NULL,
+  `middle_name` varchar(20) NOT NULL,
+  `last_name` varchar(20) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `phone_number` varchar(15) NOT NULL,
+  `date_of_birth` date NOT NULL,
+  `account_type` varchar(20) NOT NULL,
+  `account_balance` float NOT NULL,
+  `account_status` varchar(20) NOT NULL,
+  `security_question` varchar(100) NOT NULL,
+  `security_answer` varchar(100) NOT NULL,
+  `transaction_pin` varchar(5) NOT NULL,
+  `linked_accounts` varchar(100) NOT NULL,
+  `last_login_timestamp` datetime NOT NULL,
+  `account_open_date` datetime NOT NULL,
+  `account_close_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -54,6 +82,14 @@ ALTER TABLE `Bank_Verification_Number`
   ADD UNIQUE KEY `bank_verification_number` (`bank_verification_number`);
 
 --
+-- Indexes for table `User`
+--
+ALTER TABLE `User`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `phone_number` (`phone_number`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -61,6 +97,12 @@ ALTER TABLE `Bank_Verification_Number`
 -- AUTO_INCREMENT for table `Bank_Verification_Number`
 --
 ALTER TABLE `Bank_Verification_Number`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `User`
+--
+ALTER TABLE `User`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 

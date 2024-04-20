@@ -6,25 +6,3 @@ I will export the database from my system to this code here and then you get it 
 work with and export it back for us to see import the changes and vice versa.
 
 Don't forget to pull before coding to see each others change.
-
-AK have you chosen any task? Dozie chose Transaction.
-
-dozie the database rn is in the database folder. I haven't update it yet.
-
-
-Ak here.
-I've chosen Bank.
-
-Dozie here, I will go with Authentication
-
-Ak.
-arggg I wanted that, guess I go for transaction manager and notification
-
-Dera.
-Let's meet tomorrom and discuss how we can link each other up. A Flowchart per say. Okay?
-
-AK.
-Sure..
-what time? I think we should all come early, like from 9am.
-
-I will be around like 9:30.

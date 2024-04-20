@@ -3,8 +3,10 @@ class User:
                  last_name: str = None, email: str = None, phone_number: str = None, address: str = None,
                  date_of_birth: str = None, account_type: str = None, account_balance: float = None,
                  account_status: str = None, security_question: str = None, security_answer: str = None,
-                 authentication_token: str = None, transaction_pin: str = None, linked_accounts: list[str] = [], 
+                 authentication_token: str = None, transaction_pin: str = None, linked_accounts=None,
                  last_login_timestamp: str = None, account_open_date: str = None, account_close_date: str = None):
+        if linked_accounts is None:
+            linked_accounts = []
         self.username = username  # Unique identifier for the user's account.
         self.password = password  # Securely stored password for authentication.
         self.first_name = first_name  # User's first name.

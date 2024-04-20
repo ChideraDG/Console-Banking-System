@@ -9,7 +9,7 @@ class Bank:
 
     @classmethod
     def open_acount(self):
-        """This will enable a user open an account"""
+        """This will enable a user to open an account"""
         pass
 
     @classmethod

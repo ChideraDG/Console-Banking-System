@@ -21,7 +21,7 @@ class User:
         self.security_answer = security_answer  # Additional security measures for account recovery or verification.
         self.authentication_token = authentication_token  # Tokens used for session management and authentication.
         self.transaction_pin = transaction_pin  # Pin used for transaction authentication.
-        self.linked_acconuts = linked_accounts  # Information about any linked accounts, such as joint accounts or beneficiaries.
+        self.linked_accounts = linked_accounts  # Information about any linked accounts, such as joint accounts or beneficiaries.
         self.last_login_timestamp = last_login_timestamp  # Timestamp indicating the user's last login activity.
         self.account_open_date = account_open_date  # Date when the account was opened.
         self.account_close_date = account_close_date  # Date when the account was closed.

@@ -1,5 +1,5 @@
 class Account:
-    currency: str = 'Naira'
+    currency: str = 'Naira'  # Currency in which the account is denominated.
 
     def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None, 
                  account_balance: float = 0.0, account_status: str = None, linked_accounts: str = None, 
@@ -17,7 +17,6 @@ class Account:
         self.account_open_date = account_open_date  # Date when the account was opened.
         self.account_close_date = account_close_date  # Date when the account was closed (if applicable).
         self.transaction_limit = transaction_limit  # Limits on the number or amount of transactions allowed within a certain period.
-        self.currency = self.currency  # Currency in which the account is denominated.
         self.account_holder_information = account_holder_information  # Additional information about the account holder(s).
 
     def deposit(self):

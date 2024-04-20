@@ -29,28 +29,28 @@ class Transaction:
         pass
 
     def transaction_validation(self):
-        """Method to validate the transaction,
-        ensuring that it meets any requirements or constraints imposed by the bank or regulatory authorities. """
+        """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
+        the bank or regulatory authorities. """
         pass
 
     def process_transaction(self):
-        """Method to process the transaction, including updating account balances,
-         recording transaction details, and handling any necessary validations or checks."""
+        """Method to process the transaction, including updating account balances, recording transaction details,
+        and handling any necessary validations or checks."""
         pass
 
     def cancel_transaction(self):
-        """Method to cancel a pending or incomplete transaction,
-         reversing any changes made to account balances and transaction records."""
+        """Method to cancel a pending or incomplete transaction, reversing any changes made to account balances
+        and transaction records."""
         pass
 
     def transaction_status_update(self):
-        """Method to update the status of a transaction,
-         such as pending, completed, or failed, based on its progress and outcome."""
+        """Method to update the status of a transaction, such as pending, completed, or failed, based on
+        its progress and outcome."""
         pass
 
     def transaction_authorization(self):
-        """Method to authorize the transaction,
-         verifying the identity and authorization of the user or entity initiating the transaction."""
+        """Method to authorize the transaction, verifying the identity and authorization of the user or
+        entity initiating the transaction."""
         pass
 
     def transaction_history(self):

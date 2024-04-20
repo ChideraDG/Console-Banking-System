@@ -1,5 +1,5 @@
 class BVN:
-    nationality: str = 'Nigeria'
+    nationality: str = 'Nigeria'  # user's country of origin
 
     def __init__(self, bvn: str = None, first_name: str = None, middle_name: str = None,
                  last_name: str = None, address: str = None, email: str = None, phone_number: str = None,
@@ -13,7 +13,6 @@ class BVN:
         self.email = email  # user's email
         self.phone_number = phone_number  # user's phone number
         self.date_of_birth = date_of_birth  # user's date of birth
-        self.nationality = nationality  # user's country of origin
         self.created_date = created_date  # date this bvn was created
         self.last_updated = last_updated  # date this bvn was last updated
         self.status_code = status_code  # user's status code (active, inactive, suspended)

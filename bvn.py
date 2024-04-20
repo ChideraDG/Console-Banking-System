@@ -1,7 +1,9 @@
 class BVN:
+    nationality: str = 'Nigeria'
+
     def __init__(self, bvn: str = None, first_name: str = None, middle_name: str = None,
                  last_name: str = None, address: str = None, email: str = None, phone_number: str = None,
-                 date_of_birth: str = None, nationality: str = None, created_date: str = None, last_updated: str = None,
+                 date_of_birth: str = None, created_date: str = None, last_updated: str = None,
                  status_code: str = None):
         self.bvn = bvn  # Users Bank Verification Number
         self.first_name = first_name  # user's first name

@@ -1,5 +1,6 @@
 class Account:
     currency: str = 'Naira'
+
     def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None, 
                  account_balance: float = 0.0, account_status: str = None, linked_accounts: str = None, 
                  account_open_date: str = None, account_close_date: str = None, transactions: str = None, 

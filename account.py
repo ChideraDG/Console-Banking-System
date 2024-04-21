@@ -1,9 +1,9 @@
 class Account:
     currency: str = 'Naira'  # Currency in which the account is denominated.
 
-    def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None, 
-                 account_balance: float = 0.0, account_status: str = None, linked_accounts: str = None, 
-                 account_open_date: str = None, account_close_date: str = None, transactions: str = None, 
+    def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None,
+                 account_balance: float = 0.0, account_status: str = None, linked_accounts: str = None,
+                 account_open_date: str = None, account_close_date: str = None, transactions: str = None,
                  transaction_limit: str = None, account_holder_information: str = None,
                  overdraft_protection: str = None):
         self.account_number = account_number  # Unique identifier for the account.
@@ -65,8 +65,8 @@ class Account:
 
 
 class Savings(Account):
-        minimum_balance: float = 500.0  # Minimum balance required to avoid fees or maintain the account.
-        account_fees: float = 100.0  # fees associated with the account, such as monthly maintenance fees.
+    minimum_balance: float = 500.0  # Minimum balance required to avoid fees or maintain the account.
+    account_fees: float = 100.0  # fees associated with the account, such as monthly maintenance fees.
 
 
 class Current(Account):
@@ -75,6 +75,7 @@ class Current(Account):
 
 
 class FixedDeposit(Account):
-    def __init__(self,interest_rate: float = 0.0, interest_earned: float = 0.0):
+    def __init__(self, interest_rate: float = 0.0, interest_earned: float = 0.0):
+        super().__init__()
         self.interest_rate = interest_rate  # Interest rate applied to the account balance (if applicable).
         self.interest_earned = interest_earned  # Total amount of interest earned on the account balance.

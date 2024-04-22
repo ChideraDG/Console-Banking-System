@@ -2,7 +2,7 @@ import datetime as dt
 import time
 import random
 from bank_processes import bvn
-from bank_processes import database
+# from bank_processes import database
 
 
 def register_bvn():
@@ -128,9 +128,10 @@ def register_bvn():
             time.sleep(3)
             continue
 
-    register = bvn.BVN(first_name=first_name, middle_name=middle_name, last_name=last_name, address=address,
-                       email=email, phone_number=phone_number, created_date=dt.datetime.now(),
-                       date_of_birth=f'{year_of_birth}-{month_of_birth}-{day_of_birth}', bvn_status='active',
-                       bvn=str(random.randint(100000000000, 999999999999)))
+    register = bvn.BVN(first_name=first_name.title(), middle_name=middle_name.title(), last_name=last_name.title(),
+                       address=address.title(), email=email.lower(), phone_number=phone_number,
+                       created_date=dt.datetime.now(), date_of_birth=f'{year_of_birth}-{month_of_birth}-{day_of_birth}',
+                       bvn_status='active', bvn_number=str(random.randint(100000000000, 999999999999)),
+                       last_updated=dt.datetime.now())
 
     register.register_bvn()

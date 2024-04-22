@@ -1,16 +1,16 @@
 import datetime
-from database import DataBase
+from bank_processes.database import DataBase
 
 
 class BVN(DataBase):
     nationality: str = 'Nigeria'  # user's country of origin
 
-    def __init__(self, bvn: str = None, first_name: str = None, middle_name: str = None, last_name: str = None,
+    def __init__(self, bvn_number: str = None, first_name: str = None, middle_name: str = None, last_name: str = None,
                  address: str = None, email: str = None, phone_number: str = None, date_of_birth: str = None,
                  created_date: datetime.datetime = None, last_updated: datetime.datetime = None,
                  bvn_status: str = None):
         super().__init__()
-        self.bvn = bvn  # Users Bank Verification Number
+        self.bvn = bvn_number  # Users Bank Verification Number
         self.first_name = first_name  # user's first name
         self.middle_name = middle_name  # user's middle name
         self.last_name = last_name  # user's last name
@@ -29,15 +29,13 @@ class BVN(DataBase):
         query = f"""
         insert into Bank_Verification_Number
         (first_name, middle_name, last_name, address, phone_number, date_of_birth, nationality, email, 
-        bank_verification_number, created_date, last_updated, bvn_status)
-        values('{self.first_name}', {self.middle_name}, '{self.last_name}', '{self.address}', '{self.phone_number}', 
-        {self.date_of_birth}, '{self.nationality}', '{self.email}', '{self.bvn}', {self.created_date}, 
-        {self.last_updated}, '{self.bvn_status}')
+        bvn_number, created_date, last_updated, bvn_status)
+        values('{self.first_name}', '{self.middle_name}', '{self.last_name}', '{self.address}', '{self.phone_number}', 
+        '{self.date_of_birth}', '{self.nationality}', '{self.email}', '{self.bvn}', '{self.created_date}', 
+        '{self.last_updated}', '{self.bvn_status}')
         """
 
         self.query(query)
-        self.commit()
-        self.disconnect()
 
     def verify_bvn(self):
         """Method to verify the authenticity of a BVN, validating it against the central database or authority to

@@ -1,5 +1,6 @@
 import datetime as dt
 import os
+import time
 from banking import register_bvn_account as rba
 
 
@@ -29,9 +30,10 @@ def __main__():
 
     if input_1 == '1':
         header()
-        print('\t\t\tMessage from the CUSTOMER SERVICE OFFICER:::')
-        print('\t\t\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        print('Message from the CUSTOMER SERVICE OFFICER:::')
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         print("'You will need to Create your BVN first, then Create your Bank Account'. \nLet's Create your BVN first")
+        time.sleep(3)
         header()
         rba.register_bvn()
 

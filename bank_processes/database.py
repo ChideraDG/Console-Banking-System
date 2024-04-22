@@ -44,6 +44,11 @@ class DataBase:
         and deletion operations."""
 
         cls.connect()[0].execute(query)
+        cls.commit()
+        cls.disconnect()
+
+        print(f'{cls.connect()[1]}')
+        print('Done')
 
     @classmethod
     def fetch_data(cls):
@@ -54,6 +59,7 @@ class DataBase:
     @classmethod
     def commit(cls):
         """Method to commit changes made within a transaction to the database, persisting the changes permanently."""
+
         cls.connect()[1].commit()
 
     @classmethod

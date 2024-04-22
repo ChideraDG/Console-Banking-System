@@ -1,10 +1,15 @@
-class BVN:
+import datetime
+from database import DataBase
+
+
+class BVN(DataBase):
     nationality: str = 'Nigeria'  # user's country of origin
 
-    def __init__(self, bvn: str = None, first_name: str = None, middle_name: str = None,
-                 last_name: str = None, address: str = None, email: str = None, phone_number: str = None,
-                 date_of_birth: str = None, created_date: str = None, last_updated: str = None,
-                 status_code: str = None):
+    def __init__(self, bvn: str = None, first_name: str = None, middle_name: str = None, last_name: str = None,
+                 address: str = None, email: str = None, phone_number: str = None, date_of_birth: str = None,
+                 created_date: datetime.datetime = None, last_updated: datetime.datetime = None,
+                 bvn_status: str = None):
+        super().__init__()
         self.bvn = bvn  # Users Bank Verification Number
         self.first_name = first_name  # user's first name
         self.middle_name = middle_name  # user's middle name
@@ -15,12 +20,24 @@ class BVN:
         self.date_of_birth = date_of_birth  # user's date of birth
         self.created_date = created_date  # date this bvn was created
         self.last_updated = last_updated  # date this bvn was last updated
-        self.status_code = status_code  # user's status code (active, inactive, suspended)
+        self.bvn_status = bvn_status  # user's status code (active, inactive, suspended)
 
     def register_bvn(self):
         """Method to register a new Bank Verification Number for a user, capturing their personal information and
         biometric data."""
-        pass
+
+        query = f"""
+        insert into Bank_Verification_Number
+        (first_name, middle_name, last_name, address, phone_number, date_of_birth, nationality, email, 
+        bank_verification_number, created_date, last_updated, bvn_status)
+        values('{self.first_name}', {self.middle_name}, '{self.last_name}', '{self.address}', '{self.phone_number}', 
+        {self.date_of_birth}, '{self.nationality}', '{self.email}', '{self.bvn}', {self.created_date}, 
+        {self.last_updated}, '{self.bvn_status}')
+        """
+
+        self.query(query)
+        self.commit()
+        self.disconnect()
 
     def verify_bvn(self):
         """Method to verify the authenticity of a BVN, validating it against the central database or authority to

@@ -4,9 +4,6 @@ import random
 from bank_processes import bvn
 
 
-# from bank_processes import database
-
-
 def register_bvn():
     while True:
         print("Input your First Name:")

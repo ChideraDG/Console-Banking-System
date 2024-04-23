@@ -20,7 +20,7 @@ def register_bvn():
         elif first_name.isalpha():
             break
         else:
-            print('*ERROR*')
+            print('\n*ERROR*')
             print("-> Names should be in letters only.\nExample: James, Mary, etc.")
             time.sleep(3)
             continue
@@ -37,7 +37,7 @@ def register_bvn():
         elif middle_name.isalpha():
             break
         else:
-            print('*ERROR*')
+            print('\n*ERROR*')
             print("-> Names should be in letters only.\nExample: James, Mary, etc.")
             time.sleep(3)
             continue
@@ -54,7 +54,7 @@ def register_bvn():
         elif last_name.isalpha():
             break
         else:
-            print('*ERROR*')
+            print('\n*ERROR*')
             print("-> Names should be in letters only.\nExample: James, Mary, etc.")
             time.sleep(3)
             continue
@@ -65,6 +65,7 @@ def register_bvn():
 
     max_year = 2006
     month = 12
+    month_name = 'December'
     days = 31
 
     while True:
@@ -75,9 +76,11 @@ def register_bvn():
         if year_of_birth.isdigit() and 1900 < int(year_of_birth) <= max_year:
             break
         else:
-            print('*ERROR*')
-            if int(year_of_birth) > max_year:
-                print("-> Age is less than 18 ")
+            print('\n*ERROR*')
+            if not int(year_of_birth) <= max_year:
+                print("-> Age is less than 18")
+            elif not 1900 < int(year_of_birth):
+                print("-> Year is less than 1900")
             else:
                 print("-> Year of Birth should be in digits.\nExample: 2001, 2004, etc.")
             time.sleep(3)
@@ -91,7 +94,7 @@ def register_bvn():
         if month_of_birth.isdigit() and 0 < int(month_of_birth) <= month:
             break
         else:
-            print('*ERROR*')
+            print('\n*ERROR*')
             if not 0 < int(month_of_birth) <= 12:
                 print("-> Month of Birth should be between Zero(0) and Twelve(12)")
             else:
@@ -101,31 +104,43 @@ def register_bvn():
 
     month = month_of_birth
     if month == 1:
+        month_name = 'January'
         days = 31
     elif month == 2:
+        month_name = 'February'
         if (max_year % 4 == 0 and max_year % 100 != 0) or (max_year % 400 == 0):
             days = 29
         else:
             days = 28
     elif month == 3:
+        month_name = 'March'
         days = 31
     elif month == 4:
+        month_name = 'April'
         days = 30
     elif month == 5:
+        month_name = 'May'
         days = 31
     elif month == 6:
+        month_name = 'June'
         days = 30
     elif month == 7:
+        month_name = 'July'
         days = 31
     elif month == 8:
+        month_name = 'August'
         days = 30
     elif month == 9:
+        month_name = 'September'
         days = 30
     elif month == 10:
+        month_name = 'October'
         days = 31
     elif month == 11:
+        month_name = 'November'
         days = 30
     elif month == 12:
+        month_name = 'December'
         days = 31
 
     while True:
@@ -136,8 +151,11 @@ def register_bvn():
         if day_of_birth.isdigit() and 0 < int(day_of_birth) <= days:
             break
         else:
-            print('*ERROR*')
-            print("-> Day of Birth should be in digits.\nExample: 2, 4, 10, etc.")
+            print('\n*ERROR*')
+            if not 0 < int(day_of_birth) <= days:
+                print(f"-> Day of Birth should be within the number of days in {month_name}")
+            else:
+                print("-> Day of Birth should be in digits.\nExample: 2, 4, 10, etc.")
             time.sleep(3)
             continue
 

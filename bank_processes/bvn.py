@@ -28,10 +28,10 @@ class BVN(DataBase):
 
         query = f"""
         insert into Bank_Verification_Number
-        (first_name, middle_name, last_name, address, phone_number, date_of_birth, nationality, email, 
+        (first_name, middle_name, last_name, address, phone_number, date_of_birth, nationality, email,
         bvn_number, created_date, last_updated, bvn_status)
-        values('{self.first_name}', '{self.middle_name}', '{self.last_name}', '{self.address}', '{self.phone_number}', 
-        '{self.date_of_birth}', '{self.nationality}', '{self.email}', '{self.bvn}', '{self.created_date}', 
+        values('{self.first_name}', '{self.middle_name}', '{self.last_name}', '{self.address}', '{self.phone_number}',
+        '{self.date_of_birth}', '{self.nationality}', '{self.email}', '{self.bvn}', '{self.created_date}',
         '{self.last_updated}', '{self.bvn_status}')
         """
 

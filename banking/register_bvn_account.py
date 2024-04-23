@@ -2,6 +2,8 @@ import datetime as dt
 import time
 import random
 from bank_processes import bvn
+
+
 # from bank_processes import database
 
 
@@ -61,16 +63,23 @@ def register_bvn():
     print("~~~~~~~~~~~~~~~~~~~")
     address = input(">>> ")
 
+    max_year = 2006
+    month = 12
+    days = 31
+
     while True:
         print("\nInput your Year of Birth:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~")
         year_of_birth = input(">>> ")
 
-        if year_of_birth.isdigit():
+        if year_of_birth.isdigit() and 1900 < int(year_of_birth) <= max_year:
             break
         else:
             print('*ERROR*')
-            print("-> Year of Birth should be in digits.\nExample: 2021, 2004, etc.")
+            if int(year_of_birth) > max_year:
+                print("-> Age is less than 18 ")
+            else:
+                print("-> Year of Birth should be in digits.\nExample: 2001, 2004, etc.")
             time.sleep(3)
             continue
 
@@ -79,20 +88,52 @@ def register_bvn():
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~")
         month_of_birth = input(">>> ")
 
-        if month_of_birth.isdigit():
+        if month_of_birth.isdigit() and 0 < int(month_of_birth) <= month:
             break
         else:
             print('*ERROR*')
-            print("-> Month of Birth should be in digits.\nExample: 2 means February, 4 means April, etc.")
+            if not 0 < int(month_of_birth) <= 12:
+                print("-> Month of Birth should be between Zero(0) and Twelve(12)")
+            else:
+                print("-> Month of Birth should be in digits.\nExample: 2 means February, 4 means April, etc.")
             time.sleep(3)
             continue
+
+    month = month_of_birth
+    if month == 1:
+        days = 31
+    elif month == 2:
+        if (max_year % 4 == 0 and max_year % 100 != 0) or (max_year % 400 == 0):
+            days = 29
+        else:
+            days = 28
+    elif month == 3:
+        days = 31
+    elif month == 4:
+        days = 30
+    elif month == 5:
+        days = 31
+    elif month == 6:
+        days = 30
+    elif month == 7:
+        days = 31
+    elif month == 8:
+        days = 30
+    elif month == 9:
+        days = 30
+    elif month == 10:
+        days = 31
+    elif month == 11:
+        days = 30
+    elif month == 12:
+        days = 31
 
     while True:
         print("\nInput your Day of Birth:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
         day_of_birth = input(">>> ")
 
-        if day_of_birth.isdigit():
+        if day_of_birth.isdigit() and 0 < int(day_of_birth) <= days:
             break
         else:
             print('*ERROR*')

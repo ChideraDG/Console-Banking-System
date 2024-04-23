@@ -1,7 +1,8 @@
 class Authentication:
 
-    def __int__(self, username, password, token_num, auth_attempts, time_stamp, user_identifier, outcome,
-                failed_login_attempts, auth_token):
+    def __int__(self, username: str = None, password: str = None, token_num: str = None, auth_attempts: int = None,
+                time_stamp: str = None, user_identifier: str = None , outcome: str = None,
+                failed_login_attempts: int = None, auth_token: str = None):
 
         self.username = username
         self.password = password

@@ -1,8 +1,9 @@
+import datetime
 class Transaction:
     currency = 'Naira'
 
     def __init__(self, transaction_id: str = None, transaction_type: str = None,
-                 amount: float = None, date_time: str = None, sender_acct: str = None, receiver_acct: str = None,
+                 amount: float = None, date_time: datetime.datetime = None, sender_acct: str = None, receiver_acct: str = None,
                  description: str = None, status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None,):
         self.transaction_type = transaction_type

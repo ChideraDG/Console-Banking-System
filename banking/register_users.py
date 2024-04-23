@@ -5,8 +5,10 @@ from bank_processes import bvn
 
 
 def register_bvn():
+    print("BVN CREATION")
+    print("~~~~~~~~~~~~")
     while True:
-        print("Input your First Name:")
+        print("\nInput your First Name:")
         print("~~~~~~~~~~~~~~~~~~~~~~")
         first_name = input(">>> ")
 
@@ -191,3 +193,8 @@ def register_bvn():
                        last_updated=dt.datetime.now())
 
     register.register_bvn()
+
+    print("BVN Successfully Created.")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print(f"\nUser: {register.last_name} {register.first_name} {register.middle_name}")
+    print(f"BVN NUMBER: {register.bvn_number}")

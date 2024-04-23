@@ -32,10 +32,12 @@ def __main__():
         header()
         print('Message from the CUSTOMER SERVICE OFFICER:::')
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        print("'You will need to Create your BVN first, then Create your Bank Account'. \nLet's Create your BVN first")
+        print("'You will need to Create your BVN first, then Create your Bank Account'. ")
+        print("\n---Let's Create your BVN---")
         time.sleep(3)
         header()
         rba.register_bvn()
+        print("\n---Let's Create your Bank Account---")
 
 
 __main__()

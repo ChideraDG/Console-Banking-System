@@ -10,7 +10,7 @@ class BVN(DataBase):
                  created_date: datetime.datetime = None, last_updated: datetime.datetime = None,
                  bvn_status: str = None):
         super().__init__()
-        self.bvn = bvn_number  # Users Bank Verification Number
+        self.bvn_number = bvn_number  # Users Bank Verification Number
         self.first_name = first_name  # user's first name
         self.middle_name = middle_name  # user's middle name
         self.last_name = last_name  # user's last name
@@ -31,7 +31,7 @@ class BVN(DataBase):
         (first_name, middle_name, last_name, address, phone_number, date_of_birth, nationality, email,
         bvn_number, created_date, last_updated, bvn_status)
         values('{self.first_name}', '{self.middle_name}', '{self.last_name}', '{self.address}', '{self.phone_number}',
-        '{self.date_of_birth}', '{self.nationality}', '{self.email}', '{self.bvn}', '{self.created_date}',
+        '{self.date_of_birth}', '{self.nationality}', '{self.email}', '{self.bvn_number}', '{self.created_date}',
         '{self.last_updated}', '{self.bvn_status}')
         """
 

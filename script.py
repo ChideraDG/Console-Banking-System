@@ -1,7 +1,7 @@
 import datetime as dt
 import os
 import time
-from banking import register_bvn_account as rba
+from banking import register_users as rba
 
 
 def clear():

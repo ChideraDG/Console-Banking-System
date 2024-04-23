@@ -1,3 +1,3 @@
-Let's try communicating with this.
-
-Don't forget to pull before coding to see each others change.
+Ak.
+You guys, in the readme memo, in transaction class, attributes,
+we have 'authorization code', isn't that the same as the token we spoke about yesterday?

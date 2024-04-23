@@ -1,8 +1,8 @@
 import datetime
 class Transaction:
-    def __init__(self, transaction_id, transaction_type, amount,
-                 sender_account, recipient_account,
-                 description, status, fees, authorization_code):
+    def __init__(self, transaction_id: str = None, transaction_type: str = None, amount: int = None,
+                 sender_account: str = None, recipient_account: str = None,
+                 description: str = None, status: str = None, fees: int = None, authorization_code: int = None):
         self.transaction_id = transaction_id
         self.transaction_type = transaction_type
         self.amount = amount

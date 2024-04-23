@@ -1,11 +1,11 @@
 class Bank:
-    Bank_Name = None  # The name of the bank.
-    Interest_Rate = None  # Current interest rates offered for various types of accounts and financial products.
-    Fee_and_Charges = None  # Details about fees and charges; Account maintenance fees, transaction fees, and overdraft fees.
-    Security_Measures = None  # Information about security measures implemented by the bank to protect customer data and prevent fraud, such as encryption, firewalls, and fraud detection systems.
-    Financial_Performances = None  # Information about the bank's financial performance, including revenue, profits, and assets under management.
-    History_and_Heritage = None  # Historical information about the bank, including its founding date, milestones, and notable achievements.
-    Mission_and_Values = None  # The mission statement and core values of the bank, guiding its operations and interactions with customers and stakeholders.
+    bank_name = None  # The name of the bank.
+    interest_rate = None  # Current interest rates offered for various types of accounts and financial products.
+    fee_and_charges = None  # Details about fees and charges; Account maintenance fees, transaction fees, and overdraft fees.
+    security_measures = None  # Information about security measures implemented by the bank to protect customer data and prevent fraud, such as encryption, firewalls, and fraud detection systems.
+    financial_performances = None  # Information about the bank's financial performance, including revenue, profits, and assets under management.
+    history_and_heritage = None  # Historical information about the bank, including its founding date, milestones, and notable achievements.
+    mission_and_values = None  # The mission statement and core values of the bank, guiding its operations and interactions with customers and stakeholders.
 
     @classmethod
     def open_acount(self):

@@ -10,3 +10,6 @@ AK I have added the time stuff you spoke about yesterday
 
 Dera, the transaction class depends on the account class. If maybe you can signify the account type in the account file
 and also the transaction type(i.e withdraw, transfer etc.)
+
+I instantiated the account type but the transaction type comes from the method in account. So if the user selects deposit,
+the transaction_type in your transaction class will become equals to deposit. same thing goes with the other transaction methods

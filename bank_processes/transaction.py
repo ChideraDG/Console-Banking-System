@@ -1,22 +1,25 @@
 import datetime
+
+
 class Transaction:
     currency = 'Naira'
 
     def __init__(self, transaction_id: str = None, transaction_type: str = None,
-                 amount: float = None, date_time: datetime.datetime = None, sender_acct: str = None, receiver_acct: str = None,
+                 amount: float = None, date_time: datetime.datetime = None, sender_acct: str = None,
+                 receiver_acct: str = None,
                  description: str = None, status: str = None, fees: float = None, merchant_info: str = None,
-                 transaction_category: str = None, user_id: str = None,):
+                 transaction_category: str = None, user_id: str = None, ):
         self.transaction_type = transaction_type
         self.amount = amount
         self.transaction_id = transaction_id  # unique identifier for transaction
         self.date_time = date_time  # timestamp for when the transaction occurred
         self.sender_acct = sender_acct  # sender's account details
-        self.receiver = receiver_acct   # receiver's account details
+        self.receiver = receiver_acct  # receiver's account details
         self.description = description  # description of the transaction
-        self.status = status    # status of the transaction
-        self.fees = fees    # fees associated with the amount
+        self.status = status  # status of the transaction
+        self.fees = fees  # fees associated with the amount
         self.merchant_info = merchant_info  # info about the merchant or receiver
-        self.transaction_category = transaction_category    # category of the transfer
+        self.transaction_category = transaction_category  # category of the transfer
         self.user_id = user_id  # identifier of the user who initiated the transaction
 
     def transaction_record(self):

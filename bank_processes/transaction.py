@@ -8,7 +8,7 @@ class Transaction:
                  amount: float = None, date_time: datetime.datetime = None, sender_acct: str = None,
                  receiver_acct: str = None,
                  description: str = None, status: str = None, fees: float = None, merchant_info: str = None,
-                 transaction_category: str = None, user_id: str = None, account_type: str = None ):
+                 transaction_category: str = None, user_id: str = None, account_type: str = None):
         self.transaction_type = transaction_type
         self.amount = amount
         self.transaction_id = transaction_id  # unique identifier for transaction
@@ -36,15 +36,15 @@ class Transaction:
         acct_type = self.account_type.lower().strip()
         if acct_type == 'current':
             self.fees = 50.00
+            return self.fees
 
         elif acct_type == 'savings':
             self.fees = 10.00
+            return self.fees
 
-        elif acct_type == 'fixeddeposit':
+        elif acct_type == 'fixed deposit':
             self.fees = 40.00
-
-        else:
-            print('Error!!!, the account type written does not exist.')
+            return self.fees
 
     def transaction_validation(self):
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by

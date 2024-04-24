@@ -8,7 +8,7 @@ class Transaction:
                  amount: float = None, date_time: datetime.datetime = None, sender_acct: str = None,
                  receiver_acct: str = None,
                  description: str = None, status: str = None, fees: float = None, merchant_info: str = None,
-                 transaction_category: str = None, user_id: str = None, ):
+                 transaction_category: str = None, user_id: str = None, account_type: str = None ):
         self.transaction_type = transaction_type
         self.amount = amount
         self.transaction_id = transaction_id  # unique identifier for transaction
@@ -21,6 +21,7 @@ class Transaction:
         self.merchant_info = merchant_info  # info about the merchant or receiver
         self.transaction_category = transaction_category  # category of the transfer
         self.user_id = user_id  # identifier of the user who initiated the transaction
+        self.account_type = account_type
 
     def transaction_record(self):
         """Method to record new transactions made and the relevant information"""
@@ -32,7 +33,18 @@ class Transaction:
 
     def cal_transaction_fees(self):
         """Method to calculate fees associated with the transfer depending on the amount """
-        pass
+        acct_type = self.account_type.lower().strip()
+        if acct_type == 'current':
+            self.fees = 50.00
+
+        elif acct_type == 'savings':
+            self.fees = 10.00
+
+        elif acct_type == 'fixeddeposit':
+            self.fees = 40.00
+
+        else:
+            print('Error!!!, the account type written does not exist.')
 
     def transaction_validation(self):
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by

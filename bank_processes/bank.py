@@ -1,3 +1,28 @@
+import time
+import sys
+import os
+def clear():
+    if os.name == 'nt':
+        os.system('cls')
+
+def countdown_and_wait():
+    for i in range(3, 0, -1):
+        sys.stdout.flush()  # Flush the output buffer
+        print(f"Clearing in {i} seconds...", end="")  # Optional: You can add a message here for clarity
+        time.sleep(1)
+        print(end='\r')
+    time.sleep(1) # Optional: Add an extra delay for better visibility
+    clear()
+
+def wait_and_count():
+    sys.stdout.flush()
+    print("Please wait..", end='')
+    time.sleep(1)
+    print(end='\r')
+    clear()
+
+
+
 class Bank:
     bank_name: str = None  # The name of the bank.
     interest_rate: float = None  # Current interest rates offered for various types of accounts and financial products.
@@ -10,7 +35,12 @@ class Bank:
     @classmethod
     def open_account(cls):
         """this will enable a user open an account"""
-        pass
+        print("OPEN ACCOUNT")
+        print("~~~~~~~~~~~~")
+        clear()
+
+
+
 
     @classmethod
     def close_account(cls):

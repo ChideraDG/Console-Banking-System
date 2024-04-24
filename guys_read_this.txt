@@ -1,4 +1,5 @@
 Ak.
+<<<<<<< Updated upstream
 You guys, in the readme memo, in transaction class, attributes,
 we have 'authorization code', isn't that the same as the token we spoke about yesterday?
 
@@ -13,3 +14,11 @@ and also the transaction type(i.e withdraw, transfer etc.)
 
 I instantiated the account type but the transaction type comes from the method in account. So if the user selects deposit,
 the transaction_type in your transaction class will become equals to deposit. same thing goes with the other transaction methods
+=======
+Chidera, I want to start working on the bank class,
+my idea with the 'open account' method is to ask for the user's bvn, what do you think?
+>>>>>>> Stashed changes
+
+Ak.
+chidera you want to start working on the bank class, isn't that my line?
+also i was thinking the same thing, to open an account you will need the user's bvn

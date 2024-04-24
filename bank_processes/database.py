@@ -34,15 +34,6 @@ class DataBase:
         """Method to establish a connection to the database server, including authentication and authorization if
         required."""
 
-        connection = sql.connect(
-            host=cls.db_config_settings['host'],
-            user=cls.db_credentials['username'],
-            password=cls.db_credentials['password'],
-            database=cls.db_name['database']
-        )
-
-        return connection
-
     @classmethod
     def disconnect(cls):
         """Method to gracefully close the connection to the database server, releasing any resources allocated by the

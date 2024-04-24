@@ -2,5 +2,11 @@ Ak.
 You guys, in the readme memo, in transaction class, attributes,
 we have 'authorization code', isn't that the same as the token we spoke about yesterday?
 
+Yeah I think so
+
+dera.
+AK I have added the time stuff you spoke about yesterday
+
+
 Dera, the transaction class depends on the account class. If maybe you can signify the account type in the account file
 and also the transaction type(i.e withdraw, transfer etc.)

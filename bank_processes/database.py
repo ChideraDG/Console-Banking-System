@@ -2,12 +2,13 @@ import pymysql as sql
 
 
 class DataBase:
-    db_name = {'database': 'bankApp_db'}  # Name of the database storing bank-related data.
+    db_name= {'database': 'bankApp_db'}  # Name of the database storing bank-related data.
+    db_tables = ['Bank_Verification_Number', 'User']  # List of tables within the db, representing different entities.
 
     # Credentials (e.g., username, password) required to authenticate and access the database.
     db_credentials = {
-        'username': 'Chidera',
-        'password': 'admin'
+        'username': 'root',
+        'password': ''
     }
 
     # Configuration settings for database connections, such as host and port.
@@ -24,10 +25,7 @@ class DataBase:
         )
 
     db_cursor = db_connection.cursor()  # Cursor object for executing SQL queries and interacting with the database.
-
-    def __init__(self, data_models: dict = None, db_tables: list = None):
-        self.db_tables = db_tables  # List of tables within the database, representing different entities such as users, acc., etc.
-        self.data_models = data_models  # Class definitions representing database tables, mapping attributes to database columns.
+    data_models = None  # Class definitions representing database tables, mapping attributes to database columns.
 
     @classmethod
     def connect(cls):
@@ -51,10 +49,14 @@ class DataBase:
         cls.disconnect()
 
     @classmethod
-    def fetch_data(cls, query):
+    def fetch_data(cls, query) -> tuple:
         """Method to retrieve data from the database in response to a query, returning the results in a structured
         format such as lists, dictionaries, or objects."""
-        pass
+
+        cls.db_cursor.execute(query)
+        data = cls.db_cursor.fetchall()
+
+        return data
 
     @classmethod
     def commit(cls):

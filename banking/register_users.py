@@ -1,16 +1,64 @@
 import datetime as dt
+import os
 import time
 import random
-from bank_processes import bvn
+from bank_processes import bvn, database
+
+
+def get_data(getter, value):
+    db = database.DataBase()
+
+    query = (f"""
+    select {getter} from {db.db_tables[0]}
+    """)
+
+    data_package = db.fetch_data(query)
+
+    flag = False
+
+    for datas in data_package:
+        for data in datas:
+            if value == data:
+                flag = True
+
+    return flag
+
+
+def clear():
+    """Helps Clear the Output Console"""
+    os.system('clear')
+
+
+def header():
+    clear()
+    today_date = dt.datetime.now().date()
+    time_now = dt.datetime.now().time()
+
+    print(f"BETA BANKING {today_date} {time_now}")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+
+
+def countdown_timer(register):
+    print()
+    countdown = 3
+    while countdown != 0:
+        print(f"processing {register} creation...{countdown}", end='')
+        countdown -= 1
+        time.sleep(1)
+        print(end='\r')
 
 
 def register_bvn():
-    print("BVN CREATION")
-    print("~~~~~~~~~~~~")
+    print("Bank Verification Number CREATION".upper())
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+    print("\nInstruction: Carefully fill in your details")
+    print("==========================================\n")
+
     while True:
         print("\nInput your First Name:")
         print("~~~~~~~~~~~~~~~~~~~~~~")
-        first_name = input(">>> ")
+        first_name = input(">>> ").strip().title()
 
         if '-' in first_name:
             if first_name[:first_name.index('-')].isalpha() and first_name[first_name.index('-'):].isalpha():
@@ -24,10 +72,12 @@ def register_bvn():
             time.sleep(3)
             continue
 
+    time.sleep(1)
+
     while True:
         print("\nInput your Middle Name:")
         print("~~~~~~~~~~~~~~~~~~~~~~~")
-        middle_name = input(">>> ")
+        middle_name = input(">>> ").strip().title()
 
         if '-' in middle_name:
             if middle_name[:middle_name.index('-')].isalpha() and middle_name[middle_name.index('-'):].isalpha():
@@ -41,10 +91,12 @@ def register_bvn():
             time.sleep(3)
             continue
 
+    time.sleep(1)
+
     while True:
         print("\nInput your Last Name:")
         print("~~~~~~~~~~~~~~~~~~~~~")
-        last_name = input(">>> ")
+        last_name = input(">>> ").strip().title()
 
         if '-' in last_name:
             if last_name[:last_name.index('-')].isalpha() and last_name[last_name.index('-'):].isalpha():
@@ -58,19 +110,43 @@ def register_bvn():
             time.sleep(3)
             continue
 
+    time.sleep(1)
+
+    while True:
+        print("\nInput your Gender:")
+        print("~~~~~~~~~~~~~~~~~~~~~")
+        gender = input(">>> ").strip().title()
+
+        if not gender.isalpha():
+            print('\n*ERROR*')
+            print("-> Gender should be in letters only.\nExample: Male, Female")
+            time.sleep(3)
+            continue
+        elif not (gender == 'Male' or gender == 'Female'):
+            print('\n*ERROR*')
+            print("-> Gender should be either Male or Female only.")
+            time.sleep(3)
+            continue
+        else:
+            break
+
+    time.sleep(1)
+
     print("\nInput your Address:")
     print("~~~~~~~~~~~~~~~~~~~")
-    address = input(">>> ")
+    address = input(">>> ").strip().title()
 
     max_year = 2006
     month = 12
     month_name = 'December'
     days = 31
 
+    time.sleep(1)
+
     while True:
         print("\nInput your Year of Birth:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~")
-        year_of_birth = input(">>> ")
+        year_of_birth = input(">>> ").strip()
 
         if year_of_birth.isdigit() and 1900 < int(year_of_birth) <= max_year:
             break
@@ -86,10 +162,12 @@ def register_bvn():
             time.sleep(3)
             continue
 
+    time.sleep(1)
+
     while True:
         print("\nInput your Month of Birth:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        month_of_birth = input(">>> ")
+        month_of_birth = input(">>> ").strip()
 
         if month_of_birth.isdigit() and 0 < int(month_of_birth) <= month:
             break
@@ -103,7 +181,7 @@ def register_bvn():
             time.sleep(3)
             continue
 
-    month = month_of_birth
+    month = int(month_of_birth)
     if month == 1:
         month_name = 'January'
         days = 31
@@ -144,17 +222,18 @@ def register_bvn():
         month_name = 'December'
         days = 31
 
+    time.sleep(1)
+
     while True:
         print("\nInput your Day of Birth:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
-        day_of_birth = input(">>> ")
+        day_of_birth = input(">>> ").strip()
 
         if day_of_birth.isdigit() and 0 < int(day_of_birth) <= days:
             break
         else:
             print('\n*ERROR*')
             if day_of_birth.isdigit():
-                day_of_birth = int(day_of_birth)
                 if not 0 < int(day_of_birth) <= days:
                     print(f"-> Day of Birth should be within the number of days in {month_name}")
             else:
@@ -162,43 +241,63 @@ def register_bvn():
             time.sleep(3)
             continue
 
+    time.sleep(1)
+
     while True:
         print("\nInput your E-mail:")
         print("~~~~~~~~~~~~~~~~~~")
-        email = input(">>> ")
+        email = input(">>> ").strip().lower()
+
+        if get_data('email', email):
+            print('\n*ERROR*')
+            print("-> Email already exist")
+            time.sleep(3)
+            continue
 
         if email[-4:] == '.com' and '@' in email:
             break
         else:
-            print('*ERROR*')
+            print('\n*ERROR*')
             print("-> Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.")
             time.sleep(3)
             continue
 
+    time.sleep(1)
+
     while True:
         print("\nInput your Phone Number:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
-        phone_number = input(">>> ")
+        phone_number = input(">>> ").strip()
+
+        if get_data('phone_number', phone_number):
+            print('\n*ERROR*')
+            print("-> Phone Number already exist")
+            time.sleep(3)
+            continue
 
         if phone_number.isdigit() and len(phone_number) >= 11:
             break
         elif phone_number.isdigit() and phone_number[0] == '+':
             break
         else:
-            print('*ERROR*')
+            print('\n*ERROR*')
             print("-> Phone Number should be in digits  only.\nExample: 08076542879, +2348033327493 etc.")
             time.sleep(3)
             continue
 
     register = bvn.BVN(first_name=first_name.title(), middle_name=middle_name.title(), last_name=last_name.title(),
-                       address=address.title(), email=email.lower(), phone_number=phone_number,
+                       gender=gender, address=address.title(), email=email.lower(), phone_number=phone_number,
                        created_date=dt.datetime.now(), date_of_birth=f'{year_of_birth}-{month_of_birth}-{day_of_birth}',
                        bvn_status='active', bvn_number=str(random.randint(100000000000, 999999999999)),
                        last_updated=dt.datetime.now())
 
     register.register_bvn()
 
-    print("BVN Successfully Created.")
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~")
+    countdown_timer('BVN')
+    time.sleep(1)
+    header()
+
+    print("\nBank Verification Number Successfully Created.")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print(f"\nUser: {register.last_name} {register.first_name} {register.middle_name}")
     print(f"BVN NUMBER: {register.bvn_number}")

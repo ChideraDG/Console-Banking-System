@@ -1,4 +1,6 @@
 import datetime
+import enum
+
 from bank_processes.database import DataBase
 
 
@@ -6,14 +8,15 @@ class BVN(DataBase):
     nationality: str = 'Nigeria'  # user's country of origin
 
     def __init__(self, bvn_number: str = None, first_name: str = None, middle_name: str = None, last_name: str = None,
-                 address: str = None, email: str = None, phone_number: str = None, date_of_birth: str = None,
-                 created_date: datetime.datetime = None, last_updated: datetime.datetime = None,
-                 bvn_status: str = None):
+                 gender: str = None, address: str = None, email: str = None, phone_number: str = None,
+                 date_of_birth: str = None, created_date: datetime.datetime = None,
+                 last_updated: datetime.datetime = None, bvn_status: str = None):
         super().__init__()
         self.bvn_number = bvn_number  # Users Bank Verification Number
         self.first_name = first_name  # user's first name
         self.middle_name = middle_name  # user's middle name
         self.last_name = last_name  # user's last name
+        self.gender = gender  # user's gender
         self.address = address  # user's address
         self.email = email  # user's email
         self.phone_number = phone_number  # user's phone number
@@ -27,7 +30,7 @@ class BVN(DataBase):
         biometric data."""
 
         query = f"""
-        insert into Bank_Verification_Number
+        insert into {self.db_tables[0]}
         (first_name, middle_name, last_name, address, phone_number, date_of_birth, nationality, email,
         bvn_number, created_date, last_updated, bvn_status)
         values('{self.first_name}', '{self.middle_name}', '{self.last_name}', '{self.address}', '{self.phone_number}',

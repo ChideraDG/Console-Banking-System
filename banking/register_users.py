@@ -275,9 +275,9 @@ def register_bvn():
             time.sleep(3)
             continue
 
-        if phone_number.isdigit() and len(phone_number) >= 11:
+        if phone_number.isdigit() and 11 <= len(phone_number) <= 15:
             break
-        elif phone_number.isdigit() and phone_number[0] == '+':
+        elif phone_number[1:].isdigit() and phone_number[0] == '+':
             break
         else:
             print('\n*ERROR*')

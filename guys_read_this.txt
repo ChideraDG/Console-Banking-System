@@ -22,3 +22,7 @@ my idea with the 'open account' method is to ask for the user's bvn, what do you
 Ak.
 chidera you want to start working on the bank class, isn't that my line?
 also i was thinking the same thing, to open an account you will need the user's bvn
+
+I'm working on users and I have the instance attributes for every user. Also, one of my methods is registering a user.
+That's why I started working on it. You have the method to open an account, but no instance concerning a user, so you
+are probably a channel to me but not the main person to open the account.

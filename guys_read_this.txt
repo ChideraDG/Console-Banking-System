@@ -22,3 +22,6 @@ my idea with the 'open account' method is to ask for the user's bvn, what do you
 Ak.
 chidera you want to start working on the bank class, isn't that my line?
 also i was thinking the same thing, to open an account you will need the user's bvn
+Dozie.
+alright then.
+f

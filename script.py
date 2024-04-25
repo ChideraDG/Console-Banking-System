@@ -18,7 +18,7 @@ def header():
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
 
-def __main__():
+def main():
     header()
 
     print(' ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~')
@@ -40,4 +40,5 @@ def __main__():
         print("\n---Let's Create your Bank Account---")
 
 
-__main__()
+if __name__ == '__main__':
+    main()

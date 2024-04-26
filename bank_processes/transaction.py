@@ -6,8 +6,8 @@ class Transaction:
     currency: str = 'Naira'
 
     def __init__(self, transaction_id: str = None, transaction_type: str = None,
-                 amount: float = None, transaction_date_time: datetime.datetime = None, sender_acct: str = None,
-                 receiver_acct: str = None,
+                 amount: float = None, transaction_date_time: datetime.datetime = None, sender_acct_num: str = None,
+                 receiver_acct_num: str = None,
                  description: str = None, status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
                  sender_name: str = None, receiver_name: str = None):
@@ -15,8 +15,8 @@ class Transaction:
         self.amount = amount
         self.transaction_id = transaction_id  # unique identifier for transaction
         self.transaction_date_time = transaction_date_time  # timestamp for when the transaction occurred
-        self.sender_acct = sender_acct  # sender's account details
-        self.receiver = receiver_acct  # receiver's account details
+        self.sender_acct_num = sender_acct_num  # sender's account number
+        self.receiver_acct_num = receiver_acct_num  # receiver's account number
         self.description = description  # description of the transaction
         self.status = status  # status of the transaction
         self.fees = fees  # fees associated with the amount
@@ -38,19 +38,19 @@ class Transaction:
         if self.transaction_type == 'WITHDRAW':
             amt = f'-{self.amount}'
             detail_type = f'''Recipient Details\t\t\t{self.sender_name}
-                          \t\t\tBankApp|{self.sender_acct}'''
+                          \t\t\tBankApp|{self.sender_acct_num}'''
             option_transfer = f'''Credited to         \t\tBalance'''
 
         elif self.transaction_type == 'TRANSFER':
             amt = f'-{self.amount}'
             detail_type = f'''Recipient Details\t\t\t{self.sender_name}
-                          \t\t\tBankApp|{self.sender_acct}'''
+                          \t\t\tBankApp|{self.sender_acct_num}'''
             option_transfer = f'''Credited to         \t\tBalance'''
 
         elif self.transaction_type == 'DEPOSIT':
             amt = f'+{self.amount}'
             detail_type = f'''Sender Details\t\t\t\t{self.sender_name}
-                          \t\t\tBankApp|{self.sender_acct}'''
+                          \t\t\tBankApp|{self.sender_acct_num}'''
             option_transfer = f'''Payment Method         \t\tBalance'''
 
         trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,9 +83,6 @@ class Transaction:
             self.fees = 10.00
             return self.fees
 
-        elif acct_type == 'fixed deposit':
-            self.fees = 40.00
-            return self.fees
 
     def transaction_validation(self):
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by

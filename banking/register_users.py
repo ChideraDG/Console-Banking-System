@@ -2,21 +2,22 @@ import datetime as dt
 import os
 import time
 import random
-from bank_processes import bvn, database
+from bank_processes import bvn
+from bank_processes.database import DataBase
 
 
 def get_data(getter, value):
-    db = database.DataBase()
+    """Validates unique values against the database to check if it exist before or not"""
+    db: DataBase = DataBase()
 
     query = (f"""
     select {getter} from {db.db_tables[0]}
     """)
 
-    data_package = db.fetch_data(query)
+    data_from_database: tuple = db.fetch_data(query)
 
     flag = False
-
-    for datas in data_package:
+    for datas in data_from_database:
         for data in datas:
             if value == data:
                 flag = True
@@ -30,6 +31,7 @@ def clear():
 
 
 def header():
+    """Clears the output and adds the bank header"""
     clear()
     today_date = dt.datetime.now().date()
     time_now = dt.datetime.now().time()
@@ -39,6 +41,7 @@ def header():
 
 
 def countdown_timer(register):
+    """Countdown for the bank or bvn creation. It enhances users' experience."""
     print()
     countdown = 3
     while countdown != 0:
@@ -49,6 +52,7 @@ def countdown_timer(register):
 
 
 def register_bvn():
+    """Registration Form"""
     print("Bank Verification Number CREATION".upper())
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
@@ -285,11 +289,14 @@ def register_bvn():
             time.sleep(3)
             continue
 
+    created_bvn = str(random.randint(100000000000, 999999999999))
+    while get_data('bvn_number', created_bvn):
+        created_bvn = str(random.randint(100000000000, 999999999999))
+
     register = bvn.BVN(first_name=first_name.title(), middle_name=middle_name.title(), last_name=last_name.title(),
                        gender=gender, address=address.title(), email=email.lower(), phone_number=phone_number,
                        created_date=dt.datetime.now(), date_of_birth=f'{year_of_birth}-{month_of_birth}-{day_of_birth}',
-                       bvn_status='active', bvn_number=str(random.randint(100000000000, 999999999999)),
-                       last_updated=dt.datetime.now())
+                       bvn_status='active', bvn_number=created_bvn, last_updated=dt.datetime.now())
 
     register.register_bvn()
 

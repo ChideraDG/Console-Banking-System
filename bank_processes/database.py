@@ -49,7 +49,7 @@ class DataBase:
         cls.disconnect()
 
     @classmethod
-    def fetch_data(cls, query) -> tuple:
+    def fetch_data(cls, query) -> tuple[tuple]:
         """Method to retrieve data from the database in response to a query, returning the results in a structured
         format such as lists, dictionaries, or objects."""
 

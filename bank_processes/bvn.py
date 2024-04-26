@@ -30,11 +30,11 @@ class BVN:
 
         query = f"""
         insert into {self.database.db_tables[0]}
-        (first_name, middle_name, last_name, address, phone_number, date_of_birth, nationality, email,
+        (first_name, middle_name, last_name, gender, address, phone_number, date_of_birth, nationality, email,
         bvn_number, created_date, last_updated, bvn_status)
-        values('{self.first_name}', '{self.middle_name}', '{self.last_name}', '{self.address}', '{self.phone_number}',
-        '{self.date_of_birth}', '{self.nationality}', '{self.email}', '{self.bvn_number}', '{self.created_date}',
-        '{self.last_updated}', '{self.bvn_status}')
+        values('{self.first_name}', '{self.middle_name}', '{self.last_name}', '{self.gender}', '{self.address}', 
+        '{self.phone_number}', '{self.date_of_birth}', '{self.nationality}', '{self.email}', '{self.bvn_number}', 
+        '{self.created_date}', '{self.last_updated}', '{self.bvn_status}')
         """
 
         self.database.query(query)

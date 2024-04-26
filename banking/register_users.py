@@ -1,5 +1,6 @@
 import datetime as dt
 import os
+import re
 import time
 import random
 from bank_processes import bvn
@@ -55,11 +56,10 @@ def first_name() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip().title()
 
-        if '-' in name:
-            if name[:name.index('-')].isalpha() and name[name.index('-'):].isalpha():
-                break
-            break
-        elif name.isalpha():
+        if match := re.search('([a-z-]+) *([a-z-]+)', name, re.IGNORECASE):
+            name = f'{match.groups(1)}{match.groups(2)}'
+
+        if re.search('[a-z-]+', name, re.IGNORECASE):
             break
         else:
             print('\n*ERROR*')
@@ -76,11 +76,10 @@ def middle_name() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip().title()
 
-        if '-' in name:
-            if name[:name.index('-')].isalpha() and name[name.index('-'):].isalpha():
-                break
-            break
-        elif name.isalpha():
+        if match := re.search('([a-z-]+) *([a-z-]+)', name, re.IGNORECASE):
+            name = f'{match.groups(1)}{match.groups(2)}'
+
+        if re.search('[a-z-]+', name, re.IGNORECASE):
             break
         else:
             print('\n*ERROR*')
@@ -97,11 +96,10 @@ def last_name() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip().title()
 
-        if '-' in name:
-            if name[:name.index('-')].isalpha() and name[name.index('-'):].isalpha():
-                break
-            break
-        elif name.isalpha():
+        if match := re.search('([a-z-]+) *([a-z-]+)', name, re.IGNORECASE):
+            name = f'{match.groups(1)}{match.groups(2)}'
+
+        if re.search('[a-z-]+', name, re.IGNORECASE):
             break
         else:
             print('\n*ERROR*')
@@ -264,7 +262,7 @@ def e_mail() -> str:
             time.sleep(3)
             continue
 
-        if email[-4:] == '.com' and '@' in email:
+        if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", email, re.IGNORECASE):
             break
         else:
             print('\n*ERROR*')

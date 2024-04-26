@@ -11,6 +11,7 @@ class Transaction:
                  description: str = None, status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
                  sender_name: str = None, receiver_name: str = None):
+        
         self.transaction_type = transaction_type
         self.amount = amount
         self.transaction_id = transaction_id  # unique identifier for transaction

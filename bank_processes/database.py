@@ -3,7 +3,7 @@ import pymysql as sql
 
 class DataBase:
     db_name= {'database': 'bankApp_db'}  # Name of the database storing bank-related data.
-    db_tables = ['Bank_Verification_Number', 'User']  # List of tables within the db, representing different entities.
+    db_tables = ['Bank_Verification_Number', 'User', 'transaction']  # List of tables within the db, representing different entities.
 
     # Credentials (e.g., username, password) required to authenticate and access the database.
     db_credentials = {
@@ -68,7 +68,5 @@ class DataBase:
     def rollback(cls):
         """Method to rollback changes made within a transaction, reverting the database to its state before the
         transaction started."""
-        pass
 
-
-
+        cls.db_connection.rollback()

@@ -1,5 +1,4 @@
 import datetime
-
 from bank_processes.database import DataBase
 
 

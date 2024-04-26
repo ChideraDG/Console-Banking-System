@@ -1,5 +1,4 @@
 import datetime
-import enum
 
 from bank_processes.database import DataBase
 

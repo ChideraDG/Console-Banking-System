@@ -4,14 +4,14 @@ import enum
 from bank_processes.database import DataBase
 
 
-class BVN(DataBase):
+class BVN:
     nationality: str = 'Nigeria'  # user's country of origin
 
     def __init__(self, bvn_number: str = None, first_name: str = None, middle_name: str = None, last_name: str = None,
                  gender: str = None, address: str = None, email: str = None, phone_number: str = None,
                  date_of_birth: str = None, created_date: datetime.datetime = None,
                  last_updated: datetime.datetime = None, bvn_status: str = None):
-        super().__init__()
+        self.database = DataBase
         self.bvn_number = bvn_number  # Users Bank Verification Number
         self.first_name = first_name  # user's first name
         self.middle_name = middle_name  # user's middle name
@@ -30,7 +30,7 @@ class BVN(DataBase):
         biometric data."""
 
         query = f"""
-        insert into {self.db_tables[0]}
+        insert into {self.database.db_tables[0]}
         (first_name, middle_name, last_name, address, phone_number, date_of_birth, nationality, email,
         bvn_number, created_date, last_updated, bvn_status)
         values('{self.first_name}', '{self.middle_name}', '{self.last_name}', '{self.address}', '{self.phone_number}',
@@ -38,7 +38,7 @@ class BVN(DataBase):
         '{self.last_updated}', '{self.bvn_status}')
         """
 
-        self.query(query)
+        self.database.query(query)
 
     def verify_bvn(self):
         """Method to verify the authenticity of a BVN, validating it against the central database or authority to

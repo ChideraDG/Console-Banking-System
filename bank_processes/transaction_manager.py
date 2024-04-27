@@ -24,10 +24,6 @@ class Transaction_Manager:
         """Method to enable users to withdraw money from their accounts"""
         pass
 
-    def process_payments(self):
-        """Method to process payments initiated by users, such as bill payments"""
-        pass
-
     def handle_transfers_between_banks(self):
         """Method to handle transfers between accounts held at different banks"""
         pass
@@ -38,14 +34,6 @@ class Transaction_Manager:
 
     def transaction_history(self):
         """Method to retrieve transaction history for a specific account"""
-        pass
-
-    def handle_currency_conversion(self):
-        """Method to handle currency conversion for international transactions"""
-        pass
-
-    def transaction_authorization(self):
-        """Method to authenticate and authorize transactions initiated by users"""
         pass
 
     def transaction_reversal(self):

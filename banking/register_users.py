@@ -3,7 +3,7 @@ import os
 import re
 import time
 import random
-from bank_processes import bvn
+from bank_processes.bvn import BVN
 from bank_processes.database import DataBase
 
 
@@ -336,10 +336,10 @@ def register_bvn():
         while get_data('bvn_number', created_bvn):
             created_bvn = str(random.randint(100000000000, 999999999999))
 
-        register = bvn.BVN(first_name=_firstname.title(), middle_name=_middlename.title(), last_name=_lastname.title(),
-                           gender=_gender.title(), address=_address.title(), email=_email.lower(),
-                           phone_number=_phoneNumber, created_date=dt.datetime.now(), date_of_birth=_dob,
-                           bvn_status='active', bvn_number=created_bvn, last_updated=dt.datetime.now())
+        register = BVN(first_name=_firstname.title(), middle_name=_middlename.title(), last_name=_lastname.title(),
+                       gender=_gender.title(), address=_address.title(), email=_email.lower(),
+                       phone_number=_phoneNumber, created_date=dt.datetime.now(), date_of_birth=_dob,
+                       bvn_status='active', bvn_number=created_bvn, last_updated=dt.datetime.now())
 
         register.register_bvn()
 

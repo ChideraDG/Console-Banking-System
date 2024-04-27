@@ -56,10 +56,10 @@ def first_name() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip().title()
 
-        if match := re.search('([a-z-]+) *([a-z-]+)', name, re.IGNORECASE):
-            name = f'{match.groups(1)}{match.groups(2)}'
+        if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
+            name = match.group(1) + match.group(2)
 
-        if re.search('[a-z-]+', name, re.IGNORECASE):
+        if re.search('^[a-z-]+$', name, re.IGNORECASE):
             break
         else:
             print('\n*ERROR*')
@@ -76,8 +76,8 @@ def middle_name() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip().title()
 
-        if match := re.search('([a-z-]+) *([a-z-]+)', name, re.IGNORECASE):
-            name = f'{match.groups(1)}{match.groups(2)}'
+        if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
+            name = match.group(1) + match.group(2)
 
         if re.search('[a-z-]+', name, re.IGNORECASE):
             break
@@ -96,8 +96,8 @@ def last_name() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip().title()
 
-        if match := re.search('([a-z-]+) *([a-z-]+)', name, re.IGNORECASE):
-            name = f'{match.groups(1)}{match.groups(2)}'
+        if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
+            name = match.group(1) + match.group(2)
 
         if re.search('[a-z-]+', name, re.IGNORECASE):
             break
@@ -116,12 +116,7 @@ def gender() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~")
         _gender = input(">>> ").strip().title()
 
-        if not _gender.isalpha():
-            print('\n*ERROR*')
-            print("-> Gender should be in letters only.\nExample: Male, Female")
-            time.sleep(3)
-            continue
-        elif not (_gender == 'Male' or _gender == 'Female'):
+        if not re.search('^(male|female)$', _gender, re.IGNORECASE):
             print('\n*ERROR*')
             print("-> Gender should be either Male or Female only.")
             time.sleep(3)
@@ -141,7 +136,6 @@ def address() -> str:
 
 
 def date_of_birth() -> str:
-    present_year = dt.datetime.today().year
     max_year = 2006
     month = 12
     month_name = 'December'
@@ -159,8 +153,6 @@ def date_of_birth() -> str:
             if year_of_birth.isdigit():
                 if not int(year_of_birth) <= max_year:
                     print("-> Age is less than 18")
-                if not int(year_of_birth) >= present_year:
-                    print(f"-> Year {year_of_birth} not in existence yet")
                 elif not 1900 < int(year_of_birth):
                     print("-> Year is less than 1900")
             else:
@@ -349,7 +341,8 @@ def register_bvn():
                            phone_number=_phoneNumber, created_date=dt.datetime.now(), date_of_birth=_dob,
                            bvn_status='active', bvn_number=created_bvn, last_updated=dt.datetime.now())
 
-        register.register_bvn()
+        # register.register_bvn()
+        print(register)
 
         countdown_timer('BVN')
         time.sleep(1)

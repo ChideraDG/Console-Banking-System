@@ -77,3 +77,6 @@ class BVN:
         """Method to authenticate the identity of a user based on their BVN, verifying their identity during
         account-related transactions or authentication processes."""
         pass
+
+    def __str__(self):
+        return f'{self.first_name}, {self.last_name}, {self.middle_name}, {self.email}'

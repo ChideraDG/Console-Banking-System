@@ -7,12 +7,12 @@ from bank_processes.bvn import BVN
 from bank_processes.database import DataBase
 
 
-def get_data(get_column, _object) -> bool:
+def get_data(get_column: str, table_number: int, _object: str) -> bool:
     """Validates unique values against the database to check if it exists before or not"""
     db: DataBase = DataBase()
 
     query = (f"""
-    select {get_column} from {db.db_tables[0]}
+    select {get_column} from {db.db_tables[table_number]}
     """)
 
     datas: tuple = db.fetch_data(query)
@@ -64,7 +64,7 @@ def first_name() -> str:
         else:
             print('\n*ERROR*')
             print("-> Names should be in letters only.\nExample: James, Mary, etc.")
-            time.sleep(3)
+            time.sleep(2)
             continue
 
     return name.title()
@@ -84,7 +84,7 @@ def middle_name() -> str:
         else:
             print('\n*ERROR*')
             print("-> Names should be in letters only.\nExample: James, Mary, etc.")
-            time.sleep(3)
+            time.sleep(2)
             continue
 
     return name.title()
@@ -104,7 +104,7 @@ def last_name() -> str:
         else:
             print('\n*ERROR*')
             print("-> Names should be in letters only.\nExample: James, Mary, etc.")
-            time.sleep(3)
+            time.sleep(2)
             continue
 
     return name.title()
@@ -119,7 +119,7 @@ def gender() -> str:
         if not re.search('^(male|female)$', _gender, re.IGNORECASE):
             print('\n*ERROR*')
             print("-> Gender should be either Male or Female only.")
-            time.sleep(3)
+            time.sleep(2)
             continue
         else:
             break
@@ -139,7 +139,7 @@ def date_of_birth() -> str:
     max_year = 2006
     month = 12
     month_name = 'December'
-    days = 31
+    days = 21
 
     while True:
         print("\nInput your Year of Birth:")
@@ -157,7 +157,7 @@ def date_of_birth() -> str:
                     print("-> Year is less than 1900")
             else:
                 print("-> Year of Birth should be in digits.\nExample: 2001, 2004, etc.")
-            time.sleep(3)
+            time.sleep(2)
             continue
 
     time.sleep(1)
@@ -176,7 +176,7 @@ def date_of_birth() -> str:
                     print("-> Month of Birth should be between Zero(0) and Twelve(12)")
             else:
                 print("-> Month of Birth should be in digits.\nExample: 2 means February, 4 means April, etc.")
-            time.sleep(3)
+            time.sleep(2)
             continue
 
     month = int(month_of_birth)
@@ -236,7 +236,7 @@ def date_of_birth() -> str:
                     print(f"-> Day of Birth should be within the number of days in {month_name}")
             else:
                 print("-> Day of Birth should be in digits.\nExample: 2, 4, 10, etc.")
-            time.sleep(3)
+            time.sleep(2)
             continue
 
     return f'{year_of_birth}-{month_of_birth}-{day_of_birth}'
@@ -248,10 +248,10 @@ def e_mail() -> str:
         print("~~~~~~~~~~~~~~~~~~")
         email = input(">>> ").strip()
 
-        if get_data('email', email):
+        if get_data('email', 0, email):
             print('\n*ERROR*')
             print("-> Email already exist")
-            time.sleep(3)
+            time.sleep(2)
             continue
 
         if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", email, re.IGNORECASE):
@@ -259,7 +259,7 @@ def e_mail() -> str:
         else:
             print('\n*ERROR*')
             print("-> Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.")
-            time.sleep(3)
+            time.sleep(2)
             continue
 
     return email.lower()
@@ -271,7 +271,7 @@ def phone_number() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
         phoneNumber = input(">>> ").strip()
 
-        if get_data('phone_number', phoneNumber):
+        if get_data('phone_number', 0, phoneNumber):
             print('\n*ERROR*')
             print("-> Phone Number already exist")
             time.sleep(3)
@@ -282,23 +282,99 @@ def phone_number() -> str:
         else:
             print('\n*ERROR*')
             print("-> Phone Number should be in digits  only.\nExample: 08076542879, +2348033327493 etc.")
-            time.sleep(3)
+            time.sleep(2)
             continue
 
     return phoneNumber
+
+
+def account_type():
+    while True:
+        print("What is your desired Account Type:")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print('1 -> Saving \n2 -> Current \n3 -> Fixed Deposit')
+        _input = input('>>> ')
+
+        if re.search('^(1|Saving)$', _input, re.IGNORECASE):
+            _input = 'Savings'
+            break
+        elif re.search('^(2|Current)$', _input, re.IGNORECASE):
+            _input = 'Current'
+            break
+        elif re.search('^(3|Fixed Deposit)$', _input, re.IGNORECASE):
+            _input = 'Fixed Deposit'
+            break
+        else:
+            print('\n*ERROR*')
+            print("-> Choose between Saving or Current or Fixed Deposit")
+            time.sleep(2)
+            continue
+
+
+def check_password(passwords: str) -> set:
+    number, upper_letters, lower_letters, symbols = False, False, False, False
+    alphabets = 'abcdefghijklmnopqrstuvwxyyz'
+
+    if len(passwords) > 8:
+        number = {
+            True for password in list(passwords) if password.isdigit() if int(password) in list(range(0, 10))
+        }
+
+        lower_letters = {
+            True for password in list(passwords) if password in list(alphabets)
+        }
+
+        upper_letters = {
+            True for password in list(passwords) if password in list(alphabets.upper())
+        }
+
+        symbols = {
+            True for password in list(passwords) if password in list('!@#$%&*()_+-{}[]|?.,<>;:~\'')
+        }
+
+        return number and upper_letters and lower_letters and symbols
+    else:
+        return {False}
+
+
+def account_password():
+    while True:
+        print("\nEnter a new Bank Application Password:")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+        print("First Input:")
+        first_input = input(">>> ").strip()
+
+        if check_password(first_input) == {True}:
+            while True:
+                print("\nSecond Input:")
+                second_input = input(">>> ").strip()
+                if first_input == second_input:
+                    break
+                else:
+                    print('\n*ERROR*')
+                    print("-> Passwords not the same")
+                    time.sleep(2)
+                    continue
+            break
+        else:
+            print('\n*ERROR*')
+            print("-> Password must be more than 8 characters.")
+            print("-> Password should contain a number, a lowercase letter, and uppercase letter and a symbol.")
+            time.sleep(2)
+            continue
 
 
 def register_bvn():
     """Registration Form"""
 
     try:
-        print("Bank Verification Number CREATION".upper())
+        print("Bank Verification Number Creation".upper())
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
         print("\nInstruction: Carefully fill in your details")
         print("==========================================\n")
 
-        time.sleep(2)
+        time.sleep(1)
 
         _firstname = first_name()
 
@@ -331,7 +407,7 @@ def register_bvn():
         _phoneNumber = phone_number()
 
         created_bvn = str(random.randint(100000000000, 999999999999))
-        while get_data('bvn_number', created_bvn):
+        while get_data('bvn_number', 0, created_bvn):
             created_bvn = str(random.randint(100000000000, 999999999999))
 
         register = BVN(first_name=_firstname.title(), middle_name=_middlename.title(), last_name=_lastname.title(),
@@ -339,7 +415,7 @@ def register_bvn():
                        phone_number=_phoneNumber, created_date=dt.datetime.now(), date_of_birth=_dob,
                        bvn_status='active', bvn_number=created_bvn, last_updated=dt.datetime.now())
 
-        register.register_bvn()
+        # register.register_bvn()
 
         countdown_timer('BVN')
         time.sleep(1)
@@ -351,3 +427,25 @@ def register_bvn():
         print(f"BVN NUMBER: {register.bvn_number}")
     except Exception:
         print(f"\n*ERROR*\nError registering BVN")
+
+
+def register_account():
+    """Account Form"""
+
+    print("Bank Account Details Creation".upper())
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+    print("\nInstruction: Carefully fill in your details")
+    print("==========================================\n")
+
+    account_number = str(random.randint(1000000000, 9999999999))
+    while get_data('account_number', 1, account_number):
+        account_number = str(random.randint(100000000000, 999999999999))
+
+    time.sleep(1)
+    
+    account_type()
+
+    time.sleep(1)
+
+    account_password()

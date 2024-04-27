@@ -1,7 +1,8 @@
 import datetime as dt
 import os
+import re
 import time
-from banking import register_users as rba
+from banking import register_users
 
 
 def clear():
@@ -19,25 +20,35 @@ def header():
 
 
 def main():
-    header()
-
-    print(' ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~')
-    print("|  1. New User  |  2. Existing User  |")
-    print(" ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~")
-
-    print(">>> ", end='')
-    input_1 = input("")
-
-    if input_1 == '1':
+    while True:
         header()
-        print('Message from the CUSTOMER SERVICE OFFICER:::')
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        print("'You will need to Create your BVN first, then Create your Bank Account'. ")
-        print("\n---Let's Create your BVN---")
-        time.sleep(3)
-        header()
-        rba.register_bvn()
-        print("\n---Let's Create your Bank Account---")
+
+        print(' ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~')
+        print("|  1. New User  |  2. Existing User  |")
+        print(" ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~")
+
+        print(">>> ", end="")
+        _input = input("")
+
+        if re.search('^1$', _input):
+            header()
+            print('Message from the CUSTOMER SERVICE OFFICER:::')
+            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            print("'You will need to Create your BVN first, then Create your Bank Account'. ")
+            print("\n---Let's Create your BVN---")
+            time.sleep(3)
+            header()
+            register_users.register_bvn()
+            time.sleep(5)
+            header()
+            register_users.register_account()
+            break
+        elif re.search('^2$', _input):
+            print('hi')
+            break
+        else:
+            print('Error')
+            continue
 
 
 if __name__ == '__main__':

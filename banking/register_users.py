@@ -7,6 +7,21 @@ from bank_processes.bvn import BVN
 from bank_processes.database import DataBase
 
 
+def clear():
+    """Helps Clear the Output Console"""
+    os.system('clear')
+
+
+def header():
+    """Clears the output and adds the bank header"""
+    clear()
+    today_date = dt.datetime.now().date()
+    time_now = dt.datetime.now().time()
+
+    print(f"BETA BANKING {today_date} {time_now}")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+
+
 def get_data(get_column: str, table_number: int, _object: str) -> bool:
     """Validates unique values against the database to check if it exists before or not"""
     db: DataBase = DataBase()
@@ -22,21 +37,6 @@ def get_data(get_column: str, table_number: int, _object: str) -> bool:
             return True
 
     return False
-
-
-def clear():
-    """Helps Clear the Output Console"""
-    os.system('clear')
-
-
-def header():
-    """Clears the output and adds the bank header"""
-    clear()
-    today_date = dt.datetime.now().date()
-    time_now = dt.datetime.now().time()
-
-    print(f"BETA BANKING {today_date} {time_now}")
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
 
 def countdown_timer(register):
@@ -311,32 +311,6 @@ def account_type():
             continue
 
 
-def check_password(passwords: str) -> set:
-    number, upper_letters, lower_letters, symbols = False, False, False, False
-    alphabets = 'abcdefghijklmnopqrstuvwxyyz'
-
-    if len(passwords) > 8:
-        number = {
-            True for password in list(passwords) if password.isdigit() if int(password) in list(range(0, 10))
-        }
-
-        lower_letters = {
-            True for password in list(passwords) if password in list(alphabets)
-        }
-
-        upper_letters = {
-            True for password in list(passwords) if password in list(alphabets.upper())
-        }
-
-        symbols = {
-            True for password in list(passwords) if password in list('!@#$%&*()_+-{}[]|?.,<>;:~\'')
-        }
-
-        return number and upper_letters and lower_letters and symbols
-    else:
-        return {False}
-
-
 def account_password():
     while True:
         print("\nEnter a new Bank Application Password:")
@@ -344,7 +318,7 @@ def account_password():
         print("First Input:")
         first_input = input(">>> ").strip()
 
-        if check_password(first_input) == {True}:
+        if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", first_input):
             while True:
                 print("\nSecond Input:")
                 second_input = input(">>> ").strip()
@@ -352,7 +326,7 @@ def account_password():
                     break
                 else:
                     print('\n*ERROR*')
-                    print("-> Passwords not the same")
+                    print("-> Passwords are not the same")
                     time.sleep(2)
                     continue
             break
@@ -426,26 +400,30 @@ def register_bvn():
         print(f"\nUser: {register.last_name} {register.first_name} {register.middle_name}")
         print(f"BVN NUMBER: {register.bvn_number}")
     except Exception:
-        print(f"\n*ERROR*\nError registering BVN")
+        print(f"\n*ERROR*\nError Registering BVN")
 
 
 def register_account():
     """Account Form"""
 
-    print("Bank Account Details Creation".upper())
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    try:
+        print("Bank Account Details Creation".upper())
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-    print("\nInstruction: Carefully fill in your details")
-    print("==========================================\n")
+        print("\nInstruction: Carefully fill in your details")
+        print("==========================================\n")
 
-    account_number = str(random.randint(1000000000, 9999999999))
-    while get_data('account_number', 1, account_number):
-        account_number = str(random.randint(100000000000, 999999999999))
+        account_number = str(random.randint(1000000000, 9999999999))
+        while get_data('account_number', 1, account_number):
+            account_number = str(random.randint(100000000000, 999999999999))
 
-    time.sleep(1)
+        time.sleep(1)
 
-    account_type()
+        account_type()
 
-    time.sleep(1)
+        time.sleep(1)
 
-    account_password()
+        account_password()
+    except Exception:
+        print(f"\n*ERROR*\nError Registering Account Details")
+        

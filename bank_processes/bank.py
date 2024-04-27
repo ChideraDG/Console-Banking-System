@@ -25,7 +25,7 @@ def wait_and_count():
 
 class Bank:
     bank_name: str = None  # The name of the bank.
-    interest_rate: float = None  # Current interest rates offered for various types of accounts and financial products.
+    interest_rate: str = None  # Current interest rates offered for various types of accounts and financial products.
     fee_and_charges: float = None  # Details about fees and charges; Account maintenance fees, transaction fees, and overdraft fees.
     security_measures: str = None  # Information about security measures implemented by the bank to protect customer data and prevent fraud, such as encryption, firewalls, and fraud detection systems.
     financial_performances: str = None  # Information about the bank's financial performance, including revenue, profits, and assets under management.
@@ -33,11 +33,14 @@ class Bank:
     mission_and_values: str = None  # The mission statement and core values of the bank, guiding its operations and interactions with customers and stakeholders.
 
     @classmethod
-    def open_account(cls):
+    def open_account(cls, account_type, f_name, l_name, address, city, postal_code,region,monthly_sal,phone):
         """this will enable a user open an account"""
+        print("~~~~~~~~~~~~")
         print("OPEN ACCOUNT")
         print("~~~~~~~~~~~~")
         clear()
+        cls.acc_type = input("What account type: ")
+
 
 
 
@@ -47,6 +50,7 @@ class Bank:
         """Method to close an existing account"""
         pass
 
+
     @classmethod
     def view_account_details(cls):
         """Method to view account details"""
@@ -55,7 +59,7 @@ class Bank:
     @classmethod
     def list_accounts(cls):
         """Method to see the list of accounts"""
-        pass
+
 
     @classmethod
     def calculate_interest(cls):

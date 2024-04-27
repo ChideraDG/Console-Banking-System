@@ -1,11 +1,14 @@
 import datetime
 import random
+from banking.register_users import get_data
 
 
 class Transaction:
     currency: str = 'Naira'
 
-    def __init__(self, transaction_id: str = None, transaction_type: str = None,
+    def __init__(self, transaction_id: str = str(random.randint(100000000000000000000000000000,
+                                                                999999999999999999999999999999)),
+                 transaction_type: str = None,
                  amount: float = None, transaction_date_time: datetime.datetime = None, sender_acct_num: str = None,
                  receiver_acct_num: str = None,
                  description: str = None, status: str = None, fees: float = None, merchant_info: str = None,
@@ -53,18 +56,20 @@ class Transaction:
                           \t\t\tBankApp|{self.sender_acct_num}'''
             option_transfer = f'''Payment Method         \t\tBalance'''
 
+            while get_data('transaction_id', self.transaction_id):
+                self.transaction_id = {random.randint(100000000000000000000000000000,
+                                                      999999999999999999999999999999)}
+
         trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     {amt}
                     {self.status}
         TRANSACTION DETAILS
         Transaction Type\t\t\t{self.transaction_type}
         {detail_type}
-        Remark             \t\t\t{self.description}
+        Description        \t\t\t{self.description}
         {option_transfer}
-        Transaction Number   \t\t{random.randint(100000000000000000, 999999999999999999)}
         Transaction Date      \t\t{self.transaction_date_time}
-        Transaction ID         \t\t{random.randint(100000000000000000000000000000,
-                                                   999999999999999999999999999999)}
+        Transaction ID         \t\t{self.transaction_id}
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
         print(trans_record)
 
@@ -74,15 +79,7 @@ class Transaction:
 
     def cal_transaction_fees(self):
         """Method to calculate fees associated with the transfer depending on the amount """
-        acct_type = self.account_type.lower().strip()
-        if acct_type == 'current':
-            self.fees = 50.00
-            return self.fees
-
-        elif acct_type == 'savings':
-            self.fees = 10.00
-            return self.fees
-
+        return self.fees + self.amount
 
     def transaction_validation(self):
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
@@ -115,5 +112,5 @@ class Transaction:
 
 
 # obj = Transaction(transaction_type='withdraw', sender_name='Ezenwa Chiedozie', description='Food',
-#                   sender_acct='12132537437', status='SUCCESS', amount=500.00)
+#                   sender_acct_num='12132537437', status='SUCCESS', amount=500.00)
 # obj.transaction_record()

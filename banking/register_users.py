@@ -277,9 +277,7 @@ def phone_number() -> str:
             time.sleep(3)
             continue
 
-        if phoneNumber.isdigit() and 11 <= len(phoneNumber) <= 15:
-            break
-        elif phoneNumber[1:].isdigit() and phoneNumber[0] == '+':
+        if re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', phoneNumber) and 11 <= len(phoneNumber) <= 15:
             break
         else:
             print('\n*ERROR*')

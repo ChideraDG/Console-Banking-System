@@ -66,7 +66,7 @@ class Transaction:
         TRANSACTION DETAILS
         Transaction Type\t\t\t{self.transaction_type}
         {detail_type}
-        Remark             \t\t\t{self.description}
+        Description        \t\t\t{self.description}
         {option_transfer}
         Transaction Date      \t\t{self.transaction_date_time}
         Transaction ID         \t\t{self.transaction_id}

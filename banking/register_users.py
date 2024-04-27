@@ -7,18 +7,18 @@ from bank_processes import bvn
 from bank_processes.database import DataBase
 
 
-def get_data(getter, value):
-    """Validates unique values against the database to check if it exist before or not"""
+def get_data(get_column, _object) -> bool:
+    """Validates unique values against the database to check if it exists before or not"""
     db: DataBase = DataBase()
 
     query = (f"""
-    select {getter} from {db.db_tables[0]}
+    select {get_column} from {db.db_tables[0]}
     """)
 
-    data_from_database: tuple = db.fetch_data(query)
+    datas: tuple = db.fetch_data(query)
 
-    for datas in data_from_database:
-        if (value,) == datas:
+    for datas in datas:
+        if (_object,) == datas:
             return True
 
     return False
@@ -54,11 +54,11 @@ def first_name() -> str:
     while True:
         print("\nInput your First Name:")
         print("~~~~~~~~~~~~~~~~~~~~~~")
-        name = input(">>> ").strip().title()
+        name = input(">>> ").strip()
 
         if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
             name = match.group(1) + match.group(2)
-
+        print(name)
         if re.search('^[a-z-]+$', name, re.IGNORECASE):
             break
         else:
@@ -67,14 +67,14 @@ def first_name() -> str:
             time.sleep(3)
             continue
 
-    return name
+    return name.title()
 
 
 def middle_name() -> str:
     while True:
         print("\nInput your Middle Name:")
         print("~~~~~~~~~~~~~~~~~~~~~~~")
-        name = input(">>> ").strip().title()
+        name = input(">>> ").strip()
 
         if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
             name = match.group(1) + match.group(2)
@@ -87,14 +87,14 @@ def middle_name() -> str:
             time.sleep(3)
             continue
 
-    return name
+    return name.title()
 
 
 def last_name() -> str:
     while True:
         print("\nInput your Last Name:")
         print("~~~~~~~~~~~~~~~~~~~~~")
-        name = input(">>> ").strip().title()
+        name = input(">>> ").strip()
 
         if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
             name = match.group(1) + match.group(2)
@@ -107,14 +107,14 @@ def last_name() -> str:
             time.sleep(3)
             continue
 
-    return name
+    return name.title()
 
 
 def gender() -> str:
     while True:
         print("\nInput your Gender:")
         print("~~~~~~~~~~~~~~~~~~~~~")
-        _gender = input(">>> ").strip().title()
+        _gender = input(">>> ").strip()
 
         if not re.search('^(male|female)$', _gender, re.IGNORECASE):
             print('\n*ERROR*')
@@ -124,15 +124,15 @@ def gender() -> str:
         else:
             break
 
-    return _gender
+    return _gender.title()
 
 
 def address() -> str:
     print("\nInput your Address:")
     print("~~~~~~~~~~~~~~~~~~~")
-    _address = input(">>> ").strip().title()
+    _address = input(">>> ").strip()
 
-    return _address
+    return _address.title()
 
 
 def date_of_birth() -> str:
@@ -246,7 +246,7 @@ def e_mail() -> str:
     while True:
         print("\nInput your E-mail:")
         print("~~~~~~~~~~~~~~~~~~")
-        email = input(">>> ").strip().lower()
+        email = input(">>> ").strip()
 
         if get_data('email', email):
             print('\n*ERROR*')
@@ -262,7 +262,7 @@ def e_mail() -> str:
             time.sleep(3)
             continue
 
-    return email
+    return email.lower()
 
 
 def phone_number() -> str:
@@ -341,8 +341,7 @@ def register_bvn():
                            phone_number=_phoneNumber, created_date=dt.datetime.now(), date_of_birth=_dob,
                            bvn_status='active', bvn_number=created_bvn, last_updated=dt.datetime.now())
 
-        # register.register_bvn()
-        print(register)
+        register.register_bvn()
 
         countdown_timer('BVN')
         time.sleep(1)

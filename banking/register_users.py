@@ -443,7 +443,7 @@ def register_account():
         account_number = str(random.randint(100000000000, 999999999999))
 
     time.sleep(1)
-    
+
     account_type()
 
     time.sleep(1)

@@ -1,3 +1,5 @@
+from typing import Tuple, Any
+
 import pymysql as sql
 
 
@@ -46,10 +48,9 @@ class DataBase:
 
         cls.db_cursor.execute(query)
         cls.commit()
-        cls.disconnect()
 
     @classmethod
-    def fetch_data(cls, query) -> tuple[tuple]:
+    def fetch_data(cls, query) -> tuple[tuple[Any, ...], ...]:
         """Method to retrieve data from the database in response to a query, returning the results in a structured
         format such as lists, dictionaries, or objects."""
 

@@ -2,7 +2,8 @@ import datetime as dt
 import os
 import re
 import time
-from banking import register_users
+from banking.register_users import register_bvn_account
+from banking.login_panel import login
 
 
 def clear():
@@ -19,6 +20,16 @@ def header():
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
 
+def new_user():
+    header()
+    print('Message from the CUSTOMER SERVICE OFFICER:::')
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    print("'You will need to Create your BVN first, then Create your Bank Account'. ")
+    time.sleep(3)
+    header()
+    register_bvn_account()
+
+
 def main():
     while True:
         header()
@@ -31,23 +42,12 @@ def main():
         _input = input("")
 
         if re.search('^1$', _input):
-            header()
-            print('Message from the CUSTOMER SERVICE OFFICER:::')
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-            print("'You will need to Create your BVN first, then Create your Bank Account'. ")
-            print("\n---Let's Create your BVN---")
-            time.sleep(3)
-            header()
-            register_users.register_bvn()
-            time.sleep(5)
-            header()
-            register_users.register_account()
+            new_user()
             break
         elif re.search('^2$', _input):
-            print('hi')
+            login()
             break
         else:
-            print('Error')
             continue
 
 

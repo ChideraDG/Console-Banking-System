@@ -5,6 +5,7 @@ import time
 import random
 from bank_processes.bvn import BVN
 from bank_processes.database import DataBase
+from bank_processes.user import User
 
 
 def clear():
@@ -58,7 +59,7 @@ def first_name() -> str:
 
         if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
             name = match.group(1) + match.group(2)
-        print(name)
+
         if re.search('^[a-z-]+$', name, re.IGNORECASE):
             break
         else:
@@ -288,21 +289,21 @@ def phone_number() -> str:
     return phoneNumber
 
 
-def account_type():
+def account_type() -> str:
     while True:
         print("What is your desired Account Type:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print('1 -> Saving \n2 -> Current \n3 -> Fixed Deposit')
-        _input = input('>>> ')
+        accountType = input('>>> ')
 
-        if re.search('^(1|Saving)$', _input, re.IGNORECASE):
-            _input = 'Savings'
+        if re.search('^(1|Saving)$', accountType, re.IGNORECASE):
+            accountType = 'Savings'
             break
-        elif re.search('^(2|Current)$', _input, re.IGNORECASE):
-            _input = 'Current'
+        elif re.search('^(2|Current)$', accountType, re.IGNORECASE):
+            accountType = 'Current'
             break
-        elif re.search('^(3|Fixed Deposit)$', _input, re.IGNORECASE):
-            _input = 'Fixed Deposit'
+        elif re.search('^(3|Fixed Deposit)$', accountType, re.IGNORECASE):
+            accountType = 'Fixed Deposit'
             break
         else:
             print('\n*ERROR*')
@@ -310,19 +311,21 @@ def account_type():
             time.sleep(2)
             continue
 
+    return accountType.lower()
 
-def account_password():
+
+def account_password() -> str:
     while True:
         print("\nEnter a new Bank Application Password:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
         print("First Input:")
-        first_input = input(">>> ").strip()
+        accountPassword = input(">>> ").strip()
 
-        if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", first_input):
+        if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", accountPassword):
             while True:
                 print("\nSecond Input:")
                 second_input = input(">>> ").strip()
-                if first_input == second_input:
+                if accountPassword == second_input:
                     break
                 else:
                     print('\n*ERROR*')
@@ -337,10 +340,50 @@ def account_password():
             time.sleep(2)
             continue
 
+    return accountPassword
 
-def register_bvn():
+
+def transaction_pin():
+    while True:
+        print("\nEnter your new Transaction Pin:")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+        print("First Input:")
+        transactionPin = input(">>> ").strip()
+
+        if re.search(r"^\d{4}$", transactionPin):
+            while True:
+                print("\nSecond Input:")
+                second_input = input(">>> ").strip()
+                if transactionPin == second_input:
+                    break
+                else:
+                    print('\n*ERROR*')
+                    print("-> Passwords are not the same")
+                    time.sleep(2)
+                    continue
+            break
+        else:
+            print('\n*ERROR*')
+            print("-> Transaction Pin must be only 4 digits.")
+            time.sleep(2)
+            continue
+
+    return transactionPin
+
+
+def register_bvn_account():
     """Registration Form"""
 
+    _firstname = None
+    _middleName = None
+    _lastname = None
+    _gender = None
+    _address = None
+    _dob = None
+    _email = None
+    _phoneNumber = None
+
+    # BVN Form
     try:
         print("Bank Verification Number Creation".upper())
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -354,7 +397,7 @@ def register_bvn():
 
         time.sleep(1)
 
-        _middlename = middle_name()
+        _middleName = middle_name()
 
         time.sleep(1)
 
@@ -384,12 +427,12 @@ def register_bvn():
         while get_data('bvn_number', 0, created_bvn):
             created_bvn = str(random.randint(100000000000, 999999999999))
 
-        register = BVN(first_name=_firstname.title(), middle_name=_middlename.title(), last_name=_lastname.title(),
+        register = BVN(first_name=_firstname.title(), middle_name=_middleName.title(), last_name=_lastname.title(),
                        gender=_gender.title(), address=_address.title(), email=_email.lower(),
                        phone_number=_phoneNumber, created_date=dt.datetime.now(), date_of_birth=_dob,
                        bvn_status='active', bvn_number=created_bvn, last_updated=dt.datetime.now())
 
-        # register.register_bvn()
+        register.register_bvn()
 
         countdown_timer('BVN')
         time.sleep(1)
@@ -402,28 +445,55 @@ def register_bvn():
     except Exception:
         print(f"\n*ERROR*\nError Registering BVN")
 
-
-def register_account():
-    """Account Form"""
-
+    # Bank Account Form
     try:
+        time.sleep(5)
+        header()
+
         print("Bank Account Details Creation".upper())
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
         print("\nInstruction: Carefully fill in your details")
         print("==========================================\n")
 
-        account_number = str(random.randint(1000000000, 9999999999))
-        while get_data('account_number', 1, account_number):
-            account_number = str(random.randint(100000000000, 999999999999))
+        time.sleep(1)
+
+        _accountType = account_type()
 
         time.sleep(1)
 
-        account_type()
+        _accountPassword = account_password()
 
         time.sleep(1)
 
-        account_password()
+        _transactionPin = transaction_pin()
+
+        time.sleep(1)
+
+        _accountNumber = str(random.randint(1000000000, 9999999999))
+        while get_data('account_number', 1, _accountNumber):
+            _accountNumber = str(random.randint(100000000000, 999999999999))
+
+        _username = _firstname + _middleName
+        while get_data('username', 1, _username):
+            _username = _firstname + _middleName + str(random.randint(1, 1000))
+
+        register = User(username=_firstname + _middleName, password=_accountPassword, first_name=_firstname,
+                        middle_name=_middleName, last_name=_lastname, gender=_gender, email=_email,
+                        phone_number=_phoneNumber, address=_address, date_of_birth=_dob, account_number=_accountNumber,
+                        account_type=_accountType, account_balance=0.0, account_status='active',
+                        transaction_pin=_transactionPin, linked_accounts=[], last_login_timestamp=dt.datetime.now(),
+                        account_open_date=dt.datetime.now())
+
+        register.register()
+
+        countdown_timer('Bank Account')
+        time.sleep(1)
+        header()
+
+        print("\nBank Account Successfully Created.")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(f"\nUser: {register.last_name} {register.first_name} {register.middle_name}")
+        print(f"BVN NUMBER: {register.account_number}")
     except Exception:
-        print(f"\n*ERROR*\nError Registering Account Details")
-        
+        print(f"\n*ERROR*\nError Registering Bank Account")

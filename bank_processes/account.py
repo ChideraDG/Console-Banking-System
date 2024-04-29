@@ -1,23 +1,36 @@
-class Account:
+from bank_processes.user import User
+
+
+class Account(User):
     currency: str = 'Naira'  # Currency in which the account is denominated.
 
-    def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None,
-                 account_balance: float = 0.0, account_status: str = None, linked_accounts: str = None,
-                 account_open_date: str = None, account_close_date: str = None, transactions: str = None,
-                 transaction_limit: str = None, account_holder_information: str = None,
-                 overdraft_protection: str = None):
+    def __init__(self, account_number: str, account_type: str, account_holder: str, account_balance: float,
+                 transaction_pin: str, account_status: str, account_tier: str, transaction_limit: int,
+                 overdraft_protection: str):
         self.account_number = account_number  # Unique identifier for the account.
         self.account_type = account_type  # Type of account (e.g., savings, checking, credit card).
         self.account_holder = account_holder  # User or users associated with the account.
         self.account_balance = account_balance  # Current balance of the account.
-        self.transactions = transactions  # List of transactions associated with the account, including transaction type, amount, date, and counterparty information.
+        self.transaction_pin = transaction_pin  # Pin used for transaction authentication.
         self.account_status = account_status  # Status of the account (e.g., active, closed, frozen).
         self.overdraft_protection = overdraft_protection  # Indicator of whether the account has overdraft protection enabled.
-        self.linked_accounts = linked_accounts  # Information about any linked accounts or relationships with other accounts or users.
-        self.account_open_date = account_open_date  # Date when the account was opened.
-        self.account_close_date = account_close_date  # Date when the account was closed (if applicable).
+        self.account_tier = account_tier  # Current level of the account
         self.transaction_limit = transaction_limit  # Limits on the number or amount of transactions allowed within a certain period.
-        self.account_holder_information = account_holder_information  # Additional information about the account holder(s).
+
+    def register(self):
+        """Method to register a new user with the bank app, including capturing and validating personal information
+        such as name, address, contact details, and identification documents."""
+
+        query = f"""
+                insert into {self.database.db_tables[3]}
+                (account_number, account_type, account_holder, account_balance, transaction_pin, account_status, 
+                account_tier, overdraft_protection, transaction_limit)
+                values('{self.account_number}', '{self.account_type}', '{self.account_holder}', 
+                {self.account_balance}, '{self.transaction_pin}', '{self.account_status}', '{self.account_tier}',
+                '{self.overdraft_protection}', '{self.transaction_limit}')
+                """
+
+        self.database.query(query)
 
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
@@ -68,6 +81,11 @@ class Savings(Account):
     minimum_balance: float = 500.0  # Minimum balance required to avoid fees or maintain the account.
     account_fees: float = 100.0  # fees associated with the account, such as monthly maintenance fees.
 
+    def __init__(self, account_number: str, account_type: str, account_holder: str, account_balance: float,
+                 transaction_pin: str, account_status: str, transaction_limit: str, overdraft_protection: str):
+        super().__init__(account_number, account_type, account_holder, account_balance, transaction_pin, account_status,
+                         transaction_limit, overdraft_protection)
+
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
         accordingly."""
@@ -88,6 +106,11 @@ class Current(Account):
     minimum_balance: float = 5000.0
     account_fees: float = 1000.0  # fees associated with the account, such as monthly maintenance fees.
 
+    def __init__(self, account_number: str, account_type: str, account_holder: str, account_balance: float,
+                 transaction_pin: str, account_status: str, transaction_limit: str, overdraft_protection: str):
+        super().__init__(account_number, account_type, account_holder, account_balance, transaction_pin, account_status,
+                         transaction_limit, overdraft_protection)
+
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
         accordingly."""
@@ -105,8 +128,11 @@ class Current(Account):
 
 
 class FixedDeposit(Account):
-    def __init__(self, interest_rate: float = 0.0, interest_earned: float = 0.0):
-        super().__init__()
+    def __init__(self, account_number: str, account_type: str, account_holder: str, account_balance: float,
+                 transaction_pin: str, account_status: str, transaction_limit: str, overdraft_protection: str,
+                 interest_rate: float = 0.0, interest_earned: float = 0.0):
+        super().__init__(account_number, account_type, account_holder, account_balance, transaction_pin, account_status,
+                         transaction_limit, overdraft_protection)
         self.interest_rate = interest_rate  # Interest rate applied to the account balance (if applicable).
         self.interest_earned = interest_earned  # Total amount of interest earned on the account balance.
 

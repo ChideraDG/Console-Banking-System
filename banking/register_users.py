@@ -6,6 +6,7 @@ import random
 from bank_processes.bvn import BVN
 from bank_processes.database import DataBase
 from bank_processes.user import User
+from bank_processes.account import Account
 
 
 def clear():
@@ -460,6 +461,14 @@ def register_bvn_account():
 
         _accountType = account_type()
 
+        account_balance = 0.0
+        if _accountType.lower() == 'savings':
+            account_balance = 500.50
+        elif _accountType.lower() == 'current':
+            account_balance = 5000.50
+        elif _accountType.lower() == 'fixed deposit':
+            account_balance = 10000.50
+
         time.sleep(1)
 
         _accountPassword = account_password()
@@ -471,21 +480,28 @@ def register_bvn_account():
         time.sleep(1)
 
         _accountNumber = str(random.randint(1000000000, 9999999999))
-        while get_data('account_number', 1, _accountNumber):
+        while get_data('account_number', 3, _accountNumber):
             _accountNumber = str(random.randint(100000000000, 999999999999))
 
         _username = _firstname + _middleName
         while get_data('username', 1, _username):
             _username = _firstname + _middleName + str(random.randint(1, 1000))
 
-        register = User(username=_firstname + _middleName, password=_accountPassword, first_name=_firstname,
-                        middle_name=_middleName, last_name=_lastname, gender=_gender, email=_email,
-                        phone_number=_phoneNumber, address=_address, date_of_birth=_dob, account_number=_accountNumber,
-                        account_type=_accountType, account_balance=0.0, account_status='active',
-                        transaction_pin=_transactionPin, linked_accounts=[], last_login_timestamp=dt.datetime.now(),
-                        account_open_date=dt.datetime.now())
+        registerUser = User(username=_username, password=_accountPassword, first_name=_firstname,
+                            middle_name=_middleName, last_name=_lastname, gender=_gender, email=_email,
+                            phone_number=_phoneNumber, address=_address, date_of_birth=_dob,
+                            linked_accounts=[], last_login_timestamp=dt.datetime.now(),
+                            account_open_date=dt.datetime.now())
 
-        register.register()
+        registerUser.register()
+
+        registerAccount = Account(account_number=_accountNumber, account_type=_accountType,
+                                  account_holder=f'{_lastname} + {_firstname} + {_middleName}',
+                                  account_balance=account_balance, transaction_pin=_transactionPin,
+                                  account_status='active', overdraft_protection='No', account_tier='Tier 1',
+                                  transaction_limit=10)
+
+        registerAccount.register()
 
         countdown_timer('Bank Account')
         time.sleep(1)
@@ -493,7 +509,7 @@ def register_bvn_account():
 
         print("\nBank Account Successfully Created.")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(f"\nUser: {register.last_name} {register.first_name} {register.middle_name}")
-        print(f"BVN NUMBER: {register.account_number}")
+        print(f"\nUser: {registerUser.last_name} {registerUser.first_name} {registerUser.middle_name}")
+        print(f"BVN NUMBER: {registerAccount.account_number}")
     except Exception:
         print(f"\n*ERROR*\nError Registering Bank Account")

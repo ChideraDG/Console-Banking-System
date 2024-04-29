@@ -7,6 +7,7 @@ class Account(User):
     def __init__(self, account_number: str, account_type: str, account_holder: str, account_balance: float,
                  transaction_pin: str, account_status: str, account_tier: str, transaction_limit: int,
                  overdraft_protection: str):
+        super().__init__()
         self.account_number = account_number  # Unique identifier for the account.
         self.account_type = account_type  # Type of account (e.g., savings, checking, credit card).
         self.account_holder = account_holder  # User or users associated with the account.

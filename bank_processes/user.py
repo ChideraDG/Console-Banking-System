@@ -1,6 +1,6 @@
 import datetime
 from bank_processes.database import DataBase
-from bank_processes.account import Account
+# from bank_processes.account import Account
 
 
 class User:

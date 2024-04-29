@@ -322,7 +322,7 @@ def account_password() -> str:
         print("First Input:")
         accountPassword = input(">>> ").strip()
 
-        if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", accountPassword):
+        if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$.#!%*?&])[A-Za-z\d@$!#%*?.&]{8,}$", accountPassword):
             while True:
                 print("\nSecond Input:")
                 second_input = input(">>> ").strip()
@@ -496,7 +496,7 @@ def register_bvn_account():
         registerUser.register()
 
         registerAccount = Account(account_number=_accountNumber, account_type=_accountType,
-                                  account_holder=f'{_lastname} + {_firstname} + {_middleName}',
+                                  account_holder=f'{_lastname} {_firstname} {_middleName}',
                                   account_balance=account_balance, transaction_pin=_transactionPin,
                                   account_status='active', overdraft_protection='No', account_tier='Tier 1',
                                   transaction_limit=10)
@@ -510,6 +510,6 @@ def register_bvn_account():
         print("\nBank Account Successfully Created.")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print(f"\nUser: {registerUser.last_name} {registerUser.first_name} {registerUser.middle_name}")
-        print(f"BVN NUMBER: {registerAccount.account_number}")
+        print(f"ACCOUNT NUMBER: {registerAccount.account_number}")
     except Exception:
         print(f"\n*ERROR*\nError Registering Bank Account")

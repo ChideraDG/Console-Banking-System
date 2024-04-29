@@ -2,6 +2,7 @@ import datetime as dt
 import os
 import re
 import time
+from bank_processes.authentication import Authentication
 
 
 def clear():
@@ -19,4 +20,9 @@ def header():
 
 
 def login():
-    pass
+    header()
+
+    time.sleep(0)
+    print("ENTER YOUR USERNAME:")
+    print("~~~~~~~~~~~~~~~~~~~~\n")
+

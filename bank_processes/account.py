@@ -68,10 +68,40 @@ class Savings(Account):
     minimum_balance: float = 500.0  # Minimum balance required to avoid fees or maintain the account.
     account_fees: float = 100.0  # fees associated with the account, such as monthly maintenance fees.
 
+    def deposit(self):
+        """Method to allow users to deposit money into their account. It should update the account balance
+        accordingly."""
+        pass
+
+    def withdraw(self):
+        """Method to allow users to withdraw money from their account. It should update the account balance and handle
+        cases where the withdrawal amount exceeds the available balance."""
+        pass
+
+    def transfer(self):
+        """Method to facilitate transferring funds between accounts. It should handle transferring money from one
+        account to another, updating the balances of both accounts involved."""
+        pass
+
 
 class Current(Account):
     minimum_balance: float = 5000.0
     account_fees: float = 1000.0  # fees associated with the account, such as monthly maintenance fees.
+
+    def deposit(self):
+        """Method to allow users to deposit money into their account. It should update the account balance
+        accordingly."""
+        pass
+
+    def withdraw(self):
+        """Method to allow users to withdraw money from their account. It should update the account balance and handle
+        cases where the withdrawal amount exceeds the available balance."""
+        pass
+
+    def transfer(self):
+        """Method to facilitate transferring funds between accounts. It should handle transferring money from one
+        account to another, updating the balances of both accounts involved."""
+        pass
 
 
 class FixedDeposit(Account):
@@ -79,3 +109,13 @@ class FixedDeposit(Account):
         super().__init__()
         self.interest_rate = interest_rate  # Interest rate applied to the account balance (if applicable).
         self.interest_earned = interest_earned  # Total amount of interest earned on the account balance.
+
+    def deposit(self):
+        """Method to allow users to deposit money into their account. It should update the account balance
+        accordingly."""
+        pass
+
+    def withdraw(self):
+        """Method to allow users to withdraw money from their account. It should update the account balance and handle
+        cases where the withdrawal amount exceeds the available balance."""
+        pass

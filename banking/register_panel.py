@@ -24,7 +24,7 @@ def header():
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
 
-def get_data(get_column: str, table_number: int, _object: str) -> bool:
+def verify_data(get_column: str, table_number: int, _object: str) -> bool:
     """Validates unique values against the database to check if it exists before or not"""
     db: DataBase = DataBase()
 
@@ -250,7 +250,7 @@ def e_mail() -> str:
         print("~~~~~~~~~~~~~~~~~~")
         email = input(">>> ").strip()
 
-        if get_data('email', 0, email):
+        if verify_data('email', 0, email):
             print('\n*ERROR*')
             print("-> Email already exist")
             time.sleep(2)
@@ -273,7 +273,7 @@ def phone_number() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
         phoneNumber = input(">>> ").strip()
 
-        if get_data('phone_number', 0, phoneNumber):
+        if verify_data('phone_number', 0, phoneNumber):
             print('\n*ERROR*')
             print("-> Phone Number already exist")
             time.sleep(3)
@@ -375,6 +375,13 @@ def transaction_pin():
 def register_bvn_account():
     """Registration Form"""
 
+    header()
+    print('Message from the CUSTOMER SERVICE OFFICER:::')
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    print("'You will need to Create your BVN first, then Create your Bank Account'. ")
+    time.sleep(3)
+    header()
+
     _firstname = None
     _middleName = None
     _lastname = None
@@ -425,7 +432,7 @@ def register_bvn_account():
         _phoneNumber = phone_number()
 
         created_bvn = str(random.randint(100000000000, 999999999999))
-        while get_data('bvn_number', 0, created_bvn):
+        while verify_data('bvn_number', 0, created_bvn):
             created_bvn = str(random.randint(100000000000, 999999999999))
 
         register = BVN(first_name=_firstname.title(), middle_name=_middleName.title(), last_name=_lastname.title(),
@@ -480,11 +487,11 @@ def register_bvn_account():
         time.sleep(1)
 
         _accountNumber = str(random.randint(1000000000, 9999999999))
-        while get_data('account_number', 3, _accountNumber):
+        while verify_data('account_number', 3, _accountNumber):
             _accountNumber = str(random.randint(100000000000, 999999999999))
 
         _username = _firstname + _middleName
-        while get_data('username', 1, _username):
+        while verify_data('username', 1, _username):
             _username = _firstname + _middleName + str(random.randint(1, 1000))
 
         registerUser = User(username=_username, password=_accountPassword, first_name=_firstname,

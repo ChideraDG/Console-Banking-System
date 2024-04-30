@@ -1,6 +1,6 @@
 import datetime
 import random
-from banking.register_panel import get_data
+from banking.register_panel import verify_data
 
 
 class Transaction:
@@ -56,7 +56,7 @@ class Transaction:
                           \t\t\tBankApp|{self.sender_acct_num}'''
             option_transfer = f'''Payment Method         \t\tBalance'''
 
-            while get_data('transaction_id', self.transaction_id):
+            while verify_data('transaction_id', self.transaction_id):
                 self.transaction_id = {random.randint(100000000000000000000000000000,
                                                       999999999999999999999999999999)}
 

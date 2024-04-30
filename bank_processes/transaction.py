@@ -1,6 +1,6 @@
 import datetime
 import random
-from banking.register_users import get_data
+from banking.register_panel import get_data
 
 
 class Transaction:

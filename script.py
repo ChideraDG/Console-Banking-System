@@ -2,7 +2,7 @@ import datetime as dt
 import os
 import re
 import time
-from banking.register_users import register_bvn_account
+from banking.register_panel import register_bvn_account
 from banking.login_panel import login
 
 

@@ -1,28 +1,45 @@
-import datetime as dt
-import os
+# import datetime as dt
+# import os
 import re
 import time
-from bank_processes.authentication import Authentication
+from banking.script import header, go_back
+from bank_processes.authentication import Authentication as auth
 
 
-def clear():
-    """Helps Clear the Output Console"""
-    os.system('clear')
+def username():
+    print("\nENTER YOUR USERNAME:")
+    print("~~~~~~~~~~~~~~~~~~~~")
+    _username = input(">>> ")
+
+    if re.search('^1$', _username):
+        return _username
+    elif re.search('^2$', _username):
+        return _username
+
+    if auth.user_login():
+        print('hi')
+
+    return _username
 
 
-def header():
-    clear()
-    today_date = dt.datetime.now().date()
-    time_now = dt.datetime.now().time()
-
-    print(f"BETA BANKING {today_date} {time_now}")
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+def password():
+    print("\nENTER YOUR PASSWORD:")
+    print("~~~~~~~~~~~~~~~~~~~~")
 
 
 def login():
     header()
 
-    time.sleep(0)
-    print("ENTER YOUR USERNAME:")
-    print("~~~~~~~~~~~~~~~~~~~~\n")
+    print("\nGo Back? Press 1")
+    print("----------------")
+    print("Forgot Username? Press 2")
+    print("------------------------")
+    time.sleep(1)
+    _username = username()
+    if re.search('^1$', _username):
+        del _username
+        go_back('script')
+    elif re.search('^2$', _username):
+        print()
+
 

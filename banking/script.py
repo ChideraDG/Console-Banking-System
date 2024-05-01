@@ -1,9 +1,6 @@
 import datetime as dt
 import os
 import re
-import time
-from banking.register_panel import register_bvn_account
-from banking.login_panel import login
 
 
 def clear():
@@ -20,27 +17,30 @@ def header():
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
 
-def main():
+def go_back(return_place):
+    if return_place == 'script':
+        script()
+
+
+def script():
+    from banking.login_panel import login
+    from banking.register_panel import register_bvn_account
     while True:
+
         header()
 
         print(' ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~')
         print("|  1. New User  |  2. Existing User  |")
         print(" ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~")
 
-        print(">>> ", end="")
-        _input = input("")
+        user_input = input(">>> ")
 
-        if re.search('^1$', _input):
+        if re.search('^1$', user_input):
             register_bvn_account()
             login()
             break
-        elif re.search('^2$', _input):
+        elif re.search('^2$', user_input):
             login()
             break
         else:
             continue
-
-
-if __name__ == '__main__':
-    main()

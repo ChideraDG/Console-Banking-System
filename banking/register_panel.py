@@ -1,44 +1,12 @@
 import datetime as dt
-import os
 import re
 import time
 import random
 from bank_processes.bvn import BVN
-from bank_processes.database import DataBase
 from bank_processes.user import User
 from bank_processes.account import Account
-
-
-def clear():
-    """Helps Clear the Output Console"""
-    os.system('clear')
-
-
-def header():
-    """Clears the output and adds the bank header"""
-    clear()
-    today_date = dt.datetime.now().date()
-    time_now = dt.datetime.now().time()
-
-    print(f"BETA BANKING {today_date} {time_now}")
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-
-
-def verify_data(get_column: str, table_number: int, _object: str) -> bool:
-    """Validates unique values against the database to check if it exists before or not"""
-    db: DataBase = DataBase()
-
-    query = (f"""
-    select {get_column} from {db.db_tables[table_number]}
-    """)
-
-    datas: tuple = db.fetch_data(query)
-
-    for datas in datas:
-        if (_object,) == datas:
-            return True
-
-    return False
+from bank_processes.authentication import verify_data
+from banking.script import header
 
 
 def countdown_timer(register):

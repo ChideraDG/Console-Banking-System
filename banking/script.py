@@ -1,6 +1,7 @@
 import datetime as dt
 import os
 import re
+import time
 
 
 def clear():
@@ -37,6 +38,7 @@ def script():
 
         if re.search('^1$', user_input):
             register_bvn_account()
+            time.sleep(5)
             login()
             break
         elif re.search('^2$', user_input):

@@ -21,9 +21,33 @@ def verify_data(get_column: str, table_number: int, _object: str) -> bool:
     return False
 
 
+def check_account_status(username: str) -> bool:
+    """Checks the status of an Account."""
+    db: DataBase = DataBase()
+
+    query = (f"""
+    select id from {db.db_tables[1]} where username = '{username}'
+    """)
+
+    datas: tuple = db.fetch_data(query)
+
+    for data in datas:
+        for id_num in data:
+            query = (f"""
+            select account_status from {db.db_tables[3]} where account_id = {id_num}
+            """)
+            datas: tuple = db.fetch_data(query)
+
+            for status in datas:
+                if ('active',) == status:
+                    return True
+
+    return False
+
+
 class Authentication:
 
-    def __init__(self, username: str = None, password: str = None, failed_login_attempts: int = 0,
+    def __init__(self, username: str = 'MAN', password: str = None, failed_login_attempts: int = 0,
                  auth_outcome: str = None, login_time_stamp: datetime = datetime.now().time(),
                  session_token: str = str(random.randint(100000, 999999))):
         self.__username = username  # User's name for authentication.
@@ -39,25 +63,22 @@ class Authentication:
         db: DataBase = DataBase()
 
         query = (f"""
-            select username from {db.db_tables[1]}
+            select password from {db.db_tables[1]} where username = '{self.__username}'
             """)
 
         datas: tuple = db.fetch_data(query)
-
         for data in datas:
-            if (f'{self.__username}',) == data:
-                return True
-
-        return False
+            for password in data:
+                self.password = password
 
     def user_logout(self):
         """Method to log out the currently logged-in user from the bank app, terminating their session and clearing
         any authentication tokens."""
         pass
 
-    def password_validation(self):
-        """Method to validate user passwords during registration and login, enforcing password strength requirements
-        and checking against common password dictionaries."""
+    def password_validation(self) -> bool:
+        """Method to validate user passwords during registration and login; and checking against common password
+        dictionaries."""
         db: DataBase = DataBase()
 
         query = (f"""
@@ -105,7 +126,7 @@ class Authentication:
 
     @password.setter
     def password(self, pass_word):
-        self.__username = pass_word
+        self.__password = pass_word
 
     @password.deleter
     def password(self):
@@ -134,4 +155,3 @@ class Authentication:
     @auth_outcome.deleter
     def auth_outcome(self):
         del self.__auth_outcome
-

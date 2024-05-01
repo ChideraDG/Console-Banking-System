@@ -473,7 +473,12 @@ def register_bvn_account():
         while verify_data('username', 1, _username):
             _username = _firstname + _middleName + str(random.randint(1, 1000))
 
-        registerUser = User(username=_username, password=_accountPassword, first_name=_firstname,
+        if '-' in _username:
+            username_list = list(_username)
+            del username_list[username_list.index('-')]
+            _username = ''.join(username_list)
+
+        registerUser = User(username=_username.upper(), password=_accountPassword, first_name=_firstname,
                             middle_name=_middleName, last_name=_lastname, gender=_gender, email=_email,
                             phone_number=_phoneNumber, address=_address, date_of_birth=_dob,
                             linked_accounts=[], last_login_timestamp=dt.datetime.now(),

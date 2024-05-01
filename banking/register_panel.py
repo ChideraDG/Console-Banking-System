@@ -53,6 +53,7 @@ def countdown_timer(register):
 
 
 def first_name() -> str:
+    """Gets the first name of the User."""
     while True:
         print("\nInput your First Name:")
         print("~~~~~~~~~~~~~~~~~~~~~~")
@@ -73,6 +74,7 @@ def first_name() -> str:
 
 
 def middle_name() -> str:
+    """Gets the middle name of the User."""
     while True:
         print("\nInput your Middle Name:")
         print("~~~~~~~~~~~~~~~~~~~~~~~")
@@ -93,6 +95,7 @@ def middle_name() -> str:
 
 
 def last_name() -> str:
+    """Gets the last name of the User."""
     while True:
         print("\nInput your Last Name:")
         print("~~~~~~~~~~~~~~~~~~~~~")
@@ -113,6 +116,7 @@ def last_name() -> str:
 
 
 def gender() -> str:
+    """Gets the gender of the User."""
     while True:
         print("\nInput your Gender:")
         print("~~~~~~~~~~~~~~~~~~~~~")
@@ -130,6 +134,7 @@ def gender() -> str:
 
 
 def address() -> str:
+    """Gets the address of the User."""
     print("\nInput your Address:")
     print("~~~~~~~~~~~~~~~~~~~")
     _address = input(">>> ").strip()
@@ -138,6 +143,7 @@ def address() -> str:
 
 
 def date_of_birth() -> str:
+    """Gets the date of birth of the User."""
     max_year = 2006
     month = 12
     month_name = 'December'
@@ -245,6 +251,7 @@ def date_of_birth() -> str:
 
 
 def e_mail() -> str:
+    """Gets the E-mail of the User."""
     while True:
         print("\nInput your E-mail:")
         print("~~~~~~~~~~~~~~~~~~")
@@ -268,6 +275,7 @@ def e_mail() -> str:
 
 
 def phone_number() -> str:
+    """Gets the phone number of the User."""
     while True:
         print("\nInput your Phone Number:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -291,6 +299,7 @@ def phone_number() -> str:
 
 
 def account_type() -> str:
+    """Gets the account type of the User."""
     while True:
         print("What is your desired Account Type:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -316,6 +325,7 @@ def account_type() -> str:
 
 
 def account_password() -> str:
+    """Gets the account password of the User."""
     while True:
         print("\nEnter a new Bank Application Password:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
@@ -345,6 +355,7 @@ def account_password() -> str:
 
 
 def transaction_pin():
+    """Gets the transaction pin of the User."""
     while True:
         print("\nEnter your new Transaction Pin:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")

@@ -1,5 +1,6 @@
 from datetime import datetime
 import random
+from typing import Any, Tuple
 
 from bank_processes.database import DataBase
 
@@ -21,7 +22,7 @@ def verify_data(get_column: str, table_number: int, _object: str) -> bool:
     return False
 
 
-def check_account_status(username: str) -> bool:
+def check_account_status(username: str) -> tuple[bool, Any | None, Any | None] | tuple[bool, Any | None]:
     """Checks the status of an Account."""
     db: DataBase = DataBase()
 
@@ -31,18 +32,25 @@ def check_account_status(username: str) -> bool:
 
     datas: tuple = db.fetch_data(query)
 
+    id_num = None
     for data in datas:
-        for id_num in data:
-            query = (f"""
-            select account_status from {db.db_tables[3]} where account_id = {id_num}
-            """)
-            datas: tuple = db.fetch_data(query)
+        for number in data:
+            id_num = number
 
-            for status in datas:
-                if ('active',) == status:
-                    return True
+    account_status = None
+    query = (f"""
+    select account_status from {db.db_tables[3]} where account_id = {id_num}
+    """)
 
-    return False
+    datas: tuple = db.fetch_data(query)
+
+    for status in datas:
+        for data in status:
+            account_status = data
+        if ('active',) == status:
+            return True, account_status, id_num
+
+    return False, account_status, id_num
 
 
 class Authentication:
@@ -82,8 +90,8 @@ class Authentication:
         db: DataBase = DataBase()
 
         query = (f"""
-            select password from {db.db_tables[1]} where username = {self.__username}
-            """)
+        select password from {db.db_tables[1]} where username = '{self.__username}'
+        """)
 
         datas: tuple = db.fetch_data(query)
 
@@ -106,7 +114,14 @@ class Authentication:
     def account_lockout(self):
         """Method to temporarily lock user accounts after multiple failed login attempts, preventing brute force
         attacks and unauthorized access."""
-        pass
+        db: DataBase = DataBase()
+
+        query = (f"""
+        update {db.db_tables[3]} set account_status = 'suspended' where 
+        account_id = {check_account_status(self.username)[2]}
+        """)
+
+        db.query(query)
 
     @property
     def username(self):

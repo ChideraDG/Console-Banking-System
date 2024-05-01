@@ -20,7 +20,17 @@ def username():
         elif re.search('^2$', _username):
             return _username
 
-        if verify_data('username', 1, _username) and check_account_status(_username):
+        if check_account_status(_username)[1] == 'suspended':
+            print("\nAccount is Suspended.\nReset your Password.")
+            time.sleep(3)
+            go_back('script')
+
+        if check_account_status(_username)[1] == 'blocked':
+            print("\nAccount is Blocked.\nMeet the admin to unblock your account.")
+            time.sleep(3)
+            go_back('script')
+
+        if verify_data('username', 1, _username) and check_account_status(_username)[0]:
             auth.username = _username
             auth.user_login()
             return _username
@@ -31,7 +41,7 @@ def username():
 
 
 def password():
-    while auth.login_attempts <= 3:
+    while auth.login_attempts < 3:
         print("\nENTER YOUR PASSWORD:")
         print("~~~~~~~~~~~~~~~~~~~~")
         _password = input(">>> ")
@@ -41,15 +51,21 @@ def password():
         elif re.search('^2$', _password):
             return _password
 
+        auth.password = _password
         if auth.password_validation():
             return _password
         else:
             auth.login_attempts = auth.login_attempts + 1
-            print("\n*ERROR*\nWrong Password.")
-            print(3 - auth.login_attempts, 'attempts remaining.\nAccount will be suspended after exhausting attempts')
-            print()
-            time.sleep(3)
-            continue
+            if auth.login_attempts == 3:
+                print("\n*ERROR*\nWrong Password.")
+                print("Account has being Suspended. Reset your password.")
+                time.sleep(3)
+                break
+            else:
+                print("\n*ERROR*\nWrong Password.")
+                print(3-auth.login_attempts, 'attempts remaining.\nAccount will be suspended after exhausting attempts')
+                time.sleep(3)
+                continue
 
     auth.account_lockout()
 

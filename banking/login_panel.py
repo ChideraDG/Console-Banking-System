@@ -82,7 +82,7 @@ def forgot_username():
 
         if verify_data('phone_number', 1, _phoneNumber):
             _username = get_username_from_database(_phoneNumber, phone_number=True)
-
+            _password = password()
         else:
             print("\n*ERROR*\nPhone Number doesn't exist.")
             time.sleep(3)

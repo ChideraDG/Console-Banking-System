@@ -1,5 +1,6 @@
 import datetime
 import random
+from bank_processes.account import Savings
 from banking.register_panel import verify_data
 
 
@@ -30,6 +31,7 @@ class Transaction:
         self.__sender_name = sender_name  # Person in question doing the transaction
         self.__receiver_name = receiver_name
         self.__balance = balance
+        self.saving = Savings()
 
     def transaction_record(self):
         """Method to record new transactions made and the relevant information"""
@@ -87,7 +89,8 @@ class Transaction:
         the bank or regulatory authorities. """
         if self.__balance + self.__fees > self.__balance:
             return True
-        el
+
+        minimum_balance = self.saving.minimum_balance
 
     def process_transaction(self):
         """Method to process the transaction, including updating account balances, recording transaction details,

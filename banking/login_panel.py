@@ -2,7 +2,7 @@
 import re
 import time
 from banking.script import header, go_back
-from bank_processes.authentication import Authentication, verify_data, check_account_status
+from bank_processes.authentication import Authentication, verify_data, check_account_status, get_username_from_database
 
 
 auth = Authentication()
@@ -32,7 +32,7 @@ def username():
 
         if verify_data('username', 1, _username) and check_account_status(_username)[0]:
             auth.username = _username
-            auth.user_login()
+            # auth.user_login()
             return _username
         else:
             print("\n*ERROR*\nWrong Username.")
@@ -74,6 +74,20 @@ def password():
     go_back('script')
 
 
+def forgot_username():
+    while True:
+        print("ENTER YOUR PHONE NUMBER:")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~")
+        _phoneNumber = input(">>> ")
+
+        if verify_data('phone_number', 1, _phoneNumber):
+            _username = get_username_from_database(_phoneNumber, phone_number=True)
+        else:
+            print("\n*ERROR*\nPhone Number doesn't exist.")
+            time.sleep(3)
+            continue
+
+
 def login():
     header()
 
@@ -95,7 +109,8 @@ def login():
     elif re.search('^2$', _username):
         del _username
         del auth.username
-        print()
+        header()
+        forgot_username()
     else:
         header()
 

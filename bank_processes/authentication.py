@@ -1,7 +1,6 @@
 from datetime import datetime
 import random
 from typing import Any, Tuple
-
 from bank_processes.database import DataBase
 
 
@@ -53,9 +52,33 @@ def check_account_status(username: str) -> tuple[bool, Any | None, Any | None] |
     return False, account_status, id_num
 
 
+def get_username_from_database(_object: str, email: bool = False, phone_number: bool = True):
+    db: DataBase = DataBase()
+
+    if email:
+        phone_number = False
+
+    if phone_number:
+        query = (f"""
+        select username from {db.db_tables[1]} where phone_number = '{_object}'
+        """)
+    elif email:
+        query = (f"""
+        select username from {db.db_tables[1]} where email = '{_object}'
+        """)
+    else:
+        raise ValueError("Either 'email' argument or 'phone_number' must be True")
+
+    datas: tuple = db.fetch_data(query)
+
+    for data in datas:
+        for username in data:
+            return username
+
+
 class Authentication:
 
-    def __init__(self, username: str = 'MAN', password: str = None, failed_login_attempts: int = 0,
+    def __init__(self, username: str = None, password: str = None, failed_login_attempts: int = 0,
                  auth_outcome: str = None, login_time_stamp: datetime = datetime.now().time(),
                  session_token: str = str(random.randint(100000, 999999))):
         self.__username = username  # User's name for authentication.
@@ -71,8 +94,8 @@ class Authentication:
         db: DataBase = DataBase()
 
         query = (f"""
-            select password from {db.db_tables[1]} where username = '{self.__username}'
-            """)
+        select password from {db.db_tables[1]} where username = '{self.__username}'
+        """)
 
         datas: tuple = db.fetch_data(query)
         for data in datas:

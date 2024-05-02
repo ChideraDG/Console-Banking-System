@@ -100,6 +100,14 @@ class Savings(Account):
         account to another, updating the balances of both accounts involved."""
         pass
 
+    @property
+    def minimum_balance(self):
+        return self.__minimum_balance
+
+    @property
+    def account_fees(self):
+        return self.__account_fees
+
 
 class Current(Account):
     __minimum_balance: float = 5000.0
@@ -122,6 +130,14 @@ class Current(Account):
         """Method to facilitate transferring funds between accounts. It should handle transferring money from one
         account to another, updating the balances of both accounts involved."""
         pass
+
+    @property
+    def minimum_balance(self):
+        return self.__minimum_balance
+
+    @property
+    def account_fees(self):
+        return self.__account_fees
 
 
 class FixedDeposit(Account):

@@ -4,9 +4,9 @@ from bank_processes.user import User
 class Account(User):
     currency: str = 'Naira'  # Currency in which the account is denominated.
 
-    def __init__(self, account_number: str, account_type: str, account_holder: str, account_balance: float,
-                 transaction_pin: str, account_status: str, account_tier: str, transaction_limit: int,
-                 overdraft_protection: str):
+    def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None,
+                 account_balance: float = None, transaction_pin: str = None, account_status: str = None,
+                 account_tier: str = None, transaction_limit: int = None, overdraft_protection: str = None):
         super().__init__()
         self.account_number = account_number  # Unique identifier for the account.
         self.account_type = account_type  # Type of account (e.g., savings, checking, credit card).
@@ -79,13 +79,11 @@ class Account(User):
 
 
 class Savings(Account):
-    minimum_balance: float = 500.0  # Minimum balance required to avoid fees or maintain the account.
-    account_fees: float = 100.0  # fees associated with the account, such as monthly maintenance fees.
+    __minimum_balance: float = 500.0  # Minimum balance required to avoid fees or maintain the account.
+    __account_fees: float = 100.0  # fees associated with the account, such as monthly maintenance fees.
 
-    def __init__(self, account_number: str, account_type: str, account_holder: str, account_balance: float,
-                 transaction_pin: str, account_status: str, transaction_limit: str, overdraft_protection: str):
-        super().__init__(account_number, account_type, account_holder, account_balance, transaction_pin, account_status,
-                         transaction_limit, overdraft_protection)
+    def __init__(self):
+        super().__init__()
 
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
@@ -104,13 +102,11 @@ class Savings(Account):
 
 
 class Current(Account):
-    minimum_balance: float = 5000.0
-    account_fees: float = 1000.0  # fees associated with the account, such as monthly maintenance fees.
+    __minimum_balance: float = 5000.0
+    __account_fees: float = 1000.0  # fees associated with the account, such as monthly maintenance fees.
 
-    def __init__(self, account_number: str, account_type: str, account_holder: str, account_balance: float,
-                 transaction_pin: str, account_status: str, transaction_limit: str, overdraft_protection: str):
-        super().__init__(account_number, account_type, account_holder, account_balance, transaction_pin, account_status,
-                         transaction_limit, overdraft_protection)
+    def __init__(self):
+        super().__init__()
 
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
@@ -129,11 +125,8 @@ class Current(Account):
 
 
 class FixedDeposit(Account):
-    def __init__(self, account_number: str, account_type: str, account_holder: str, account_balance: float,
-                 transaction_pin: str, account_status: str, transaction_limit: str, overdraft_protection: str,
-                 interest_rate: float = 0.0, interest_earned: float = 0.0):
-        super().__init__(account_number, account_type, account_holder, account_balance, transaction_pin, account_status,
-                         transaction_limit, overdraft_protection)
+    def __init__(self, interest_rate: float = 0.0, interest_earned: float = 0.0):
+        super().__init__()
         self.interest_rate = interest_rate  # Interest rate applied to the account balance (if applicable).
         self.interest_earned = interest_earned  # Total amount of interest earned on the account balance.
 

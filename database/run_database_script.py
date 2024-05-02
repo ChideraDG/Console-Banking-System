@@ -2,9 +2,9 @@ import pymysql as sql
 
 connection = sql.connect(
     host='localhost',
-    user='root',
-    password='',
-    database='bankApp_db'
+    user='Chidera',
+    password='admin',
+    database=''
 )
 
 my_cursor = connection.cursor()
@@ -12,6 +12,17 @@ my_cursor = connection.cursor()
 query0 = """
 CREATE DATABASE IF NOT EXISTS bankApp_db
 """
+
+my_cursor.execute(query0)
+
+connection = sql.connect(
+    host='localhost',
+    user='Chidera',
+    password='admin',
+    database='bankApp_db'
+)
+
+my_cursor = connection.cursor()
 
 query1 = """
 CREATE TABLE `Account` (
@@ -123,10 +134,9 @@ ALTER TABLE `Bank_Verification_Number`
 query11 = """
 ALTER TABLE `User`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-COMMIT;
 """
 
-queries = [query0, query1, query2, query3, query4, query5, query6, query7, query8, query9, query10, query11]
+queries = [query1, query2, query3, query4, query5, query6, query7, query8, query9, query10, query11]
 
 for query in queries:
     my_cursor.execute(query)

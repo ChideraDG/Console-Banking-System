@@ -15,7 +15,7 @@ def header():
     time_now = dt.datetime.now().time()
 
     print(f"BETA BANKING {today_date} {time_now}")
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
 
 def go_back(return_place):
@@ -30,6 +30,7 @@ def script():
 
         header()
 
+        print(end='\n')
         print(' ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~')
         print("|  1. New User  |  2. Existing User  |")
         print(" ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~")

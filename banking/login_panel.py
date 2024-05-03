@@ -20,7 +20,7 @@ def token_auth():
 def username():
     """Get Username of the User"""
     while True:
-        print("ENTER YOUR USERNAME:")
+        print("\nENTER YOUR USERNAME:")
         print("~~~~~~~~~~~~~~~~~~~~")
         _username = input(">>> ")
 
@@ -46,14 +46,14 @@ def username():
             # auth.user_login()
             return _username
         else:
-            print("\n*ERROR*\nWrong Username.\n")
+            print("\n*ERROR*\nWrong Username.")
             time.sleep(3)
             continue
 
 
 def password():
     while auth.login_attempts < 3:
-        print("ENTER YOUR PASSWORD:")
+        print("\nENTER YOUR PASSWORD:")
         print("~~~~~~~~~~~~~~~~~~~~")
         _password = input(">>> ")
 
@@ -75,7 +75,7 @@ def password():
             else:
                 print("\n*ERROR*\nWrong Password.")
                 print(3 - auth.login_attempts,
-                      'attempts remaining.\nAccount will be suspended after exhausting attempts\n')
+                      'attempts remaining.\nAccount will be suspended after exhausting attempts')
                 time.sleep(3)
                 continue
 
@@ -88,7 +88,7 @@ def password():
 
 def forgot_username():
     while True:
-        print("ENTER YOUR PHONE NUMBER/E-MAIL:")
+        print("\nENTER YOUR PHONE NUMBER/E-MAIL:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         _input = input(">>> ")
 
@@ -135,7 +135,7 @@ def forgot_username():
                     continue
             break
         else:
-            print("\n*ERROR*\nPhone Number doesn't exist.\n")
+            print("\n*ERROR*\nPhone Number doesn't exist.")
             time.sleep(3)
             continue
 
@@ -143,10 +143,10 @@ def forgot_username():
 def login():
     header()
 
-    print("Go Back? Press 1")
+    print("\nGo Back? Press 1")
     print("----------------")
     print("Forgot Username? Press 2")
-    print("------------------------\n")
+    print("------------------------")
 
     time.sleep(1)
 
@@ -156,11 +156,13 @@ def login():
 
     if re.search('^1$', _username):
         del _username
-        del auth.username
+        if auth.username is not None:
+            del auth.username
         go_back('script')
     elif re.search('^2$', _username):
         del _username
-        del auth.username
+        if auth.username is not None:
+            del auth.username
         header()
         forgot_username()
         time.sleep(3)
@@ -169,26 +171,30 @@ def login():
 
     header()
 
-    print(f"Welcome Back, {_username}")
+    print(f"\nWelcome Back, {_username}")
     print("~~~~~~~~~~~~~~" + '~' * len(_username))
     print("\nGo Back? Press 1")
     print("----------------")
-    print("Forgot Username? Press 2")
-    print("------------------------\n")
+    print("Forgot Password? Press 2")
+    print("------------------------")
 
     _password = password()
 
     if re.search('^1$', _password):
         del _username
         del _password
-        del auth.username
-        del auth.password
+        if auth.username is not None:
+            del auth.username
+        if auth.password is not None:
+            del auth.password
         go_back('script')
     elif re.search('^2$', _password):
         del _username
-        del auth.username
         del _password
-        del auth.password
+        if auth.username is not None:
+            del auth.username
+        if auth.password is not None:
+            del auth.password
     else:
         print("\nLogin Successful")
         print("~~~~~~~~~~~~~~~~")

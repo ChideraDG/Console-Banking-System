@@ -3,7 +3,10 @@ import random
 import re
 import time
 from banking.script import header, go_back
-from bank_processes.authentication import Authentication, verify_data, check_account_status, get_username_from_database
+from bank_processes.authentication import (Authentication,
+                                           verify_data,
+                                           check_account_status,
+                                           get_username_from_database)
 
 auth = Authentication()
 

@@ -6,7 +6,11 @@ from bank_processes.bvn import BVN
 from bank_processes.user import User
 from bank_processes.account import Account
 from bank_processes.authentication import verify_data
-from banking.script import header
+from banking.script import header, go_back
+
+user = User()
+bvn = BVN()
+account = Account()
 
 
 def countdown_timer(register):
@@ -269,7 +273,7 @@ def phone_number() -> str:
 def account_type() -> str:
     """Gets the account type of the User."""
     while True:
-        print("What is your desired Account Type:")
+        print("\nWhat is your desired Account Type:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print('1 -> Saving \n2 -> Current \n3 -> Fixed Deposit')
         accountType = input('>>> ')
@@ -355,71 +359,64 @@ def register_bvn_account():
     """Registration Form"""
 
     header()
-    print('Message from the CUSTOMER SERVICE OFFICER:::')
+    print('\nMessage from the CUSTOMER SERVICE OFFICER:::')
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     print("'You will need to Create your BVN first, then Create your Bank Account'. ")
     time.sleep(3)
-    header()
-
-    _firstname = None
-    _middleName = None
-    _lastname = None
-    _gender = None
-    _address = None
-    _dob = None
-    _email = None
-    _phoneNumber = None
 
     # BVN Form
     try:
-        print("Bank Verification Number Creation".upper())
+        header()
+
+        print("\nBank Verification Number Creation".upper())
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
         print("\nInstruction: Carefully fill in your details")
-        print("==========================================\n")
+        print("==========================================")
 
         time.sleep(1)
 
-        _firstname = first_name()
+        bvn.first_name = first_name().title()
 
         time.sleep(1)
 
-        _middleName = middle_name()
+        bvn.middle_name = middle_name().title()
 
         time.sleep(1)
 
-        _lastname = last_name()
+        bvn.last_name = last_name().title()
 
         time.sleep(1)
 
-        _gender = gender()
+        bvn.gender = gender().title()
 
         time.sleep(1)
 
-        _address = address()
+        bvn.address = address().title()
 
         time.sleep(1)
 
-        _dob = date_of_birth()
+        bvn.date_of_birth = date_of_birth()
 
         time.sleep(1)
 
-        _email = e_mail()
+        bvn.email = e_mail().lower()
 
         time.sleep(1)
 
-        _phoneNumber = phone_number()
+        bvn.phone_number = phone_number()
 
-        created_bvn = str(random.randint(100000000000, 999999999999))
-        while verify_data('bvn_number', 0, created_bvn):
-            created_bvn = str(random.randint(100000000000, 999999999999))
+        bvn.bvn_number = str(random.randint(100000000000, 999999999999))
+        while verify_data('bvn_number', 0, bvn.bvn_number):
+            bvn.bvn_number = str(random.randint(100000000000, 999999999999))
 
-        register = BVN(first_name=_firstname.title(), middle_name=_middleName.title(), last_name=_lastname.title(),
-                       gender=_gender.title(), address=_address.title(), email=_email.lower(),
-                       phone_number=_phoneNumber, created_date=dt.datetime.now(), date_of_birth=_dob,
-                       bvn_status='active', bvn_number=created_bvn, last_updated=dt.datetime.now())
+        bvn.created_date = dt.datetime.now()
 
-        register.register_bvn()
+        bvn.bvn_status = 'active'
+
+        bvn.last_updated = dt.datetime.now()
+
+        bvn.register_bvn()
 
         countdown_timer('BVN')
         time.sleep(1)
@@ -427,72 +424,83 @@ def register_bvn_account():
 
         print("\nBank Verification Number Successfully Created.")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(f"\nUser: {register.last_name} {register.first_name} {register.middle_name}")
-        print(f"BVN NUMBER: {register.bvn_number}")
+        print(f"\nUser: {bvn.last_name} {bvn.first_name} {bvn.middle_name}")
+        print(f"BVN NUMBER: {bvn.bvn_number}")
     except Exception:
-        print(f"\n*ERROR*\nError Registering BVN")
+        print(f"\n*ERROR*\nError Creating BVN")
+        go_back('script')
+
+    time.sleep(5)
 
     # Bank Account Form
     try:
-        time.sleep(5)
         header()
 
-        print("Bank Account Details Creation".upper())
+        print("\nBank Account Details Creation".upper())
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
         print("\nInstruction: Carefully fill in your details")
-        print("==========================================\n")
+        print("==========================================")
 
         time.sleep(1)
 
-        _accountType = account_type()
+        # Account Section
+        account.account_type = account_type()
 
-        account_balance = 0.0
-        if _accountType.lower() == 'savings':
-            account_balance = 500.50
-        elif _accountType.lower() == 'current':
-            account_balance = 5000.50
-        elif _accountType.lower() == 'fixed deposit':
-            account_balance = 10000.50
-
-        time.sleep(1)
-
-        _accountPassword = account_password()
+        account.account_balance = 0.0
+        if account.account_type.lower() == 'savings':
+            account.account_balance = 500.50
+        elif account.account_type.lower() == 'current':
+            account.account_balance = 5000.50
+        elif account.account_type.lower() == 'fixed deposit':
+            account.account_balance = 10000.50
 
         time.sleep(1)
 
-        _transactionPin = transaction_pin()
+        user.password = account_password()
 
         time.sleep(1)
 
-        _accountNumber = str(random.randint(1000000000, 9999999999))
-        while verify_data('account_number', 3, _accountNumber):
-            _accountNumber = str(random.randint(100000000000, 999999999999))
+        account.transaction_pin = transaction_pin()
 
-        _username = _firstname + _middleName
-        while verify_data('username', 1, _username):
-            _username = _firstname + _middleName + str(random.randint(1, 1000))
+        time.sleep(1)
 
-        if '-' in _username:
-            username_list = list(_username)
+        account.account_holder = f'{bvn.last_name} {bvn.first_name} {bvn.middle_name}'
+        account.account_status = 'active'
+        account.overdraft_protection = 'No'
+        account.account_tier = 'Tier 1'
+        account.transaction_limit = 10
+
+        account.account_number = str(random.randint(1000000000, 9999999999))
+        while verify_data('account_number', 3, account.account_number):
+            account.account_number = str(random.randint(100000000000, 999999999999))
+
+        account.open_account()
+
+        # User Section
+        user.first_name = bvn.first_name
+        user.middle_name = bvn.middle_name
+        user.last_name = bvn.last_name
+        user.gender = bvn.gender
+        user.email = bvn.email
+        user.phone_number = bvn.phone_number
+        user.address = bvn.address
+        user.date_of_birth = bvn.date_of_birth
+        user.linked_accounts = []
+        user.last_login_timestamp = dt.datetime.now()
+        user.account_open_date = dt.datetime.now()
+
+        user.username = user.first_name + user.middle_name
+        while verify_data('username', 1, user.username):
+            user.username = user.first_name + user.middle_name + str(random.randint(1, 1000))
+
+        if '-' in user.username:
+            username_list = list(user.username)
             del username_list[username_list.index('-')]
-            _username = ''.join(username_list)
+            user.username = ''.join(username_list)
+            del username_list
 
-        registerUser = User(username=_username.upper(), password=_accountPassword, first_name=_firstname,
-                            middle_name=_middleName, last_name=_lastname, gender=_gender, email=_email,
-                            phone_number=_phoneNumber, address=_address, date_of_birth=_dob,
-                            linked_accounts=[], last_login_timestamp=dt.datetime.now(),
-                            account_open_date=dt.datetime.now())
-
-        registerUser.register()
-
-        registerAccount = Account(account_number=_accountNumber, account_type=_accountType,
-                                  account_holder=f'{_lastname} {_firstname} {_middleName}',
-                                  account_balance=account_balance, transaction_pin=_transactionPin,
-                                  account_status='active', overdraft_protection='No', account_tier='Tier 1',
-                                  transaction_limit=10)
-
-        registerAccount.register()
+        user.register()
 
         countdown_timer('Bank Account')
         time.sleep(1)
@@ -500,7 +508,8 @@ def register_bvn_account():
 
         print("\nBank Account Successfully Created.")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(f"\nUser: {registerUser.last_name} {registerUser.first_name} {registerUser.middle_name}")
-        print(f"ACCOUNT NUMBER: {registerAccount.account_number}")
+        print(f"\nUser: {user.last_name} {user.first_name} {user.middle_name}")
+        print(f"ACCOUNT NUMBER: {account.account_number}")
     except Exception:
-        print(f"\n*ERROR*\nError Registering Bank Account")
+        print(f"\n*ERROR*\nError Creating Bank Account")
+        go_back('script')

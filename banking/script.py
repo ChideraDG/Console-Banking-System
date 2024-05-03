@@ -46,4 +46,5 @@ def script():
             login()
             break
         else:
+            del user_input
             continue

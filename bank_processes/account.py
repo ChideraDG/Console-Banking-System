@@ -1,9 +1,10 @@
-from abc import abstractmethod, ABC
+from abc import abstractmethod
 
+from bank_processes.database import DataBase
 from bank_processes.user import User
 
 
-class Account(ABC, User):
+class Account(User):
     currency: str = 'Naira'  # Currency in which the account is denominated.
 
     def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None,
@@ -82,12 +83,17 @@ class Account(ABC, User):
         prevent fraudulent or unauthorized transactions."""
         pass
 
+    def __str__(self):
+        """For Debugging"""
+        return f"""{self.account_number} {self.account_type} {self.account_balance} {self.account_holder} 
+{self.account_tier} {self.account_status} {self.transaction_limit} {self.overdraft_protection} {self.transaction_pin}"""
+
     @property
     def account_number(self):
         return self.__account_number
 
     @account_number.setter
-    def account_number(self, _account_number):
+    def account_number(self, _account_number: str):
         self.__account_number = _account_number
 
     @account_number.deleter
@@ -99,7 +105,7 @@ class Account(ABC, User):
         return self.__account_type
 
     @account_type.setter
-    def account_type(self, _account_type):
+    def account_type(self, _account_type: str):
         self.__account_type = _account_type
 
     @account_type.deleter
@@ -111,7 +117,7 @@ class Account(ABC, User):
         return self.__account_holder
 
     @account_holder.setter
-    def account_holder(self, _account_holder):
+    def account_holder(self, _account_holder: str):
         self.__account_holder = _account_holder
 
     @account_holder.deleter
@@ -123,7 +129,7 @@ class Account(ABC, User):
         return self.__account_balance
 
     @account_balance.setter
-    def account_balance(self, _account_balance):
+    def account_balance(self, _account_balance: float):
         self.__account_balance = _account_balance
 
     @account_balance.deleter
@@ -135,7 +141,7 @@ class Account(ABC, User):
         return self.__transaction_pin
 
     @transaction_pin.setter
-    def transaction_pin(self, _transaction_pin):
+    def transaction_pin(self, _transaction_pin: str):
         self.__transaction_pin = _transaction_pin
 
     @transaction_pin.deleter
@@ -147,7 +153,7 @@ class Account(ABC, User):
         return self.__account_status
 
     @account_status.setter
-    def account_status(self, _account_status):
+    def account_status(self, _account_status: str):
         self.__account_status = _account_status
 
     @account_status.deleter
@@ -159,7 +165,7 @@ class Account(ABC, User):
         return self.__overdraft_protection
 
     @overdraft_protection.setter
-    def overdraft_protection(self, _overdraft_protection):
+    def overdraft_protection(self, _overdraft_protection: str):
         self.__overdraft_protection = _overdraft_protection
 
     @overdraft_protection.deleter
@@ -171,7 +177,7 @@ class Account(ABC, User):
         return self.__account_tier
 
     @account_tier.setter
-    def account_tier(self, _account_tier):
+    def account_tier(self, _account_tier: str):
         self.__account_tier = _account_tier
 
     @account_tier.deleter
@@ -183,7 +189,7 @@ class Account(ABC, User):
         return self.__transaction_limit
 
     @transaction_limit.setter
-    def transaction_limit(self, _transaction_limit):
+    def transaction_limit(self, _transaction_limit: int):
         self.__transaction_limit = _transaction_limit
 
     @transaction_limit.deleter

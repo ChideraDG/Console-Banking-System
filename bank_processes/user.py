@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 # from bank_processes.account import Account
 
 
-class User(ABC):
+class User:
     def __init__(self, username: str = None, password: str = None, first_name: str = None, middle_name: str = None,
                  last_name: str = None, gender: str = None, email: str = None, phone_number: str = None,
                  address: str = None, date_of_birth: str = None, linked_accounts: list = None,
@@ -16,7 +16,7 @@ class User(ABC):
         self.__first_name = first_name  # User's first name.
         self.__middle_name = middle_name  # User's middle name.
         self.__last_name = last_name  # User's last name.
-        self.__gender = gender
+        self.__gender = gender  # User's gender.
         self.__email = email  # Contact information for communication and account verification.
         self.__phone_number = phone_number  # Contact information for communication and account verification.
         self.__address = address  # User's residential or mailing address.
@@ -80,6 +80,12 @@ class User(ABC):
         """Method to initiate the transaction pin reset process, sending a temporary password or password reset link to the
         user's registered email or phone number."""
         pass
+
+    def __str__(self):
+        """For debugging"""
+        return f"""{self.username} {self.password} {self.first_name} {self.middle_name} {self.last_name} 
+                {self.phone_number} {self.email} {self.date_of_birth} {self.gender} {self.address} 
+                {self.linked_accounts}"""
 
     @property
     def username(self):

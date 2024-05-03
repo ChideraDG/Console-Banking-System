@@ -1,24 +1,26 @@
+from abc import abstractmethod, ABC
+
 from bank_processes.user import User
 
 
-class Account(User):
+class Account(ABC, User):
     currency: str = 'Naira'  # Currency in which the account is denominated.
 
     def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None,
                  account_balance: float = None, transaction_pin: str = None, account_status: str = None,
                  account_tier: str = None, transaction_limit: int = None, overdraft_protection: str = None):
         super().__init__()
-        self.account_number = account_number  # Unique identifier for the account.
-        self.account_type = account_type  # Type of account (e.g., savings, checking, credit card).
-        self.account_holder = account_holder  # User or users associated with the account.
-        self.account_balance = account_balance  # Current balance of the account.
-        self.transaction_pin = transaction_pin  # Pin used for transaction authentication.
-        self.account_status = account_status  # Status of the account (e.g., active, closed, frozen).
-        self.overdraft_protection = overdraft_protection  # Indicator of whether the account has overdraft protection enabled.
-        self.account_tier = account_tier  # Current level of the account
-        self.transaction_limit = transaction_limit  # Limits on the number or amount of transactions allowed within a certain period.
+        self.__account_number = account_number  # Unique identifier for the account.
+        self.__account_type = account_type  # Type of account (e.g., savings, checking, credit card).
+        self.__account_holder = account_holder  # User or users associated with the account.
+        self.__account_balance = account_balance  # Current balance of the account.
+        self.__transaction_pin = transaction_pin  # Pin used for transaction authentication.
+        self.__account_status = account_status  # Status of the account (e.g., active, closed, frozen).
+        self.__overdraft_protection = overdraft_protection  # Indicator of whether the account has overdraft protection enabled.
+        self.__account_tier = account_tier  # Current level of the account
+        self.__transaction_limit = transaction_limit  # Limits on the number or amount of transactions allowed within a certain period.
 
-    def register(self):
+    def open_account(self):
         """Method to register a new user with the bank app, including capturing and validating personal information
         such as name, address, contact details, and identification documents."""
 
@@ -26,27 +28,30 @@ class Account(User):
                 insert into {self.database.db_tables[3]}
                 (account_number, account_type, account_holder, account_balance, transaction_pin, account_status, 
                 account_tier, overdraft_protection, transaction_limit)
-                values('{self.account_number}', '{self.account_type}', '{self.account_holder}', 
-                {self.account_balance}, '{self.transaction_pin}', '{self.account_status}', '{self.account_tier}',
-                '{self.overdraft_protection}', '{self.transaction_limit}')
+                values('{self.__account_number}', '{self.__account_type}', '{self.__account_holder}', 
+                {self.__account_balance}, '{self.__transaction_pin}', '{self.__account_status}', '{self.__account_tier}',
+                '{self.__overdraft_protection}', '{self.__transaction_limit}')
                 """
 
         self.database.query(query)
 
+    @abstractmethod
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
         accordingly."""
-        pass
+        raise NotImplementedError('This Method not in Use.')
 
+    @abstractmethod
     def withdraw(self):
         """Method to allow users to withdraw money from their account. It should update the account balance and handle
         cases where the withdrawal amount exceeds the available balance."""
-        pass
+        raise NotImplementedError('This Method not in Use.')
 
+    @abstractmethod
     def transfer(self):
         """Method to facilitate transferring funds between accounts. It should handle transferring money from one
         account to another, updating the balances of both accounts involved."""
-        pass
+        raise NotImplementedError('This Method not in Use.')
 
     def get_balance(self):
         """Method to retrieve the current balance of the account."""
@@ -76,6 +81,114 @@ class Account(User):
         """Method to enforce transaction limits, such as daily withdrawal limits or maximum transfer amounts, to
         prevent fraudulent or unauthorized transactions."""
         pass
+
+    @property
+    def account_number(self):
+        return self.__account_number
+
+    @account_number.setter
+    def account_number(self, _account_number):
+        self.__account_number = _account_number
+
+    @account_number.deleter
+    def account_number(self):
+        del self.__account_number
+
+    @property
+    def account_type(self):
+        return self.__account_type
+
+    @account_type.setter
+    def account_type(self, _account_type):
+        self.__account_type = _account_type
+
+    @account_type.deleter
+    def account_type(self):
+        del self.__account_type
+
+    @property
+    def account_holder(self):
+        return self.__account_holder
+
+    @account_holder.setter
+    def account_holder(self, _account_holder):
+        self.__account_holder = _account_holder
+
+    @account_holder.deleter
+    def account_holder(self):
+        del self.__account_holder
+
+    @property
+    def account_balance(self):
+        return self.__account_balance
+
+    @account_balance.setter
+    def account_balance(self, _account_balance):
+        self.__account_balance = _account_balance
+
+    @account_balance.deleter
+    def account_balance(self):
+        del self.__account_balance
+
+    @property
+    def transaction_pin(self):
+        return self.__transaction_pin
+
+    @transaction_pin.setter
+    def transaction_pin(self, _transaction_pin):
+        self.__transaction_pin = _transaction_pin
+
+    @transaction_pin.deleter
+    def transaction_pin(self):
+        del self.__transaction_pin
+
+    @property
+    def account_status(self):
+        return self.__account_status
+
+    @account_status.setter
+    def account_status(self, _account_status):
+        self.__account_status = _account_status
+
+    @account_status.deleter
+    def account_status(self):
+        del self.__account_status
+
+    @property
+    def overdraft_protection(self):
+        return self.__overdraft_protection
+
+    @overdraft_protection.setter
+    def overdraft_protection(self, _overdraft_protection):
+        self.__overdraft_protection = _overdraft_protection
+
+    @overdraft_protection.deleter
+    def overdraft_protection(self):
+        del self.__overdraft_protection
+
+    @property
+    def account_tier(self):
+        return self.__account_tier
+
+    @account_tier.setter
+    def account_tier(self, _account_tier):
+        self.__account_tier = _account_tier
+
+    @account_tier.deleter
+    def account_tier(self):
+        del self.__account_tier
+
+    @property
+    def transaction_limit(self):
+        return self.__transaction_limit
+
+    @transaction_limit.setter
+    def transaction_limit(self, _transaction_limit):
+        self.__transaction_limit = _transaction_limit
+
+    @transaction_limit.deleter
+    def transaction_limit(self):
+        del self.__transaction_limit
 
 
 class Savings(Account):

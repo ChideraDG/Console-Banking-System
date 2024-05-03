@@ -1,6 +1,4 @@
 from abc import abstractmethod
-
-from bank_processes.database import DataBase
 from bank_processes.user import User
 
 

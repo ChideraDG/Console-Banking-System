@@ -2,8 +2,8 @@ import pymysql as sql
 
 connection = sql.connect(
     host='localhost',
-    user='Chidera',
-    password='admin',
+    user='root',
+    password='',
     database=''
 )
 
@@ -17,8 +17,8 @@ my_cursor.execute(query0)
 
 connection = sql.connect(
     host='localhost',
-    user='Chidera',
-    password='admin',
+    user='root',
+    password='',
     database='bankApp_db'
 )
 

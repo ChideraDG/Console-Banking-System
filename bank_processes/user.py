@@ -1,7 +1,8 @@
 import datetime
+import re
+import time
 from bank_processes.database import DataBase
-from abc import ABC, abstractmethod
-# from bank_processes.account import Account
+from abc import abstractmethod
 
 
 class User:
@@ -69,16 +70,116 @@ class User:
     def change_password(self):
         """Method to allow users to change their password, providing a mechanism for updating login credentials
         securely."""
-        pass
+        db: DataBase = DataBase()
+
+        query = (f"""
+        update {db.db_tables[1]} set password = '{self.password}' where 
+        username = '{self.username}'
+        """)
+
+        db.query(query)
 
     def reset_password(self):
         """Method to initiate the password reset process, sending a temporary password or password reset link to the
         user's registered email or phone number."""
-        pass
+        from bank_processes.authentication import token_auth
+        from banking.register_panel import account_password
+        from banking.script import header
+
+        while True:
+            header()
+            print("\nReset your password with your Phone Number? Press 1")
+            print("---------------------------------------------------")
+            print("Reset your password with your Email? Press 2")
+            print("--------------------------------------------")
+            _input = input(">>> ")
+
+            time.sleep(1)
+
+            if re.search('^1$', _input):
+                four_digit = self.phone_number[-4:]
+                incomplete_number = self.phone_number[:-4] + '****'
+                while True:
+                    header()
+                    print(f"\nENTER THE LAST FOUR DIGITS OF YOUR PHONE NUMBER ({incomplete_number}):")
+                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+"~"*len(incomplete_number))
+                    _input = input(">>> ")
+
+                    if four_digit == _input:
+                        start_time = time.time()
+                        _token = token_auth()
+                        while True:
+                            print("\nENTER YOUR TOKEN NUMBER:")
+                            print("~~~~~~~~~~~~~~~~~~~~~~~~")
+                            _tokenNumber = input(">>> ")
+
+                            elapsed_time = time.time() - start_time
+                            if elapsed_time < 30.0:
+                                if _token == _tokenNumber:
+                                    self.password = account_password()
+                                    break
+                                else:
+                                    print("\n*ERROR*\nWrong Token Number.\n\nTry Again")
+                                    time.sleep(3)
+                                    continue
+                            else:
+                                print("\n*ERROR*\nTime is already over 30 minutes.\n\nRe-Sending Token Number")
+                                start_time = time.time()
+                                _token = token_auth()
+                                time.sleep(3)
+                                continue
+                        break
+                    else:
+                        print("\n*ERROR*\nWrong Four Digit Input.")
+                        time.sleep(3)
+                        continue
+                break
+            elif re.search('^2$', _input):
+                at_index = self.email.index('@')
+                incomplete_email = self.email[:1-len(self.email)]+'*'*len(self.email[1:at_index])+self.email[at_index:]
+                while True:
+                    header()
+                    print(f"\nENTER YOUR EMAIL ({incomplete_email}):")
+                    print("~~~~~~~~~~~~~~~~~~~~" + "~" * len(incomplete_email))
+                    _input = input(">>> ")
+
+                    if self.email == _input.lower():
+                        start_time = time.time()
+                        _token = token_auth()
+                        while True:
+                            print("\nENTER YOUR TOKEN NUMBER:")
+                            print("~~~~~~~~~~~~~~~~~~~~~~~~")
+                            _tokenNumber = input(">>> ")
+
+                            elapsed_time = time.time() - start_time
+                            if elapsed_time < 30.0:
+                                if _token == _tokenNumber:
+                                    self.password = account_password()
+                                    break
+                                else:
+                                    print("\n*ERROR*\nWrong Token Number.\n\nTry Again")
+                                    time.sleep(3)
+                                    continue
+                            else:
+                                print("\n*ERROR*\nTime is already over 30 minutes.\n\nRe-Sending Token Number")
+                                start_time = time.time()
+                                _token = token_auth()
+                                time.sleep(3)
+                                continue
+                        break
+                    else:
+                        print("\n*ERROR*\nWrong Corresponding Email.")
+                        time.sleep(3)
+                        continue
+                break
+            else:
+                print("\n*ERROR*\nWrong Input.")
+                time.sleep(3)
+                continue
 
     def reset_transaction_pin(self):
-        """Method to initiate the transaction pin reset process, sending a temporary password or password reset link to the
-        user's registered email or phone number."""
+        """Method to initiate the transaction pin reset process, sending a temporary password or password reset link
+        to the user's registered email or phone number."""
         pass
 
     def __str__(self):
@@ -161,6 +262,18 @@ class User:
 
     @property
     def email(self):
+        db: DataBase = DataBase()
+
+        query = (f"""
+        select email from {db.db_tables[1]} where username = '{self.username}'
+        """)
+
+        datas: tuple = db.fetch_data(query)
+
+        for data in datas:
+            for email in data:
+                self.email = email
+
         return self.__email
 
     @email.setter
@@ -173,6 +286,18 @@ class User:
 
     @property
     def phone_number(self):
+        db: DataBase = DataBase()
+
+        query = (f"""
+        select phone_number from {db.db_tables[1]} where username = '{self.username}'
+        """)
+
+        datas: tuple = db.fetch_data(query)
+
+        for data in datas:
+            for phone_number in data:
+                self.phone_number = phone_number
+
         return self.__phone_number
 
     @phone_number.setter

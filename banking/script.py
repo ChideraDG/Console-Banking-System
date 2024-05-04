@@ -26,6 +26,7 @@ def go_back(return_place):
 def script():
     from banking.login_panel import login
     from banking.register_panel import register_bvn_account
+    
     while True:
 
         header()

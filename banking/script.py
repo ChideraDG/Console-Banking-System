@@ -6,7 +6,10 @@ import time
 
 def clear():
     """Helps Clear the Output Console"""
-    os.system('clear')
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
 
 
 def header():

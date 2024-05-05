@@ -81,7 +81,6 @@ def password():
 
 def forgot_username():
     while True:
-        header()
         print("\nENTER YOUR REGISTERED PHONE NUMBER/E-MAIL:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         _input = input(">>> ").lower()

@@ -4,7 +4,6 @@ import random
 from typing import Any, Tuple
 from bank_processes.account import Account
 from bank_processes.database import DataBase
-from bank_processes.user import User
 
 
 def verify_data(get_column: str, table_number: int, _object: str) -> bool:
@@ -103,9 +102,9 @@ class Authentication(Account, ABC):
     def user_login(self):
         """Method to authenticate and log in an existing user, verifying their credentials (e.g., username and
         password) against stored user data."""
-        self.user_id = self.user_id
         self.username = self.username
         self.password = self.password
+        self.user_id = self.user_id
         self.login_time_stamp = datetime.now()
         self.auth_outcome = True
         self.session_management()
@@ -130,10 +129,43 @@ class Authentication(Account, ABC):
         self.account_tier = self.account_tier
         self.transaction_limit = self.transaction_limit
 
+        query = (f"""
+        UPDATE {self.database.db_tables[1]} 
+        SET last_login_timestamp = '{self.last_login_timestamp}' 
+        WHERE username = '{self.username}'
+        """)
+
+        self.database.query(query)
+
     def user_logout(self):
         """Method to log out the currently logged-in user from the bank app, terminating their session and clearing
         any authentication tokens."""
-        pass
+        del self.username
+        del self.password
+        del self.user_id
+        del self.login_time_stamp
+        del self.auth_outcome
+        del self.session_token
+        del self.first_name
+        del self.middle_name
+        del self.last_name
+        del self.gender
+        del self.email
+        del self.phone_number
+        del self.address
+        del self.date_of_birth
+        del self.linked_accounts
+        del self.last_login_timestamp
+        del self.account_open_date
+        del self.account_number
+        del self.account_type
+        del self.account_holder
+        del self.account_balance
+        del self.transaction_pin
+        del self.account_status
+        del self.overdraft_protection
+        del self.account_tier
+        del self.transaction_limit
 
     def password_validation(self) -> bool:
         """Method to validate user passwords during registration and login; and checking against common password

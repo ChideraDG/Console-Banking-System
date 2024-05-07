@@ -2,7 +2,7 @@
 import random
 import re
 import time
-from banking.script import header, go_back
+from banking.script import header, go_back, signed_in
 from bank_processes.authentication import (Authentication,
                                            verify_data,
                                            check_account_status,
@@ -23,15 +23,17 @@ def username():
             return _username
         elif re.search('^2$', _username):
             return _username
+        elif re.search('^go back$', _username.lower()):
+            go_back('script')
 
         if verify_data('username', 1, _username):
             if check_account_status(_username)[1] == 'suspended':
-                print("\nAccount is Suspended.\nReset your Password.")
+                print("\n:: Account is SUSPENDED.\n:: Reset your Password.")
                 del _username
                 time.sleep(3)
                 go_back('script')
             elif check_account_status(_username)[1] == 'blocked':
-                print("\nAccount is Blocked.\nMeet the admin to unblock your account.")
+                print("\n:: Account is BLOCKED.\n:: Meet the admin to UNBLOCK your account.")
                 del _username
                 time.sleep(3)
                 go_back('script')
@@ -39,7 +41,7 @@ def username():
                 auth.username = _username
                 return _username
         else:
-            print("\n*ERROR*\nWrong Username.")
+            print("\n:: Wrong Username.")
             time.sleep(3)
             continue
 
@@ -61,12 +63,12 @@ def password():
         else:
             auth.login_attempts = auth.login_attempts + 1
             if auth.login_attempts == 3:
-                print("\n*ERROR*\nWrong Password.")
+                print("\n:: Wrong Password.")
                 print("Account has being Suspended. Reset your password.")
                 time.sleep(3)
                 break
             else:
-                print("\n*ERROR*\nWrong Password.")
+                print("\n:: Wrong Password.")
                 print(3 - auth.login_attempts,
                       'attempts remaining.\nAccount will be suspended after exhausting attempts')
                 time.sleep(3)
@@ -121,14 +123,16 @@ def forgot_username():
                         time.sleep(3)
                         continue
                 else:
-                    print("\n*ERROR*\nTime is already over 30 minutes.\n\nRe-Sending Token Number")
+                    print("\n:: Time is already over 30 minutes.")
+                    time.sleep(1)
+                    print("\n:: Re-Sending Token Number")
                     start_time = time.time()
                     _token = token_auth()
                     time.sleep(3)
                     continue
             break
         else:
-            print("\n*ERROR*\nPhone Number doesn't exist.")
+            print(":: Phone Number doesn't exist.")
             time.sleep(3)
             continue
 
@@ -225,8 +229,8 @@ def login():
         login()
     else:
         header()
-        auth.user_login()
-        print(auth.__str__())
-        print(auth.for_debugging())
-        print("\nLogin Successful")
-        print("~~~~~~~~~~~~~~~~")
+        # auth.user_login()
+        print("\n:: Login Successful")
+        print("~~~~~~~~~~~~~~~~~~~")
+        # time.sleep(2)
+        signed_in(username=_username, password=_password)

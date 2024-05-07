@@ -1,8 +1,8 @@
-from banking.script import script
+from banking.script import signing_in
 
 
 def main():
-    script()
+    signing_in()
 
 
 if __name__ == '__main__':

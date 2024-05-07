@@ -48,7 +48,7 @@ class User:
     def user_login(self):
         """Method to authenticate and log in an existing user, verifying their credentials (e.g., username and password)
          against stored user data."""
-        raise NotImplementedError('This Method not in Use.')
+
 
     @abstractmethod
     def user_logout(self):
@@ -468,18 +468,6 @@ class User:
 
     @property
     def last_login_timestamp(self):
-        query = (f"""
-        SELECT last_login_timestamp 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
-
-        datas: tuple = self.database.fetch_data(query)
-
-        for data in datas:
-            for last_login_timestamp in data:
-                self.last_login_timestamp = last_login_timestamp
-
         return self.__last_login_timestamp
 
     @last_login_timestamp.setter
@@ -516,18 +504,6 @@ class User:
 
     @property
     def account_close_date(self):
-        query = (f"""
-        SELECT account_close_date 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
-
-        datas: tuple = self.database.fetch_data(query)
-
-        for data in datas:
-            for account_close_date in data:
-                self.account_close_date = account_close_date
-
         return self.__account_close_date
 
     @account_close_date.setter

@@ -14,27 +14,23 @@ class Transaction(Account, ABC):
                  transaction_type: str = None,
                  amount: float = None, transaction_date_time: datetime.datetime = None,
                  received_transaction_date_time: datetime.datetime = None,
-                 sender_acct_num: str = None,
                  receiver_acct_num: str = None,
                  description: str = None, trans_status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
-                 sender_name: str = None, receiver_name: str = None, balance: float = None):
+                 receiver_name: str = None, balance: float = None):
         super().__init__()
         self.__transaction_type = transaction_type
         self.__amount = amount
         self.__transaction_id = transaction_id  # unique identifier for transaction
         self.__transaction_date_time = transaction_date_time  # timestamp for when the transaction occurred
         self.__received_transaction_date_time = received_transaction_date_time
-        # self.__sender_acct_num = sender_acct_num  # sender's account number
         self.__receiver_acct_num = receiver_acct_num  # receiver's account number
         self.__description = description  # description of the transaction
         self.__trans_status = trans_status  # status of the transaction
-        # self.__fees = fees  # fees associated with the amount
         self.__merchant_info = merchant_info  # info about the merchant or receiver
         self.__transaction_category = transaction_category  # category of the transfer
         self.__user_id = user_id  # identifier of the user who initiated the transaction
         self.__account_type = account_type  # whether fixed deposit, savings or current
-        # self.__sender_name = sender_name  # Person in question doing the transaction
         self.__receiver_name = receiver_name
         self.__balance = balance
         self.__saving = Savings()

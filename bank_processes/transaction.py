@@ -14,27 +14,23 @@ class Transaction(Account, ABC):
                  transaction_type: str = None,
                  amount: float = None, transaction_date_time: datetime.datetime = None,
                  received_transaction_date_time: datetime.datetime = None,
-                 sender_acct_num: str = None,
                  receiver_acct_num: str = None,
                  description: str = None, trans_status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
-                 sender_name: str = None, receiver_name: str = None, balance: float = None):
+                 receiver_name: str = None, balance: float = None):
         super().__init__()
         self.__transaction_type = transaction_type
         self.__amount = amount
         self.__transaction_id = transaction_id  # unique identifier for transaction
         self.__transaction_date_time = transaction_date_time  # timestamp for when the transaction occurred
         self.__received_transaction_date_time = received_transaction_date_time
-        self.__sender_acct_num = sender_acct_num  # sender's account number
         self.__receiver_acct_num = receiver_acct_num  # receiver's account number
         self.__description = description  # description of the transaction
         self.__trans_status = trans_status  # status of the transaction
-        # self.__fees = fees  # fees associated with the amount
         self.__merchant_info = merchant_info  # info about the merchant or receiver
         self.__transaction_category = transaction_category  # category of the transfer
         self.__user_id = user_id  # identifier of the user who initiated the transaction
         self.__account_type = account_type  # whether fixed deposit, savings or current
-        self.__sender_name = sender_name  # Person in question doing the transaction
         self.__receiver_name = receiver_name
         self.__balance = balance
         self.__saving = Savings()
@@ -59,8 +55,8 @@ class Transaction(Account, ABC):
             Transaction Type\t\t\t{self.__transaction_type}
             Recipient Details\t\t\t\t{self.__receiver_name}
                           \t\t\tBankApp|{self.__receiver_acct_num}'''
-            Sender Details\t\t\t\t{self.__sender_name}
-                          \t\t\tBankApp|{self.__sender_acct_num}'''
+            Sender Details\t\t\t\t{self.account_holder}
+                          \t\t\tBankApp|{self.account_number}'''
             Description        \t\t\t{self.__description}
             Payment Method         \t\tBalance'''
             Transaction Date      \t\t{self.__transaction_date_time}
@@ -73,8 +69,8 @@ class Transaction(Account, ABC):
                         {self.__trans_status}
             TRANSACTION DETAILS\n
             Transaction Type\t\t\t{self.__transaction_type}
-            Sender Details\t\t\t\t{self.__sender_name}
-                            \t\t\tBankApp|{self.__sender_acct_num}'''
+            Sender Details\t\t\t\t{self.account_holder}
+                            \t\t\tBankApp|{self.account_number}'''
             Description        \t\t\t{self.__description}
             Payment Method         \t\tBalance'''
             Transaction Date      \t\t{self.__transaction_date_time}
@@ -89,8 +85,8 @@ class Transaction(Account, ABC):
             Transaction Type\t\t\t{self.__transaction_type}
             Recipient Details\t\t\t\t{self.__receiver_name}
                           \t\t\tBankApp|{self.__receiver_acct_num}'''
-            Sender Details\t\t\t\t{self.__sender_name}
-                            \t\t\tBankApp|{self.__sender_acct_num}'''
+            Sender Details\t\t\t\t{self.account_holder}
+                            \t\t\tBankApp|{self.account_number}'''
             Description        \t\t\t{self.__description}
             Payment Method         \t\tBalance'''
             Transaction Date      \t\t{self.__transaction_date_time}
@@ -104,15 +100,13 @@ class Transaction(Account, ABC):
         self.__received_transaction_date_time = now.strftime("%d %B %Y %H:%M:%S")
         self.__transaction_type = self.__transaction_type.upper()
 
-        receiver_trans_record = ''
-
         receiver_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                             f'+{self.__amount}'
                             {self.__trans_status}
                 TRANSACTION DETAILS\n
                 Transaction Type\t\t\t{self.__transaction_type}
-                Sender Details\t\t\t\t{self.__sender_name}
-                                \t\t\tBankApp|{self.__sender_acct_num}'''
+                Sender Details\t\t\t\t{self.account_holder}
+                                \t\t\tBankApp|{self.account_number}'''
                 Description        \t\t\t{self.__description}
                 Credited to        \t\tBalance'''
                 Transaction Date      \t\t{self.__received_transaction_date_time}
@@ -127,14 +121,17 @@ class Transaction(Account, ABC):
     def cal_transaction_fees(self):
         """Method to calculate fees associated with the transfer depending on the amount """
         # return self.__fees + self.__amount
+        pass
 
     def transaction_validation(self):
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
         the bank or regulatory authorities. """
         minimum_savings_balance = self.__saving.minimum_balance
         minimum_current_balance = self.__current.minimum_balance
+        savings_fee = self.__saving.account_fees
+        current_fees = self.__current.account_fees
         # if self.__balance + self.__fees > self.__balance:
-        #     return True
+        account_type = self.account_type.upper()
 
     def process_transaction(self):
         """Method to process the transaction, including updating account balances, recording transaction details,

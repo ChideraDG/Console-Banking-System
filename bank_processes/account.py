@@ -24,10 +24,10 @@ class Account(User):
         such as name, address, contact details, and identification documents."""
 
         query = f"""
-                insert into {self.database.db_tables[3]}
+                INSERT INTO {self.database.db_tables[3]}
                 (account_number, account_type, account_holder, account_balance, transaction_pin, account_status, 
                 account_tier, overdraft_protection, transaction_limit)
-                values('{self.__account_number}', '{self.__account_type}', '{self.__account_holder}', 
+                VALUES('{self.__account_number}', '{self.__account_type}', '{self.__account_holder}', 
                 {self.__account_balance}, '{self.__transaction_pin}', '{self.__account_status}', '{self.__account_tier}',
                 '{self.__overdraft_protection}', '{self.__transaction_limit}')
                 """
@@ -81,13 +81,25 @@ class Account(User):
         prevent fraudulent or unauthorized transactions."""
         pass
 
-    def __str__(self):
+    def for_debugging(self):
         """For Debugging"""
         return f"""{self.account_number} {self.account_type} {self.account_balance} {self.account_holder} 
 {self.account_tier} {self.account_status} {self.transaction_limit} {self.overdraft_protection} {self.transaction_pin}"""
 
     @property
     def account_number(self):
+        query = (f"""
+        SELECT account_number 
+        FROM {self.database.db_tables[3]} 
+        WHERE account_id = {self.user_id}
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for account_number in data:
+                self.account_number = account_number
+
         return self.__account_number
 
     @account_number.setter
@@ -100,6 +112,18 @@ class Account(User):
 
     @property
     def account_type(self):
+        query = (f"""
+        SELECT account_type 
+        FROM {self.database.db_tables[3]} 
+        WHERE account_number = '{self.account_number}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for account_type in data:
+                self.account_type = account_type
+
         return self.__account_type
 
     @account_type.setter
@@ -112,6 +136,18 @@ class Account(User):
 
     @property
     def account_holder(self):
+        query = (f"""
+        SELECT account_holder 
+        FROM {self.database.db_tables[3]} 
+        WHERE account_number = '{self.account_number}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for account_holder in data:
+                self.account_holder = account_holder
+
         return self.__account_holder
 
     @account_holder.setter
@@ -124,6 +160,18 @@ class Account(User):
 
     @property
     def account_balance(self):
+        query = (f"""
+        SELECT account_balance 
+        FROM {self.database.db_tables[3]} 
+        WHERE account_number = '{self.account_number}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for account_balance in data:
+                self.account_balance = account_balance
+
         return self.__account_balance
 
     @account_balance.setter
@@ -136,6 +184,18 @@ class Account(User):
 
     @property
     def transaction_pin(self):
+        query = (f"""
+        SELECT transaction_pin 
+        FROM {self.database.db_tables[3]} 
+        WHERE account_number = '{self.account_number}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for transaction_pin in data:
+                self.transaction_pin = transaction_pin
+
         return self.__transaction_pin
 
     @transaction_pin.setter
@@ -148,6 +208,18 @@ class Account(User):
 
     @property
     def account_status(self):
+        query = (f"""
+        SELECT account_status 
+        FROM {self.database.db_tables[3]} 
+        WHERE account_number = '{self.account_number}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for account_status in data:
+                self.account_status = account_status
+
         return self.__account_status
 
     @account_status.setter
@@ -160,6 +232,18 @@ class Account(User):
 
     @property
     def overdraft_protection(self):
+        query = (f"""
+        SELECT overdraft_protection 
+        FROM {self.database.db_tables[3]} 
+        WHERE account_number = '{self.account_number}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for overdraft_protection in data:
+                self.overdraft_protection = overdraft_protection
+
         return self.__overdraft_protection
 
     @overdraft_protection.setter
@@ -172,6 +256,18 @@ class Account(User):
 
     @property
     def account_tier(self):
+        query = (f"""
+        SELECT account_tier 
+        FROM {self.database.db_tables[3]} 
+        WHERE account_number = '{self.account_number}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for account_tier in data:
+                self.account_tier = account_tier
+
         return self.__account_tier
 
     @account_tier.setter
@@ -184,6 +280,18 @@ class Account(User):
 
     @property
     def transaction_limit(self):
+        query = (f"""
+        SELECT transaction_limit 
+        FROM {self.database.db_tables[3]} 
+        WHERE account_number = '{self.account_number}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for transaction_limit in data:
+                self.transaction_limit = transaction_limit
+
         return self.__transaction_limit
 
     @transaction_limit.setter

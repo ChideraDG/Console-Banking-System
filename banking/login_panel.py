@@ -225,5 +225,8 @@ def login():
         login()
     else:
         header()
+        auth.user_login()
+        print(auth.__str__())
+        print(auth.for_debugging())
         print("\nLogin Successful")
         print("~~~~~~~~~~~~~~~~")

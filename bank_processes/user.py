@@ -6,12 +6,13 @@ from abc import abstractmethod
 
 
 class User:
-    def __init__(self, username: str = None, password: str = None, first_name: str = None, middle_name: str = None,
+    def __init__(self, user_id: int = None, username: str = None, password: str = None, first_name: str = None, middle_name: str = None,
                  last_name: str = None, gender: str = None, email: str = None, phone_number: str = None,
                  address: str = None, date_of_birth: str = None, linked_accounts: list = None,
                  last_login_timestamp: datetime.datetime = None, account_open_date: datetime.datetime = None,
                  account_close_date: datetime.datetime = None):
         self.database = DataBase
+        self.__USER_ID = user_id
         self.__username = username  # Unique identifier for the user's account.
         self.__password = password  # Securely stored password for authentication.
         self.__first_name = first_name  # User's first name.
@@ -32,10 +33,10 @@ class User:
         such as name, address, contact details, and identification documents."""
 
         query = f"""
-                insert into {self.database.db_tables[1]}
+                INSERT INTO {self.database.db_tables[1]}
                 (username, password, first_name, middle_name, last_name, gender, email, phone_number, address, 
                 date_of_birth, linked_accounts, last_login_timestamp, account_open_date)
-                values('{self.__username}', '{self.__password}', '{self.__first_name}', '{self.__middle_name}', 
+                VALUES('{self.__username}', '{self.__password}', '{self.__first_name}', '{self.__middle_name}', 
                 '{self.__last_name}', '{self.__gender}', '{self.__email}', '{self.__phone_number}', '{self.__address}', 
                 '{self.__date_of_birth}', '{self.__linked_accounts}', '{self.__last_login_timestamp}', 
                 '{self.__account_open_date}')
@@ -43,14 +44,16 @@ class User:
 
         self.database.query(query)
 
-    def login(self):
+    @abstractmethod
+    def user_login(self):
         """Method to authenticate and log in an existing user, verifying their credentials (e.g., username and password)
          against stored user data."""
-        pass
+        raise NotImplementedError('This Method not in Use.')
 
-    def logout(self):
+    @abstractmethod
+    def user_logout(self):
         """Method to log out the currently logged-in user from the bank app."""
-        pass
+        raise NotImplementedError('This Method not in Use.')
 
     def update_personal_info(self):
         """Method to allow users to update their personal information, such as contact details, address, or password."""
@@ -70,14 +73,13 @@ class User:
     def change_password(self):
         """Method to allow users to change their password, providing a mechanism for updating login credentials
         securely."""
-        db: DataBase = DataBase()
-
         query = (f"""
-        update {db.db_tables[1]} set password = '{self.password}' where 
-        username = '{self.username}'
+        UPDATE {self.database.db_tables[1]} 
+        SET password = '{self.password}' 
+        WHERE username = '{self.username}'
         """)
 
-        db.query(query)
+        self.database.query(query)
 
     def reset_password(self):
         """Method to initiate the password reset process, sending a temporary password or password reset link to the
@@ -189,6 +191,30 @@ class User:
                 {self.linked_accounts}"""
 
     @property
+    def user_id(self):
+        query = (f"""
+            SELECT id 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for id in data:
+                self.user_id = id
+
+        return self.__USER_ID
+
+    @user_id.setter
+    def user_id(self, _user_id):
+        self.__USER_ID = _user_id
+
+    @user_id.deleter
+    def user_id(self):
+        del self.__USER_ID
+
+    @property
     def username(self):
         return self.__username
 
@@ -202,6 +228,18 @@ class User:
 
     @property
     def password(self):
+        query = (f"""
+        SELECT password 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for password in data:
+                self.password = password
+
         return self.__password
 
     @password.setter
@@ -214,6 +252,18 @@ class User:
 
     @property
     def first_name(self):
+        query = (f"""
+        SELECT first_name 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for first_name in data:
+                self.first_name = first_name
+
         return self.__first_name
 
     @first_name.setter
@@ -226,6 +276,18 @@ class User:
 
     @property
     def middle_name(self):
+        query = (f"""
+        SELECT middle_name 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for middle_name in data:
+                self.middle_name = middle_name
+
         return self.__middle_name
 
     @middle_name.setter
@@ -238,6 +300,18 @@ class User:
 
     @property
     def last_name(self):
+        query = (f"""
+        SELECT last_name 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for last_name in data:
+                self.last_name = last_name
+
         return self.__last_name
 
     @last_name.setter
@@ -250,6 +324,18 @@ class User:
 
     @property
     def gender(self):
+        query = (f"""
+        SELECT gender 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for gender in data:
+                self.gender = gender
+
         return self.__gender
 
     @gender.setter
@@ -262,13 +348,13 @@ class User:
 
     @property
     def email(self):
-        db: DataBase = DataBase()
-
         query = (f"""
-        select email from {db.db_tables[1]} where username = '{self.username}'
+        SELECT email 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
         """)
 
-        datas: tuple = db.fetch_data(query)
+        datas: tuple = self.database.fetch_data(query)
 
         for data in datas:
             for email in data:
@@ -286,13 +372,13 @@ class User:
 
     @property
     def phone_number(self):
-        db: DataBase = DataBase()
-
         query = (f"""
-        select phone_number from {db.db_tables[1]} where username = '{self.username}'
+        SELECT phone_number 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
         """)
 
-        datas: tuple = db.fetch_data(query)
+        datas: tuple = self.database.fetch_data(query)
 
         for data in datas:
             for phone_number in data:
@@ -310,6 +396,18 @@ class User:
 
     @property
     def address(self):
+        query = (f"""
+        SELECT address 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for address in data:
+                self.address = address
+
         return self.__address
 
     @address.setter
@@ -322,6 +420,18 @@ class User:
 
     @property
     def date_of_birth(self):
+        query = (f"""
+        SELECT date_of_birth 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for date_of_birth in data:
+                self.date_of_birth = date_of_birth
+
         return self.__date_of_birth
 
     @date_of_birth.setter
@@ -334,6 +444,18 @@ class User:
 
     @property
     def linked_accounts(self):
+        query = (f"""
+        SELECT linked_accounts 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for linked_account in data:
+                self.linked_accounts = linked_account
+
         return self.__linked_accounts
 
     @linked_accounts.setter
@@ -346,6 +468,18 @@ class User:
 
     @property
     def last_login_timestamp(self):
+        query = (f"""
+        SELECT last_login_timestamp 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for last_login_timestamp in data:
+                self.last_login_timestamp = last_login_timestamp
+
         return self.__last_login_timestamp
 
     @last_login_timestamp.setter
@@ -358,6 +492,18 @@ class User:
 
     @property
     def account_open_date(self):
+        query = (f"""
+        SELECT account_open_date 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for account_open_date in data:
+                self.account_open_date = account_open_date
+
         return self.__account_open_date
 
     @account_open_date.setter
@@ -370,6 +516,18 @@ class User:
 
     @property
     def account_close_date(self):
+        query = (f"""
+        SELECT account_close_date 
+        FROM {self.database.db_tables[1]} 
+        WHERE username = '{self.username}'
+        """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for account_close_date in data:
+                self.account_close_date = account_close_date
+
         return self.__account_close_date
 
     @account_close_date.setter

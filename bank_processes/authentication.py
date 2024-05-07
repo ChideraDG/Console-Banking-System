@@ -2,6 +2,7 @@ from abc import ABC
 from datetime import datetime
 import random
 from typing import Any, Tuple
+from bank_processes.account import Account
 from bank_processes.database import DataBase
 from bank_processes.user import User
 
@@ -87,12 +88,11 @@ def token_auth():
     return token
 
 
-class Authentication(User, ABC):
+class Authentication(Account, ABC):
 
     def __init__(self, username: str = None, password: str = None, failed_login_attempts: int = 0,
-                 auth_outcome: str = None, login_time_stamp: datetime = datetime.now().time(),
-                 session_token: str = str(random.randint(100000, 999999))):
-        super().__init__(username, password)
+                 auth_outcome: bool = None, login_time_stamp: datetime = None, session_token: str = None):
+        super().__init__()
         self.__username = username  # User's name for authentication.
         self.__password = password  # User's password for authentication.
         self.__failed_login_attempts = failed_login_attempts  # Count of failed login attempts for each user.
@@ -103,7 +103,32 @@ class Authentication(User, ABC):
     def user_login(self):
         """Method to authenticate and log in an existing user, verifying their credentials (e.g., username and
         password) against stored user data."""
-        pass
+        self.user_id = self.user_id
+        self.username = self.username
+        self.password = self.password
+        self.login_time_stamp = datetime.now()
+        self.auth_outcome = True
+        self.session_management()
+        self.first_name = self.first_name
+        self.middle_name = self.middle_name
+        self.last_name = self.last_name
+        self.gender = self.gender
+        self.email = self.email
+        self.phone_number = self.phone_number
+        self.address = self.address
+        self.date_of_birth = self.date_of_birth
+        self.linked_accounts = self.linked_accounts
+        self.last_login_timestamp = self.login_time_stamp
+        self.account_open_date = self.account_open_date
+        self.account_number = self.account_number
+        self.account_type = self.account_type
+        self.account_holder = self.account_holder
+        self.account_balance = self.account_balance
+        self.transaction_pin = self.transaction_pin
+        self.account_status = self.account_status
+        self.overdraft_protection = self.overdraft_protection
+        self.account_tier = self.account_tier
+        self.transaction_limit = self.transaction_limit
 
     def user_logout(self):
         """Method to log out the currently logged-in user from the bank app, terminating their session and clearing
@@ -127,10 +152,20 @@ class Authentication(User, ABC):
 
         return False
 
-    def session_management(self):
+    def session_management(self, token_object: str = None):
         """Method to manage user sessions, including generating and validating session tokens, tracking session
         expiration, and handling session timeouts."""
-        pass
+
+        if token_object is None:
+            if self.auth_outcome:
+                self.session_token = str(random.randint(100000, 999999))
+            else:
+                self.session_token = None
+        else:
+            if self.session_token == token_object:
+                return True
+            else:
+                return False
 
     # def password_reset(self):
     #     """Method to initiate the password reset process for users who have forgotten their password, sending a
@@ -202,7 +237,7 @@ class Authentication(User, ABC):
         return self.__login_time_stamp
 
     @login_time_stamp.setter
-    def login_time_stamp(self, _login_time_stamp: str):
+    def login_time_stamp(self, _login_time_stamp: datetime):
         self.__login_time_stamp = _login_time_stamp
 
     @login_time_stamp.deleter

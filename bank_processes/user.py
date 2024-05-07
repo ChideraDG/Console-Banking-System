@@ -48,7 +48,7 @@ class User:
     def user_login(self):
         """Method to authenticate and log in an existing user, verifying their credentials (e.g., username and password)
          against stored user data."""
-
+        raise NotImplementedError('This Method not in Use.')
 
     @abstractmethod
     def user_logout(self):
@@ -192,17 +192,18 @@ class User:
 
     @property
     def user_id(self):
-        query = (f"""
-            SELECT id 
-            FROM {self.database.db_tables[1]} 
-            WHERE username = '{self.username}'
-            """)
+        if self.username is not None:
+            query = (f"""
+                SELECT id 
+                FROM {self.database.db_tables[1]} 
+                WHERE username = '{self.username}'
+                """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for id in data:
-                self.user_id = id
+            for data in datas:
+                for user_id in data:
+                    self.user_id = user_id
 
         return self.__USER_ID
 
@@ -228,17 +229,18 @@ class User:
 
     @property
     def password(self):
-        query = (f"""
-        SELECT password 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT password 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for password in data:
-                self.password = password
+            for data in datas:
+                for password in data:
+                    self.password = password
 
         return self.__password
 
@@ -252,17 +254,18 @@ class User:
 
     @property
     def first_name(self):
-        query = (f"""
-        SELECT first_name 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT first_name 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for first_name in data:
-                self.first_name = first_name
+            for data in datas:
+                for first_name in data:
+                    self.first_name = first_name
 
         return self.__first_name
 
@@ -276,17 +279,18 @@ class User:
 
     @property
     def middle_name(self):
-        query = (f"""
-        SELECT middle_name 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT middle_name 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for middle_name in data:
-                self.middle_name = middle_name
+            for data in datas:
+                for middle_name in data:
+                    self.middle_name = middle_name
 
         return self.__middle_name
 
@@ -300,17 +304,18 @@ class User:
 
     @property
     def last_name(self):
-        query = (f"""
-        SELECT last_name 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT last_name 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for last_name in data:
-                self.last_name = last_name
+            for data in datas:
+                for last_name in data:
+                    self.last_name = last_name
 
         return self.__last_name
 
@@ -324,17 +329,18 @@ class User:
 
     @property
     def gender(self):
-        query = (f"""
-        SELECT gender 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT gender 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for gender in data:
-                self.gender = gender
+            for data in datas:
+                for gender in data:
+                    self.gender = gender
 
         return self.__gender
 
@@ -348,17 +354,18 @@ class User:
 
     @property
     def email(self):
-        query = (f"""
-        SELECT email 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT email 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for email in data:
-                self.email = email
+            for data in datas:
+                for email in data:
+                    self.email = email
 
         return self.__email
 
@@ -372,17 +379,18 @@ class User:
 
     @property
     def phone_number(self):
-        query = (f"""
-        SELECT phone_number 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT phone_number 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for phone_number in data:
-                self.phone_number = phone_number
+            for data in datas:
+                for phone_number in data:
+                    self.phone_number = phone_number
 
         return self.__phone_number
 
@@ -396,17 +404,18 @@ class User:
 
     @property
     def address(self):
-        query = (f"""
-        SELECT address 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT address 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for address in data:
-                self.address = address
+            for data in datas:
+                for address in data:
+                    self.address = address
 
         return self.__address
 
@@ -420,17 +429,18 @@ class User:
 
     @property
     def date_of_birth(self):
-        query = (f"""
-        SELECT date_of_birth 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT date_of_birth 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for date_of_birth in data:
-                self.date_of_birth = date_of_birth
+            for data in datas:
+                for date_of_birth in data:
+                    self.date_of_birth = date_of_birth
 
         return self.__date_of_birth
 
@@ -444,17 +454,18 @@ class User:
 
     @property
     def linked_accounts(self):
-        query = (f"""
-        SELECT linked_accounts 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT linked_accounts 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for linked_account in data:
-                self.linked_accounts = linked_account
+            for data in datas:
+                for linked_account in data:
+                    self.linked_accounts = linked_account
 
         return self.__linked_accounts
 
@@ -480,17 +491,18 @@ class User:
 
     @property
     def account_open_date(self):
-        query = (f"""
-        SELECT account_open_date 
-        FROM {self.database.db_tables[1]} 
-        WHERE username = '{self.username}'
-        """)
+        if self.username is not None:
+            query = (f"""
+            SELECT account_open_date 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for account_open_date in data:
-                self.account_open_date = account_open_date
+            for data in datas:
+                for account_open_date in data:
+                    self.account_open_date = account_open_date
 
         return self.__account_open_date
 

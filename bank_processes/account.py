@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 from bank_processes.user import User
 
 
@@ -88,17 +88,18 @@ class Account(User):
 
     @property
     def account_number(self):
-        query = (f"""
-        SELECT account_number 
-        FROM {self.database.db_tables[3]} 
-        WHERE account_id = {self.user_id}
-        """)
+        if self.user_id is not None:
+            query = (f"""
+            SELECT account_number 
+            FROM {self.database.db_tables[3]} 
+            WHERE account_id = {self.user_id}
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for account_number in data:
-                self.account_number = account_number
+            for data in datas:
+                for account_number in data:
+                    self.account_number = account_number
 
         return self.__account_number
 
@@ -112,17 +113,18 @@ class Account(User):
 
     @property
     def account_type(self):
-        query = (f"""
-        SELECT account_type 
-        FROM {self.database.db_tables[3]} 
-        WHERE account_number = '{self.account_number}'
-        """)
+        if self.user_id is not None:
+            query = (f"""
+            SELECT account_type 
+            FROM {self.database.db_tables[3]} 
+            WHERE account_number = '{self.account_number}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for account_type in data:
-                self.account_type = account_type
+            for data in datas:
+                for account_type in data:
+                    self.account_type = account_type
 
         return self.__account_type
 
@@ -136,17 +138,18 @@ class Account(User):
 
     @property
     def account_holder(self):
-        query = (f"""
-        SELECT account_holder 
-        FROM {self.database.db_tables[3]} 
-        WHERE account_number = '{self.account_number}'
-        """)
+        if self.user_id is not None:
+            query = (f"""
+            SELECT account_holder 
+            FROM {self.database.db_tables[3]} 
+            WHERE account_number = '{self.account_number}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for account_holder in data:
-                self.account_holder = account_holder
+            for data in datas:
+                for account_holder in data:
+                    self.account_holder = account_holder
 
         return self.__account_holder
 
@@ -160,17 +163,18 @@ class Account(User):
 
     @property
     def account_balance(self):
-        query = (f"""
-        SELECT account_balance 
-        FROM {self.database.db_tables[3]} 
-        WHERE account_number = '{self.account_number}'
-        """)
+        if self.user_id is not None:
+            query = (f"""
+            SELECT account_balance 
+            FROM {self.database.db_tables[3]} 
+            WHERE account_number = '{self.account_number}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for account_balance in data:
-                self.account_balance = account_balance
+            for data in datas:
+                for account_balance in data:
+                    self.account_balance = account_balance
 
         return self.__account_balance
 
@@ -184,17 +188,18 @@ class Account(User):
 
     @property
     def transaction_pin(self):
-        query = (f"""
-        SELECT transaction_pin 
-        FROM {self.database.db_tables[3]} 
-        WHERE account_number = '{self.account_number}'
-        """)
+        if self.user_id is not None:
+            query = (f"""
+            SELECT transaction_pin 
+            FROM {self.database.db_tables[3]} 
+            WHERE account_number = '{self.account_number}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for transaction_pin in data:
-                self.transaction_pin = transaction_pin
+            for data in datas:
+                for transaction_pin in data:
+                    self.transaction_pin = transaction_pin
 
         return self.__transaction_pin
 
@@ -208,17 +213,18 @@ class Account(User):
 
     @property
     def account_status(self):
-        query = (f"""
-        SELECT account_status 
-        FROM {self.database.db_tables[3]} 
-        WHERE account_number = '{self.account_number}'
-        """)
+        if self.user_id is not None:
+            query = (f"""
+            SELECT account_status 
+            FROM {self.database.db_tables[3]} 
+            WHERE account_number = '{self.account_number}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for account_status in data:
-                self.account_status = account_status
+            for data in datas:
+                for account_status in data:
+                    self.account_status = account_status
 
         return self.__account_status
 
@@ -232,17 +238,18 @@ class Account(User):
 
     @property
     def overdraft_protection(self):
-        query = (f"""
-        SELECT overdraft_protection 
-        FROM {self.database.db_tables[3]} 
-        WHERE account_number = '{self.account_number}'
-        """)
+        if self.user_id is not None:
+            query = (f"""
+            SELECT overdraft_protection 
+            FROM {self.database.db_tables[3]} 
+            WHERE account_number = '{self.account_number}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for overdraft_protection in data:
-                self.overdraft_protection = overdraft_protection
+            for data in datas:
+                for overdraft_protection in data:
+                    self.overdraft_protection = overdraft_protection
 
         return self.__overdraft_protection
 
@@ -256,17 +263,18 @@ class Account(User):
 
     @property
     def account_tier(self):
-        query = (f"""
-        SELECT account_tier 
-        FROM {self.database.db_tables[3]} 
-        WHERE account_number = '{self.account_number}'
-        """)
+        if self.user_id is not None:
+            query = (f"""
+            SELECT account_tier 
+            FROM {self.database.db_tables[3]} 
+            WHERE account_number = '{self.account_number}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for account_tier in data:
-                self.account_tier = account_tier
+            for data in datas:
+                for account_tier in data:
+                    self.account_tier = account_tier
 
         return self.__account_tier
 
@@ -280,17 +288,18 @@ class Account(User):
 
     @property
     def transaction_limit(self):
-        query = (f"""
-        SELECT transaction_limit 
-        FROM {self.database.db_tables[3]} 
-        WHERE account_number = '{self.account_number}'
-        """)
+        if self.user_id is not None:
+            query = (f"""
+            SELECT transaction_limit 
+            FROM {self.database.db_tables[3]} 
+            WHERE account_number = '{self.account_number}'
+            """)
 
-        datas: tuple = self.database.fetch_data(query)
+            datas: tuple = self.database.fetch_data(query)
 
-        for data in datas:
-            for transaction_limit in data:
-                self.transaction_limit = transaction_limit
+            for data in datas:
+                for transaction_limit in data:
+                    self.transaction_limit = transaction_limit
 
         return self.__transaction_limit
 
@@ -303,7 +312,7 @@ class Account(User):
         del self.__transaction_limit
 
 
-class Savings(Account):
+class Savings(Account, ABC):
     __minimum_balance: float = 500.0  # Minimum balance required to avoid fees or maintain the account.
     __account_fees: float = 100.0  # fees associated with the account, such as monthly maintenance fees.
 
@@ -334,7 +343,7 @@ class Savings(Account):
         return self.__account_fees
 
 
-class Current(Account):
+class Current(Account, ABC):
     __minimum_balance: float = 5000.0
     __account_fees: float = 1000.0  # fees associated with the account, such as monthly maintenance fees.
 
@@ -365,7 +374,7 @@ class Current(Account):
         return self.__account_fees
 
 
-class FixedDeposit(Account):
+class FixedDeposit(Account, ABC):
     def __init__(self, interest_rate: float = 0.0, interest_earned: float = 0.0):
         super().__init__()
         self.interest_rate = interest_rate  # Interest rate applied to the account balance (if applicable).

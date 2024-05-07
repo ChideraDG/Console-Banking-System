@@ -7,6 +7,8 @@ from bank_processes.user import User
 from bank_processes.account import Account
 from bank_processes.authentication import verify_data
 from banking.script import header, go_back
+import logging
+logger = logging.getLogger('ftpuploader')
 
 user = User()
 bvn = BVN()
@@ -426,7 +428,9 @@ def register_bvn_account():
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print(f"\nUser: {bvn.last_name} {bvn.first_name} {bvn.middle_name}")
         print(f"BVN NUMBER: {bvn.bvn_number}")
-    except Exception:
+    except Exception as e:
+        with open('error.txt', 'w') as file:
+            file.write(f'Error: {repr(e)}')
         print(f"\n*ERROR*\nError Creating BVN")
         go_back('script')
 
@@ -510,6 +514,8 @@ def register_bvn_account():
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print(f"\nUser: {user.last_name} {user.first_name} {user.middle_name}")
         print(f"ACCOUNT NUMBER: {account.account_number}")
-    except Exception:
+    except Exception as e:
+        with open('error.txt', 'w') as file:
+            file.write(f'Error: {repr(e)}')
         print(f"\n*ERROR*\nError Creating Bank Account")
         go_back('script')

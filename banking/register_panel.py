@@ -490,9 +490,9 @@ def register_bvn_account():
         user.last_login_timestamp = dt.datetime.now()
         user.account_open_date = dt.datetime.now()
 
-        user.username = user.first_name + user.middle_name
+        user.username = user.first_name.upper() + user.middle_name.upper()
         while verify_data('username', 1, user.username):
-            user.username = user.first_name + user.middle_name + str(random.randint(1, 1000))
+            user.username = user.first_name.upper() + user.middle_name.upper() + str(random.randint(1, 1000))
 
         if '-' in user.username:
             username_list = list(user.username)

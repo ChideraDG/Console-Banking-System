@@ -1,7 +1,9 @@
+from abc import ABC
 from datetime import datetime
 import random
 from typing import Any, Tuple
 from bank_processes.database import DataBase
+from bank_processes.user import User
 
 
 def verify_data(get_column: str, table_number: int, _object: str) -> bool:
@@ -76,11 +78,21 @@ def get_username_from_database(_object: str, email: bool = False, phone_number: 
             return username
 
 
-class Authentication:
+def token_auth():
+    """Generates token for username and password recovery."""
+    token = str(random.randint(100000, 999999))
+    with open('token_notification.txt', 'w') as file:
+        file.write(f"Your Token Number: {token}. Don't Share it.\nExpires after 30 minutes.")
+
+    return token
+
+
+class Authentication(User, ABC):
 
     def __init__(self, username: str = None, password: str = None, failed_login_attempts: int = 0,
                  auth_outcome: str = None, login_time_stamp: datetime = datetime.now().time(),
                  session_token: str = str(random.randint(100000, 999999))):
+        super().__init__(username, password)
         self.__username = username  # User's name for authentication.
         self.__password = password  # User's password for authentication.
         self.__failed_login_attempts = failed_login_attempts  # Count of failed login attempts for each user.
@@ -91,16 +103,7 @@ class Authentication:
     def user_login(self):
         """Method to authenticate and log in an existing user, verifying their credentials (e.g., username and
         password) against stored user data."""
-        db: DataBase = DataBase()
-
-        query = (f"""
-        select password from {db.db_tables[1]} where username = '{self.__username}'
-        """)
-
-        datas: tuple = db.fetch_data(query)
-        for data in datas:
-            for password in data:
-                self.password = password
+        pass
 
     def user_logout(self):
         """Method to log out the currently logged-in user from the bank app, terminating their session and clearing
@@ -129,10 +132,10 @@ class Authentication:
         expiration, and handling session timeouts."""
         pass
 
-    def password_reset(self):
-        """Method to initiate the password reset process for users who have forgotten their password, sending a
-        temporary password or password reset link via email or SMS."""
-        pass
+    # def password_reset(self):
+    #     """Method to initiate the password reset process for users who have forgotten their password, sending a
+    #     temporary password or password reset link via email or SMS."""
+    #     pass
 
     def account_lockout(self):
         """Method to temporarily lock user accounts after multiple failed login attempts, preventing brute force
@@ -193,3 +196,27 @@ class Authentication:
     @auth_outcome.deleter
     def auth_outcome(self):
         del self.__auth_outcome
+
+    @property
+    def login_time_stamp(self):
+        return self.__login_time_stamp
+
+    @login_time_stamp.setter
+    def login_time_stamp(self, _login_time_stamp: str):
+        self.__login_time_stamp = _login_time_stamp
+
+    @login_time_stamp.deleter
+    def login_time_stamp(self):
+        del self.__login_time_stamp
+
+    @property
+    def session_token(self):
+        return self.__session_token
+
+    @session_token.setter
+    def session_token(self, _session_token: str):
+        self.__session_token = _session_token
+
+    @session_token.deleter
+    def session_token(self):
+        del self.__session_token

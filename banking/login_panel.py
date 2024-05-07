@@ -6,18 +6,10 @@ from banking.script import header, go_back
 from bank_processes.authentication import (Authentication,
                                            verify_data,
                                            check_account_status,
-                                           get_username_from_database)
+                                           get_username_from_database,
+                                           token_auth)
 
 auth = Authentication()
-
-
-def token_auth():
-    """Generates token for username and password recovery."""
-    token = str(random.randint(100000, 999999))
-    with open('token_notification.txt', 'w') as file:
-        file.write(f"Your Token Number: {token}. Don't Share it.\nExpires after 30 minutes.")
-
-    return token
 
 
 def username():
@@ -43,11 +35,9 @@ def username():
                 del _username
                 time.sleep(3)
                 go_back('script')
-
-        if verify_data('username', 1, _username) and check_account_status(_username)[0]:
-            auth.username = _username
-            # auth.user_login()
-            return _username
+            elif check_account_status(_username)[0]:
+                auth.username = _username
+                return _username
         else:
             print("\n*ERROR*\nWrong Username.")
             time.sleep(3)
@@ -91,9 +81,9 @@ def password():
 
 def forgot_username():
     while True:
-        print("\nENTER YOUR PHONE NUMBER/E-MAIL:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        _input = input(">>> ")
+        print("\nENTER YOUR REGISTERED PHONE NUMBER/E-MAIL:")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        _input = input(">>> ").lower()
 
         if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _input, re.IGNORECASE):
             _username: str = get_username_from_database(_input, email=True)
@@ -143,11 +133,30 @@ def forgot_username():
             continue
 
 
+def forgot_password():
+    while True:
+        print("\nENTER YOUR USERNAME:")
+        print("~~~~~~~~~~~~~~~~~~~~")
+        _input = input(">>> ")
+
+        if verify_data('username', 1, _input):
+            auth.username = _input
+            time.sleep(2)
+            auth.reset_password()
+            auth.change_password()
+            break
+        else:
+            print("\n*ERROR*\nUsername doesn't exist.")
+            time.sleep(3)
+            continue
+
+
 def login():
     header()
 
     print("\nGo Back? Press 1")
     print("----------------")
+
     print("Forgot Username? Press 2")
     print("------------------------")
 
@@ -168,16 +177,18 @@ def login():
             del auth.username
         header()
         forgot_username()
-        time.sleep(3)
+        time.sleep(2)
         header()
         _username = username()
 
     header()
 
-    print(f"\nWelcome Back, {_username}")
-    print("~~~~~~~~~~~~~~" + '~' * len(_username))
+    print(f"\nWelcome Back, {auth.username}")
+    print("~~~~~~~~~~~~~~" + '~' * len(auth.username))
+
     print("\nGo Back? Press 1")
     print("----------------")
+
     print("Forgot Password? Press 2")
     print("------------------------")
 
@@ -186,18 +197,33 @@ def login():
     if re.search('^1$', _password):
         del _username
         del _password
+
         if auth.username is not None:
             del auth.username
         if auth.password is not None:
             del auth.password
+
         go_back('script')
     elif re.search('^2$', _password):
         del _username
         del _password
+
         if auth.username is not None:
             del auth.username
         if auth.password is not None:
             del auth.password
+
+        time.sleep(2)
+        header()
+        forgot_password()
+
+        if auth.username is not None:
+            del auth.username
+        if auth.password is not None:
+            del auth.password
+
+        login()
     else:
+        header()
         print("\nLogin Successful")
         print("~~~~~~~~~~~~~~~~")

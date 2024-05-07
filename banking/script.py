@@ -6,7 +6,10 @@ import time
 
 def clear():
     """Helps Clear the Output Console"""
-    os.system('clear')
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
 
 
 def header():
@@ -26,8 +29,8 @@ def go_back(return_place):
 def script():
     from banking.login_panel import login
     from banking.register_panel import register_bvn_account
-    while True:
 
+    while True:
         header()
 
         print(end='\n')

@@ -1,10 +1,12 @@
 import datetime
 import random
-from bank_processes.account import Savings, Current
+from abc import ABC
+
+from bank_processes.account import Savings, Current, Account
 from banking.register_panel import verify_data
 
 
-class Transaction:
+class Transaction(Account, ABC):
     currency: str = 'Naira'
 
     def __init__(self, transaction_id: str = str(random.randint(100000000000000000000000000000,
@@ -15,6 +17,7 @@ class Transaction:
                  description: str = None, status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
                  sender_name: str = None, receiver_name: str = None, balance: float = None):
+        super().__init__()
         self.__transaction_type = transaction_type
         self.__amount = amount
         self.__transaction_id = transaction_id  # unique identifier for transaction
@@ -22,8 +25,8 @@ class Transaction:
         self.__sender_acct_num = sender_acct_num  # sender's account number
         self.__receiver_acct_num = receiver_acct_num  # receiver's account number
         self.__description = description  # description of the transaction
-        self.__status = status  # status of the transaction
-        self.__fees = fees  # fees associated with the amount
+        # self.__status = status  # status of the transaction
+        # self.__fees = fees  # fees associated with the amount
         self.__merchant_info = merchant_info  # info about the merchant or receiver
         self.__transaction_category = transaction_category  # category of the transfer
         self.__user_id = user_id  # identifier of the user who initiated the transaction
@@ -66,7 +69,7 @@ class Transaction:
 
         trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                     {amt}
-                    {self.__status}
+                    {self.account_status}
         TRANSACTION DETAILS
         Transaction Type\t\t\t{self.__transaction_type}
         {detail_type}

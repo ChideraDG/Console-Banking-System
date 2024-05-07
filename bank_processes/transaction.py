@@ -12,9 +12,11 @@ class Transaction(Account, ABC):
     def __init__(self, transaction_id: str = str(random.randint(100000000000000000000000000000,
                                                                 999999999999999999999999999999)),
                  transaction_type: str = None,
-                 amount: float = None, transaction_date_time: datetime.datetime = None, sender_acct_num: str = None,
+                 amount: float = None, transaction_date_time: datetime.datetime = None,
+                 received_transaction_date_time: datetime.datetime = None,
+                 sender_acct_num: str = None,
                  receiver_acct_num: str = None,
-                 description: str = None, status: str = None, fees: float = None, merchant_info: str = None,
+                 description: str = None, trans_status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
                  sender_name: str = None, receiver_name: str = None, balance: float = None):
         super().__init__()
@@ -22,10 +24,11 @@ class Transaction(Account, ABC):
         self.__amount = amount
         self.__transaction_id = transaction_id  # unique identifier for transaction
         self.__transaction_date_time = transaction_date_time  # timestamp for when the transaction occurred
+        self.__received_transaction_date_time = received_transaction_date_time
         self.__sender_acct_num = sender_acct_num  # sender's account number
         self.__receiver_acct_num = receiver_acct_num  # receiver's account number
         self.__description = description  # description of the transaction
-        # self.__status = status  # status of the transaction
+        self.__trans_status = trans_status  # status of the transaction
         # self.__fees = fees  # fees associated with the amount
         self.__merchant_info = merchant_info  # info about the merchant or receiver
         self.__transaction_category = transaction_category  # category of the transfer
@@ -37,48 +40,85 @@ class Transaction(Account, ABC):
         self.__saving = Savings()
         self.__current = Current()
 
-    def transaction_record(self):
-        """Method to record new transactions made and the relevant information"""
+        while verify_data('transaction_id', self.__transaction_id):
+            self.__transaction_id = {random.randint(100000000000000000000000000000,
+                                                    999999999999999999999999999999)}
+
+    def sender_transaction_record(self):
+        """Method to record new transactions made by the sender  and the relevant information"""
         now = datetime.datetime.now()
         self.__transaction_date_time = now.strftime("%d %B %Y %H:%M:%S")
-        amt = ''
-        detail_type = ''  # whether sender or receiver
-        option_transfer = ''  # 'Payment method' in the  case of a debit and 'Credited' for credit
         self.__transaction_type = self.__transaction_type.upper()
-        if self.__transaction_type == 'WITHDRAW':
-            amt = f'-{self.__amount}'
-            detail_type = f'''Recipient Details\t\t\t{self.__sender_name}
-                          \t\t\tBankApp|{self.__sender_acct_num}'''
-            option_transfer = f'''Credited to         \t\tBalance'''
 
-        elif self.__transaction_type == 'TRANSFER':
-            amt = f'-{self.__amount}'
-            detail_type = f'''Recipient Details\t\t\t{self.__sender_name}
+        sender_trans_record = ''
+        if self.__transaction_type == 'TRANSFER':
+            sender_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        -{self.__amount}
+                        {self.__trans_status}
+            TRANSACTION DETAILS\n
+            Transaction Type\t\t\t{self.__transaction_type}
+            Recipient Details\t\t\t\t{self.__receiver_name}
+                          \t\t\tBankApp|{self.__receiver_acct_num}'''
+            Sender Details\t\t\t\t{self.__sender_name}
                           \t\t\tBankApp|{self.__sender_acct_num}'''
-            option_transfer = f'''Credited to         \t\tBalance'''
+            Description        \t\t\t{self.__description}
+            Payment Method         \t\tBalance'''
+            Transaction Date      \t\t{self.__transaction_date_time}
+            Transaction ID         \t\t{self.__transaction_id}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
+
+        elif self.__transaction_type == 'WITHDRAW':
+            sender_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        -{self.__amount}
+                        {self.__trans_status}
+            TRANSACTION DETAILS\n
+            Transaction Type\t\t\t{self.__transaction_type}
+            Sender Details\t\t\t\t{self.__sender_name}
+                            \t\t\tBankApp|{self.__sender_acct_num}'''
+            Description        \t\t\t{self.__description}
+            Payment Method         \t\tBalance'''
+            Transaction Date      \t\t{self.__transaction_date_time}
+            Transaction ID         \t\t{self.__transaction_id}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
 
         elif self.__transaction_type == 'DEPOSIT':
-            amt = f'+{self.__amount}'
-            detail_type = f'''Sender Details\t\t\t\t{self.__sender_name}
-                          \t\t\tBankApp|{self.__sender_acct_num}'''
-            option_transfer = f'''Payment Method         \t\tBalance'''
+            sender_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                        -{self.__amount}
+                        {self.__trans_status}
+            TRANSACTION DETAILS\n
+            Transaction Type\t\t\t{self.__transaction_type}
+            Recipient Details\t\t\t\t{self.__receiver_name}
+                          \t\t\tBankApp|{self.__receiver_acct_num}'''
+            Sender Details\t\t\t\t{self.__sender_name}
+                            \t\t\tBankApp|{self.__sender_acct_num}'''
+            Description        \t\t\t{self.__description}
+            Payment Method         \t\tBalance'''
+            Transaction Date      \t\t{self.__transaction_date_time}
+            Transaction ID         \t\t{self.__transaction_id}
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
+        print(sender_trans_record)
 
-            while verify_data('transaction_id', self.__transaction_id):
-                self.__transaction_id = {random.randint(100000000000000000000000000000,
-                                                        999999999999999999999999999999)}
+    def recipient_trans_record(self):
+        """Method to record new transactions made to the receiver  and the relevant information"""
+        now = datetime.datetime.now()
+        self.__received_transaction_date_time = now.strftime("%d %B %Y %H:%M:%S")
+        self.__transaction_type = self.__transaction_type.upper()
 
-        trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                    {amt}
-                    {self.account_status}
-        TRANSACTION DETAILS
-        Transaction Type\t\t\t{self.__transaction_type}
-        {detail_type}
-        Description        \t\t\t{self.__description}
-        {option_transfer}
-        Transaction Date      \t\t{self.__transaction_date_time}
-        Transaction ID         \t\t{self.__transaction_id}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
-        print(trans_record)
+        receiver_trans_record = ''
+
+        receiver_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                            f'+{self.__amount}'
+                            {self.__trans_status}
+                TRANSACTION DETAILS\n
+                Transaction Type\t\t\t{self.__transaction_type}
+                Sender Details\t\t\t\t{self.__sender_name}
+                                \t\t\tBankApp|{self.__sender_acct_num}'''
+                Description        \t\t\t{self.__description}
+                Credited to        \t\tBalance'''
+                Transaction Date      \t\t{self.__received_transaction_date_time}
+                Transaction ID         \t\t{self.__transaction_id}
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
+        print(receiver_trans_record)
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""
@@ -86,7 +126,7 @@ class Transaction(Account, ABC):
 
     def cal_transaction_fees(self):
         """Method to calculate fees associated with the transfer depending on the amount """
-        return self.__fees + self.__amount
+        # return self.__fees + self.__amount
 
     def transaction_validation(self):
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by

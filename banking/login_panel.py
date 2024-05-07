@@ -112,7 +112,7 @@ def forgot_username():
                 _tokenNumber = input(">>> ")
 
                 elapsed_time = time.time() - start_time
-                if elapsed_time < 30.0:
+                if elapsed_time < 300.0:
                     if _token == _tokenNumber:
                         with open('notification.txt', 'w') as file:
                             file.write(f"Your Username: {_username}. Don't Share it.")
@@ -123,7 +123,7 @@ def forgot_username():
                         time.sleep(3)
                         continue
                 else:
-                    print("\n:: Time is already over 30 minutes.")
+                    print("\n:: Time is already over 5 minutes.")
                     time.sleep(1)
                     print("\n:: Re-Sending Token Number")
                     start_time = time.time()

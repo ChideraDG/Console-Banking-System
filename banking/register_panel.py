@@ -7,8 +7,6 @@ from bank_processes.user import User
 from bank_processes.account import Account
 from bank_processes.authentication import verify_data
 from banking.script import header, go_back
-import logging
-logger = logging.getLogger('ftpuploader')
 
 user = User()
 bvn = BVN()

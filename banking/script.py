@@ -37,7 +37,6 @@ def header():
 
 def go_back(return_place):
     if return_place == 'script':
-        time.sleep(1)
         signing_in()
 
 

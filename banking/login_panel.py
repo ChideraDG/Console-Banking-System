@@ -197,78 +197,79 @@ def forgot_password():
 
 def login():
     """Processes the User's Login"""
-    header()
-
-    print("\nGo Back? Press 1")
-    print("----------------")
-
-    print("Forgot Username? Press 2")
-    print("------------------------")
-
-    time.sleep(1)
-
-    _username: str = username()
-
-    time.sleep(1)
-
-    if re.search('^1$', _username):
-        del _username
-        if auth.username is not None:
-            del auth.username
-        go_back('script')
-    elif re.search('^2$', _username):
-        del _username
-        if auth.username is not None:
-            del auth.username
+    try:
         header()
-        forgot_username()
-        time.sleep(2)
+
+        print("\nGo Back? Press 1")
+        print("----------------")
+
+        print("Forgot Username? Press 2")
+        print("------------------------")
+
+        time.sleep(1)
+
+        _username: str = username()
+
+        time.sleep(1)
+
+        if re.search('^1$', _username):
+            del _username
+            if auth.username is not None:
+                del auth.username
+            go_back('script')
+        elif re.search('^2$', _username):
+            del _username
+            if auth.username is not None:
+                del auth.username
+            header()
+            forgot_username()
+            time.sleep(2)
+            header()
+            _username = username()
+
         header()
-        _username = username()
 
-    header()
+        print("\nGo Back? Press 1")
+        print("----------------")
 
-    print("\nGo Back? Press 1")
-    print("----------------")
+        print("Forgot Password? Press 2")
+        print("------------------------")
 
-    print("Forgot Password? Press 2")
-    print("------------------------")
+        print(f"\nWelcome Back, {auth.first_name}")
+        print("~~~~~~~~~~~~~~" + '~' * len(auth.first_name))
 
-    print(f"\nWelcome Back, {auth.first_name}")
-    print("~~~~~~~~~~~~~~" + '~' * len(auth.first_name))
+        _password = password()
 
-    _password = password()
+        if re.search('^1$', _password):
+            del _username
+            del _password
 
-    if re.search('^1$', _password):
-        del _username
-        del _password
+            if auth.username is not None:
+                del auth.username
+            if auth.password is not None:
+                del auth.password
 
-        if auth.username is not None:
-            del auth.username
-        if auth.password is not None:
-            del auth.password
+            go_back('script')
+        elif re.search('^2$', _password):
+            del _username
+            del _password
 
-        go_back('script')
-    elif re.search('^2$', _password):
-        del _username
-        del _password
+            if auth.username is not None:
+                del auth.username
+            if auth.password is not None:
+                del auth.password
 
-        if auth.username is not None:
-            del auth.username
-        if auth.password is not None:
-            del auth.password
+            time.sleep(2)
+            header()
+            forgot_password()
 
-        time.sleep(2)
-        header()
-        forgot_password()
+            if auth.username is not None:
+                del auth.username
+            if auth.password is not None:
+                del auth.password
 
-        if auth.username is not None:
-            del auth.username
-        if auth.password is not None:
-            del auth.password
+            login()
 
-        login()
-    else:
         print(end='\n')
         countdown_timer(_register='\rLogging in', _duty='')
 
@@ -282,3 +283,9 @@ def login():
         )
 
         signed_in(username=_username, password=_password)
+    except Exception as e:
+        with open('error.txt', 'w') as file:
+            file.write(f'Error: {repr(e)}')
+        print(f'\nError: {repr(e)}')
+        time.sleep(3)
+        go_back('script')

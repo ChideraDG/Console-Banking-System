@@ -37,8 +37,8 @@ class Transaction(Account, ABC):
         self.__current = Current()
 
         while verify_data('transaction_id', self.__transaction_id):
-            self.__transaction_id = {random.randint(100000000000000000000000000000,
-                                                    999999999999999999999999999999)}
+            self.__transaction_id = str({random.randint(100000000000000000000000000000,
+                                                        999999999999999999999999999999)})
 
     def sender_transaction_record(self):
         """Method to record new transactions made by the sender  and the relevant information"""
@@ -64,6 +64,8 @@ class Transaction(Account, ABC):
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
 
         elif self.__transaction_type == 'WITHDRAW':
+            self.__receiver_name = ''
+            self.__receiver_acct_num = ''
             sender_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                         -{self.__amount}
                         {self.__trans_status}
@@ -92,6 +94,17 @@ class Transaction(Account, ABC):
             Transaction Date      \t\t{self.__transaction_date_time}
             Transaction ID         \t\t{self.__transaction_id}
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
+        query = f"""
+                INSERT INTO {self.database.db_tables[2]}
+                (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                receiver_account_number, receiver_name, transaction_date_time, description, status,account_type,
+                user_id)
+                VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
+                '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
+                '{self.__receiver_name}', {self.__transaction_date_time}, '{self.__description}'
+                '{self.__trans_status}', '{self.account_type}', '{self.user_id}')
+                 """
+        self.database.query(query)
         print(sender_trans_record)
 
     def recipient_trans_record(self):

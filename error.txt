@@ -1,1 +1,1 @@
-Error: NotImplementedError('No usable implementation found!')
+Error: AttributeError("'Authentication' object has no attribute '_Authentication__session_token'")

@@ -13,12 +13,12 @@ bvn = BVN()
 account = Account()
 
 
-def countdown_timer(register):
+def countdown_timer(_register, _duty: str = 'creation'):
     """Countdown for the bank or bvn creation. It enhances users' experience."""
     print()
     countdown = 3
     while countdown != 0:
-        print(f"processing {register} creation...{countdown}", end='')
+        print(f"processing {_register} {_duty}... {countdown}", end='')
         countdown -= 1
         time.sleep(1)
         print(end='\r')

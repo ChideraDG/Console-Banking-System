@@ -86,98 +86,105 @@ class User:
         user's registered email or phone number."""
         from bank_processes.authentication import token_auth
         from banking.register_panel import account_password
-        from banking.script import header
+        from banking.script import header, go_back
 
-        while True:
-            header()
-            print("\nReset your password with your Phone Number? Press 1")
-            print("---------------------------------------------------")
-            print("Reset your password with your Email? Press 2")
-            print("--------------------------------------------")
-            _input = input(">>> ")
+        try:
+            while True:
+                header()
+                print("\nReset your password with your Phone Number? Press 1")
+                print("---------------------------------------------------")
+                print("Reset your password with your Email? Press 2")
+                print("--------------------------------------------")
+                _input = input(">>> ")
 
-            time.sleep(1)
+                time.sleep(1)
 
-            if re.search('^1$', _input):
-                four_digit = self.phone_number[-4:]
-                incomplete_number = self.phone_number[:-4] + '****'
-                while True:
-                    header()
-                    print(f"\nENTER THE LAST FOUR DIGITS OF YOUR PHONE NUMBER ({incomplete_number}):")
-                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+"~"*len(incomplete_number))
-                    _input = input(">>> ")
+                if re.search('^1$', _input):
+                    four_digit = self.phone_number[-4:]
+                    incomplete_number = self.phone_number[:-4] + '****'
+                    while True:
+                        header()
+                        print(f"\nENTER THE LAST FOUR DIGITS OF YOUR PHONE NUMBER ({incomplete_number}):")
+                        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+"~"*len(incomplete_number))
+                        _input = input(">>> ")
 
-                    if four_digit == _input:
-                        start_time = time.time()
-                        _token = token_auth()
-                        while True:
-                            print("\nENTER YOUR TOKEN NUMBER:")
-                            print("~~~~~~~~~~~~~~~~~~~~~~~~")
-                            _tokenNumber = input(">>> ")
+                        if four_digit == _input:
+                            start_time = time.time()
+                            _token = token_auth()
+                            while True:
+                                print("\nENTER YOUR TOKEN NUMBER:")
+                                print("~~~~~~~~~~~~~~~~~~~~~~~~")
+                                _tokenNumber = input(">>> ")
 
-                            elapsed_time = time.time() - start_time
-                            if elapsed_time < 30.0:
-                                if _token == _tokenNumber:
-                                    self.password = account_password()
-                                    break
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time < 30.0:
+                                    if _token == _tokenNumber:
+                                        self.password = account_password()
+                                        break
+                                    else:
+                                        print("\n*ERROR*\nWrong Token Number.\n\nTry Again")
+                                        time.sleep(3)
+                                        continue
                                 else:
-                                    print("\n*ERROR*\nWrong Token Number.\n\nTry Again")
+                                    print("\n*ERROR*\nTime is already over 30 minutes.\n\nRe-Sending Token Number")
+                                    start_time = time.time()
+                                    _token = token_auth()
                                     time.sleep(3)
                                     continue
-                            else:
-                                print("\n*ERROR*\nTime is already over 30 minutes.\n\nRe-Sending Token Number")
-                                start_time = time.time()
-                                _token = token_auth()
-                                time.sleep(3)
-                                continue
-                        break
-                    else:
-                        print("\n*ERROR*\nWrong Four Digit Input.")
-                        time.sleep(3)
-                        continue
-                break
-            elif re.search('^2$', _input):
-                at_index = self.email.index('@')
-                incomplete_email = self.email[:1-len(self.email)]+'*'*len(self.email[1:at_index])+self.email[at_index:]
-                while True:
-                    header()
-                    print(f"\nENTER YOUR EMAIL ({incomplete_email}):")
-                    print("~~~~~~~~~~~~~~~~~~~~" + "~" * len(incomplete_email))
-                    _input = input(">>> ")
+                            break
+                        else:
+                            print("\n*ERROR*\nWrong Four Digit Input.")
+                            time.sleep(3)
+                            continue
+                    break
+                elif re.search('^2$', _input):
+                    at_index = self.email.index('@')
+                    incomplete_email = self.email[:1-len(self.email)]+'*'*len(self.email[1:at_index])+self.email[at_index:]
+                    while True:
+                        header()
+                        print(f"\nENTER YOUR EMAIL ({incomplete_email}):")
+                        print("~~~~~~~~~~~~~~~~~~~~" + "~" * len(incomplete_email))
+                        _input = input(">>> ")
 
-                    if self.email == _input.lower():
-                        start_time = time.time()
-                        _token = token_auth()
-                        while True:
-                            print("\nENTER YOUR TOKEN NUMBER:")
-                            print("~~~~~~~~~~~~~~~~~~~~~~~~")
-                            _tokenNumber = input(">>> ")
+                        if self.email == _input.lower():
+                            start_time = time.time()
+                            _token = token_auth()
+                            while True:
+                                print("\nENTER YOUR TOKEN NUMBER:")
+                                print("~~~~~~~~~~~~~~~~~~~~~~~~")
+                                _tokenNumber = input(">>> ")
 
-                            elapsed_time = time.time() - start_time
-                            if elapsed_time < 30.0:
-                                if _token == _tokenNumber:
-                                    self.password = account_password()
-                                    break
+                                elapsed_time = time.time() - start_time
+                                if elapsed_time < 30.0:
+                                    if _token == _tokenNumber:
+                                        self.password = account_password()
+                                        break
+                                    else:
+                                        print("\n*ERROR*\nWrong Token Number.\n\nTry Again")
+                                        time.sleep(3)
+                                        continue
                                 else:
-                                    print("\n*ERROR*\nWrong Token Number.\n\nTry Again")
+                                    print("\n*ERROR*\nTime is already over 30 minutes.\n\nRe-Sending Token Number")
+                                    start_time = time.time()
+                                    _token = token_auth()
                                     time.sleep(3)
                                     continue
-                            else:
-                                print("\n*ERROR*\nTime is already over 30 minutes.\n\nRe-Sending Token Number")
-                                start_time = time.time()
-                                _token = token_auth()
-                                time.sleep(3)
-                                continue
-                        break
-                    else:
-                        print("\n*ERROR*\nWrong Corresponding Email.")
-                        time.sleep(3)
-                        continue
-                break
-            else:
-                print("\n*ERROR*\nWrong Input.")
-                time.sleep(3)
-                continue
+                            break
+                        else:
+                            print("\n*ERROR*\nWrong Corresponding Email.")
+                            time.sleep(3)
+                            continue
+                    break
+                else:
+                    print("\n*ERROR*\nWrong Input.")
+                    time.sleep(3)
+                    continue
+        except Exception as e:
+            with open('error.txt', 'w') as file:
+                file.write(f'Error: {repr(e)}')
+            print(f'\nError: {repr(e)}')
+            time.sleep(3)
+            go_back('script')
 
     def reset_transaction_pin(self):
         """Method to initiate the transaction pin reset process, sending a temporary password or password reset link

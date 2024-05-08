@@ -509,8 +509,8 @@ def register_bvn_account():
         header()
 
         print("\nBank Account Successfully Created.")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(f"\nUser: {user.last_name} {user.first_name} {user.middle_name}")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(f"\nUSERNAME: {user.username}")
         print(f"ACCOUNT NUMBER: {account.account_number}")
     except Exception as e:
         with open('error.txt', 'w') as file:

@@ -1,5 +1,5 @@
 import datetime
-import datetime as dt
+import calendar
 import os
 import re
 import time
@@ -14,13 +14,25 @@ def clear():
         os.system('clear')
 
 
+def findDate(date):
+    year, month, day = (int(i) for i in date.split('-'))
+    dayNumber = calendar.weekday(year, month, day)
+    monthNumber = datetime.datetime.now().month
+
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+              "November", "December"]
+
+    return days[dayNumber], str(day), months[monthNumber-1], str(year)
+
+
 def header():
     clear()
-    today_date = dt.datetime.now().date()
-    time_now = dt.datetime.now().time()
+    date = datetime.datetime.today().date()
+    day_in_words, day, month, year = findDate(str(date))
 
-    print(f"BETA BANKING {today_date} {time_now}")
-    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    print(f"BETA BANKING         {day_in_words}, {day} {month} {year}")
+    print("~~~~~~~~~~~~         ~~~~", "~"*(len(day_in_words)+len(day)+len(month)+len(year)), sep='')
 
 
 def go_back(return_place):
@@ -29,38 +41,37 @@ def go_back(return_place):
 
 
 def signing_in():
-    try:
-        from banking.login_panel import login
-        from banking.register_panel import register_bvn_account
+    from banking.login_panel import login
+    from banking.register_panel import register_bvn_account
 
-        while True:
-            header()
+    while True:
+        header()
 
-            print(end='\n')
-            print(' ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~')
-            print("|  1. NEW USER  |  2. EXISTING USER  |")
-            print(" ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~")
-            print("|         3. UNBLOCK ACCOUNT         |")
-            print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(end='\n')
+        print(' ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~')
+        print("|  1. NEW USER  |  2. EXISTING USER  |")
+        print(" ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~")
+        print("|         3. UNBLOCK ACCOUNT         |")
+        print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-            user_input = input(">>> ")
+        user_input = input(">>> ")
 
-            if re.search('^1$', user_input):
-                register_bvn_account()
-                time.sleep(5)
-                login()
-                break
-            elif re.search('^2$', user_input):
-                login()
-                break
-            elif re.search('^3$', user_input):
-                break
-            else:
-                del user_input
-                continue
-    except Exception as e:
-        with open('error.txt', 'w') as file:
-            file.write(f'Error: {repr(e)}')
+        if re.search('^1$', user_input):
+            register_bvn_account()
+            time.sleep(5)
+            login()
+            break
+        elif re.search('^2$', user_input):
+            login()
+            break
+        elif re.search('^3$', user_input):
+            break
+        else:
+            del user_input
+            continue
+    # except Exception as e:
+    #     with open('error.txt', 'w') as file:
+    #         file.write(f'Error: {repr(e)}')
 
 
 def signed_in(username: str, password: str):

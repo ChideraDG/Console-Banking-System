@@ -2,12 +2,15 @@
 import random
 import re
 import time
-from banking.script import header, go_back, signed_in
+from datetime import datetime
+
+from banking.script import header, go_back, signed_in, findDate
 from bank_processes.authentication import (Authentication,
                                            verify_data,
                                            check_account_status,
                                            get_username_from_database,
                                            token_auth)
+from plyer import notification as note
 
 auth = Authentication()
 
@@ -114,6 +117,11 @@ def forgot_username():
                 elapsed_time = time.time() - start_time
                 if elapsed_time < 300.0:
                     if _token == _tokenNumber:
+                        note.notify(
+                            title='Username Notification',
+                            message=f"Your Username: {_username}. \nDon't Share it.",
+                            timeout=30
+                        )
                         with open('notification.txt', 'w') as file:
                             file.write(f"Your Username: {_username}. Don't Share it.")
                         print("\nUsername Successfully Recovered. \nUsername sent to your notification")
@@ -187,14 +195,14 @@ def login():
 
     header()
 
-    print(f"\nWelcome Back, {auth.username}")
-    print("~~~~~~~~~~~~~~" + '~' * len(auth.username))
-
     print("\nGo Back? Press 1")
     print("----------------")
 
     print("Forgot Password? Press 2")
     print("------------------------")
+
+    print(f"\nWelcome Back, {auth.first_name}")
+    print("~~~~~~~~~~~~~~" + '~' * len(auth.username))
 
     _password = password()
 
@@ -228,8 +236,16 @@ def login():
 
         login()
     else:
+        date = datetime.today().date()
+        day_in_words, day, month, year = findDate(str(date))
+
+        note.notify(
+            title='Login Notification',
+            message=f"You logged into your Account on {day_in_words}, {day} {month} {year}. \nDon't Share it.",
+            timeout=30
+        )
+
         header()
-        # auth.user_login()
         print("\n:: Login Successful")
         print("~~~~~~~~~~~~~~~~~~~")
         # time.sleep(2)

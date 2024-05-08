@@ -4,6 +4,7 @@ import random
 from typing import Any, Tuple
 from bank_processes.account import Account
 from bank_processes.database import DataBase
+from plyer import notification as note
 
 
 def verify_data(get_column: str, table_number: int, _object: str) -> bool:
@@ -81,6 +82,12 @@ def get_username_from_database(_object: str, email: bool = False, phone_number: 
 def token_auth():
     """Generates token for username and password recovery."""
     token = str(random.randint(100000, 999999))
+
+    note.notify(
+        title='Username Notification',
+        message=f"Your Token Number: {token}. Don't Share it.\nExpires after 30 minutes.",
+        timeout=30
+    )
     with open('token_notification.txt', 'w') as file:
         file.write(f"Your Token Number: {token}. Don't Share it.\nExpires after 30 minutes.")
 

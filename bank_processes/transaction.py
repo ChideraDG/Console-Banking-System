@@ -102,7 +102,7 @@ class Transaction(Account, ABC):
                 VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
                 '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
                 '{self.__receiver_name}', {self.__transaction_date_time}, '{self.__description}'
-                '{self.__trans_status}', '{self.account_type}', '{self.user_id}')
+                '{self.__trans_status}', '{self.account_type}', {self.user_id})
                  """
         self.database.query(query)
         print(sender_trans_record)

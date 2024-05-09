@@ -113,8 +113,8 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
 
 def signed_in(username: str, password: str):
     auth = Authentication()
-    try:
 
+    try:
         auth.username = username
         auth.password = password
         auth.user_login()

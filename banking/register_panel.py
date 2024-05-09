@@ -300,13 +300,13 @@ def account_password() -> str:
     """Gets the account password of the User."""
     while True:
         print("\nEnter a new Bank Application Password:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-        print("First Input:")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("\nEnter Password:")
         accountPassword = input(">>> ").strip()
 
         if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$.#!%*?&])[A-Za-z\d@$!#%*?.&]{8,}$", accountPassword):
             while True:
-                print("\nSecond Input:")
+                print("\nRe-enter Password:")
                 second_input = input(">>> ").strip()
                 if accountPassword == second_input:
                     break
@@ -329,14 +329,14 @@ def account_password() -> str:
 def transaction_pin():
     """Gets the transaction pin of the User."""
     while True:
-        print("\nEnter your new Transaction Pin:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-        print("First Input:")
+        print("\nEnter your new Transaction Pin: (A Four-digit Number)")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "~"*len(' (A Four-digit Number)'), sep="")
+        print("\nEnter Transaction Pin:")
         transactionPin = input(">>> ").strip()
 
         if re.search(r"^\d{4}$", transactionPin):
             while True:
-                print("\nSecond Input:")
+                print("\nRe-Enter Transaction Pin:")
                 second_input = input(">>> ").strip()
                 if transactionPin == second_input:
                     break

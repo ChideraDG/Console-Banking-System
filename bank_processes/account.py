@@ -7,7 +7,8 @@ class Account(User):
 
     def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None,
                  account_balance: float = None, transaction_pin: str = None, account_status: str = None,
-                 account_tier: str = None, transaction_limit: int = None, overdraft_protection: str = None):
+                 account_tier: str = None, transaction_limit: int = None, overdraft_protection: str = None,
+                 beneficiaries: dict = None):
         super().__init__()
         self.__account_number = account_number  # Unique identifier for the account.
         self.__account_type = account_type  # Type of account (e.g., savings, checking, credit card).
@@ -18,6 +19,7 @@ class Account(User):
         self.__overdraft_protection = overdraft_protection  # Indicator of whether the account has overdraft protection enabled.
         self.__account_tier = account_tier  # Current level of the account
         self.__transaction_limit = transaction_limit  # Limits on the number or amount of transactions allowed within a certain period.
+        self.__beneficiaries = beneficiaries  # Beneficiaries of the Account
 
     def open_account(self):
         """Method to register a new user with the bank app, including capturing and validating personal information
@@ -310,6 +312,31 @@ class Account(User):
     @transaction_limit.deleter
     def transaction_limit(self):
         del self.__transaction_limit
+
+    @property
+    def beneficiaries(self):
+        if self.user_id is not None:
+            query = (f"""
+                SELECT beneficiaries 
+                FROM {self.database.db_tables[3]} 
+                WHERE account_number = '{self.account_number}'
+                """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for beneficiaries in data:
+                    self.beneficiaries = beneficiaries
+
+        return self.__beneficiaries
+
+    @beneficiaries.setter
+    def beneficiaries(self, _beneficiaries: dict):
+        self.__beneficiaries = _beneficiaries
+
+    @beneficiaries.deleter
+    def beneficiaries(self):
+        del self.__beneficiaries
 
 
 class Savings(Account, ABC):

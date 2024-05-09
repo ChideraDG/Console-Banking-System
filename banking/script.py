@@ -23,7 +23,7 @@ def findDate(date):
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
               "November", "December"]
 
-    return days[dayNumber], str(day), months[monthNumber-1], str(year)
+    return days[dayNumber], str(day), months[monthNumber - 1], str(year)
 
 
 def header():
@@ -33,8 +33,8 @@ def header():
     day_in_words, day, month, year = findDate(str(date))
 
     print(f"CONSOLE BETA BANKING   :: {day_in_words}, {day} {month} {year} ::   :: {time_now} ::")
-    print("~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~", "~"*(len(day_in_words)+len(day)+len(month)+len(year)),
-          "   ~~~~~~", "~"*len(str(time_now)), sep='')
+    print("~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~", "~" * (len(day_in_words) + len(day) + len(month) + len(year)),
+          "   ~~~~~~", "~" * len(str(time_now)), sep='')
 
 
 def go_back(return_place):
@@ -73,14 +73,8 @@ def signing_in():
             continue
 
 
-def signed_in(username: str, password: str):
-    auth = Authentication()
+def signed_in_header(auth: Authentication, account_balance_display: bool = True):
     try:
-
-        auth.username = username
-        auth.password = password
-        auth.user_login()
-
         if datetime.time(0, 0, 0) < datetime.datetime.now().time() < datetime.time(12, 0, 0):
             time_of_the_day = 'Morning'
         elif datetime.time(12, 0, 0) < datetime.datetime.now().time() < datetime.time(17, 0, 0):
@@ -90,25 +84,44 @@ def signed_in(username: str, password: str):
         else:
             time_of_the_day = 'Night'
 
+        header()
+        if account_balance_display:
+            display_name = 'HIDE'
+            print(end='\n')
+            print(f"Good {time_of_the_day}, {auth.first_name}               "
+                  f"{auth.account_balance} Naira               "
+                  f"Session Token: {auth.session_token}")
+            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), "               ~~~~~~",
+                  "~" * len(str(auth.account_balance)),
+                  "               ~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
+        else:
+            display_name = 'SHOW'
+            print(end='\n')
+            print(f"Good {time_of_the_day}, {auth.first_name}                                         "
+                  f"Session Token: {auth.session_token}")
+            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), "               ",
+                  "                          ~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
+
+        return display_name
+    except Exception as e:
+        with open('error.txt', 'w') as file:
+            file.write(f'Error: {repr(e)}')
+        print(f'\nError: {repr(e)}')
+        time.sleep(3)
+        go_back('script')
+
+
+def signed_in(username: str, password: str):
+    auth = Authentication()
+    try:
+
+        auth.username = username
+        auth.password = password
+        auth.user_login()
+
         account_balance_display = True
         while True:
-            header()
-            if account_balance_display:
-                display_name = 'HIDE'
-                print(end='\n')
-                print(f"Good {time_of_the_day}, {auth.first_name}               "
-                      f"{auth.account_balance} Naira               "
-                      f"Session Token: {auth.session_token}")
-                print(f"~~~~~~~", "~"*len(time_of_the_day), "~"*len(auth.first_name), "               ~~~~~~",
-                      "~"*len(str(auth.account_balance)),
-                      "               ~~~~~~~~~~~~~~~", "~"*len(auth.session_token), sep='')
-            else:
-                display_name = 'SHOW'
-                print(end='\n')
-                print(f"Good {time_of_the_day}, {auth.first_name}                                         "
-                      f"Session Token: {auth.session_token}")
-                print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), "               ",
-                      "                          ~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
+            display_name = signed_in_header(auth, account_balance_display)
 
             print(end='\n')
             print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ")

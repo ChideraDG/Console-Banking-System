@@ -28,11 +28,13 @@ def findDate(date):
 
 def header():
     clear()
+    time_now = datetime.datetime.now().time()
     date = datetime.datetime.today().date()
     day_in_words, day, month, year = findDate(str(date))
 
-    print(f"CONSOLE BETA BANKING   :: {day_in_words}, {day} {month} {year} ::")
-    print("~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~", "~"*(len(day_in_words)+len(day)+len(month)+len(year)), sep='')
+    print(f"CONSOLE BETA BANKING   :: {day_in_words}, {day} {month} {year} ::   :: {time_now} ::")
+    print("~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~", "~"*(len(day_in_words)+len(day)+len(month)+len(year)),
+          "   ~~~~~~", "~"*len(str(time_now)), sep='')
 
 
 def go_back(return_place):

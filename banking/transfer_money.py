@@ -36,6 +36,7 @@ def process_transfer(auth: Authentication):
     header()
 
     while True:
+        # To Bank or To Beneficiaries
         break
 
     if auth.account_type == 'savings':

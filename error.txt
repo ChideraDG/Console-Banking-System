@@ -1,1 +1,1 @@
-Error: AttributeError("'Authentication' object has no attribute '_Authentication__session_token'")
+Error: NotImplementedError('This Method not in Use.')

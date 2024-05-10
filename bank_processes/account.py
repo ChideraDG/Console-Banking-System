@@ -83,6 +83,10 @@ class Account(User):
         prevent fraudulent or unauthorized transactions."""
         pass
 
+    def add_beneficiaries(self, _account_holder: str, _account_number: str):
+        """Method to add new beneficiaries to an Account"""
+        pass
+
     def for_debugging(self):
         """For Debugging"""
         return f"""{self.account_number} {self.account_type} {self.account_balance} {self.account_holder} 
@@ -359,7 +363,7 @@ class Savings(Account, ABC):
     def transfer(self):
         """Method to facilitate transferring funds between accounts. It should handle transferring money from one
         account to another, updating the balances of both accounts involved."""
-        pass
+        print(self.account_number)
 
     @property
     def minimum_balance(self):

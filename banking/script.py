@@ -3,7 +3,10 @@ import calendar
 import os
 import re
 import time
+
+from bank_processes.account import Savings, Current
 from bank_processes.authentication import Authentication
+from banking import transfer_money
 
 
 def clear():
@@ -149,7 +152,7 @@ def signed_in(username: str, password: str):
 
                     continue
                 elif re.search('^2$', user_input):
-                    pass
+                    transfer_money.process_transfer(auth)
                 elif re.search('^3$', user_input):
                     pass
                 elif re.search('^4$', user_input):

@@ -3,18 +3,13 @@ import calendar
 import os
 import re
 import time
-
-from bank_processes.account import Savings, Current
 from bank_processes.authentication import Authentication
 from banking import transfer_money
 
 
 def clear():
     """Helps Clear the Output Console"""
-    if os.name == 'nt':
-        os.system('cls')
-    else:
-        os.system('clear')
+    os.system('cls') if os.name == 'nt' else os.system('clear')
 
 
 def findDate(date):

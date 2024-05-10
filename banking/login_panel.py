@@ -1,9 +1,6 @@
-# import datetime as dt
-import random
 import re
 import time
 from datetime import datetime
-
 from banking.register_panel import countdown_timer
 from banking.script import header, go_back, signed_in, findDate
 from bank_processes.authentication import (Authentication,
@@ -158,7 +155,7 @@ def forgot_username():
                         continue
                 break
             else:
-                print(":: Phone Number doesn't exist.")
+                print("\n:: Phone Number doesn't exist.")
                 time.sleep(3)
                 continue
     except Exception as e:
@@ -184,7 +181,7 @@ def forgot_password():
                 auth.change_password()
                 break
             else:
-                print("\n*ERROR*\nUsername doesn't exist.")
+                print("\n:: Username doesn't exist.")
                 time.sleep(3)
                 continue
     except Exception as e:

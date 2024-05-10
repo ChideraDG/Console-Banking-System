@@ -1,47 +1,69 @@
+import json
 import re
-from bank_processes.account import Savings, Current
+import time
 from bank_processes.authentication import Authentication
-from banking.script import header
+from banking.script import header, clear
 
 
 def beneficiaries(auth: Authentication):
     while True:
-        beneficiary = auth.beneficiaries
+        beneficiary = json.loads(auth.beneficiaries)
 
         print(end='\n')
+        if beneficiary:
+            header()
+            print('\n')
 
-        for account_number, account_name in beneficiary.items():
-            print(f'{account_number} - {account_name[0]} : {account_name[1]}')
-            print('    ~~~', "~" * (len(account_name[0]) + len(account_name[1])), sep='')
+            for account_number, account_name in beneficiary.items():
+                print(f'{account_number} - {account_name[0]} : {account_name[1]}')
+                print('    ~~~', "~" * (len(account_name[0]) + len(account_name[1])), sep='')
 
-        print("Pick a Beneficiary:")
-        _input = input('>>> ')
+            print("\nPick a Beneficiary:")
+            _input = input('>>> ')
 
-        if re.search("^\\D$", _input):
-            print('here')
-            continue
+            if re.search("^\\D$", _input):
+                print('here')
+                continue
 
-        if int(_input) <= len(beneficiary):
-            for key in beneficiary.keys():
-                if int(_input) == key:
-                    return beneficiary[key]
+            if int(_input) <= len(beneficiary):
+                for key in beneficiary.keys():
+                    if _input == key:
+                        return beneficiary[key]
+            else:
+                continue
         else:
-            continue
+            return ':: Empty'
 
 
 def process_transfer(auth: Authentication):
-    savings = Savings()
-    current = Current()
-
-    header()
 
     while True:
+        header()
         # To Bank or To Beneficiaries
-        break
+        print(end='\n')
+        print(" ~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~ ")
+        print("|  1. to BANK  |  2. to BENEFICIARY  |")
+        print(" ~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~ ")
+        user_input = input(">>> ")
+
+        if re.search('^1$', user_input):
+            pass
+        elif re.search('^2$', user_input):
+            bene = beneficiaries(auth)
+            if bene == ':: Empty':
+                print('\n' + bene)
+                time.sleep(3)
+                continue
+            else:
+                print(bene)
+                time.sleep(5)
+                break
+        else:
+            continue
 
     if auth.account_type == 'savings':
-        savings.transfer()
+        auth.transfer()
     elif auth.account_type == 'current':
-        current.transfer()
+        auth.transfer()
     else:
         raise TypeError("Account Type doesn't exist")

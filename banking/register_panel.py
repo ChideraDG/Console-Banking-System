@@ -37,8 +37,7 @@ def first_name() -> str:
         if re.search('^[a-z-]+$', name, re.IGNORECASE):
             break
         else:
-            print('\n*ERROR*')
-            print("-> Names should be in letters only.\nExample: James, Mary, etc.")
+            print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
             time.sleep(2)
             continue
 
@@ -58,8 +57,7 @@ def middle_name() -> str:
         if re.search('[a-z-]+', name, re.IGNORECASE):
             break
         else:
-            print('\n*ERROR*')
-            print("-> Names should be in letters only.\nExample: James, Mary, etc.")
+            print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
             time.sleep(2)
             continue
 
@@ -79,8 +77,7 @@ def last_name() -> str:
         if re.search('[a-z-]+', name, re.IGNORECASE):
             break
         else:
-            print('\n*ERROR*')
-            print("-> Names should be in letters only.\nExample: James, Mary, etc.")
+            print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
             time.sleep(2)
             continue
 
@@ -95,8 +92,7 @@ def gender() -> str:
         _gender = input(">>> ").strip()
 
         if not re.search('^(male|female)$', _gender, re.IGNORECASE):
-            print('\n*ERROR*')
-            print("-> Gender should be either Male or Female only.")
+            print("\n:: Gender should be either Male or Female only.")
             time.sleep(2)
             continue
         else:
@@ -129,14 +125,13 @@ def date_of_birth() -> str:
         if year_of_birth.isdigit() and 1900 < int(year_of_birth) <= max_year:
             break
         else:
-            print('\n*ERROR*')
             if year_of_birth.isdigit():
                 if not int(year_of_birth) <= max_year:
-                    print("-> Age is less than 18")
+                    print("\n:: Age is less than 18")
                 elif not 1900 < int(year_of_birth):
-                    print("-> Year is less than 1900")
+                    print("\n:: Year is less than 1900")
             else:
-                print("-> Year of Birth should be in digits.\nExample: 2001, 2004, etc.")
+                print("\n:: Year of Birth should be in digits.\nExample: 2001, 2004, etc.")
             time.sleep(2)
             continue
 
@@ -150,12 +145,11 @@ def date_of_birth() -> str:
         if month_of_birth.isdigit() and 0 < int(month_of_birth) <= month:
             break
         else:
-            print('\n*ERROR*')
             if month_of_birth.isdigit():
                 if not 0 < int(month_of_birth) <= 12:
-                    print("-> Month of Birth should be between Zero(0) and Twelve(12)")
+                    print("\n:: Month of Birth should be between Zero(0) and Twelve(12)")
             else:
-                print("-> Month of Birth should be in digits.\nExample: 2 means February, 4 means April, etc.")
+                print("\n:: Month of Birth should be in digits.\nExample: 2 means February, 4 means April, etc.")
             time.sleep(2)
             continue
 
@@ -210,12 +204,11 @@ def date_of_birth() -> str:
         if day_of_birth.isdigit() and 0 < int(day_of_birth) <= days:
             break
         else:
-            print('\n*ERROR*')
             if day_of_birth.isdigit():
                 if not 0 < int(day_of_birth) <= days:
-                    print(f"-> Day of Birth should be within the number of days in {month_name}")
+                    print(f"\n:: Day of Birth should be within the number of days in {month_name}")
             else:
-                print("-> Day of Birth should be in digits.\nExample: 2, 4, 10, etc.")
+                print("\n:: Day of Birth should be in digits.\nExample: 2, 4, 10, etc.")
             time.sleep(2)
             continue
 
@@ -238,8 +231,7 @@ def e_mail() -> str:
         if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", email, re.IGNORECASE):
             break
         else:
-            print('\n*ERROR*')
-            print("-> Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.")
+            print("\n:: Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.")
             time.sleep(2)
             continue
 
@@ -254,16 +246,14 @@ def phone_number() -> str:
         phoneNumber = input(">>> ").strip()
 
         if verify_data('phone_number', 0, phoneNumber):
-            print('\n*ERROR*')
-            print("-> Phone Number already exist")
+            print("\n:: Phone Number already exist")
             time.sleep(3)
             continue
 
         if re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', phoneNumber) and 11 <= len(phoneNumber) <= 15:
             break
         else:
-            print('\n*ERROR*')
-            print("-> Phone Number should be in digits  only.\nExample: 08076542879, +2348033327493 etc.")
+            print("\n:: Phone Number should be in digits  only.\nExample: 08076542879, +2348033327493 etc.")
             time.sleep(2)
             continue
 
@@ -288,8 +278,7 @@ def account_type() -> str:
             accountType = 'Fixed Deposit'
             break
         else:
-            print('\n*ERROR*')
-            print("-> Choose between Saving or Current or Fixed Deposit")
+            print("\n:: Choose between Saving or Current or Fixed Deposit")
             time.sleep(2)
             continue
 
@@ -311,15 +300,13 @@ def account_password() -> str:
                 if accountPassword == second_input:
                     break
                 else:
-                    print('\n*ERROR*')
-                    print("-> Passwords are not the same")
+                    print("\n:: Passwords are not the same")
                     time.sleep(2)
                     continue
             break
         else:
-            print('\n*ERROR*')
-            print("-> Password must be more than 8 characters.")
-            print("-> Password should contain a number, a lowercase letter, and uppercase letter and a symbol.")
+            print("\n:: Password must be more than 8 characters.")
+            print(":: Password should contain a number, a lowercase letter, and uppercase letter and a symbol.")
             time.sleep(2)
             continue
 
@@ -341,14 +328,12 @@ def transaction_pin():
                 if transactionPin == second_input:
                     break
                 else:
-                    print('\n*ERROR*')
-                    print("-> Passwords are not the same")
+                    print("\n:: Passwords are not the same")
                     time.sleep(2)
                     continue
             break
         else:
-            print('\n*ERROR*')
-            print("-> Transaction Pin must be only 4 digits.")
+            print("\n:: Transaction Pin must be only 4 digits.")
             time.sleep(2)
             continue
 
@@ -450,10 +435,16 @@ def register_bvn_account():
         account.account_type = account_type()
 
         account.account_balance = 0.0
+        account.minimum_balance = 0.0
+        account.account_fee = 0.0
         if account.account_type.lower() == 'savings':
             account.account_balance = 500.50
+            account.minimum_balance = 50.0
+            account.account_fee = 100.0
         elif account.account_type.lower() == 'current':
             account.account_balance = 5000.50
+            account.minimum_balance = 500.0
+            account.account_fee = 500.0
         elif account.account_type.lower() == 'fixed deposit':
             account.account_balance = 10000.50
 

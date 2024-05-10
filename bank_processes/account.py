@@ -29,11 +29,12 @@ class Account(User):
 
         query = f"""
                 INSERT INTO {self.database.db_tables[3]}
-                (account_number, account_type, account_holder, account_balance, transaction_pin, account_status, 
-                account_tier, overdraft_protection, transaction_limit)
+                (account_number, account_type, account_holder, account_balance, minimum_balance, account_fee, 
+                transaction_pin, account_status, account_tier, overdraft_protection, transaction_limit)
                 VALUES('{self.__account_number}', '{self.__account_type}', '{self.__account_holder}', 
-                {self.__account_balance}, '{self.__transaction_pin}', '{self.__account_status}', '{self.__account_tier}',
-                '{self.__overdraft_protection}', '{self.__transaction_limit}')
+                {self.__account_balance}, {self.__minimum_balance}, {self.__account_fee}, '{self.__transaction_pin}', 
+                '{self.__account_status}', '{self.__account_tier}', '{self.__overdraft_protection}', 
+                '{self.__transaction_limit}')
                 """
 
         self.database.query(query)
@@ -42,19 +43,19 @@ class Account(User):
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
         accordingly."""
-        raise NotImplementedError('This Method not in Use.')
+        pass
 
     @abstractmethod
     def withdraw(self):
         """Method to allow users to withdraw money from their account. It should update the account balance and handle
         cases where the withdrawal amount exceeds the available balance."""
-        raise NotImplementedError('This Method not in Use.')
+        pass
 
     @abstractmethod
     def transfer(self):
         """Method to facilitate transferring funds between accounts. It should handle transferring money from one
         account to another, updating the balances of both accounts involved."""
-        raise NotImplementedError('This Method not in Use.')
+        pass
 
     def get_balance(self):
         """Method to retrieve the current balance of the account."""

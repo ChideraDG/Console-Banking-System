@@ -4,7 +4,6 @@ import os
 import re
 import time
 from bank_processes.authentication import Authentication
-from banking import transfer_money
 
 
 def clear():
@@ -110,6 +109,8 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
 
 
 def signed_in(username: str, password: str):
+    from banking import transfer_money
+
     auth = Authentication()
 
     try:

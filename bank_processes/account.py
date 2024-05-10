@@ -6,14 +6,16 @@ class Account(User):
     currency: str = 'Naira'  # Currency in which the account is denominated.
 
     def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None,
-                 account_balance: float = None, transaction_pin: str = None, account_status: str = None,
-                 account_tier: str = None, transaction_limit: int = None, overdraft_protection: str = None,
-                 beneficiaries: dict = None):
+                 account_balance: float = None, minimum_balance: float = None, account_fee: float = None,
+                 transaction_pin: str = None, account_status: str = None, account_tier: str = None,
+                 transaction_limit: int = None, overdraft_protection: str = None, beneficiaries: dict = None):
         super().__init__()
         self.__account_number = account_number  # Unique identifier for the account.
         self.__account_type = account_type  # Type of account (e.g., savings, checking, credit card).
         self.__account_holder = account_holder  # User or users associated with the account.
         self.__account_balance = account_balance  # Current balance of the account.
+        self.__minimum_balance = minimum_balance  # Minimum balance required to avoid fees or maintain the account.
+        self.__account_fee = account_fee  # fees associated with the account, such as monthly maintenance fees.
         self.__transaction_pin = transaction_pin  # Pin used for transaction authentication.
         self.__account_status = account_status  # Status of the account (e.g., active, closed, frozen).
         self.__overdraft_protection = overdraft_protection  # Indicator of whether the account has overdraft protection enabled.
@@ -342,67 +344,55 @@ class Account(User):
     def beneficiaries(self):
         del self.__beneficiaries
 
-
-class Savings(Account, ABC):
-    __minimum_balance: float = 500.0  # Minimum balance required to avoid fees or maintain the account.
-    __account_fees: float = 100.0  # fees associated with the account, such as monthly maintenance fees.
-
-    def __init__(self):
-        super().__init__()
-
-    def deposit(self):
-        """Method to allow users to deposit money into their account. It should update the account balance
-        accordingly."""
-        pass
-
-    def withdraw(self):
-        """Method to allow users to withdraw money from their account. It should update the account balance and handle
-        cases where the withdrawal amount exceeds the available balance."""
-        pass
-
-    def transfer(self):
-        """Method to facilitate transferring funds between accounts. It should handle transferring money from one
-        account to another, updating the balances of both accounts involved."""
-        print(self.account_number)
-
     @property
     def minimum_balance(self):
+        if self.user_id is not None:
+            query = (f"""
+                    SELECT minimum_balance 
+                    FROM {self.database.db_tables[3]} 
+                    WHERE account_number = '{self.account_number}'
+                    """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for minimum_balance in data:
+                    self.minimum_balance = minimum_balance
+
         return self.__minimum_balance
 
-    @property
-    def account_fees(self):
-        return self.__account_fees
+    @minimum_balance.setter
+    def minimum_balance(self, _minimum_balance: dict):
+        self.__minimum_balance = _minimum_balance
 
-
-class Current(Account, ABC):
-    __minimum_balance: float = 5000.0
-    __account_fees: float = 1000.0  # fees associated with the account, such as monthly maintenance fees.
-
-    def __init__(self):
-        super().__init__()
-
-    def deposit(self):
-        """Method to allow users to deposit money into their account. It should update the account balance
-        accordingly."""
-        pass
-
-    def withdraw(self):
-        """Method to allow users to withdraw money from their account. It should update the account balance and handle
-        cases where the withdrawal amount exceeds the available balance."""
-        pass
-
-    def transfer(self):
-        """Method to facilitate transferring funds between accounts. It should handle transferring money from one
-        account to another, updating the balances of both accounts involved."""
-        pass
-
-    @property
+    @minimum_balance.deleter
     def minimum_balance(self):
-        return self.__minimum_balance
+        del self.__minimum_balance
 
     @property
-    def account_fees(self):
-        return self.__account_fees
+    def account_fee(self):
+        if self.user_id is not None:
+            query = (f"""
+                    SELECT account_fee 
+                    FROM {self.database.db_tables[3]} 
+                    WHERE account_number = '{self.account_number}'
+                    """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for account_fee in data:
+                    self.account_fee = account_fee
+
+        return self.__account_fee
+
+    @account_fee.setter
+    def account_fee(self, _account_fee: dict):
+        self.__account_fee = _account_fee
+
+    @account_fee.deleter
+    def account_fee(self):
+        del self.__account_fee
 
 
 class FixedDeposit(Account, ABC):

@@ -157,10 +157,10 @@ INSERT INTO `Bank_Verification_Number` (`id`, `first_name`, `middle_name`, `last
 """
 
 query14 = """
-INSERT INTO `Account` (`account_id`, `account_number`, `account_type`, `account_holder`, `account_balance`, `transaction_pin`, `account_status`, `account_tier`, `overdraft_protection`, `transaction_limit`, `beneficiaries`) VALUES
-(1, '4773494548', 'savings', 'Ohanenye-Ohiaekpete Chidera Divine-Gift', 500.5, '1234', 'active', 'Tier 1', 'no', '10', ''),
-(2, '1513500889', 'savings', 'Oboh Victory Akhere', 500.5, '2000', 'active', 'Tier 1', 'no', '10', ''),
-(3, '5409484424', 'savings', 'Ezenwa Chiedozie Emmanuel', 500.5, '2094', 'active', 'Tier 1', 'no', '10', '');
+INSERT INTO `Account` (`account_id`, `account_number`, `account_type`, `account_holder`, `account_balance`, `minimum_balance`, `account_fee`, `transaction_pin`, `account_status`, `account_tier`, `overdraft_protection`, `transaction_limit`, `beneficiaries`) VALUES
+(1, '4773494548', 'savings', 'Ohanenye-Ohiaekpete Chidera Divine-Gift', 500.5, 50, 100, '1234', 'active', 'Tier 1', 'no', '10', ''),
+(2, '1513500889', 'savings', 'Oboh Victory Akhere', 500.5, 50, 100, '2000', 'active', 'Tier 1', 'no', '10', ''),
+(3, '5409484424', 'savings', 'Ezenwa Chiedozie Emmanuel', 500.5, 50, 100, '2094', 'active', 'Tier 1', 'no', '10', '');
 """
 
 queries2 = [query12, query13, query14]

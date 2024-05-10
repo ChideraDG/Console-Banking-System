@@ -33,8 +33,6 @@ class Transaction(Account, ABC):
         self.__account_type = account_type  # whether fixed deposit, savings or current
         self.__receiver_name = receiver_name
         self.__balance = balance
-        self.__saving = Savings()
-        self.__current = Current()
 
         while verify_data('transaction_id', self.__transaction_id):
             self.__transaction_id = str({random.randint(100000000000000000000000000000,
@@ -139,10 +137,10 @@ class Transaction(Account, ABC):
     def transaction_validation(self):
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
         the bank or regulatory authorities. """
-        minimum_savings_balance = self.__saving.minimum_balance
-        minimum_current_balance = self.__current.minimum_balance
-        savings_fee = self.__saving.account_fees
-        current_fees = self.__current.account_fees
+        minimum_savings_balance = self.minimum_balance
+        minimum_current_balance = self.minimum_balance
+        savings_fee = self.account_fee
+        current_fees = self.account_fee
         # if self.__balance + self.__fees > self.__balance:
         account_type = self.account_type.upper()
 

@@ -35,7 +35,8 @@ CREATE TABLE `Account` (
   `account_status` varchar(10) NOT NULL,
   `account_tier` varchar(10) NOT NULL,
   `overdraft_protection` enum('yes','no') NOT NULL,
-  `transaction_limit` varchar(5) NOT NULL
+  `transaction_limit` varchar(5) NOT NULL,
+  `beneficiaries` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 """
 
@@ -142,24 +143,24 @@ for query in queries:
     my_cursor.execute(query)
 
 query12 = """
-INSERT INTO `Account` (`account_id`, `account_number`, `account_type`, `account_holder`, `account_balance`, 
-`transaction_pin`, `account_status`, `account_tier`, `overdraft_protection`, `transaction_limit`) VALUES
-(1, '2739713114', 'savings', 'Ohanenye-Ohiaekpete Chidera Divine-Gift', 500.5, '1234', 'active', 'Tier 1', 'no', '10');
+INSERT INTO `User` (`id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `gender`, `email`, `phone_number`, `address`, `date_of_birth`, `linked_accounts`, `last_login_timestamp`, `account_open_date`, `account_close_date`) VALUES
+(1, 'CHI', 'chi', 'Chidera', 'Divine-Gift', 'Ohanenye-Ohiaekpete', 'Male', 'chrischidera6@gmail.com', '07033327493', 'Lagos', '2001-09-27', '[]', '2024-05-10 10:42:18', '2024-05-04 19:58:00', NULL),
+(2, 'VICTORYAKHERE', '!INternational10', 'Victory', 'Akhere', 'Oboh', 'Male', 'victoryoboh10@gmail.com', '09048786573', '29 Sufianu Street', '2000-03-14', '[]', '2024-05-09 13:15:23', '2024-05-07 14:49:17', NULL),
+(3, 'CHIEDOZIEEMMANUEL', 'Dozie12$', 'Chiedozie', 'Emmanuel', 'Ezenwa', 'Male', 'chiedoziee@gmail.com', '09134030147', '8 Lawanson Street Lagos', '2004-09-03', '[]', '2024-05-07 15:07:47', '2024-05-07 15:06:51', NULL);
 """
 
 query13 = """
-INSERT INTO `Bank_Verification_Number` (`id`, `first_name`, `middle_name`, `last_name`, `gender`, `address`, 
-`phone_number`, `date_of_birth`, `nationality`, `email`, `bvn_number`, `created_date`, `last_updated`, `bvn_status`) 
-VALUES (5, 'Chidera', 'Divine-Gift', 'Ohanenye-Ohiaekpete', 'Male', 'Lagos', '07033327493', '2001-09-27', 'Nigeria', 
-'chrischidera6@gmail.com', '698718792902', '2024-05-01 18:18:09', '2024-05-01 18:18:09', 'active');
+INSERT INTO `Bank_Verification_Number` (`id`, `first_name`, `middle_name`, `last_name`, `gender`, `address`, `phone_number`, `date_of_birth`, `nationality`, `email`, `bvn_number`, `created_date`, `last_updated`, `bvn_status`) VALUES
+(1, 'Chidera', 'Divine-Gift', 'Ohanenye-Ohiaekpete', 'Male', 'Lagos', '07033327493', '2001-09-27', 'Nigeria', 'chrischidera6@gmail.com', '357455498371', '2024-05-04 19:57:21', '2024-05-04 19:57:21', 'active'),
+(2, 'Victory', 'Akhere', 'Oboh', 'Male', '29 Sufianu Street', '09048786573', '2000-03-14', 'Nigeria', 'victoryoboh10@gmail.com', '450986277846', '2024-05-07 14:47:33', '2024-05-07 14:47:33', 'active'),
+(3, 'Chiedozie', 'Emmanuel', 'Ezenwa', 'Male', '8 Lawanson Street Lagos', '09134030147', '2004-09-03', 'Nigeria', 'chiedoziee@gmail.com', '583707628558', '2024-05-07 15:05:45', '2024-05-07 15:05:45', 'active');
 """
 
 query14 = """
-INSERT INTO `User` (`id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `gender`, `email`, 
-`phone_number`, `address`, `date_of_birth`, `linked_accounts`, `last_login_timestamp`, `account_open_date`, 
-`account_close_date`) VALUES (1, 'CHI', 'chi', 'Chidera', 'Divine-Gift', 'Ohanenye-Ohiaekpete', 'Male', 
-'chrischidera6@gmail.com', '07033327493', 'Lagos', '2001-09-27', '[]', '2024-05-01 18:18:57', '2024-05-01 18:18:57', 
-NULL);
+INSERT INTO `Account` (`account_id`, `account_number`, `account_type`, `account_holder`, `account_balance`, `transaction_pin`, `account_status`, `account_tier`, `overdraft_protection`, `transaction_limit`, `beneficiaries`) VALUES
+(1, '4773494548', 'savings', 'Ohanenye-Ohiaekpete Chidera Divine-Gift', 500.5, '1234', 'active', 'Tier 1', 'no', '10', ''),
+(2, '1513500889', 'savings', 'Oboh Victory Akhere', 500.5, '2000', 'active', 'Tier 1', 'no', '10', ''),
+(3, '5409484424', 'savings', 'Ezenwa Chiedozie Emmanuel', 500.5, '2094', 'active', 'Tier 1', 'no', '10', '');
 """
 
 queries2 = [query12, query13, query14]

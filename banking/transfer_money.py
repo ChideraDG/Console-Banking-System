@@ -35,6 +35,18 @@ def beneficiaries(auth: Authentication):
             return ':: Empty'
 
 
+def recipient_account_number(auth: Authentication):
+    while True:
+        header()
+        print(end='\n')
+        print("\nENTER YOUR RECIPIENT ACCOUNT NUMBER:")
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        _input = input(">>> ")
+
+        auth.transaction_validation()
+
+
+
 def process_transfer(auth: Authentication):
 
     while True:

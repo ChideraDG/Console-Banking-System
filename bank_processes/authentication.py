@@ -2,9 +2,10 @@ from abc import ABC
 from datetime import datetime
 import random
 from typing import Any, Tuple
-from bank_processes.account import Account
 from bank_processes.database import DataBase
 from plyer import notification as note
+
+from bank_processes.transaction import Transaction
 
 
 def verify_data(get_column: str, table_number: int, _object: str) -> bool:
@@ -94,7 +95,7 @@ def token_auth():
     return token
 
 
-class Authentication(Account, ABC):
+class Authentication(Transaction, ABC):
 
     def __init__(self, username: str = None, password: str = None, failed_login_attempts: int = 0,
                  auth_outcome: bool = None, login_time_stamp: datetime = None, session_token: str = None):

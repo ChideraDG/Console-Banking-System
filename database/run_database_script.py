@@ -31,6 +31,8 @@ CREATE TABLE `Account` (
   `account_type` varchar(15) NOT NULL,
   `account_holder` varchar(70) NOT NULL,
   `account_balance` float NOT NULL,
+  `minimum_balance` float NOT NULL,
+  `account_fee` float NOT NULL,
   `transaction_pin` varchar(4) NOT NULL,
   `account_status` varchar(10) NOT NULL,
   `account_tier` varchar(10) NOT NULL,

@@ -134,7 +134,7 @@ class Transaction(Account, ABC):
         # return self.__fees + self.__amount
         pass
 
-    def transaction_validation(self, amount=False, transaction_limit=False):
+    def transaction_validation(self, amount: bool = False, transaction_limit: bool = False):
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
         the bank or regulatory authorities. """
         amt_charges = self.__amount + self.account_fee

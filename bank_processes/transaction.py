@@ -2,7 +2,7 @@ import datetime
 import random
 from abc import ABC
 
-from bank_processes.account import Savings, Current, Account
+from bank_processes.account import Account
 from banking.register_panel import verify_data
 
 
@@ -134,15 +134,26 @@ class Transaction(Account, ABC):
         # return self.__fees + self.__amount
         pass
 
-    def transaction_validation(self):
+    def transaction_validation(self, amount=False, transaction_limit=False):
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
         the bank or regulatory authorities. """
-        minimum_savings_balance = self.minimum_balance
-        minimum_current_balance = self.minimum_balance
-        savings_fee = self.account_fee
-        current_fees = self.account_fee
-        # if self.__balance + self.__fees > self.__balance:
-        account_type = self.account_type.upper()
+        amt_charges = self.__amount + self.account_fee
+        new_bal = self.account_balance - amt_charges
+
+        if amt_charges > self.account_balance:
+            if new_bal < self.minimum_balance:
+                return tuple[False, 'Insufficient Balance!!!']
+        elif self.__amount > self.transaction_limit:
+
+            return tuple[False, 'Transaction limit passed!!!']
+
+        else:
+            return True
+
+    def receiver_transaction_validation(self):
+        """Method to validate if the receiver is allowed to receive such amount and then apply the necessary step"""
+
+        pass
 
     def process_transaction(self):
         """Method to process the transaction, including updating account balances, recording transaction details,
@@ -168,6 +179,14 @@ class Transaction(Account, ABC):
         """ Method to retrieve the transaction history associated with a specific account or user,
          providing details of past transactions for reference and auditing purposes."""
 
-# obj = Transaction(transaction_type='withdraw', sender_name='Ezenwa Chiedozie', description='Food',
-#                   sender_acct_num='12132537437', status='SUCCESS', amount=500.00)
-# obj.transaction_record()
+    @property
+    def receiver_acct_num(self):
+        return self.__receiver_acct_num
+
+    @receiver_acct_num.setter
+    def receiver_acct_num(self, _receiver_account_number: str):
+        self.__receiver_acct_num = _receiver_account_number
+
+    @receiver_acct_num.deleter
+    def receiver_acct_num(self):
+        del self.__receiver_acct_num

@@ -1,1 +1,1 @@
-Error: JSONDecodeError('Expecting value: line 1 column 8 (char 7)')
+Error: OperationalError(1364, "Field 'beneficiaries' doesn't have a default value")

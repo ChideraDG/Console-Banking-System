@@ -293,7 +293,7 @@ def account_password() -> str:
         print("\nEnter Password:")
         accountPassword = input(">>> ").strip()
 
-        if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$.#!%*?&])[A-Za-z\d@$!#%*?.&]{8,}$", accountPassword):
+        if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$. #!%*?&])[A-Za-z\d@$!#% *?.&]{8,}$", accountPassword):
             while True:
                 print("\nRe-enter Password:")
                 second_input = input(">>> ").strip()

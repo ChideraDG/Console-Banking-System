@@ -150,35 +150,35 @@ def signed_in(username: str, password: str):
                 elif re.search('^2$', user_input):
                     transfer_money.process_transfer(auth)
                 elif re.search('^3$', user_input):
-                    pass
+                    continue
                 elif re.search('^4$', user_input):
-                    pass
+                    continue
                 elif re.search('^5$', user_input):
-                    pass
+                    continue
                 elif re.search('^6$', user_input):
-                    pass
+                    continue
                 elif re.search('^7$', user_input):
-                    pass
+                    continue
                 elif re.search('^8$', user_input):
-                    pass
+                    continue
                 elif re.search('^9$', user_input):
-                    pass
+                    continue
                 elif re.search('^10$', user_input):
-                    pass
+                    continue
                 elif re.search('^11$', user_input):
-                    pass
+                    continue
                 elif re.search('^12$', user_input):
-                    pass
+                    continue
                 elif re.search('^13$', user_input):
-                    pass
+                    continue
                 elif re.search('^14$', user_input):
-                    pass
+                    continue
                 elif re.search('^15$', user_input):
-                    pass
+                    continue
                 elif re.search('^16$', user_input):
-                    pass
+                    continue
                 elif re.search('^17$', user_input):
-                    pass
+                    continue
                 elif re.search('^18$', user_input):
                     auth.user_logout()
                     del user_input

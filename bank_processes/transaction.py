@@ -9,15 +9,14 @@ from banking.register_panel import verify_data
 class Transaction(Account, ABC):
     currency: str = 'Naira'
 
-    def __init__(self, transaction_id: str = str(random.randint(100000000000000000000000000000,
-                                                                999999999999999999999999999999)),
+    def __init__(self, transaction_id: str = None,
                  transaction_type: str = None,
                  amount: float = None, transaction_date_time: datetime.datetime = None,
                  received_transaction_date_time: datetime.datetime = None,
                  receiver_acct_num: str = None,
                  description: str = None, trans_status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
-                 receiver_name: str = None, balance: float = None):
+                 receiver_name: str = None, balance: float = None, transfer_limit: float = None):
         super().__init__()
         self.__transaction_type = transaction_type
         self.__amount = amount
@@ -33,17 +32,18 @@ class Transaction(Account, ABC):
         self.__account_type = account_type  # whether fixed deposit, savings or current
         self.__receiver_name = receiver_name
         self.__balance = balance
-
-        while verify_data('transaction_id', self.__transaction_id):
-            self.__transaction_id = str({random.randint(100000000000000000000000000000,
-                                                        999999999999999999999999999999)})
+        self.__transfer_limit = transfer_limit
 
     def sender_transaction_record(self):
         """Method to record new transactions made by the sender  and the relevant information"""
         now = datetime.datetime.now()
         self.__transaction_date_time = now.strftime("%d %B %Y %H:%M:%S")
         self.__transaction_type = self.__transaction_type.upper()
-
+        self.__transaction_id = str(random.randint(100000000000000000000000000000,
+                                                   999999999999999999999999999999))
+        while verify_data('transaction_id', 2, self.__transaction_id):
+            self.__transaction_id = str({random.randint(100000000000000000000000000000,
+                                                        999999999999999999999999999999)})
         sender_trans_record = ''
         if self.__transaction_type == 'TRANSFER':
             sender_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -190,3 +190,28 @@ class Transaction(Account, ABC):
     @receiver_acct_num.deleter
     def receiver_acct_num(self):
         del self.__receiver_acct_num
+
+    @property
+    def transfer_limit(self):
+        if self.user_id is not None:
+            query = (f"""
+                SELECT transfer_limit 
+                FROM {self.database.db_tables[3]} 
+                WHERE account_number = '{self.account_number}'
+                """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for transfer_limit in data:
+                    self.transfer_limit = transfer_limit
+
+        return self.__transfer_limit
+
+    @transfer_limit.setter
+    def transfer_limit(self, _transfer_limit):
+        self.__transfer_limit = _transfer_limit
+
+    @transfer_limit.deleter
+    def transfer_limit(self):
+        del self.__transfer_limit

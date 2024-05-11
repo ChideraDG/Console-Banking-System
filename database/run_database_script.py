@@ -32,12 +32,14 @@ CREATE TABLE `Account` (
   `account_holder` varchar(70) NOT NULL,
   `account_balance` float NOT NULL,
   `minimum_balance` float NOT NULL,
+  `maximum_balance` float NOT NULL,
   `account_fee` float NOT NULL,
   `transaction_pin` varchar(4) NOT NULL,
   `account_status` varchar(10) NOT NULL,
   `account_tier` varchar(10) NOT NULL,
   `overdraft_protection` enum('yes','no') NOT NULL,
-  `transaction_limit` varchar(5) NOT NULL,
+  `transaction_limit` int(11) NOT NULL,
+  `transfer_limit` float NOT NULL,
   `beneficiaries` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 """
@@ -159,10 +161,11 @@ INSERT INTO `Bank_Verification_Number` (`id`, `first_name`, `middle_name`, `last
 """
 
 query14 = """
-INSERT INTO `Account` (`account_id`, `account_number`, `account_type`, `account_holder`, `account_balance`, `minimum_balance`, `account_fee`, `transaction_pin`, `account_status`, `account_tier`, `overdraft_protection`, `transaction_limit`, `beneficiaries`) VALUES
-(1, '4773494548', 'savings', 'Ohanenye-Ohiaekpete Chidera Divine-Gift', 500.5, 50, 100, '1234', 'active', 'Tier 1', 'no', '10', ''),
-(2, '1513500889', 'savings', 'Oboh Victory Akhere', 500.5, 50, 100, '2000', 'active', 'Tier 1', 'no', '10', ''),
-(3, '5409484424', 'savings', 'Ezenwa Chiedozie Emmanuel', 500.5, 50, 100, '2094', 'active', 'Tier 1', 'no', '10', '');
+INSERT INTO `Account` (`account_id`, `account_number`, `account_type`, `account_holder`, `account_balance`, `minimum_balance`, `maximum_balance`, `account_fee`, `transaction_pin`, `account_status`, `account_tier`, `overdraft_protection`, `transaction_limit`, `transfer_limit`, `beneficiaries`) VALUES
+(1, '4773494548', 'savings', 'Ohanenye-Ohiaekpete Chidera Divine-Gift', 500.5, 50, 300000, 100, '1234', 'active', 'Tier 1', 'no', 10, 50000, '{\"1\": [\"1234567\", \"James\"], \"2\": [\"5678907\", \"Chi\"]}'),
+(2, '1513500889', 'savings', 'Oboh Victory Akhere', 500.5, 50, 300000, 100, '2000', 'active', 'Tier 1', 'no', 10, 50000, ''),
+(3, '5409484424', 'savings', 'Ezenwa Chiedozie Emmanuel', 500.5, 50, 300000, 100, '2094', 'active', 'Tier 1', 'no', 10, 50000, ''),
+(4, '2936502510', 'savings', 'Hello Abdul Bye', 500.5, 50, 300000, 100, '1234', 'active', 'Tier 1', 'no', 10, 50000, NULL);
 """
 
 queries2 = [query12, query13, query14]

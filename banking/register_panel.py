@@ -463,6 +463,8 @@ def register_bvn_account():
         account.overdraft_protection = 'No'
         account.account_tier = 'Tier 1'
         account.transaction_limit = 10
+        account.transfer_limit = 50000
+        account.maximum_balance = 300000
 
         account.account_number = str(random.randint(1000000000, 9999999999))
         while verify_data('account_number', 3, account.account_number):

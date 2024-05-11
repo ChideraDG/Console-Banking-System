@@ -6,21 +6,24 @@ class Account(User):
     currency: str = 'Naira'  # Currency in which the account is denominated.
 
     def __init__(self, account_number: str = None, account_type: str = None, account_holder: str = None,
-                 account_balance: float = None, minimum_balance: float = None, account_fee: float = None,
-                 transaction_pin: str = None, account_status: str = None, account_tier: str = None,
-                 transaction_limit: int = None, overdraft_protection: str = None, beneficiaries: dict = None):
+                 account_balance: float = None, minimum_balance: float = None, maximum_balance: float = None,
+                 account_fee: float = None, transaction_pin: str = None, account_status: str = None,
+                 account_tier: str = None, transaction_limit: int = None, overdraft_protection: str = None,
+                 beneficiaries: dict = None, transfer_limit: float = None):
         super().__init__()
         self.__account_number = account_number  # Unique identifier for the account.
         self.__account_type = account_type  # Type of account (e.g., savings, checking, credit card).
         self.__account_holder = account_holder  # User or users associated with the account.
         self.__account_balance = account_balance  # Current balance of the account.
         self.__minimum_balance = minimum_balance  # Minimum balance required to avoid fees or maintain the account.
+        self.__maximum_balance = maximum_balance
         self.__account_fee = account_fee  # fees associated with the account, such as monthly maintenance fees.
         self.__transaction_pin = transaction_pin  # Pin used for transaction authentication.
         self.__account_status = account_status  # Status of the account (e.g., active, closed, frozen).
         self.__overdraft_protection = overdraft_protection  # Indicator of whether the account has overdraft protection enabled.
         self.__account_tier = account_tier  # Current level of the account
         self.__transaction_limit = transaction_limit  # Limits on the number or amount of transactions allowed within a certain period.
+        self.__transfer_limit = transfer_limit
         self.__beneficiaries = beneficiaries  # Beneficiaries of the Account
 
     def open_account(self):
@@ -32,9 +35,9 @@ class Account(User):
                 (account_number, account_type, account_holder, account_balance, minimum_balance, account_fee, 
                 transaction_pin, account_status, account_tier, overdraft_protection, transaction_limit)
                 VALUES('{self.__account_number}', '{self.__account_type}', '{self.__account_holder}', 
-                {self.__account_balance}, {self.__minimum_balance}, {self.__account_fee}, '{self.__transaction_pin}', 
+                {self.__account_balance}, {self.__minimum_balance}, {self.__maximum_balance}, {self.__account_fee}, '{self.__transaction_pin}', 
                 '{self.__account_status}', '{self.__account_tier}', '{self.__overdraft_protection}', 
-                '{self.__transaction_limit}')
+                {self.__transaction_limit}, {self.__transfer_limit})
                 """
 
         self.database.query(query)
@@ -394,6 +397,56 @@ class Account(User):
     @account_fee.deleter
     def account_fee(self):
         del self.__account_fee
+
+    @property
+    def maximum_balance(self):
+        if self.user_id is not None:
+            query = (f"""
+                        SELECT maximum_balance 
+                        FROM {self.database.db_tables[3]} 
+                        WHERE account_number = '{self.account_number}'
+                        """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for maximum_balance in data:
+                    self.maximum_balance = maximum_balance
+
+        return self.__maximum_balance
+
+    @maximum_balance.setter
+    def maximum_balance(self, _maximum_balance: dict):
+        self.__maximum_balance = _maximum_balance
+
+    @maximum_balance.deleter
+    def maximum_balance(self):
+        del self.__maximum_balance
+
+    @property
+    def transfer_limit(self):
+        if self.user_id is not None:
+            query = (f"""
+                        SELECT transfer_limit 
+                        FROM {self.database.db_tables[3]} 
+                        WHERE account_number = '{self.account_number}'
+                        """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for transfer_limit in data:
+                    self.transfer_limit = transfer_limit
+
+        return self.__transfer_limit
+
+    @transfer_limit.setter
+    def transfer_limit(self, _transfer_limit: dict):
+        self.__transfer_limit = _transfer_limit
+
+    @transfer_limit.deleter
+    def transfer_limit(self):
+        del self.__transfer_limit
 
 
 class FixedDeposit(Account, ABC):

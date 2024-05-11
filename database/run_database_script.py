@@ -114,11 +114,6 @@ ALTER TABLE `Bank_Verification_Number`
   ADD UNIQUE KEY `bvn_number` (`bvn_number`);
 """
 
-query7 = """
-ALTER TABLE `Transaction`
-  ADD UNIQUE KEY `transaction_id` (`transaction_id`);
-"""
-
 query8 = """
 ALTER TABLE `User`
   ADD PRIMARY KEY (`id`),
@@ -141,7 +136,7 @@ ALTER TABLE `User`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 """
 
-queries = [query1, query2, query3, query4, query5, query6, query7, query8, query9, query10, query11]
+queries = [query1, query2, query3, query4, query5, query6, query8, query9, query10, query11]
 
 for query in queries:
     my_cursor.execute(query)

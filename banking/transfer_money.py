@@ -46,7 +46,6 @@ def recipient_account_number(auth: Authentication):
         auth.transaction_validation()
 
 
-
 def process_transfer(auth: Authentication):
 
     while True:

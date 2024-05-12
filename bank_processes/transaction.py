@@ -137,13 +137,13 @@ class Transaction(Account, ABC):
     def transaction_validation(self, amount: bool = False, transfer_limit: bool = False) -> tuple[bool, str] | bool:
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
         the bank or regulatory authorities. """
-        amt_charges = self.__amount + self.account_fee
-        new_bal = self.account_balance - amt_charges
+        debited_amount = self.__amount + self.account_fee
+        sender_updated_balance = self.account_balance - debited_amount
 
         if amount:
-            if amt_charges > self.account_balance:
+            if debited_amount > self.account_balance:
                 return False, 'Insufficient Balance!!!'
-            elif new_bal < self.minimum_balance:
+            elif sender_updated_balance < self.minimum_balance:
                 return False, 'Insufficient Balance!!!'
 
             else:

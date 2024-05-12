@@ -134,24 +134,27 @@ class Transaction(Account, ABC):
         # return self.__fees + self.__amount
         pass
 
-    def transaction_validation(self, amount: bool = False, transaction_limit: bool = False):
+    def transaction_validation(self, amount: bool = False, transfer_limit: bool = False):
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
         the bank or regulatory authorities. """
         amt_charges = self.__amount + self.account_fee
         new_bal = self.account_balance - amt_charges
 
-        if transaction_limit:
-            if amount:
-                if amt_charges > self.account_balance:
-                    return tuple[False, 'Insufficient Balance!!!']
-                elif new_bal < self.minimum_balance:
-                    return tuple[False, 'Insufficient Balance!!!']
+        if amount:
+            if amt_charges > self.account_balance:
+                return tuple[False, 'Insufficient Balance!!!']
+            elif new_bal < self.minimum_balance:
+                return tuple[False, 'Insufficient Balance!!!']
 
-                elif self.__amount > self.transaction_limit:
-                    return tuple[False, 'Transaction limit passed!!!']
+            else:
+                return True
 
-                else:
-                    return True
+        if transfer_limit:
+            if self.__amount > self.transfer_limit:
+                return tuple[False, 'Transfer limit passed!!!']
+
+            else:
+                return True
 
     def receiver_transaction_validation(self):
         """Method to validate if the receiver is allowed to receive such amount and then apply the necessary step"""

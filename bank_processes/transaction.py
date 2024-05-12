@@ -134,7 +134,7 @@ class Transaction(Account, ABC):
         # return self.__fees + self.__amount
         pass
 
-    def transaction_validation(self, amount: bool = False, transfer_limit: bool = False) -> tuple[bool, str] | bool:
+    def transaction_validation(self, amount: bool = False, transfer_limit: bool = False) -> tuple[bool, str]:
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
         the bank or regulatory authorities. """
         debited_amount = self.__amount + self.account_fee

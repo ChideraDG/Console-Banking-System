@@ -277,13 +277,13 @@ def login():
         auth.password = _password
         auth.user_login()
 
-        signed_in(auth=auth)
-
         note.notify(
             title='Login Notification',
             message=f"You logged into your Account on {day_in_words}, {day} {month} {year}.",
             timeout=30
         )
+        
+        signed_in(auth=auth)
     except Exception as e:
         with open('error.txt', 'w') as file:
             file.write(f'Error: {repr(e)}')

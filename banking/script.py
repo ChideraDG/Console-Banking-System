@@ -34,9 +34,11 @@ def header():
           "   ~~~~~~", "~" * len(str(time_now)), sep='')
 
 
-def go_back(return_place):
+def go_back(return_place, auth: Authentication = None):
     if return_place == 'script':
         signing_in()
+    if return_place == 'signed_in':
+        signed_in(auth)
 
 
 def signing_in():
@@ -108,16 +110,10 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
         go_back('script')
 
 
-def signed_in(username: str, password: str):
+def signed_in(auth: Authentication):
     from banking import transfer_money
 
-    auth = Authentication()
-
     try:
-        auth.username = username
-        auth.password = password
-        auth.user_login()
-
         if auth.account_type == 'savings' or auth.account_type == 'current':
             account_balance_display = True
             while True:

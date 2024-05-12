@@ -1,1 +1,1 @@
-Error: OperationalError(1364, "Field 'beneficiaries' doesn't have a default value")
+Error: TypeError("unsupported operand type(s) for +: 'NoneType' and 'float'")

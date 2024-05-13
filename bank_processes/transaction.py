@@ -1,8 +1,10 @@
 import datetime
 import random
 from abc import ABC
+from typing import Tuple, Any
 
 from bank_processes.account import Account
+from banking.register_panel import verify_data
 
 
 class Transaction(Account, ABC):
@@ -35,8 +37,6 @@ class Transaction(Account, ABC):
 
     def sender_transaction_record(self):
         """Method to record new transactions made by the sender  and the relevant information"""
-        from banking.register_panel import verify_data
-
         now = datetime.datetime.now()
         self.__transaction_date_time = now.strftime("%d %B %Y %H:%M:%S")
         self.__transaction_type = self.__transaction_type.upper()
@@ -152,15 +152,25 @@ class Transaction(Account, ABC):
 
         if transfer_limit:
             if self.__amount > self.transfer_limit:
-                return False, 'Daily Transfer limit passed!!!'
+                return False, 'Transfer limit passed!!!'
 
             else:
                 return True, 'Sufficient Balance'
 
-    def receiver_transaction_validation(self):
+    def receiver_transaction_validation(self) -> tuple[bool, str, Any | None, str | None]:
         """Method to validate if the receiver is allowed to receive such amount and then apply the necessary step"""
+        Account.account_number = self.receiver_acct_num
+        if self.account_balance > self.maximum_balance:
+            query = (f""" 
+            UPDATE {self.database.db_tables[3]}
+            SET account_status = 'blocked'
+            WHERE account_number = {self.receiver_acct_num}""")
+            self.database.query(query)
 
-        pass
+            return False, 'Maximum Balance passed!!!', self.account_status, self.receiver_acct_num
+
+        else:
+            return True, 'Allowed balance met', self.account_status, self.receiver_acct_num
 
     def process_transaction(self):
         """Method to process the transaction, including updating account balances, recording transaction details,

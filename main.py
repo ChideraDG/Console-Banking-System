@@ -8,8 +8,8 @@ def install(package):
 
 
 def main():
-    install('plyer')
-    install('pyobjus')
+    # install('plyer')
+    # install('pyobjus')
     signing_in()
 
 

@@ -125,7 +125,7 @@ class Account(User):
 
     @property
     def account_type(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
             SELECT account_type 
             FROM {self.database.db_tables[3]} 
@@ -150,7 +150,7 @@ class Account(User):
 
     @property
     def account_holder(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
             SELECT account_holder 
             FROM {self.database.db_tables[3]} 
@@ -175,7 +175,7 @@ class Account(User):
 
     @property
     def account_balance(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
             SELECT account_balance 
             FROM {self.database.db_tables[3]} 
@@ -200,7 +200,7 @@ class Account(User):
 
     @property
     def transaction_pin(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
             SELECT transaction_pin 
             FROM {self.database.db_tables[3]} 
@@ -225,7 +225,7 @@ class Account(User):
 
     @property
     def account_status(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
             SELECT account_status 
             FROM {self.database.db_tables[3]} 
@@ -250,7 +250,7 @@ class Account(User):
 
     @property
     def overdraft_protection(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
             SELECT overdraft_protection 
             FROM {self.database.db_tables[3]} 
@@ -275,7 +275,7 @@ class Account(User):
 
     @property
     def account_tier(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
             SELECT account_tier 
             FROM {self.database.db_tables[3]} 
@@ -300,7 +300,7 @@ class Account(User):
 
     @property
     def transaction_limit(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
             SELECT transaction_limit 
             FROM {self.database.db_tables[3]} 
@@ -325,7 +325,7 @@ class Account(User):
 
     @property
     def beneficiaries(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
                 SELECT beneficiaries 
                 FROM {self.database.db_tables[3]} 
@@ -350,7 +350,7 @@ class Account(User):
 
     @property
     def minimum_balance(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
                     SELECT minimum_balance 
                     FROM {self.database.db_tables[3]} 
@@ -375,7 +375,7 @@ class Account(User):
 
     @property
     def account_fee(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
                     SELECT account_fee 
                     FROM {self.database.db_tables[3]} 
@@ -400,7 +400,7 @@ class Account(User):
 
     @property
     def maximum_balance(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
                         SELECT maximum_balance 
                         FROM {self.database.db_tables[3]} 
@@ -425,7 +425,7 @@ class Account(User):
 
     @property
     def transfer_limit(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
                         SELECT transfer_limit 
                         FROM {self.database.db_tables[3]} 

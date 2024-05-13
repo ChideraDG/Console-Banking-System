@@ -1,1 +1,1 @@
-Error: TypeError("unsupported operand type(s) for +: 'NoneType' and 'float'")
+Error: TypeError('time.sleep() takes no keyword arguments')

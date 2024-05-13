@@ -1,7 +1,7 @@
 from abc import ABC
 from datetime import datetime
 import random
-from typing import Any, Tuple
+from typing import Any
 from bank_processes.database import DataBase
 from plyer import notification as note
 

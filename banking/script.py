@@ -115,7 +115,7 @@ def signed_in(auth: Authentication):
 
     try:
         if auth.account_type == 'savings' or auth.account_type == 'current':
-            account_balance_display = True
+            account_balance_display = None
             while True:
                 display_name = signed_in_header(auth, account_balance_display)
 

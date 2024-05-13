@@ -4,7 +4,6 @@ from abc import ABC
 from typing import Tuple, Any
 
 from bank_processes.account import Account
-from banking.register_panel import verify_data
 
 
 class Transaction(Account, ABC):
@@ -37,6 +36,8 @@ class Transaction(Account, ABC):
 
     def sender_transaction_record(self):
         """Method to record new transactions made by the sender  and the relevant information"""
+        from banking.register_panel import verify_data
+        
         now = datetime.datetime.now()
         self.__transaction_date_time = now.strftime("%d %B %Y %H:%M:%S")
         self.__transaction_type = self.__transaction_type.upper()

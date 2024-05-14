@@ -14,7 +14,7 @@ class Transaction(Account, ABC):
                  amount: float = None, transaction_date_time: datetime = None,
                  received_transaction_date_time: datetime = None,
                  receiver_acct_num: str = None,
-                 description: str = None, trans_status: str = None, fees: float = None, merchant_info: str = None,
+                 description: str = None, transaction_status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
                  receiver_name: str = None, balance: float = None, transfer_limit: float = None, charges: float = None):
         super().__init__()
@@ -25,7 +25,7 @@ class Transaction(Account, ABC):
         self.__received_transaction_date_time = received_transaction_date_time
         self.__receiver_acct_num = receiver_acct_num  # receiver's account number
         self.__description = description  # description of the transaction
-        self.__trans_status = trans_status  # status of the transaction
+        self.__transaction_status = transaction_status  # status of the transaction
         self.__merchant_info = merchant_info  # info about the merchant or receiver
         self.__transaction_category = transaction_category  # category of the transfer
         self.__user_id = user_id  # identifier of the user who initiated the transaction
@@ -37,17 +37,6 @@ class Transaction(Account, ABC):
 
     def sender_transaction_record(self):
         """Method to record new transactions made by the sender  and the relevant information"""
-        from banking.register_panel import verify_data
-
-        self.__transaction_date_time = datetime.now()
-        self.__transaction_type = self.__transaction_type.upper()
-        self.__transaction_id = str(random.randint(100000000000000000000000000000,
-                                                   999999999999999999999999999999))
-        self.__transaction_id = str(random.randint(100000000000000000000000000000,
-                                                   999999999999999999999999999999))
-        while verify_data('transaction_id', 2, self.__transaction_id):
-            self.__transaction_id = str({random.randint(100000000000000000000000000000,
-                                                        999999999999999999999999999999)})
         query = f"""
                 INSERT INTO {self.database.db_tables[2]}
                 (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
@@ -56,7 +45,7 @@ class Transaction(Account, ABC):
                 VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
                 '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
                 '{self.__receiver_name}', {self.__transaction_date_time}, '{self.__description}'
-                '{self.__trans_status}', '{self.account_type}', {self.user_id})
+                '{self.__transaction_status}', '{self.account_type}', {self.user_id})
                  """
         self.database.query(query)
 
@@ -252,3 +241,24 @@ class Transaction(Account, ABC):
     @description.deleter
     def description(self):
         del self.__description
+
+    @property
+    def transaction_id(self):
+        from banking.register_panel import verify_data
+        self.transaction_id = str(random.randint(100000000000000000000000000000,
+                                                 999999999999999999999999999999))
+        self.transaction_id = str(random.randint(100000000000000000000000000000,
+                                                 999999999999999999999999999999))
+        while verify_data('transaction_id', 2, self.__transaction_id):
+            self.transaction_id = str({random.randint(100000000000000000000000000000,
+                                                      999999999999999999999999999999)})
+        return self.__transaction_id
+
+    @transaction_id.setter
+    def transaction_id(self, _transaction_id):
+        self.__transaction_id = _transaction_id
+
+    @transaction_id.deleter
+    def transaction_id(self):
+        del self.__transaction_id
+

@@ -9,7 +9,13 @@ from bank_processes.transaction import Transaction
 
 
 def verify_data(get_column: str, table_number: int, _object: str) -> bool:
-    """Validates unique values against the database to check if it exists before or not"""
+    """Validates unique values against the database to check if it exists before or not
+
+    Arguments:
+
+    get_column - name of the column you want to verify your object from
+    table_number - the index of the table you want to verify your object from
+    _object - the item you want to verify"""
     db: DataBase = DataBase()
 
     query = (f"""
@@ -26,7 +32,11 @@ def verify_data(get_column: str, table_number: int, _object: str) -> bool:
 
 
 def check_account_status(username: str) -> tuple[bool, Any | None, Any | None] | tuple[bool, Any | None]:
-    """Checks the status of an Account."""
+    """Checks the status of an Account.
+
+    Argument:
+
+    username - the username of the account you want to check its status"""
     db: DataBase = DataBase()
 
     query = (f"""
@@ -57,6 +67,13 @@ def check_account_status(username: str) -> tuple[bool, Any | None, Any | None] |
 
 
 def get_username_from_database(_object: str, email: bool = False, phone_number: bool = True):
+    """Gets the username of any user with respect to their email or phone number
+
+    Arguments:
+
+    _object - the email or phone number of the user that will be used to get the user's username
+    email - when True, the email of the user will be used to get the user's username
+    phone_number - when True, the phone_number of the user will be used to get the user's username"""
     db: DataBase = DataBase()
 
     if email:

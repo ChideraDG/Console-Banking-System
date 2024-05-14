@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import random
 from abc import ABC
 from typing import Tuple, Any
@@ -11,12 +11,12 @@ class Transaction(Account, ABC):
 
     def __init__(self, transaction_id: str = None,
                  transaction_type: str = None,
-                 amount: float = None, transaction_date_time: datetime.datetime = None,
-                 received_transaction_date_time: datetime.datetime = None,
+                 amount: float = None, transaction_date_time: datetime = None,
+                 received_transaction_date_time: datetime = None,
                  receiver_acct_num: str = None,
                  description: str = None, trans_status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
-                 receiver_name: str = None, balance: float = None, transfer_limit: float = None):
+                 receiver_name: str = None, balance: float = None, transfer_limit: float = None, charges: float = None):
         super().__init__()
         self.__transaction_type = transaction_type
         self.__amount = amount
@@ -33,67 +33,21 @@ class Transaction(Account, ABC):
         self.__receiver_name = receiver_name
         self.__balance = balance
         self.__transfer_limit = transfer_limit
+        self.__charges = charges
 
     def sender_transaction_record(self):
         """Method to record new transactions made by the sender  and the relevant information"""
         from banking.register_panel import verify_data
 
-        now = datetime.datetime.now()
-        self.__transaction_date_time = now.strftime("%d %B %Y %H:%M:%S")
+        self.__transaction_date_time = datetime.now()
         self.__transaction_type = self.__transaction_type.upper()
+        self.__transaction_id = str(random.randint(100000000000000000000000000000,
+                                                   999999999999999999999999999999))
         self.__transaction_id = str(random.randint(100000000000000000000000000000,
                                                    999999999999999999999999999999))
         while verify_data('transaction_id', 2, self.__transaction_id):
             self.__transaction_id = str({random.randint(100000000000000000000000000000,
                                                         999999999999999999999999999999)})
-        sender_trans_record = ''
-        if self.__transaction_type == 'TRANSFER':
-            sender_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                        -{self.__amount}
-                        {self.__trans_status}
-            TRANSACTION DETAILS\n
-            Transaction Type\t\t\t{self.__transaction_type}
-            Recipient Details\t\t\t\t{self.__receiver_name}
-                          \t\t\tBankApp|{self.__receiver_acct_num}'''
-            Sender Details\t\t\t\t{self.account_holder}
-                          \t\t\tBankApp|{self.account_number}'''
-            Description        \t\t\t{self.__description}
-            Payment Method         \t\tBalance'''
-            Transaction Date      \t\t{self.__transaction_date_time}
-            Transaction ID         \t\t{self.__transaction_id}
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
-
-        elif self.__transaction_type == 'WITHDRAW':
-            self.__receiver_name = ''
-            self.__receiver_acct_num = ''
-            sender_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                        -{self.__amount}
-                        {self.__trans_status}
-            TRANSACTION DETAILS\n
-            Transaction Type\t\t\t{self.__transaction_type}
-            Sender Details\t\t\t\t{self.account_holder}
-                            \t\t\tBankApp|{self.account_number}'''
-            Description        \t\t\t{self.__description}
-            Payment Method         \t\tBalance'''
-            Transaction Date      \t\t{self.__transaction_date_time}
-            Transaction ID         \t\t{self.__transaction_id}
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
-
-        elif self.__transaction_type == 'DEPOSIT':
-            sender_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                        -{self.__amount}
-                        {self.__trans_status}
-            TRANSACTION DETAILS\n
-            Transaction Type\t\t\t{self.__transaction_type}
-            Recipient Details\t\t\t\t{self.__receiver_name}
-                          \t\t\tBankApp|{self.__receiver_acct_num}'''
-            Sender Details\t\t\t\t{self.account_holder}
-                            \t\t\tBankApp|{self.account_number}'''
-            Description        \t\t\t{self.__description}
-            Payment Method         \t\tBalance'''
-            Transaction Date      \t\t{self.__transaction_date_time}
-            Transaction ID         \t\t{self.__transaction_id}
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
         query = f"""
                 INSERT INTO {self.database.db_tables[2]}
                 (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
@@ -105,27 +59,10 @@ class Transaction(Account, ABC):
                 '{self.__trans_status}', '{self.account_type}', {self.user_id})
                  """
         self.database.query(query)
-        print(sender_trans_record)
 
     def recipient_trans_record(self):
         """Method to record new transactions made to the receiver  and the relevant information"""
-        now = datetime.datetime.now()
-        self.__received_transaction_date_time = now.strftime("%d %B %Y %H:%M:%S")
-        self.__transaction_type = self.__transaction_type.upper()
-
-        receiver_trans_record = f"""~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                            f'+{self.__amount}'
-                            {self.__trans_status}
-                TRANSACTION DETAILS\n
-                Transaction Type\t\t\t{self.__transaction_type}
-                Sender Details\t\t\t\t{self.account_holder}
-                                \t\t\tBankApp|{self.account_number}'''
-                Description        \t\t\t{self.__description}
-                Credited to        \t\tBalance'''
-                Transaction Date      \t\t{self.__received_transaction_date_time}
-                Transaction ID         \t\t{self.__transaction_id}
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
-        print(receiver_trans_record)
+        pass
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""
@@ -210,14 +147,25 @@ class Transaction(Account, ABC):
         del self.__receiver_acct_num
 
     @property
+    def receiver_name(self):
+        return self.__receiver_name
+
+    @receiver_name.setter
+    def receiver_name(self, _receiver_name):
+        self.__receiver_name = _receiver_name
+
+    @receiver_name.deleter
+    def receiver_name(self):
+        del self.__receiver_name
+
+    @property
     def transfer_limit(self):
         if self.user_id is not None:
             query = (f"""
                 SELECT transfer_limit 
                 FROM {self.database.db_tables[3]} 
-                WHERE account_number = '{self.account_number}'
+                WHERE account_number = {self.account_number}
                 """)
-
             datas: tuple = self.database.fetch_data(query)
 
             for data in datas:
@@ -245,3 +193,62 @@ class Transaction(Account, ABC):
     @amount.deleter
     def amount(self):
         del self.__amount
+
+    @property
+    def transaction_date_time(self):
+        transaction_time = datetime.now()
+        self.transaction_date_time = transaction_time
+        return self.__transaction_date_time
+
+    @transaction_date_time.setter
+    def transaction_date_time(self, _transaction_date_time):
+        self.__transaction_date_time = _transaction_date_time
+
+    @transaction_date_time.deleter
+    def transaction_date_time(self):
+        del self.__transaction_date_time
+
+    @property
+    def transaction_type(self):
+        return self.__transaction_type
+
+    @transaction_type.setter
+    def transaction_type(self, _transaction_type):
+        self.__transaction_type = _transaction_type
+
+    @transaction_type.deleter
+    def transaction_type(self):
+        del self.__transaction_type
+
+    @property
+    def charges(self):
+        if self.amount <= 5000:
+            self.charges = 10.53
+
+        elif self.amount <= 50_000:
+            self.charges = 26.88
+
+        else:
+            self.charges = 53.57
+
+        return self.__charges
+
+    @charges.setter
+    def charges(self, _charges):
+        self.__charges = _charges
+
+    @charges.deleter
+    def charges(self):
+        del self.__charges
+
+    @property
+    def description(self):
+        return self.__description
+
+    @description.setter
+    def description(self, _description):
+        self.__description = _description
+
+    @description.deleter
+    def description(self):
+        del self.__description

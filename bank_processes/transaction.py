@@ -239,12 +239,9 @@ class Transaction(Account, ABC):
         return self.__amount
 
     @amount.setter
-    def amount(self, _amount):
+    def amount(self, _amount: float):
         self.__amount = _amount
 
     @amount.deleter
     def amount(self):
         del self.__amount
-
-
-

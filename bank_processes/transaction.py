@@ -139,7 +139,7 @@ class Transaction(Account, ABC):
     def transaction_validation(self, amount: bool = False, transfer_limit: bool = False) -> tuple[bool, str]:
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
         the bank or regulatory authorities. """
-        debited_amount = self.__amount + self.account_fee
+        debited_amount = self.amount + self.account_fee
         sender_updated_balance = self.account_balance - debited_amount
 
         if amount:
@@ -152,7 +152,7 @@ class Transaction(Account, ABC):
                 return True, 'Sufficient Balance'
 
         if transfer_limit:
-            if self.__amount > self.transfer_limit:
+            if self.amount > self.transfer_limit:
                 return False, 'Daily Transfer limit passed!!!'
 
             else:
@@ -233,3 +233,18 @@ class Transaction(Account, ABC):
     @transfer_limit.deleter
     def transfer_limit(self):
         del self.__transfer_limit
+
+    @property
+    def amount(self):
+        return self.__amount
+
+    @amount.setter
+    def amount(self, _amount):
+        self.__amount = _amount
+
+    @amount.deleter
+    def amount(self):
+        del self.__amount
+
+
+

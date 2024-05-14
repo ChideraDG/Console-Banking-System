@@ -86,7 +86,7 @@ class Transaction(Account, ABC):
 
     def receiver_transaction_validation(self) -> tuple[bool, str, Any | None, str | None]:
         """Method to validate if the receiver is allowed to receive such amount and then apply the necessary step"""
-        Account.account_number = self.receiver_acct_num
+        self.account_number = self.receiver_acct_num
         if self.account_balance > self.maximum_balance:
             query = (f""" 
             UPDATE {self.database.db_tables[3]}

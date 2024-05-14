@@ -1,1 +1,3 @@
-Error: TypeError('time.sleep() takes no keyword arguments')
+Module: transfer_money.py 
+Function: amount_to_be_transferred 
+Error: TypeError("unsupported operand type(s) for +: 'NoneType' and 'float'")

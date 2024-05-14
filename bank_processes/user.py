@@ -6,9 +6,9 @@ from abc import abstractmethod
 
 
 class User:
-    def __init__(self, user_id: int = None, username: str = None, password: str = None, first_name: str = None, middle_name: str = None,
-                 last_name: str = None, gender: str = None, email: str = None, phone_number: str = None,
-                 address: str = None, date_of_birth: str = None, linked_accounts: list = None,
+    def __init__(self, user_id: int = None, username: str = None, password: str = None, first_name: str = None,
+                 middle_name: str = None, last_name: str = None, gender: str = None, email: str = None,
+                 phone_number: str = None, address: str = None, date_of_birth: str = None, linked_accounts: list = None,
                  last_login_timestamp: datetime.datetime = None, account_open_date: datetime.datetime = None,
                  account_close_date: datetime.datetime = None):
         self.database = DataBase

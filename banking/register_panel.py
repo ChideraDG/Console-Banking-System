@@ -413,7 +413,7 @@ def register_bvn_account():
         print(f"BVN NUMBER: {bvn.bvn_number}")
     except Exception as e:
         with open('error.txt', 'w') as file:
-            file.write(f'Error: {repr(e)}')
+            file.write(f'Module: register_panel.py \nFunction: register_bvn_account \nError: {repr(e)}')
         print(f"\n*ERROR*\nError Creating BVN")
         go_back('script')
 
@@ -507,6 +507,6 @@ def register_bvn_account():
         print(f"ACCOUNT NUMBER: {account.account_number}")
     except Exception as e:
         with open('error.txt', 'w') as file:
-            file.write(f'Error: {repr(e)}')
+            file.write(f'Module: register_panel.py \nFunction: register_panel \nError: {repr(e)}')
         print(f"\n*ERROR*\nError Creating Bank Account")
         go_back('script')

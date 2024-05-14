@@ -1,4 +1,0 @@
-Dozie.
-I need you to complete the authentication methods.
-I am creating the login panel now and I need you to authenticate both the password and username.
-Also, allocate session token and track login attempts and outcomes.

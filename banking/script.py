@@ -49,11 +49,11 @@ def signing_in():
         header()
 
         print(end='\n')
-        print(' ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~')
+        print('+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
         print("|  1. NEW USER  |  2. EXISTING USER  |")
-        print(" ~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~")
+        print("+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+")
         print("|         3. UNBLOCK ACCOUNT         |")
-        print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
         user_input = input(">>> ")
 
@@ -104,7 +104,7 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
         return display_name
     except Exception as e:
         with open('error.txt', 'w') as file:
-            file.write(f'Error: {repr(e)}')
+            file.write(f'Module: script.py \nFunction: signed_in_header \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
         go_back('script')
@@ -120,19 +120,19 @@ def signed_in(auth: Authentication):
                 display_name = signed_in_header(auth, account_balance_display)
 
                 print(end='\n')
-                print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
                 print(f"|  1. {display_name} ACCOUNT BALANCE  |    2. TRANSFER MONEY    |   3. CARD-LESS WITHDRAWAL    |")
-                print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
                 print("|      4. DEPOSIT MONEY     |     5. COLLECT LOAN     |        6. UPDATE BVN         |")
-                print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
                 print("|  7. TRANSACTION HISTORY   |  8. GENERATE STATEMENT  |       9. BENEFICIARIES       |")
-                print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
                 print("|    10. UPGRADE ACCOUNT    |    11. OPEN ACCOUNT     |       12. CLOSE ACCOUNT      |")
-                print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
                 print("|     13. BLOCK ACCOUNT     |  14. VIEW CONTACT INFO  |  15. CHANGE TRANSACTION PIN  |")
-                print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
                 print("|  16. UPDATE ACCOUNT INFO  |  17. BANK INFORMATION   |          18. LOGOUT          |")
-                print(" ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
                 user_input = input(">>> ")
 
@@ -190,7 +190,7 @@ def signed_in(auth: Authentication):
                 break
     except Exception as e:
         with open('error.txt', 'w') as file:
-            file.write(f'Error: {repr(e)}')
+            file.write(f'Module: script.py \nFunction: signed_in_ \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
         go_back('script')

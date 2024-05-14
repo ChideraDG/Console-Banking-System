@@ -198,12 +198,9 @@ def process_transfer(auth: Authentication):
                 user_input = input(">>> ")
 
                 if re.search('^1$', user_input):
-                    recipient_account_number(auth)[0]
+                    recipient_account_number(auth)
                     amount_to_be_transferred(auth)
-                    transfer_description = description(auth)
-                    print(receiver_account_number)
-                    print(amount_to_be_debited)
-                    print(transfer_description)
+                    description(auth)
                     time.sleep(10)
                 elif re.search('^2$', user_input):
                     bene = beneficiaries(auth)

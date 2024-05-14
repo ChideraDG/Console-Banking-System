@@ -186,7 +186,6 @@ def signed_in(auth: Authentication):
                 else:
                     del user_input
                     continue
-
                 break
     except Exception as e:
         with open('error.txt', 'w') as file:

@@ -160,7 +160,7 @@ class Transaction(Account, ABC):
 
     @property
     def transfer_limit(self):
-        if self.user_id is not None:
+        if self.account_number is not None:
             query = (f"""
                 SELECT transfer_limit 
                 FROM {self.database.db_tables[3]} 

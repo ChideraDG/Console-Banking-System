@@ -44,7 +44,7 @@ def beneficiaries(auth: Authentication) -> str | list:
         go_back('signed_in', auth=auth)
 
 
-def recipient_account_number(auth: Authentication) -> tuple[str, str]:
+def recipient_account_number(auth: Authentication):
     try:
         while True:
             header()
@@ -64,7 +64,7 @@ def recipient_account_number(auth: Authentication) -> tuple[str, str]:
                     checking = Authentication()  # New Instance to get the name of the Recipient
                     checking.account_number = _input
                     recipient_name = checking.account_holder
-                    print(f'\t::: {recipient_name} :::')
+                    print(f'  R.N. ::: {recipient_name} ')
                     print('\nis this the correct RECIPIENT NAME you want to send money to?')
                     print('1. Yes  |  2. No')
                     print('~~~~~~     ~~~~~')
@@ -72,7 +72,12 @@ def recipient_account_number(auth: Authentication) -> tuple[str, str]:
 
                     if checking_input == '1' or checking_input.lower() == 'yes':
                         del checking_input
-                        return _input, recipient_name
+                        auth.receiver_acct_num = _input
+                        auth.receiver_name = recipient_name
+                    elif _input.lower() == 'go back' or _input.lower() == 'goback':
+                        del _input
+                        time.sleep(1.5)
+                        go_back('signed_in', auth=auth)
                     else:
                         del checking
                         del _input
@@ -101,7 +106,7 @@ def recipient_account_number(auth: Authentication) -> tuple[str, str]:
         go_back('signed_in', auth=auth)
 
 
-def amount_to_be_transferred(auth: Authentication) -> float:
+def amount_to_be_transferred(auth: Authentication):
     try:
         while True:
             header()
@@ -119,7 +124,23 @@ def amount_to_be_transferred(auth: Authentication) -> float:
             auth.amount = float(_input)
             if auth.transaction_validation(transfer_limit=True)[0]:
                 if auth.transaction_validation(amount=True)[0]:
-                    return float(_input)
+                    print(f'\nyou will be charged {auth.charges} for this transfer')
+                    print('1. Yes  |  2. No')
+                    print('~~~~~~     ~~~~~')
+                    checking_input = input(">>> ")
+
+                    if checking_input == '1' or checking_input.lower() == 'yes':
+                        auth.amount = float(_input)
+                    elif _input.lower() == 'go back' or _input.lower() == 'goback':
+                        del checking_input
+                        del _input
+                        time.sleep(1.5)
+                        go_back('signed_in', auth=auth)
+                    else:
+                        del _input
+                        del checking_input
+                        time.sleep(2)
+                        continue
                 else:
                     print(f"\n:: {auth.transaction_validation(amount=True)[1]}")
                     del _input
@@ -142,7 +163,7 @@ def amount_to_be_transferred(auth: Authentication) -> float:
         go_back('signed_in', auth=auth)
 
 
-def description(auth) -> str:
+def description(auth):
     try:
         header()
         print(end='\n')
@@ -155,7 +176,7 @@ def description(auth) -> str:
             time.sleep(1.5)
             go_back('signed_in', auth=auth)
         else:
-            return _input
+            auth.description = _input
     except Exception as e:
         with open('error.txt', 'w') as file:
             file.write(f'Module: transfer_money.py \nFunction: description \nError: {repr(e)}')
@@ -177,8 +198,8 @@ def process_transfer(auth: Authentication):
                 user_input = input(">>> ")
 
                 if re.search('^1$', user_input):
-                    receiver_account_number = recipient_account_number(auth)[0]
-                    amount_to_be_debited = amount_to_be_transferred(auth)
+                    recipient_account_number(auth)[0]
+                    amount_to_be_transferred(auth)
                     transfer_description = description(auth)
                     print(receiver_account_number)
                     print(amount_to_be_debited)

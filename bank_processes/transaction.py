@@ -76,7 +76,7 @@ class Transaction(Account, ABC):
     def transaction_validation(self, amount: bool = False, transfer_limit: bool = False) -> tuple[bool, str]:
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
         the bank or regulatory authorities. """
-        debited_amount = self.amount + self.account_fee
+        debited_amount = self.amount + self.charges
         sender_updated_balance = self.account_balance - debited_amount
 
         if amount:

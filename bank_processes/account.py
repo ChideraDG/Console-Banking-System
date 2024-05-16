@@ -32,12 +32,32 @@ class Account(User):
 
         query = f"""
                 INSERT INTO {self.database.db_tables[3]}
-                (account_number, account_type, account_holder, account_balance, minimum_balance, account_fee, 
-                transaction_pin, account_status, account_tier, overdraft_protection, transaction_limit)
-                VALUES('{self.__account_number}', '{self.__account_type}', '{self.__account_holder}', 
-                {self.__account_balance}, {self.__minimum_balance}, {self.__maximum_balance}, {self.__account_fee}, '{self.__transaction_pin}', 
-                '{self.__account_status}', '{self.__account_tier}', '{self.__overdraft_protection}', 
-                {self.__transaction_limit}, {self.__transfer_limit})
+                (account_number, 
+                account_type, 
+                account_holder, 
+                account_balance, 
+                minimum_balance, 
+                maximum_balance, 
+                account_fee, 
+                transaction_pin, 
+                account_status, 
+                account_tier, 
+                overdraft_protection, 
+                transaction_limit, 
+                transfer_limit)
+                VALUES('{self.__account_number}', 
+                '{self.__account_type}', 
+                '{self.__account_holder}', 
+                {self.__account_balance}, 
+                {self.__minimum_balance}, 
+                {self.__maximum_balance}, 
+                {self.__account_fee}, 
+                '{self.__transaction_pin}', 
+                '{self.__account_status}', 
+                '{self.__account_tier}', 
+                '{self.__overdraft_protection}', 
+                {self.__transaction_limit}, 
+                {self.__transfer_limit})
                 """
 
         self.database.query(query)

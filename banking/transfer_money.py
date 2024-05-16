@@ -208,7 +208,7 @@ def process_transfer(auth: Authentication):
                     amount_to_be_transferred(auth)
                     description(auth)
                     auth.transaction_type = 'transfer'
-                    break
+                    quit()
                 elif re.search('^2$', user_input):
                     bene = beneficiaries(auth)
                     if bene == ':: Empty':

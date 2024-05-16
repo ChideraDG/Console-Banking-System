@@ -40,8 +40,6 @@ class Transaction(Account, ABC):
         from banking.register_panel import verify_data
         self.__transaction_id = str(random.randint(100000000000000000000000000000,
                                                    999999999999999999999999999999))
-        self.__transaction_id = str(random.randint(100000000000000000000000000000,
-                                                   999999999999999999999999999999))
         while verify_data('transaction_id', 2, self.__transaction_id):
             self.__transaction_id = str({random.randint(100000000000000000000000000000,
                                                         999999999999999999999999999999)})

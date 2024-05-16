@@ -45,7 +45,8 @@ class Account(User):
                 overdraft_protection, 
                 transaction_limit, 
                 transfer_limit)
-                VALUES('{self.__account_number}', 
+                VALUES(
+                '{self.__account_number}', 
                 '{self.__account_type}', 
                 '{self.__account_holder}', 
                 {self.__account_balance}, 

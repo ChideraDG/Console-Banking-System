@@ -37,6 +37,15 @@ class Transaction(Account, ABC):
 
     def sender_transaction_record(self):
         """Method to record new transactions made by the sender  and the relevant information"""
+        from banking.register_panel import verify_data
+        self.__transaction_id = str(random.randint(100000000000000000000000000000,
+                                                   999999999999999999999999999999))
+        self.__transaction_id = str(random.randint(100000000000000000000000000000,
+                                                   999999999999999999999999999999))
+        while verify_data('transaction_id', 2, self.__transaction_id):
+            self.__transaction_id = str({random.randint(100000000000000000000000000000,
+                                                        999999999999999999999999999999)})
+
         query = f"""
                 INSERT INTO {self.database.db_tables[2]}
                 (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
@@ -100,7 +109,26 @@ class Transaction(Account, ABC):
     def process_transaction(self):
         """Method to process the transaction, including updating account balances, recording transaction details,
         and handling any necessary validations or checks."""
-        pass
+        debited_amount = self.amount + self.charges
+        if self.transaction_type == 'transfer':
+            sender_updated_balance = self.account_balance - debited_amount
+            sender_query = f"""
+            UPDATE {self.database.db_tables[3]}
+            SET account_balance = {sender_updated_balance}
+            WHERE account_number = {self.account_number}  
+            """
+            self.database.query(sender_query)
+
+            _receiver_object = Account()
+            _receiver_object.account_number = self.receiver_acct_num
+            receiver_updated_balance = _receiver_object.account_balance + self.amount
+            receiver_query = f"""
+            UPDATE {self.database.db_tables[3]}
+            SET account_balance = {receiver_updated_balance}
+            WHERE account_number = {self.receiver_acct_num}
+            """
+            self.database.query(receiver_query)
+            del _receiver_object
 
     def cancel_transaction(self):
         """Method to cancel a pending or incomplete transaction, reversing any changes made to account balances
@@ -239,24 +267,3 @@ class Transaction(Account, ABC):
     @description.deleter
     def description(self):
         del self.__description
-
-    @property
-    def transaction_id(self):
-        from banking.register_panel import verify_data
-        self.transaction_id = str(random.randint(100000000000000000000000000000,
-                                                 999999999999999999999999999999))
-        self.transaction_id = str(random.randint(100000000000000000000000000000,
-                                                 999999999999999999999999999999))
-        while verify_data('transaction_id', 2, self.__transaction_id):
-            self.transaction_id = str({random.randint(100000000000000000000000000000,
-                                                      999999999999999999999999999999)})
-        return self.__transaction_id
-
-    @transaction_id.setter
-    def transaction_id(self, _transaction_id):
-        self.__transaction_id = _transaction_id
-
-    @transaction_id.deleter
-    def transaction_id(self):
-        del self.__transaction_id
-

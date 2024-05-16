@@ -1,3 +1,3 @@
-Module: login_panel.py 
-Function: login 
-Error: UnboundLocalError("cannot access local variable '_username' where it is not associated with a value")
+Module: transfer_money.py 
+Function: beneficiaries 
+Error: JSONDecodeError('Expecting value: line 1 column 1 (char 0)')

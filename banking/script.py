@@ -145,6 +145,7 @@ def signed_in(auth: Authentication):
                     continue
                 elif re.search('^2$', user_input):
                     transfer_money.process_transfer(auth)
+                    continue
                 elif re.search('^3$', user_input):
                     continue
                 elif re.search('^4$', user_input):
@@ -186,7 +187,6 @@ def signed_in(auth: Authentication):
                 else:
                     del user_input
                     continue
-                break
     except Exception as e:
         with open('error.txt', 'w') as file:
             file.write(f'Module: script.py \nFunction: signed_in_ \nError: {repr(e)}')

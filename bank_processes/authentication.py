@@ -4,7 +4,6 @@ import random
 from typing import Any
 from bank_processes.database import DataBase
 from plyer import notification as note
-
 from bank_processes.transaction import Transaction
 
 
@@ -195,13 +194,12 @@ class Authentication(Transaction, ABC):
     def password_validation(self) -> bool:
         """Method to validate user passwords during registration and login; and checking against common password
         dictionaries."""
-        db: DataBase = DataBase()
 
         query = (f"""
-        select password from {db.db_tables[1]} where username = '{self.__username}'
+        select password from {self.database.db_tables[1]} where username = '{self.__username}'
         """)
 
-        datas: tuple = db.fetch_data(query)
+        datas: tuple = self.database.fetch_data(query)
 
         for data in datas:
             if (f'{self.__password}',) == data:
@@ -232,14 +230,13 @@ class Authentication(Transaction, ABC):
     def account_lockout(self):
         """Method to temporarily lock user accounts after multiple failed login attempts, preventing brute force
         attacks and unauthorized access."""
-        db: DataBase = DataBase()
 
         query = (f"""
-        update {db.db_tables[3]} set account_status = 'suspended' where 
+        update {self.database.db_tables[3]} set account_status = 'suspended' where 
         account_id = {check_account_status(self.username)[2]}
         """)
 
-        db.query(query)
+        self.database.query(query)
 
     @property
     def username(self):

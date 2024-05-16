@@ -88,9 +88,7 @@ def password():
                     continue
 
         auth.account_lockout()
-
         time.sleep(1)
-
         go_back('script')
     except Exception as e:
         with open('error.txt', 'w') as file:

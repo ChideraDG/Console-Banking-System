@@ -1,3 +1,4 @@
+import json
 from abc import abstractmethod, ABC
 from bank_processes.user import User
 
@@ -110,9 +111,29 @@ class Account(User):
         prevent fraudulent or unauthorized transactions."""
         pass
 
-    def add_beneficiaries(self, _account_holder: str, _account_number: str):
+    def block_account(self):
+        """Method to block user accounts after multiple failed pin attempts, preventing brute force
+        attacks and unauthorized access."""
+        query = (f""" 
+        UPDATE {self.database.db_tables[3]}
+        SET account_status = 'blocked'
+        WHERE account_number = {self.account_number}
+        """)
+
+        self.database.query(query)
+
+    def add_beneficiaries(self, _account_number: str, _account_holder: str):
         """Method to add new beneficiaries to an Account"""
-        pass
+        value = len(self.beneficiaries)
+
+        self.__beneficiaries.update({str(value + 1): [_account_number, _account_holder]})
+
+        query = (f"""
+        UPDATE {self.database.db_tables[3]}
+        SET beneficiaries = '{str(self.__beneficiaries).replace("'", '"')}'
+        WHERE account_number = {self.account_number}
+        """)
+        self.database.query(query)
 
     def for_debugging(self):
         """For Debugging"""
@@ -357,7 +378,7 @@ class Account(User):
 
             for data in datas:
                 for beneficiaries in data:
-                    self.beneficiaries = beneficiaries
+                    self.beneficiaries = json.loads(beneficiaries)
 
         return self.__beneficiaries
 

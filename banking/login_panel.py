@@ -2,13 +2,16 @@ import re
 import time
 from datetime import datetime
 from banking.register_panel import countdown_timer
-from banking.script import header, go_back, signed_in, findDate
+from plyer import notification as note
+from banking.script import (header,
+                            go_back,
+                            signed_in,
+                            findDate)
 from bank_processes.authentication import (Authentication,
                                            verify_data,
                                            check_account_status,
                                            get_username_from_database,
                                            token_auth)
-from plyer import notification as note
 
 auth = Authentication()
 

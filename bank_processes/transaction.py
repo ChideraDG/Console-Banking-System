@@ -86,18 +86,16 @@ class Transaction(Account, ABC):
 
     def receiver_transaction_validation(self) -> tuple[bool, str, Any | None, str | None]:
         """Method to validate if the receiver is allowed to receive such amount and then apply the necessary step"""
-        self.account_number = self.receiver_acct_num
-        if self.account_balance > self.maximum_balance:
+        _object = Account()
+        _object.account_number = self.receiver_acct_num
+        if _object.account_balance > _object.maximum_balance:
             query = (f""" 
             UPDATE {self.database.db_tables[3]}
             SET account_status = 'blocked'
             WHERE account_number = {self.receiver_acct_num}""")
             self.database.query(query)
-
-            return False, 'Maximum Balance passed!!!', self.account_status, self.receiver_acct_num
-
-        else:
-            return True, 'Allowed balance met', self.account_status, self.receiver_acct_num
+            return False, 'Maximum Balance passed!!!', _object.account_status, self.receiver_acct_num
+        del _object
 
     def process_transaction(self):
         """Method to process the transaction, including updating account balances, recording transaction details,

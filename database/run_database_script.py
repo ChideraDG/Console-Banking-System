@@ -7,19 +7,19 @@ connection = sql.connect(
     database=''
 )
 
-my_cursor = connection.cursor()
+_cursor = connection.cursor()
 
 query0 = """
-CREATE DATABASE IF NOT EXISTS bankApp_db
+CREATE DATABASE IF NOT EXISTS bankApp
 """
 
-my_cursor.execute(query0)
+_cursor.execute(query0)
 
 connection = sql.connect(
     host='localhost',
     user='root',
     password='',
-    database='bankApp_db'
+    database='bankApp'
 )
 
 my_cursor = connection.cursor()
@@ -41,7 +41,7 @@ CREATE TABLE `Account` (
   `transaction_limit` int(11) NOT NULL,
   `transfer_limit` float NOT NULL,
   `beneficiaries` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) 
 """
 
 query2 = """
@@ -60,7 +60,7 @@ CREATE TABLE `Bank_Verification_Number` (
   `created_date` datetime NOT NULL,
   `last_updated` datetime NOT NULL,
   `bvn_status` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) 
 """
 
 query3 = """
@@ -75,8 +75,8 @@ CREATE TABLE `Transaction` (
   `transaction_date_time` datetime NOT NULL,
   `description` varchar(100) NOT NULL,
   `status` enum('successful','failed') NOT NULL,
-  `account_type` varchar(15) NOT NULL,
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `account_type` varchar(15) NOT NULL
+) 
 """
 
 query4 = """
@@ -96,7 +96,7 @@ CREATE TABLE `User` (
   `last_login_timestamp` datetime NOT NULL,
   `account_open_date` datetime NOT NULL,
   `account_close_date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) 
 """
 
 query5 = """
@@ -156,10 +156,11 @@ INSERT INTO `Bank_Verification_Number` (`id`, `first_name`, `middle_name`, `last
 
 query14 = """
 INSERT INTO `Account` (`account_id`, `account_number`, `account_type`, `account_holder`, `account_balance`, `minimum_balance`, `maximum_balance`, `account_fee`, `transaction_pin`, `account_status`, `account_tier`, `overdraft_protection`, `transaction_limit`, `transfer_limit`, `beneficiaries`) VALUES
-(1, '4773494548', 'savings', 'Ohanenye-Ohiaekpete Chidera Divine-Gift', 500.5, 50, 300000, 100, '1234', 'active', 'Tier 1', 'no', 10, 50000, '{\"1\": [\"1234567\", \"James\"], \"2\": [\"5678907\", \"Chi\"]}'),
-(2, '1513500889', 'savings', 'Oboh Victory Akhere', 500.5, 50, 300000, 100, '2000', 'active', 'Tier 1', 'no', 10, 50000, ''),
-(3, '5409484424', 'savings', 'Ezenwa Chiedozie Emmanuel', 500.5, 50, 300000, 100, '2094', 'active', 'Tier 1', 'no', 10, 50000, ''),
-(4, '2936502510', 'savings', 'Hello Abdul Bye', 500.5, 50, 300000, 100, '1234', 'active', 'Tier 1', 'no', 10, 50000, NULL);
+(1, '4773494548', 'savings', 'Ohanenye-Ohiaekpete Chidera Divine-Gift', 500.5, 50, 300000, 100, '1234', 'active', 'Tier 1', 'no', 10, 49960, '{\"1\": [\"1513500889\", \"Oboh Victory Akhere\"]}'),
+(2, '1513500889', 'savings', 'Oboh Victory Akhere', 500.5, 50, 300000, 100, '2000', 'active', 'Tier 1', 'no', 9, 49800, '{\"1\": [\"4773494548\", \"Ohanenye-Ohiaekpete Chidera Divine-Gift\"]}'),
+(3, '5409484424', 'savings', 'Ezenwa Chiedozie Emmanuel', 500.5, 50, 300000, 100, '2094', 'active', 'Tier 1', 'no', 10, 50000, '{}'),
+(4, '2936502510', 'savings', 'Hello Abdul Bye', 500.5, 50, 300000, 100, '1234', 'active', 'Tier 1', 'no', 10, 50000, '{}'),
+(5, '2726400190', 'savings', 'Nwa Ebube Godson', 500.5, 50, 300000, 100, '1234', 'active', 'Tier 1', 'no', 10, 50000, '{}');
 """
 
 queries2 = [query12, query13, query14]

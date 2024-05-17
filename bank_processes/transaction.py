@@ -35,7 +35,7 @@ class Transaction(Account, ABC):
         self.__transfer_limit = transfer_limit
         self.__charges = charges
 
-    def sender_transaction_record(self):
+    def transaction_record(self):
         """Method to record new transactions made by the sender  and the relevant information"""
         from banking.register_panel import verify_data
         self.__transaction_id = str(random.randint(100000000000000000000000000000,
@@ -55,10 +55,6 @@ class Transaction(Account, ABC):
                 '{self.__transaction_status}', '{self.account_type}', {self.user_id})
                  """
         self.database.query(query)
-
-    def recipient_trans_record(self):
-        """Method to record new transactions made to the receiver  and the relevant information"""
-        pass
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""
@@ -108,11 +104,14 @@ class Transaction(Account, ABC):
         """Method to process the transaction, including updating account balances, recording transaction details,
         and handling any necessary validations or checks."""
         debited_amount = self.amount + self.charges
+        updated_transaction_limit = self.transaction_limit - 1
+        updated_transfer_limit = self.transfer_limit - self.amount
         if self.transaction_type == 'transfer':
             sender_updated_balance = self.account_balance - debited_amount
             sender_query = f"""
             UPDATE {self.database.db_tables[3]}
-            SET account_balance = {sender_updated_balance}
+            SET account_balance = {sender_updated_balance}, transaction_limit = {updated_transaction_limit},
+            transfer_limit = {updated_transfer_limit}
             WHERE account_number = {self.account_number}  
             """
             self.database.query(sender_query)

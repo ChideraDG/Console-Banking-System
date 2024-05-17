@@ -486,6 +486,19 @@ class User:
 
     @property
     def last_login_timestamp(self):
+        if self.username is not None:
+            query = (f"""
+            SELECT last_login_timestamp 
+            FROM {self.database.db_tables[1]} 
+            WHERE username = '{self.username}'
+            """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for last_login_timestamp in data:
+                    self.last_login_timestamp = last_login_timestamp
+
         return self.__last_login_timestamp
 
     @last_login_timestamp.setter

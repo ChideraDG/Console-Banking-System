@@ -141,7 +141,6 @@ class Authentication(Transaction, ABC):
         self.address = self.address
         self.date_of_birth = self.date_of_birth
         self.linked_accounts = self.linked_accounts
-        self.last_login_timestamp = self.login_time_stamp
         self.account_open_date = self.account_open_date
         self.account_number = self.account_number
         self.account_type = self.account_type
@@ -153,11 +152,20 @@ class Authentication(Transaction, ABC):
         self.account_tier = self.account_tier
         self.transaction_limit = self.transaction_limit
 
+        if self.last_login_timestamp.date() < datetime.today().date():
+            query = (f"""
+                    UPDATE {self.database.db_tables[3]} 
+                    SET transaction_limit = 10
+                    WHERE account_number = '{self.account_number}'
+                    """)
+
+            self.database.query(query)
+
         query = (f"""
-        UPDATE {self.database.db_tables[1]} 
-        SET last_login_timestamp = '{self.last_login_timestamp}' 
-        WHERE username = '{self.username}'
-        """)
+                UPDATE {self.database.db_tables[1]} 
+                SET last_login_timestamp = '{self.login_time_stamp}' 
+                WHERE username = '{self.username}'
+                """)
 
         self.database.query(query)
 

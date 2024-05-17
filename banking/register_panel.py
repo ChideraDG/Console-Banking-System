@@ -30,15 +30,19 @@ def first_name() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip()
 
-        if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
-            name = match.group(1) + match.group(2)
-
-        if re.search('^[a-z-]+$', name, re.IGNORECASE):
-            break
+        if re.search('^(goback|go back)$', name, re.IGNORECASE):
+            del name
+            go_back('script')
         else:
-            print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
-            time.sleep(2)
-            continue
+            if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
+                name = match.group(1) + match.group(2)
+
+            if re.search('^[a-z-]+$', name, re.IGNORECASE):
+                break
+            else:
+                print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
+                time.sleep(2)
+                continue
 
     return name.title()
 
@@ -50,15 +54,19 @@ def middle_name() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip()
 
-        if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
-            name = match.group(1) + match.group(2)
-
-        if re.search('[a-z-]+', name, re.IGNORECASE):
-            break
+        if re.search('^(goback|go back)$', name, re.IGNORECASE):
+            del name
+            go_back('script')
         else:
-            print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
-            time.sleep(2)
-            continue
+            if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
+                name = match.group(1) + match.group(2)
+
+            if re.search('[a-z-]+', name, re.IGNORECASE):
+                break
+            else:
+                print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
+                time.sleep(2)
+                continue
 
     return name.title()
 
@@ -70,15 +78,19 @@ def last_name() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip()
 
-        if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
-            name = match.group(1) + match.group(2)
-
-        if re.search('[a-z-]+', name, re.IGNORECASE):
-            break
+        if re.search('^(goback|go back)$', name, re.IGNORECASE):
+            del name
+            go_back('script')
         else:
-            print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
-            time.sleep(2)
-            continue
+            if match := re.search(r'^([a-z-]+) +([a-z-]+)$', name, re.IGNORECASE):
+                name = match.group(1) + match.group(2)
+
+            if re.search('[a-z-]+', name, re.IGNORECASE):
+                break
+            else:
+                print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
+                time.sleep(2)
+                continue
 
     return name.title()
 
@@ -90,12 +102,16 @@ def gender() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~")
         _gender = input(">>> ").strip()
 
-        if not re.search('^(male|female)$', _gender, re.IGNORECASE):
-            print("\n:: Gender should be either Male or Female only.")
-            time.sleep(2)
-            continue
+        if re.search('^(goback|go back)$', _gender, re.IGNORECASE):
+            del _gender
+            go_back('script')
         else:
-            break
+            if not re.search('^(male|female)$', _gender, re.IGNORECASE):
+                print("\n:: Gender should be either Male or Female only.")
+                time.sleep(2)
+                continue
+            else:
+                break
 
     return _gender.title()
 
@@ -106,7 +122,11 @@ def address() -> str:
     print("~~~~~~~~~~~~~~~~~~~")
     _address = input(">>> ").strip()
 
-    return _address.title()
+    if re.search('^(goback|go back)$', _address, re.IGNORECASE):
+        del _address
+        go_back('script')
+    else:
+        return _address.title()
 
 
 def date_of_birth() -> str:
@@ -121,18 +141,22 @@ def date_of_birth() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~~~")
         year_of_birth = input(">>> ").strip()
 
-        if year_of_birth.isdigit() and 1900 < int(year_of_birth) <= max_year:
-            break
+        if re.search('^(goback|go back)$', year_of_birth, re.IGNORECASE):
+            del year_of_birth
+            go_back('script')
         else:
-            if year_of_birth.isdigit():
-                if not int(year_of_birth) <= max_year:
-                    print("\n:: Age is less than 18")
-                elif not 1900 < int(year_of_birth):
-                    print("\n:: Year is less than 1900")
+            if year_of_birth.isdigit() and 1900 < int(year_of_birth) <= max_year:
+                break
             else:
-                print("\n:: Year of Birth should be in digits.\nExample: 2001, 2004, etc.")
-            time.sleep(2)
-            continue
+                if year_of_birth.isdigit():
+                    if not int(year_of_birth) <= max_year:
+                        print("\n:: Age is less than 18")
+                    elif not 1900 < int(year_of_birth):
+                        print("\n:: Year is less than 1900")
+                else:
+                    print("\n:: Year of Birth should be in digits.\nExample: 2001, 2004, etc.")
+                time.sleep(2)
+                continue
 
     time.sleep(1)
 
@@ -141,16 +165,20 @@ def date_of_birth() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~")
         month_of_birth = input(">>> ").strip()
 
-        if month_of_birth.isdigit() and 0 < int(month_of_birth) <= month:
-            break
+        if re.search('^(goback|go back)$', month_of_birth, re.IGNORECASE):
+            del month_of_birth
+            go_back('script')
         else:
-            if month_of_birth.isdigit():
-                if not 0 < int(month_of_birth) <= 12:
-                    print("\n:: Month of Birth should be between Zero(0) and Twelve(12)")
+            if month_of_birth.isdigit() and 0 < int(month_of_birth) <= month:
+                break
             else:
-                print("\n:: Month of Birth should be in digits.\nExample: 2 means February, 4 means April, etc.")
-            time.sleep(2)
-            continue
+                if month_of_birth.isdigit():
+                    if not 0 < int(month_of_birth) <= 12:
+                        print("\n:: Month of Birth should be between Zero(0) and Twelve(12)")
+                else:
+                    print("\n:: Month of Birth should be in digits.\nExample: 2 means February, 4 means April, etc.")
+                time.sleep(2)
+                continue
 
     month = int(month_of_birth)
     if month == 1:
@@ -200,16 +228,20 @@ def date_of_birth() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
         day_of_birth = input(">>> ").strip()
 
-        if day_of_birth.isdigit() and 0 < int(day_of_birth) <= days:
-            break
+        if re.search('^(goback|go back)$', day_of_birth, re.IGNORECASE):
+            del day_of_birth
+            go_back('script')
         else:
-            if day_of_birth.isdigit():
-                if not 0 < int(day_of_birth) <= days:
-                    print(f"\n:: Day of Birth should be within the number of days in {month_name}")
+            if day_of_birth.isdigit() and 0 < int(day_of_birth) <= days:
+                break
             else:
-                print("\n:: Day of Birth should be in digits.\nExample: 2, 4, 10, etc.")
-            time.sleep(2)
-            continue
+                if day_of_birth.isdigit():
+                    if not 0 < int(day_of_birth) <= days:
+                        print(f"\n:: Day of Birth should be within the number of days in {month_name}")
+                else:
+                    print("\n:: Day of Birth should be in digits.\nExample: 2, 4, 10, etc.")
+                time.sleep(2)
+                continue
 
     return f'{year_of_birth}-{month_of_birth}-{day_of_birth}'
 
@@ -221,18 +253,22 @@ def e_mail() -> str:
         print("~~~~~~~~~~~~~~~~~~")
         email = input(">>> ").strip()
 
-        if verify_data('email', 0, email):
-            print('\n*ERROR*')
-            print("-> Email already exist")
-            time.sleep(2)
-            continue
-
-        if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", email, re.IGNORECASE):
-            break
+        if re.search('^(goback|go back)$', email, re.IGNORECASE):
+            del email
+            go_back('script')
         else:
-            print("\n:: Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.")
-            time.sleep(2)
-            continue
+            if verify_data('email', 0, email):
+                print('\n*ERROR*')
+                print("-> Email already exist")
+                time.sleep(2)
+                continue
+
+            if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", email, re.IGNORECASE):
+                break
+            else:
+                print("\n:: Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.")
+                time.sleep(2)
+                continue
 
     return email.lower()
 
@@ -244,17 +280,21 @@ def phone_number() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
         phoneNumber = input(">>> ").strip()
 
-        if verify_data('phone_number', 0, phoneNumber):
-            print("\n:: Phone Number already exist")
-            time.sleep(3)
-            continue
-
-        if re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', phoneNumber) and 11 <= len(phoneNumber) <= 15:
-            break
+        if re.search('^(goback|go back)$', phoneNumber, re.IGNORECASE):
+            del phoneNumber
+            go_back('script')
         else:
-            print("\n:: Phone Number should be in digits  only.\nExample: 08076542879, +2348033327493 etc.")
-            time.sleep(2)
-            continue
+            if verify_data('phone_number', 0, phoneNumber):
+                print("\n:: Phone Number already exist")
+                time.sleep(3)
+                continue
+
+            if re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', phoneNumber) and 11 <= len(phoneNumber) <= 15:
+                break
+            else:
+                print("\n:: Phone Number should be in digits  only.\nExample: 08076542879, +2348033327493 etc.")
+                time.sleep(2)
+                continue
 
     return phoneNumber
 
@@ -267,19 +307,23 @@ def account_type() -> str:
         print('1 -> Saving \n2 -> Current \n3 -> Fixed Deposit')
         accountType = input('>>> ')
 
-        if re.search('^(1|Saving)$', accountType, re.IGNORECASE):
-            accountType = 'Savings'
-            break
-        elif re.search('^(2|Current)$', accountType, re.IGNORECASE):
-            accountType = 'Current'
-            break
-        elif re.search('^(3|Fixed Deposit)$', accountType, re.IGNORECASE):
-            accountType = 'Fixed Deposit'
-            break
+        if re.search('^(goback|go back)$', accountType, re.IGNORECASE):
+            del accountType
+            go_back('script')
         else:
-            print("\n:: Choose between Saving or Current or Fixed Deposit")
-            time.sleep(2)
-            continue
+            if re.search('^(1|Saving)$', accountType, re.IGNORECASE):
+                accountType = 'Savings'
+                break
+            elif re.search('^(2|Current)$', accountType, re.IGNORECASE):
+                accountType = 'Current'
+                break
+            elif re.search('^(3|Fixed Deposit)$', accountType, re.IGNORECASE):
+                accountType = 'Fixed Deposit'
+                break
+            else:
+                print("\n:: Choose between Saving or Current or Fixed Deposit")
+                time.sleep(2)
+                continue
 
     return accountType.lower()
 
@@ -292,22 +336,26 @@ def account_password() -> str:
         print("\nEnter Password:")
         accountPassword = input(">>> ").strip()
 
-        if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$. #!%*?&])[A-Za-z\d@$!#% *?.&]{8,}$", accountPassword):
-            while True:
-                print("\nRe-enter Password:")
-                second_input = input(">>> ").strip()
-                if accountPassword == second_input:
-                    break
-                else:
-                    print("\n:: Passwords are not the same")
-                    time.sleep(2)
-                    continue
-            break
+        if re.search('^(goback|go back)$', accountPassword, re.IGNORECASE):
+            del accountPassword
+            go_back('script')
         else:
-            print("\n:: Password must be more than 8 characters.")
-            print(":: Password should contain a number, a lowercase letter, and uppercase letter and a symbol.")
-            time.sleep(2)
-            continue
+            if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$. #!%*?&])[A-Za-z\d@$!#% *?.&]{8,}$", accountPassword):
+                while True:
+                    print("\nRe-enter Password:")
+                    second_input = input(">>> ").strip()
+                    if accountPassword == second_input:
+                        break
+                    else:
+                        print("\n:: Passwords are not the same")
+                        time.sleep(2)
+                        continue
+                break
+            else:
+                print("\n:: Password must be more than 8 characters.")
+                print(":: Password should contain a number, a lowercase letter, and uppercase letter and a symbol.")
+                time.sleep(2)
+                continue
 
     return accountPassword
 
@@ -320,21 +368,25 @@ def transaction_pin():
         print("\nEnter Transaction Pin:")
         transactionPin = input(">>> ").strip()
 
-        if re.search(r"^\d{4}$", transactionPin):
-            while True:
-                print("\nRe-Enter Transaction Pin:")
-                second_input = input(">>> ").strip()
-                if transactionPin == second_input:
-                    break
-                else:
-                    print("\n:: Passwords are not the same")
-                    time.sleep(2)
-                    continue
-            break
+        if re.search('^(goback|go back)$', transactionPin, re.IGNORECASE):
+            del transactionPin
+            go_back('script')
         else:
-            print("\n:: Transaction Pin must be only 4 digits.")
-            time.sleep(2)
-            continue
+            if re.search(r"^\d{4}$", transactionPin):
+                while True:
+                    print("\nRe-Enter Transaction Pin:")
+                    second_input = input(">>> ").strip()
+                    if transactionPin == second_input:
+                        break
+                    else:
+                        print("\n:: Passwords are not the same")
+                        time.sleep(2)
+                        continue
+                break
+            else:
+                print("\n:: Transaction Pin must be only 4 digits.")
+                time.sleep(2)
+                continue
 
     return transactionPin
 

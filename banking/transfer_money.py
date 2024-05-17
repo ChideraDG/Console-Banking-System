@@ -1,7 +1,6 @@
 import re
 import time
 from typing import Any
-
 from bank_processes.authentication import Authentication, verify_data
 from banking.register_panel import countdown_timer
 from banking.script import header, go_back
@@ -61,13 +60,16 @@ def recipient_account_number(auth: Authentication):
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ")
 
-            if re.search("^\\D$", _input):
+            if _input.lower() == 'go back' or _input.lower() == 'goback':
+                del _input
+                time.sleep(1.5)
+                go_back('signed_in', auth=auth)
+            elif re.search("^\\D$", _input):
                 print("\n:: Digits Only")
                 del _input
                 time.sleep(2)
                 continue
-
-            if verify_data('account_number', 3, _input):
+            elif verify_data('account_number', 3, _input):
                 if _input != auth.account_number:
                     checking = Authentication()  # New Instance to get the name of the Recipient
                     checking.account_number = _input
@@ -98,10 +100,6 @@ def recipient_account_number(auth: Authentication):
                     del _input
                     time.sleep(3)
                     continue
-            elif _input.lower() == 'go back' or _input.lower() == 'goback':
-                del _input
-                time.sleep(1.5)
-                go_back('signed_in', auth=auth)
             else:
                 print("\n:: Account Number not Found")
                 del _input
@@ -124,51 +122,56 @@ def amount_to_be_transferred(auth: Authentication):
             print("~~~~~~~~~~~~~")
             _input = input(">>> ")
 
-            if re.search("^[0-9]$", _input):
-                print("\n:: Amount MUST be above N10")
-                del _input
-                time.sleep(3)
-                continue
-            elif re.search("^[a-z]$", _input):
-                print("\n:: No Alphabets")
-                del _input
-                time.sleep(2)
-                continue
-
-            auth.amount = float(_input)
-            if auth.transaction_validation(transfer_limit=True)[0]:
-                if auth.transaction_validation(amount=True)[0]:
-                    print(f'\nyou will be charged N{auth.charges} for this transfer')
-                    print('1. Yes  |  2. No')
-                    print('~~~~~~     ~~~~~')
-                    checking_input = input(">>> ")
-
-                    if checking_input == '1' or checking_input.lower() == 'yes':
-                        break
-                    elif checking_input.lower() == 'go back' or checking_input.lower() == 'goback':
-                        del checking_input
-                        del _input
-                        time.sleep(1.5)
-                        go_back('signed_in', auth=auth)
-                    else:
-                        del _input
-                        del checking_input
-                        time.sleep(1)
-                        continue
-                else:
-                    print(f"\n:: {auth.transaction_validation(amount=True)[1]}")
-                    del _input
-                    time.sleep(2)
-                    continue
-            elif re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
+            if re.search('^(goback|go back)$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
             else:
-                print(f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}")
-                del _input
-                time.sleep(3)
-                go_back('signed_in', auth=auth)
+                if re.search("^[0-9]$", _input):
+                    print("\n:: Amount MUST be above N10")
+                    del _input
+                    time.sleep(3)
+                    continue
+                elif re.search("^[a-z]$", _input):
+                    print("\n:: No Alphabets")
+                    del _input
+                    time.sleep(2)
+                    continue
+                else:
+                    auth.amount = float(_input)
+                    if auth.transaction_validation(transfer_limit=True)[0]:
+                        if auth.transaction_validation(amount=True)[0]:
+                            print(f'\nyou will be charged N{auth.charges} for this transfer')
+                            print('1. Yes  |  2. No')
+                            print('~~~~~~     ~~~~~')
+                            checking_input = input(">>> ")
+
+                            if checking_input == '1' or checking_input.lower() == 'yes':
+                                break
+                            elif checking_input.lower() == 'go back' or checking_input.lower() == 'goback':
+                                del checking_input
+                                del _input
+                                time.sleep(1.5)
+                                go_back('signed_in', auth=auth)
+                            else:
+                                del _input
+                                del checking_input
+                                time.sleep(1)
+                                continue
+                        else:
+                            print(f"\n:: {auth.transaction_validation(amount=True)[1]}")
+                            del _input
+                            time.sleep(2)
+                            continue
+                    elif re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
+                        del _input
+                        time.sleep(1.5)
+                        go_back('signed_in', auth=auth)
+                    else:
+                        print(f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}")
+                        del _input
+                        time.sleep(3)
+                        go_back('signed_in', auth=auth)
     except Exception as e:
         with open('error.txt', 'w') as file:
             file.write(f'Module: transfer_money.py \nFunction: amount_to_be_transferred \nError: {repr(e)}')

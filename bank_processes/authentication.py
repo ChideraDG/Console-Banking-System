@@ -152,14 +152,15 @@ class Authentication(Transaction, ABC):
         self.account_tier = self.account_tier
         self.transaction_limit = self.transaction_limit
 
-        if self.last_login_timestamp.date() < datetime.today().date():
-            query = (f"""
-                    UPDATE {self.database.db_tables[3]} 
-                    SET transaction_limit = 10
-                    WHERE account_number = '{self.account_number}'
-                    """)
+        if self.account_type == 'savings' and self.account_tier == 'Tier 1':
+            if self.last_login_timestamp.date() < datetime.today().date():
+                query = (f"""
+                        UPDATE {self.database.db_tables[3]} 
+                        SET transaction_limit = 10, transfer_limit = 50000
+                        WHERE account_number = '{self.account_number}'
+                        """)
 
-            self.database.query(query)
+                self.database.query(query)
 
         query = (f"""
                 UPDATE {self.database.db_tables[1]} 

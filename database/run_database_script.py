@@ -10,7 +10,7 @@ connection = sql.connect(
 _cursor = connection.cursor()
 
 query0 = """
-CREATE DATABASE IF NOT EXISTS bankApp
+CREATE DATABASE IF NOT EXISTS bankApp_db
 """
 
 _cursor.execute(query0)
@@ -19,7 +19,7 @@ connection = sql.connect(
     host='localhost',
     user='root',
     password='',
-    database='bankApp'
+    database='bankApp_db'
 )
 
 my_cursor = connection.cursor()

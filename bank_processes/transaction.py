@@ -36,7 +36,7 @@ class Transaction(Account, ABC):
         self.__charges = charges
 
     def transaction_record(self):
-        """Method to record new transactions made by the sender  and the relevant information"""
+        """Method to record new transactions made by the sender and the relevant information"""
         from banking.register_panel import verify_data
         self.__transaction_id = str(random.randint(100000000000000000000000000000,
                                                    999999999999999999999999999999))

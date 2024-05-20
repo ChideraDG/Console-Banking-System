@@ -87,19 +87,19 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
         if account_balance_display:
             display_name = 'HIDE'
             print(end='\n')
-            print(f"Good {time_of_the_day}, {auth.first_name}               "
-                  f"{auth.account_balance} Naira               "
-                  f"Session Token: {auth.session_token}")
-            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), "               ~~~~~~",
-                  "~" * len(str(auth.account_balance)),
-                  "               ~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
+            print(f"Good {time_of_the_day}, {auth.first_name}                {auth.account_balance} Naira             "
+                  f"   Session Token: {auth.session_token}")
+            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), " "*16, "~~~~~~",
+                  "~" * len(str(auth.account_balance)), " "*16, "~~~~~~~~~~~~~~~",
+                  "~" * len(auth.session_token), sep='')
         else:
             display_name = 'SHOW'
             print(end='\n')
-            print(f"Good {time_of_the_day}, {auth.first_name}                                         "
+            print(f"Good {time_of_the_day}, {auth.first_name}                                            "
                   f"Session Token: {auth.session_token}")
-            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), "               ",
-                  "                          ~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
+            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), " "*16,
+                  " " * (len(str(auth.account_balance)) + len(' Naira')), " "*16,
+                  "~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
 
         return display_name
     except Exception as e:

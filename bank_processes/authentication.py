@@ -162,6 +162,16 @@ class Authentication(Transaction, ABC):
 
                 self.database.query(query)
 
+        elif self.account_type == 'current' and self.account_tier == 'Tier 1':
+            if self.last_login_timestamp.date() < datetime.today().date():
+                query = (f"""
+                        UPDATE {self.database.db_tables[3]} 
+                        SET transaction_limit = 50, transfer_limit = 500000
+                        WHERE account_number = '{self.account_number}'
+                        """)
+
+                self.database.query(query)
+
         query = (f"""
                 UPDATE {self.database.db_tables[1]} 
                 SET last_login_timestamp = '{self.login_time_stamp}' 

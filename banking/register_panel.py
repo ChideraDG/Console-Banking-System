@@ -488,14 +488,23 @@ def register_bvn_account():
         account.account_balance = 0.0
         account.minimum_balance = 0.0
         account.account_fee = 0.0
+        account.transaction_limit = 0
+        account.transfer_limit = 0.0
+        account.maximum_balance = 0.0
         if account.account_type.lower() == 'savings':
             account.account_balance = 500.50
             account.minimum_balance = 50.0
             account.account_fee = 100.0
+            account.transaction_limit = 10
+            account.transfer_limit = 50000
+            account.maximum_balance = 300000
         elif account.account_type.lower() == 'current':
             account.account_balance = 5000.50
             account.minimum_balance = 500.0
             account.account_fee = 500.0
+            account.transaction_limit = 50
+            account.transfer_limit = 500000
+            account.maximum_balance = 3000000
         elif account.account_type.lower() == 'fixed deposit':
             account.account_balance = 10000.50
 
@@ -513,9 +522,6 @@ def register_bvn_account():
         account.account_status = 'active'
         account.overdraft_protection = 'No'
         account.account_tier = 'Tier 1'
-        account.transaction_limit = 10
-        account.transfer_limit = 50000
-        account.maximum_balance = 300000
 
         account.account_number = str(random.randint(1000000000, 9999999999))
         while verify_data('account_number', 3, account.account_number):

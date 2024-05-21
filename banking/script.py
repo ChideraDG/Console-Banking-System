@@ -33,7 +33,7 @@ def header():
     print(bold, end='')
     print(yellow, end='')
     print(f"CONSOLE BETA BANKING   :: {day_in_words}, {day} {month} {year} ::   :: {time_now} ::")
-    print(f"{magenta}~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~",
+    print(f"{magenta}{bold}~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~",
           "~" * (len(day_in_words) + len(day) + len(month) + len(year)),
           "   ~~~~~~", "~" * len(str(time_now)), sep='')
     print(end, end='')
@@ -59,7 +59,7 @@ def signing_in():
         print(f"|  {yellow}1. NEW USER  {magenta}|  {yellow}2. EXISTING USER  {magenta}|")
         print(f"+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+")
         print(f"|         {yellow}3. UNBLOCK ACCOUNT         {magenta}|")
-        print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+{end}")
+        print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
         print(magenta, bold, end='')
         user_input = input(">>> ")

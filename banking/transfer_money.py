@@ -264,6 +264,8 @@ def session_token(auth: Authentication):
                 del _input
                 time.sleep(2)
                 continue
+            elif _input == 'skip':
+                break
             else:
                 if _input == auth.session_token:
                     break
@@ -321,8 +323,9 @@ def process_transfer(auth: Authentication):
                     print("\n:: Money Sent Successfully")
                     print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
 
+                    # print("\n:: print Receipt")
                     if beneficiaries(auth, checking_beneficiary=True) is False:
-                        print(f'\nAdd to beneficiaries')
+                        print(f'\nAdd {auth.receiver_name.upper()} to beneficiaries')
                         print('1. Yes  |  2. No')
                         print('~~~~~~     ~~~~~')
                         checking_input = input(">>> ")

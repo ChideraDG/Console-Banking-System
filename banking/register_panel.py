@@ -391,6 +391,48 @@ def transaction_pin():
     return transactionPin
 
 
+def safelock():
+    try:
+        pass
+    except Exception as e:
+        with open('error.txt', 'w') as file:
+            file.write(f'Module: login_panel.py \nFunction: login \nError: {repr(e)}')
+        print(f'\nError: {repr(e)}')
+        time.sleep(3)
+        go_back('script')
+
+
+def fixed_deposit():
+    try:
+        while True:
+            header()
+            print("\nHow long do you want to lock funds?")
+            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            print("1 -: 10 - 30 days", " "*10, "at ~ 8% p.a\n", sep='')
+            print("2 -: 31 - 60 days", " "*10, "at ~ 9% p.a\n", sep='')
+            print("3 -: 61 - 90 days", " " * 10, "at ~ 11% p.a\n", sep='')
+            print("4 -: 91 - 180 days", " " * 10, "at ~ 11.5% p.a\n", sep='')
+            print("5 -: 181 - 270 days", " " * 10, "at ~ 13.5% p.a\n", sep='')
+            print("6 -: 271 - 365 days", " " * 10, "at ~ 14% p.a\n", sep='')
+            print("7 -: Above 1 - 2 years", " " * 10, "at ~ 14.5% p.a\n", sep='')
+            print("8 -: Above 2 years", " " * 10, "at ~ 15% p.a\n", sep='')
+            _input = input(">>> ")
+
+            if re.search('^[1-8]$', _input) is None:
+                print("\n:: Wrong Input")
+                time.sleep(2)
+                continue
+            else:
+                if _input == '1':
+                    pass
+    except Exception as e:
+        with open('error.txt', 'w') as file:
+            file.write(f'Module: login_panel.py \nFunction: login \nError: {repr(e)}')
+        print(f'\nError: {repr(e)}')
+        time.sleep(3)
+        go_back('script')
+
+
 def register_bvn_account():
     """Registration Form"""
 
@@ -491,77 +533,78 @@ def register_bvn_account():
         account.transaction_limit = 0
         account.transfer_limit = 0.0
         account.maximum_balance = 0.0
-        if account.account_type.lower() == 'savings':
-            account.account_balance = 500.50
-            account.minimum_balance = 50.0
-            account.account_fee = 100.0
-            account.transaction_limit = 10
-            account.transfer_limit = 50000
-            account.maximum_balance = 300000
-        elif account.account_type.lower() == 'current':
-            account.account_balance = 5000.50
-            account.minimum_balance = 500.0
-            account.account_fee = 500.0
-            account.transaction_limit = 50
-            account.transfer_limit = 500000
-            account.maximum_balance = 3000000
+        if account.account_type.lower() == 'savings' or account.account_type.lower() == 'current':
+            if account.account_type.lower() == 'savings':
+                account.account_balance = 500.50
+                account.minimum_balance = 50.0
+                account.account_fee = 100.0
+                account.transaction_limit = 10
+                account.transfer_limit = 50000
+                account.maximum_balance = 300000
+            elif account.account_type.lower() == 'current':
+                account.account_balance = 5000.50
+                account.minimum_balance = 500.0
+                account.account_fee = 500.0
+                account.transaction_limit = 50
+                account.transfer_limit = 500000
+                account.maximum_balance = 3000000
+
+            time.sleep(1)
+
+            user.password = account_password()
+
+            time.sleep(1)
+
+            account.transaction_pin = transaction_pin()
+
+            time.sleep(1)
+
+            account.account_holder = f'{bvn.last_name} {bvn.first_name} {bvn.middle_name}'
+            account.account_status = 'active'
+            account.overdraft_protection = 'No'
+            account.account_tier = 'Tier 1'
+
+            account.account_number = str(random.randint(1000000000, 9999999999))
+            while verify_data('account_number', 3, account.account_number):
+                account.account_number = str(random.randint(100000000000, 999999999999))
+
+            account.open_account()
+
+            # User Section
+            user.first_name = bvn.first_name
+            user.middle_name = bvn.middle_name
+            user.last_name = bvn.last_name
+            user.gender = bvn.gender
+            user.email = bvn.email
+            user.phone_number = bvn.phone_number
+            user.address = bvn.address
+            user.date_of_birth = bvn.date_of_birth
+            user.linked_accounts = []
+            user.last_login_timestamp = dt.datetime.now()
+            user.account_open_date = dt.datetime.now()
+
+            user.username = user.first_name.upper() + user.middle_name.upper()
+            while verify_data('username', 1, user.username):
+                user.username = user.first_name.upper() + user.middle_name.upper() + str(random.randint(1, 1000))
+
+            if '-' in user.username:
+                username_list = list(user.username)
+                del username_list[username_list.index('-')]
+                user.username = ''.join(username_list)
+                del username_list
+
+            user.register()
+
+            countdown_timer('Bank Account')
+            time.sleep(1)
+            header()
+
+            print("\nBank Account Successfully Created.")
+            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            print(f"\nUSERNAME: {user.username}")
+            print(f"ACCOUNT NUMBER: {account.account_number}")
         elif account.account_type.lower() == 'fixed deposit':
             account.account_balance = 10000.50
-
-        time.sleep(1)
-
-        user.password = account_password()
-
-        time.sleep(1)
-
-        account.transaction_pin = transaction_pin()
-
-        time.sleep(1)
-
-        account.account_holder = f'{bvn.last_name} {bvn.first_name} {bvn.middle_name}'
-        account.account_status = 'active'
-        account.overdraft_protection = 'No'
-        account.account_tier = 'Tier 1'
-
-        account.account_number = str(random.randint(1000000000, 9999999999))
-        while verify_data('account_number', 3, account.account_number):
-            account.account_number = str(random.randint(100000000000, 999999999999))
-
-        account.open_account()
-
-        # User Section
-        user.first_name = bvn.first_name
-        user.middle_name = bvn.middle_name
-        user.last_name = bvn.last_name
-        user.gender = bvn.gender
-        user.email = bvn.email
-        user.phone_number = bvn.phone_number
-        user.address = bvn.address
-        user.date_of_birth = bvn.date_of_birth
-        user.linked_accounts = []
-        user.last_login_timestamp = dt.datetime.now()
-        user.account_open_date = dt.datetime.now()
-
-        user.username = user.first_name.upper() + user.middle_name.upper()
-        while verify_data('username', 1, user.username):
-            user.username = user.first_name.upper() + user.middle_name.upper() + str(random.randint(1, 1000))
-
-        if '-' in user.username:
-            username_list = list(user.username)
-            del username_list[username_list.index('-')]
-            user.username = ''.join(username_list)
-            del username_list
-
-        user.register()
-
-        countdown_timer('Bank Account')
-        time.sleep(1)
-        header()
-
-        print("\nBank Account Successfully Created.")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(f"\nUSERNAME: {user.username}")
-        print(f"ACCOUNT NUMBER: {account.account_number}")
     except Exception as e:
         with open('error.txt', 'w') as file:
             file.write(f'Module: register_panel.py \nFunction: register_panel \nError: {repr(e)}')

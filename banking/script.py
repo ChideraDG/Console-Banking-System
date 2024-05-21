@@ -4,6 +4,7 @@ import os
 import re
 import time
 from bank_processes.authentication import Authentication
+from animation.colors import *
 
 
 def clear():
@@ -29,9 +30,15 @@ def header():
     date = datetime.datetime.today().date()
     day_in_words, day, month, year = findDate(str(date))
 
+    print(bold, end='')
+    print(yellow, end='')
     print(f"CONSOLE BETA BANKING   :: {day_in_words}, {day} {month} {year} ::   :: {time_now} ::")
-    print("~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~", "~" * (len(day_in_words) + len(day) + len(month) + len(year)),
+    print(end, end='')
+    print(end, end='')
+    print(f"{magenta}~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~",
+          "~" * (len(day_in_words) + len(day) + len(month) + len(year)),
           "   ~~~~~~", "~" * len(str(time_now)), sep='')
+    print(end, end='')
 
 
 def go_back(return_place, auth: Authentication = None):
@@ -49,13 +56,16 @@ def signing_in():
         header()
 
         print(end='\n')
-        print('+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-        print("|  1. NEW USER  |  2. EXISTING USER  |")
-        print("+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+")
-        print("|         3. UNBLOCK ACCOUNT         |")
-        print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
+        print(f'{magenta}+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
+        print(f"|{end}  {yellow}1. NEW USER{end}  {magenta}|{end}  {yellow}2. EXISTING USER{end}  {magenta}|")
+        print(f"+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+")
+        print(f"|{end}         {yellow}3. UNBLOCK ACCOUNT{end}         {magenta}|")
+        print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+{end}")
+
+        print(magenta, end='')
         user_input = input(">>> ")
+        print(end, end='')
 
         if re.search('^1$', user_input):
             register_bvn_account()
@@ -87,18 +97,23 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
         if account_balance_display:
             display_name = 'HIDE'
             print(end='\n')
-            print(f"Good {time_of_the_day}, {auth.first_name}                {auth.account_balance} Naira             "
-                  f"   Session Token: {auth.session_token}")
-            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), " "*16, "~~~~~~",
-                  "~" * len(str(auth.account_balance)), " "*16, "~~~~~~~~~~~~~~~",
+            print(f"Good {time_of_the_day}, {auth.first_name}"
+                  f"{' '*(28-len(auth.first_name+time_of_the_day))}"
+                  f"{auth.account_balance} Naira"
+                  f"{' '*(24-len(str(auth.account_balance)))}"
+                  f"Session Token: {auth.session_token}")
+            print(f"~"*7, "~"*len(time_of_the_day), "~"*len(auth.first_name),
+                  " "*(28-len(auth.first_name+time_of_the_day)), "~"*6,
+                  "~" * len(str(auth.account_balance)), " "*(24-len(str(auth.account_balance))), "~~~~~~~~~~~~~~~",
                   "~" * len(auth.session_token), sep='')
         else:
             display_name = 'SHOW'
             print(end='\n')
-            print(f"Good {time_of_the_day}, {auth.first_name}                                            "
+            print(f"Good {time_of_the_day}, {auth.first_name}"
+                  f"{' '*(58-len(auth.first_name+time_of_the_day))}"
                   f"Session Token: {auth.session_token}")
-            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), " "*16,
-                  " " * (len(str(auth.account_balance)) + len(' Naira')), " "*16,
+            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name),
+                  ' '*(58-len(auth.first_name+time_of_the_day)),
                   "~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
 
         return display_name

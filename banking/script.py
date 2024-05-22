@@ -198,7 +198,7 @@ def signed_in(auth: Authentication):
                     continue
                 elif re.search('^18$', user_input):
                     if auth.fixed_account == 'yes':
-                        pass
+                        continue
                     if auth.fixed_account == 'no':
                         fixed_deposit.fixed_deposit(auth)
                 elif re.search('^19$', user_input):
@@ -216,7 +216,7 @@ def signed_in(auth: Authentication):
                     continue
     except Exception as e:
         with open('error.txt', 'w') as file:
-            file.write(f'Module: script.py \nFunction: signed_in_ \nError: {repr(e)}')
+            file.write(f'Module: script.py \nFunction: signed_in \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
         go_back('script')

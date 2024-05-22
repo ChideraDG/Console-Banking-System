@@ -236,7 +236,7 @@ def transaction_pin(auth: Authentication):
                         continue
     except Exception as e:
         with open('error.txt', 'w') as file:
-            file.write(f'Module: transfer_money.py \nFunction: description \nError: {repr(e)}')
+            file.write(f'Module: transfer_money.py \nFunction: transaction_pin \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(5)
         go_back('signed_in', auth=auth)
@@ -282,7 +282,7 @@ def session_token(auth: Authentication):
                         continue
     except Exception as e:
         with open('error.txt', 'w') as file:
-            file.write(f'Module: transfer_money.py \nFunction: description \nError: {repr(e)}')
+            file.write(f'Module: transfer_money.py \nFunction: session_token \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(5)
         go_back('signed_in', auth=auth)

@@ -6,9 +6,9 @@ import random
 from bank_processes.authentication import Authentication, verify_data
 from banking.register_panel import countdown_timer
 from banking.script import go_back, header
-
-auth = Authentication()
-auth.account_number = 1513500889
+#
+# auth = Authentication()
+# auth.account_number = 1513500889
 
 
 def get_month(month):
@@ -284,6 +284,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                         if re.search('^(1|yes)$', _input, re.IGNORECASE):
 
                             countdown_timer(_register='fixed deposit', countdown=5)
+                            print('\rFixed Deposit Account Successfully Created.')
 
                             _id = 'cbb' + str(random.randint(100000000, 999999999))
                             auth.deposit_id = _id
@@ -544,5 +545,5 @@ def fixed_deposit(auth: Authentication):
         time.sleep(3)
         go_back('script')
 
-
-fixed_deposit(auth=auth)
+#
+# fixed_deposit(auth=auth)

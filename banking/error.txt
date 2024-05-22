@@ -1,3 +1,0 @@
-Module: fixed_deposit.py 
-Function: preview_safelock 
-Error: OperationalError(1292, "Incorrect time value: '<built-in method time of datetime.datetime object at 0x109afa9a0>' for column `bankapp_db`.`fixed_deposit`.`payback_time` at row 1")

@@ -1,3 +1,3 @@
 Module: login_panel.py 
 Function: login 
-Error: AttributeError("'NoneType' object has no attribute 'date'")
+Error: OperationalError(1054, "Unknown column 'deposit_title' in 'field list'")

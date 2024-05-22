@@ -561,6 +561,13 @@ class FixedDeposit(Account, ABC):
 
         self.database.query(query)
 
+        query = (f"""
+                UPDATE {self.database.db_tables[3]}
+                SET fixed_account = 'yes'
+                WHERE account_number = {self.account_number}
+                """)
+        self.database.query(query)
+
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
         accordingly."""
@@ -600,10 +607,10 @@ class FixedDeposit(Account, ABC):
     def deposit_title(self):
         if self.account_number is not None:
             query = (f"""
-                            SELECT deposit_title 
-                            FROM {self.database.db_tables[3]} 
-                            WHERE account_number = '{self.account_number}'
-                            """)
+                        SELECT deposit_title 
+                        FROM {self.database.db_tables[4]} 
+                        WHERE account_number = '{self.account_number}'
+                        """)
 
             datas: tuple = self.database.fetch_data(query)
 
@@ -626,7 +633,7 @@ class FixedDeposit(Account, ABC):
         if self.account_number is not None:
             query = (f"""
                             SELECT initial_deposit 
-                            FROM {self.database.db_tables[3]} 
+                            FROM {self.database.db_tables[4]} 
                             WHERE account_number = '{self.account_number}'
                             """)
 
@@ -651,7 +658,7 @@ class FixedDeposit(Account, ABC):
         if self.account_number is not None:
             query = (f"""
                                 SELECT interest_rate 
-                                FROM {self.database.db_tables[3]} 
+                                FROM {self.database.db_tables[4]} 
                                 WHERE account_number = '{self.account_number}'
                                 """)
 
@@ -676,7 +683,7 @@ class FixedDeposit(Account, ABC):
         if self.account_number is not None:
             query = (f"""
                             SELECT total_interest_earned 
-                            FROM {self.database.db_tables[3]} 
+                            FROM {self.database.db_tables[4]} 
                             WHERE account_number = '{self.account_number}'
                             """)
 
@@ -701,7 +708,7 @@ class FixedDeposit(Account, ABC):
         if self.account_number is not None:
             query = (f"""
                             SELECT start_date 
-                            FROM {self.database.db_tables[3]} 
+                            FROM {self.database.db_tables[4]} 
                             WHERE account_number = '{self.account_number}'
                             """)
 
@@ -726,7 +733,7 @@ class FixedDeposit(Account, ABC):
         if self.account_number is not None:
             query = (f"""
                             SELECT payback_date 
-                            FROM {self.database.db_tables[3]} 
+                            FROM {self.database.db_tables[4]} 
                             WHERE account_number = '{self.account_number}'
                             """)
 
@@ -751,7 +758,7 @@ class FixedDeposit(Account, ABC):
         if self.account_number is not None:
             query = (f"""
                         SELECT payback_time 
-                        FROM {self.database.db_tables[3]} 
+                        FROM {self.database.db_tables[4]} 
                         WHERE account_number = '{self.account_number}'
                         """)
 
@@ -776,7 +783,7 @@ class FixedDeposit(Account, ABC):
         if self.account_number is not None:
             query = (f"""
                             SELECT status 
-                            FROM {self.database.db_tables[3]} 
+                            FROM {self.database.db_tables[4]} 
                             WHERE account_number = '{self.account_number}'
                             """)
 

@@ -533,6 +533,34 @@ class FixedDeposit(Account, ABC):
         self.__payback_time = payback_time
         self.__status = status
 
+    def open_fixed_deposit_account(self):
+        query = f"""
+                INSERT INTO {self.database.db_tables[4]}
+                (deposit_id, 
+                account_number, 
+                deposit_title, 
+                initial_deposit, 
+                interest_rate, 
+                total_interest_earned, 
+                start_date, 
+                payback_date, 
+                payback_time, 
+                status)
+                VALUES(
+                '{self.__deposit_id}', 
+                '{self.account_number}', 
+                '{self.__deposit_title}', 
+                {self.__initial_deposit}, 
+                '{self.__interest_rate}', 
+                {self.__total_interest_earned}, 
+                '{self.__start_date}', 
+                '{self.__payback_date}', 
+                '{self.__payback_time}', 
+                '{self.__status}')
+                """
+
+        self.database.query(query)
+
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
         accordingly."""
@@ -617,6 +645,31 @@ class FixedDeposit(Account, ABC):
     @initial_deposit.deleter
     def initial_deposit(self):
         del self.__initial_deposit
+
+    @property
+    def interest_rate(self):
+        if self.account_number is not None:
+            query = (f"""
+                                SELECT interest_rate 
+                                FROM {self.database.db_tables[3]} 
+                                WHERE account_number = '{self.account_number}'
+                                """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for interest_rate in data:
+                    self.interest_rate = interest_rate
+
+        return self.__interest_rate
+
+    @interest_rate.setter
+    def interest_rate(self, _interest_rate):
+        self.__interest_rate = _interest_rate
+
+    @interest_rate.deleter
+    def interest_rate(self):
+        del self.__interest_rate
 
     @property
     def total_interest_earned(self):

@@ -31,8 +31,10 @@ def header():
     day_in_words, day, month, year = findDate(str(date))
 
     print(bold, end='')
-    print(yellow, end='')
+    print(brt_black_bg, end='')
+    print(brt_yellow, end='')
     print(f"CONSOLE BETA BANKING   :: {day_in_words}, {day} {month} {year} ::   :: {time_now} ::")
+    print(end, end='')
     print(f"{magenta}{bold}~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~",
           "~" * (len(day_in_words) + len(day) + len(month) + len(year)),
           "   ~~~~~~", "~" * len(str(time_now)), sep='')
@@ -56,9 +58,10 @@ def signing_in():
         print(end='\n')
 
         print(f'{magenta}+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-        print(f"|  {yellow}1. NEW USER  {magenta}|  {yellow}2. EXISTING USER  {magenta}|")
+        print(f"|  {brt_black_bg}{brt_yellow}1. NEW USER{end}  {magenta}|  "
+              f"{brt_black_bg}{brt_yellow}2. EXISTING USER{end}  {magenta}|")
         print(f"+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+")
-        print(f"|         {yellow}3. UNBLOCK ACCOUNT         {magenta}|")
+        print(f"|         {brt_black_bg}{brt_yellow}3. UNBLOCK ACCOUNT{end}         {magenta}|")
         print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
         print(magenta, bold, end='')

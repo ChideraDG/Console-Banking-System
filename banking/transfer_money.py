@@ -163,10 +163,6 @@ def amount_to_be_transferred(auth: Authentication):
                             del _input
                             time.sleep(2)
                             continue
-                    elif re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
-                        del _input
-                        time.sleep(1.5)
-                        go_back('signed_in', auth=auth)
                     else:
                         print(f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}")
                         del _input

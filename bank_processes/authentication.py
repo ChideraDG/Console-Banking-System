@@ -2,6 +2,7 @@ from abc import ABC
 from datetime import datetime
 import random
 from typing import Any
+from bank_processes.account import FixedDeposit
 from bank_processes.database import DataBase
 from plyer import notification as note
 from bank_processes.transaction import Transaction
@@ -111,7 +112,7 @@ def token_auth():
     return token
 
 
-class Authentication(Transaction, ABC):
+class Authentication(Transaction, FixedDeposit, ABC):
 
     def __init__(self, username: str = None, password: str = None, failed_login_attempts: int = 0,
                  auth_outcome: bool = None, login_time_stamp: datetime = None, session_token: str = None):
@@ -151,6 +152,17 @@ class Authentication(Transaction, ABC):
         self.overdraft_protection = self.overdraft_protection
         self.account_tier = self.account_tier
         self.transaction_limit = self.transaction_limit
+        self.fixed_account = self.fixed_account
+
+        if self.fixed_account == 'yes':
+            self.deposit_id = self.deposit_id
+            self.deposit_title = self.deposit_title
+            self.initial_deposit = self.initial_deposit
+            self.total_interest_earned = self.total_interest_earned
+            self.start_date = self.start_date
+            self.payback_time = self.payback_time
+            self.payback_date = self.payback_date
+            self.status = self.status
 
         if self.account_type == 'savings' and self.account_tier == 'Tier 1':
             if self.last_login_timestamp.date() < datetime.today().date():

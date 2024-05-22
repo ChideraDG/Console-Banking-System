@@ -124,7 +124,9 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
 
 
 def signed_in(auth: Authentication):
+    """Function to sign in Users with a Savings or Current account"""
     from banking import transfer_money
+    from banking import fixed_deposit
 
     try:
         if auth.account_type == 'savings' or auth.account_type == 'current':
@@ -144,7 +146,9 @@ def signed_in(auth: Authentication):
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
                 print("|     13. BLOCK ACCOUNT     |  14. VIEW CONTACT INFO  |  15. CHANGE TRANSACTION PIN  |")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print("|  16. UPDATE ACCOUNT INFO  |  17. BANK INFORMATION   |          18. LOGOUT          |")
+                print("|  16. UPDATE ACCOUNT INFO  |  17. BANK INFORMATION   |      18. FIXED DEPOSIT       |")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print("|                                     19. LOGOUT                                     |")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
                 user_input = input(">>> ")
@@ -190,13 +194,20 @@ def signed_in(auth: Authentication):
                 elif re.search('^17$', user_input):
                     continue
                 elif re.search('^18$', user_input):
+                    if auth.fixed_account == 'yes':
+                        pass
+                    if auth.fixed_account == 'no':
+                        fixed_deposit.fixed_deposit(auth)
+                elif re.search('^19$', user_input):
                     auth.user_logout()
                     del user_input
                     go_back('script')
+                    break
                 elif re.search('^(go back|goback)$', user_input.strip().lower()):
                     auth.user_logout()
                     del user_input
                     go_back('script')
+                    break
                 else:
                     del user_input
                     continue

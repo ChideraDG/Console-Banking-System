@@ -2,7 +2,8 @@ from datetime import datetime
 import random
 from abc import ABC
 from typing import Tuple, Any
-
+from prettytable import PrettyTable
+from pymysql.cursors import DictCursor
 from bank_processes.account import Account
 
 
@@ -168,11 +169,9 @@ class Transaction(Account, ABC):
 
     def transaction_history(self, start_date: datetime = None, end_date: datetime = None, year: int = None,
                             month: str = None, time_period: bool = False, is_month: bool = False):
-
         """ Method to retrieve the transaction history associated with a specific account or user,
          providing details of past transactions for reference and auditing purposes."""
-        from prettytable import PrettyTable
-        from pymysql.cursors import DictCursor
+
         original = self.database.db_cursor  # storing the original query here
         self.database.db_cursor = self.database.db_connection.cursor(DictCursor)
 

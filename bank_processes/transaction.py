@@ -141,6 +141,7 @@ class Transaction(Account, ABC):
             """
             self.database.query(receiver_query)
             del _receiver_object
+        self.__transaction_date_time= datetime.now()
 
     def cancel_transaction(self):
         """Method to cancel a pending or incomplete transaction, reversing any changes made to account balances
@@ -354,20 +355,6 @@ class Transaction(Account, ABC):
     @amount.deleter
     def amount(self):
         del self.__amount
-
-    @property
-    def transaction_date_time(self):
-        transaction_time = datetime.now()
-        self.transaction_date_time = transaction_time
-        return self.__transaction_date_time
-
-    @transaction_date_time.setter
-    def transaction_date_time(self, _transaction_date_time):
-        self.__transaction_date_time = _transaction_date_time
-
-    @transaction_date_time.deleter
-    def transaction_date_time(self):
-        del self.__transaction_date_time
 
     @property
     def transaction_type(self):

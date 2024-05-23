@@ -44,11 +44,13 @@ class Transaction(Account, ABC):
             self.__transaction_id = str({random.randint(100000000000000000000000000000,
                                                         999999999999999999999999999999)})
 
+        self.__transaction_date_time = datetime.today().now()
+        self.__transaction_status = 'successful'
+
         query = f"""
                 INSERT INTO {self.database.db_tables[2]}
                 (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
-                receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
-                user_id)
+                receiver_account_number, receiver_name, transaction_date_time, description, status, account_type)
                 VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
                 '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
                 '{self.__receiver_name}', {self.__transaction_date_time}, '{self.__description}',

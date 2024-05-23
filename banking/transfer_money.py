@@ -311,9 +311,9 @@ def process_transfer(auth: Authentication):
 
                     header()
                     countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
+                    auth.transaction_record()
                     auth.receiver_transaction_validation()
                     # notification missing
-                    # Process Transaction missing
 
                     header()
                     print("\n:: Money Sent Successfully")
@@ -362,6 +362,7 @@ def process_transfer(auth: Authentication):
                         auth.receiver_transaction_validation()
                         # notification missing
                         # Process Transaction missing
+                        # receipt
 
                         header()
                         print("\n:: Money Sent Successfully")

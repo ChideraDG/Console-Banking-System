@@ -3,9 +3,12 @@ import re
 import time
 import random
 
+from animation.colors import *
 from bank_processes.authentication import Authentication, verify_data
 from banking.register_panel import countdown_timer
 from banking.script import go_back, header
+
+
 #
 # auth = Authentication()
 # auth.account_number = 1513500889
@@ -113,15 +116,15 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
 
                 print(f'[{day}] -> {current_day}/{_month}/{current_year} - {rate_of_interest:.2f}%', end='\t\t\t\t\t')
 
-                if str(current_day)[-1] == 1:
+                if str(current_day)[-1] == '1':
                     dates[f'{day}'] = [f'{rate_of_interest:.3f}%', f'{interest:.3f}',
                                        f'{current_day}st {_month} {current_year}',
                                        f'{current_year}-{current_month}-{current_day}']
-                elif str(current_day)[-1] == 2:
+                elif str(current_day)[-1] == '2':
                     dates[f'{day}'] = [f'{rate_of_interest:.3f}%', f'{interest:.3f}',
                                        f'{current_day}nd {_month} {current_year}',
                                        f'{current_year}-{current_month}-{current_day}']
-                elif str(current_day)[-1] == 3:
+                elif str(current_day)[-1] == '3':
                     dates[f'{day}'] = [f'{rate_of_interest:.3f}%', f'{interest:.3f}',
                                        f'{current_day}rd {_month} {current_year}',
                                        f'{current_year}-{current_month}-{current_day}']
@@ -333,8 +336,13 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
         go_back('script')
 
 
-def fixed_deposit(auth: Authentication):
+def create_safelock(auth: Authentication):
     try:
+        header()
+        print('\nMessage from the CUSTOMER SERVICE OFFICER:::')
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        print("'You don't have a Fixed Deposit Account. Let's Create one for You.'")
+        time.sleep(3)
         while True:
             header()
             print("\nHow long do you want to lock funds?")
@@ -393,7 +401,7 @@ def fixed_deposit(auth: Authentication):
                                 auth, deposit_amount=deposit_amount, percentage_rate=9
                             )
                         )
-                        print(deposit_title, deposit_amount, dates, lock_duration, maturity_location)
+
                         preview_safelock(
                             safelock_title=deposit_title,
                             amount_to_lock=deposit_amount,
@@ -415,7 +423,7 @@ def fixed_deposit(auth: Authentication):
                                 auth, deposit_amount=deposit_amount, percentage_rate=11
                             )
                         )
-                        print(deposit_title, deposit_amount, dates, lock_duration, maturity_location)
+
                         preview_safelock(
                             safelock_title=deposit_title,
                             amount_to_lock=deposit_amount,
@@ -437,7 +445,7 @@ def fixed_deposit(auth: Authentication):
                                 auth, deposit_amount=deposit_amount, percentage_rate=11.5
                             )
                         )
-                        print(deposit_title, deposit_amount, dates, lock_duration, maturity_location)
+
                         preview_safelock(
                             safelock_title=deposit_title,
                             amount_to_lock=deposit_amount,
@@ -459,7 +467,7 @@ def fixed_deposit(auth: Authentication):
                                 auth, deposit_amount=deposit_amount, percentage_rate=13.5
                             )
                         )
-                        print(deposit_title, deposit_amount, dates, lock_duration, maturity_location)
+
                         preview_safelock(
                             safelock_title=deposit_title,
                             amount_to_lock=deposit_amount,
@@ -481,7 +489,7 @@ def fixed_deposit(auth: Authentication):
                                 auth, deposit_amount=deposit_amount, percentage_rate=14
                             )
                         )
-                        print(deposit_title, deposit_amount, dates, lock_duration, maturity_location)
+
                         preview_safelock(
                             safelock_title=deposit_title,
                             amount_to_lock=deposit_amount,
@@ -503,7 +511,7 @@ def fixed_deposit(auth: Authentication):
                                 auth, deposit_amount=deposit_amount, percentage_rate=14.5
                             )
                         )
-                        print(deposit_title, deposit_amount, dates, lock_duration, maturity_location)
+
                         preview_safelock(
                             safelock_title=deposit_title,
                             amount_to_lock=deposit_amount,
@@ -525,7 +533,7 @@ def fixed_deposit(auth: Authentication):
                                 auth, deposit_amount=deposit_amount, percentage_rate=15
                             )
                         )
-                        print(deposit_title, deposit_amount, dates, lock_duration, maturity_location)
+
                         preview_safelock(
                             safelock_title=deposit_title,
                             amount_to_lock=deposit_amount,
@@ -540,10 +548,30 @@ def fixed_deposit(auth: Authentication):
             break
     except Exception as e:
         with open('error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: fixed_deposit \nError: {repr(e)}')
+            file.write(f'Module: fixed_deposit.py \nFunction: create_safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
         go_back('script')
 
+
+# pay interests to the account number immediately after deposit is made
 #
 # fixed_deposit(auth=auth)
+
+def access_safelock(auth: Authentication):
+    try:
+        header()
+        print(f"{bold}{brt_black_bg}{brt_red}" + f"\n8% - 15% per annum{end}")
+
+        print(f"{bold}{brt_black_bg}{brt_yellow}")
+        print("Fixed Deposit Balance" + f"{end}")
+        print(f'{bold}N{auth.initial_deposit:,}{end}')
+
+        time.sleep(102)
+
+    except Exception as e:
+        with open('error.txt', 'w') as file:
+            file.write(f'Module: fixed_deposit.py \nFunction: access_safelock \nError: {repr(e)}')
+        print(f'\nError: {repr(e)}')
+        time.sleep(3)
+        go_back('script')

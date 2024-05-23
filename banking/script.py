@@ -57,6 +57,7 @@ def signing_in():
 
         print(end='\n')
 
+        print(f'{bold}{brt_black_bg}{brt_yellow}' + 'Welcome, what can we do for you today?' + f'{end}\n')
         print(f'{magenta}+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
         print(f"|  {brt_black_bg}{brt_yellow}1. NEW USER{end}  {magenta}|  "
               f"{brt_black_bg}{brt_yellow}2. EXISTING USER{end}  {magenta}|")
@@ -198,9 +199,10 @@ def signed_in(auth: Authentication):
                     continue
                 elif re.search('^18$', user_input):
                     if auth.fixed_account == 'yes':
-                        continue
+                        fixed_deposit.access_safelock(auth)
                     if auth.fixed_account == 'no':
-                        fixed_deposit.fixed_deposit(auth)
+                        fixed_deposit.create_safelock(auth)
+                        fixed_deposit.access_safelock(auth)
                 elif re.search('^19$', user_input):
                     auth.user_logout()
                     del user_input
@@ -214,6 +216,7 @@ def signed_in(auth: Authentication):
                 else:
                     del user_input
                     continue
+                break
     except Exception as e:
         with open('error.txt', 'w') as file:
             file.write(f'Module: script.py \nFunction: signed_in \nError: {repr(e)}')

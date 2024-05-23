@@ -578,6 +578,27 @@ class FixedDeposit(Account, ABC):
         cases where the withdrawal amount exceeds the available balance."""
         pass
 
+    def get_actives(self):
+
+        query = f"""
+        SELECT * 
+        FROM {self.database.db_tables[4]} 
+        WHERE account_number = {self.account_number} 
+        AND status = 'active'
+        """
+
+        return  self.database.fetch_data(query)
+
+    def get_inactive(self):
+        query = f"""
+                SELECT * 
+                FROM {self.database.db_tables[4]} 
+                WHERE account_number = {self.account_number} 
+                AND status = 'inactive'
+                """
+
+        return self.database.fetch_data(query)
+
     @property
     def deposit_id(self):
         if self.account_number is not None:

@@ -16,7 +16,8 @@ class Transaction(Account, ABC):
                  receiver_acct_num: str = None,
                  description: str = None, transaction_status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
-                 receiver_name: str = None, balance: float = None, transfer_limit: float = None, charges: float = None):
+                 receiver_name: str = None, balance: float = None, transfer_limit: float = None, charges: float = None,
+                 transaction_mode: str = None):
         super().__init__()
         self.__transaction_type = transaction_type
         self.__amount = amount
@@ -34,44 +35,49 @@ class Transaction(Account, ABC):
         self.__balance = balance
         self.__transfer_limit = transfer_limit
         self.__charges = charges
+        self.__transaction_mode = transaction_mode
 
-    def transaction_record(self):
+    def transaction_record(self, transfer: bool = False):
         """Method to record new transactions made by the sender and the relevant information"""
         from banking.register_panel import verify_data
-        self.__transaction_id = str(random.randint(100000000000000000000000000000,
-                                                   999999999999999999999999999999))
-        while verify_data('transaction_id', 2, self.__transaction_id):
-            self.__transaction_id = str({random.randint(100000000000000000000000000000,
-                                                        999999999999999999999999999999)})
 
-        self.__transaction_date_time = datetime.today().now()
-        self.__transaction_status = 'successful'
+        if transfer:
+            self.__transaction_id = str(random.randint(100000000000000000000000000000,
+                                                       999999999999999999999999999999))
+            while verify_data('transaction_id', 2, self.__transaction_id):
+                self.__transaction_id = str({random.randint(100000000000000000000000000000,
+                                                            999999999999999999999999999999)})
 
-        query = f"""
-                INSERT INTO {self.database.db_tables[2]}
-                (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
-                receiver_account_number, receiver_name, transaction_date_time, description, status, account_type)
-                VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
-                '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
-                '{self.__receiver_name}', {self.__transaction_date_time}, '{self.__description}',
-                '{self.__transaction_status}', '{self.account_type}')
-                 """
-        self.database.query(query)
+            self.__transaction_date_time = datetime.today().now()
+            self.__transaction_status = 'successful'
 
-        _receiver_obj = Account()
-        _receiver_obj.account_number = self.receiver_acct_num
-        receiver_query = f"""
-                        INSERT INTO {self.database.db_tables[2]}
-                        (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
-                        receiver_account_number, receiver_name, transaction_date_time, description, status,
-                        account_type)
-                        VALUES('{self.__transaction_id}', '{self.transaction_type}', {self.__amount},
-                        '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
-                        '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
-                        '{self.__transaction_status}', '{_receiver_obj.account_type}')
-                        """
-        self.database.query(receiver_query)
-        del _receiver_obj
+            query = f"""
+                    INSERT INTO {self.database.db_tables[2]}
+                    (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                    receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
+                    account_balance, transaction_mode)
+                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount + self.charges},
+                    '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
+                    '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
+                    '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
+                     """
+            self.database.query(query)
+
+            _receiver_obj = Account()
+            _receiver_obj.account_number = self.receiver_acct_num
+            receiver_query = f"""
+                            INSERT INTO {self.database.db_tables[2]}
+                            (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                            receiver_account_number, receiver_name, transaction_date_time, description, status,
+                            account_type, account_balance, transaction_mode)
+                            VALUES('{self.__transaction_id}', '{self.transaction_type}', {self.__amount},
+                            '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
+                            '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
+                            '{self.__transaction_status}', '{_receiver_obj.account_type}', 
+                            {_receiver_obj.account_balance}, 'credit')
+                            """
+            self.database.query(receiver_query)
+            del _receiver_obj
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""

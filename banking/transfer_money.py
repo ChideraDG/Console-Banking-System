@@ -311,7 +311,7 @@ def process_transfer(auth: Authentication):
 
                     header()
                     countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
-                    auth.transaction_record()
+                    auth.transaction_record(transfer=True)
                     auth.receiver_transaction_validation()
                     # notification missing
 
@@ -339,7 +339,7 @@ def process_transfer(auth: Authentication):
                             del checking_input
                             time.sleep(1)
                             continue
-                    time.sleep(2)
+                    time.sleep(4)
                     break
                 elif re.search('^2$', user_input):
                     bene = beneficiaries(auth)
@@ -359,15 +359,15 @@ def process_transfer(auth: Authentication):
 
                         header()
                         countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
+                        auth.transaction_record(transfer=True)
                         auth.receiver_transaction_validation()
                         # notification missing
-                        # Process Transaction missing
                         # receipt
 
                         header()
                         print("\n:: Money Sent Successfully")
                         print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
-                        time.sleep(2)
+                        time.sleep(4)
                         break
                 elif re.search('^(goback|go back)$', user_input.lower(), re.IGNORECASE):
                     del user_input

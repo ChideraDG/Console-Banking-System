@@ -47,14 +47,29 @@ class Transaction(Account, ABC):
         query = f"""
                 INSERT INTO {self.database.db_tables[2]}
                 (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
-                receiver_account_number, receiver_name, transaction_date_time, description, status,account_type,
+                receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                 user_id)
                 VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
                 '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
-                '{self.__receiver_name}', {self.__transaction_date_time}, '{self.__description}'
-                '{self.__transaction_status}', '{self.account_type}', {self.user_id})
+                '{self.__receiver_name}', {self.__transaction_date_time}, '{self.__description}',
+                '{self.__transaction_status}', '{self.account_type}')
                  """
         self.database.query(query)
+
+        _receiver_obj = Account()
+        _receiver_obj.account_number = self.receiver_acct_num
+        receiver_query = f"""
+                        INSERT INTO {self.database.db_tables[2]}
+                        (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                        receiver_account_number, receiver_name, transaction_date_time, description, status,
+                        account_type)
+                        VALUES('{self.__transaction_id}', '{self.transaction_type}', {self.__amount},
+                        '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
+                        '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
+                        '{self.__transaction_status}', '{_receiver_obj.account_type}')
+                        """
+        self.database.query(receiver_query)
+        del _receiver_obj
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""
@@ -142,9 +157,143 @@ class Transaction(Account, ABC):
         entity initiating the transaction."""
         pass
 
-    def transaction_history(self):
+    def transaction_history(self, start_date: datetime = None, end_date: datetime = None, year: int = None,
+                            month: str = None, time_period: bool = False, is_month: bool = False):
+
         """ Method to retrieve the transaction history associated with a specific account or user,
          providing details of past transactions for reference and auditing purposes."""
+        from prettytable import PrettyTable
+        from pymysql.cursors import DictCursor
+        original = self.database.db_cursor  # storing the original query here
+        self.database.db_cursor = self.database.db_connection.cursor(DictCursor)
+
+        if time_period:
+            user_sender_transaction_query = f""" SELECT transaction_id, transaction_type, transaction_amount,
+                   sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
+                   transaction_date_time
+                   FROM {self.database.db_tables[2]}
+                   WHERE sender_account_number = {self.account_number}
+                   AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                   """
+            sender_data: list = self.database.fetch_data(user_sender_transaction_query)
+
+            user_receiver_transaction_query = f""" SELECT transaction_id, transaction_type, transaction_amount,
+                   sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
+                   transaction_date_time
+                   FROM {self.database.db_tables[2]}
+                   WHERE receiver_account_number = {self.account_number}
+                   AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                   """
+            receiver_data: list = self.database.fetch_data(user_receiver_transaction_query)
+
+            all_user_transactions = sender_data + receiver_data
+
+            sorted_transaction_history = sorted(all_user_transactions,
+                                                key=lambda criteria: criteria['transaction_date_time'])
+            transaction_history_table = PrettyTable()
+            transaction_history_table.field_names = ['Transaction ID', 'Transaction Type', 'Transaction Amount',
+                                                     'Sender Account Number', 'Sender Name', 'Receiver Account Number',
+                                                     'Receiver Name', 'Description', 'Status', 'Transaction Date']
+
+            for transaction in sorted_transaction_history:
+                transaction_history_table.add_row([transaction['transaction_id'], transaction['transaction_type'],
+                                                   transaction['transaction_amount'],
+                                                   transaction['sender_account_number'],
+                                                   transaction['sender_name'], transaction['receiver_account_number'],
+                                                   transaction['receiver_name'], transaction['description'],
+                                                   transaction['status'], transaction['transaction_date_time']])
+
+        elif is_month:
+            if year % 4 == 0:
+                february_days = 29
+
+            else:
+                february_days = 28
+
+            no_of_month_days = {'january': 31, 'february': february_days, 'march': 31, 'april': 30, 'may': 31,
+                                'june': 30, 'july': 31, 'august': 30, 'september': 30, 'october': 31, 'november': 30,
+                                'december': 31}
+
+            months = {'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
+                      'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11,
+                      'december': 12}
+            month_value = months.get(month, 'The month entered does not exist')
+            end_day = no_of_month_days.get(month)
+            start_date = datetime(2024, month_value, 1)
+            end_date = datetime(year, month_value, end_day)
+
+            user_sender_transaction_query = f""" SELECT transaction_id, transaction_type, transaction_amount,
+                               sender_account_number, sender_name, receiver_account_number, receiver_name, description,
+                               status, transaction_date_time
+                               FROM {self.database.db_tables[2]}
+                               WHERE sender_account_number = {self.account_number} 
+                               AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                               """
+            sender_data: list = self.database.fetch_data(user_sender_transaction_query)
+
+            user_receiver_transaction_query = f""" SELECT transaction_id, transaction_type, transaction_amount,
+                               sender_account_number, sender_name, receiver_account_number, receiver_name, description, 
+                               status, transaction_date_time
+                               FROM {self.database.db_tables[2]}
+                               WHERE receiver_account_number = {self.account_number} 
+                               AND transaction_date_time BETWEEN '{start_date} AND {end_date}'
+                               """
+            receiver_data: list = self.database.fetch_data(user_receiver_transaction_query)
+
+            all_user_transactions = sender_data + receiver_data
+
+            sorted_transaction_history = sorted(all_user_transactions,
+                                                key=lambda criteria: criteria['transaction_date_time'])
+            transaction_history_table = PrettyTable()
+            transaction_history_table.field_names = ['Transaction ID', 'Transaction Type', 'Transaction Amount',
+                                                     'Sender Account Number', 'Sender Name', 'Receiver Account Number',
+                                                     'Receiver Name', 'Description', 'Status', 'Transaction Date']
+
+            for transaction in sorted_transaction_history:
+                transaction_history_table.add_row([transaction['transaction_id'], transaction['transaction_type'],
+                                                   transaction['transaction_amount'],
+                                                   transaction['sender_account_number'],
+                                                   transaction['sender_name'], transaction['receiver_account_number'],
+                                                   transaction['receiver_name'], transaction['description'],
+                                                   transaction['status'], transaction['transaction_date_time']])
+
+        else:
+
+            user_sender_transaction_query = f""" SELECT transaction_id, transaction_type, transaction_amount,
+            sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
+            transaction_date_time
+            FROM {self.database.db_tables[2]}
+            WHERE sender_account_number = {self.account_number}
+            """
+            sender_data: list = self.database.fetch_data(user_sender_transaction_query)
+
+            user_receiver_transaction_query = f""" SELECT transaction_id, transaction_type, transaction_amount,
+            sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
+            transaction_date_time
+            FROM {self.database.db_tables[2]}
+            WHERE receiver_account_number = {self.account_number}
+            """
+            receiver_data: list = self.database.fetch_data(user_receiver_transaction_query)
+
+            all_user_transactions = sender_data + receiver_data
+            sorted_transaction_history = sorted(all_user_transactions,
+                                                key=lambda criteria: criteria['transaction_date_time'])
+            transaction_history_table = PrettyTable()
+            transaction_history_table.field_names = ['Transaction ID', 'Transaction Type', 'Transaction Amount',
+                                                     'Sender Account Number', 'Sender Name', 'Receiver Account Number',
+                                                     'Receiver Name', 'Description', 'Status', 'Transaction Date']
+
+            for transaction in sorted_transaction_history:
+                transaction_history_table.add_row([transaction['transaction_id'], transaction['transaction_type'],
+                                                   transaction['transaction_amount'],
+                                                   transaction['sender_account_number'],
+                                                   transaction['sender_name'], transaction['receiver_account_number'],
+                                                   transaction['receiver_name'], transaction['description'],
+                                                   transaction['status'], transaction['transaction_date_time']])
+
+        print(transaction_history_table)
+        self.database.db_cursor = original
+        del original
 
     @property
     def receiver_acct_num(self):

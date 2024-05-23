@@ -4,6 +4,7 @@ import os
 import re
 import time
 from bank_processes.authentication import Authentication
+from animation.colors import *
 
 
 def clear():
@@ -29,9 +30,13 @@ def header():
     date = datetime.datetime.today().date()
     day_in_words, day, month, year = findDate(str(date))
 
+    print(bold, end='')
+    print(yellow, end='')
     print(f"CONSOLE BETA BANKING   :: {day_in_words}, {day} {month} {year} ::   :: {time_now} ::")
-    print("~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~", "~" * (len(day_in_words) + len(day) + len(month) + len(year)),
+    print(f"{magenta}{bold}~~~~~~~~~~~~~~~~~~~~   ~~~~~~~~~~",
+          "~" * (len(day_in_words) + len(day) + len(month) + len(year)),
           "   ~~~~~~", "~" * len(str(time_now)), sep='')
+    print(end, end='')
 
 
 def go_back(return_place, auth: Authentication = None):
@@ -49,13 +54,16 @@ def signing_in():
         header()
 
         print(end='\n')
-        print('+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-        print("|  1. NEW USER  |  2. EXISTING USER  |")
-        print("+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+")
-        print("|         3. UNBLOCK ACCOUNT         |")
-        print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
+        print(f'{magenta}+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
+        print(f"|  {yellow}1. NEW USER  {magenta}|  {yellow}2. EXISTING USER  {magenta}|")
+        print(f"+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+")
+        print(f"|         {yellow}3. UNBLOCK ACCOUNT         {magenta}|")
+        print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+
+        print(magenta, bold, end='')
         user_input = input(">>> ")
+        print(end, end='')
 
         if re.search('^1$', user_input):
             register_bvn_account()
@@ -87,19 +95,24 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
         if account_balance_display:
             display_name = 'HIDE'
             print(end='\n')
-            print(f"Good {time_of_the_day}, {auth.first_name}               "
-                  f"{auth.account_balance} Naira               "
+            print(f"Good {time_of_the_day}, {auth.first_name}"
+                  f"{' '*(28-len(auth.first_name+time_of_the_day))}"
+                  f"{auth.account_balance} Naira"
+                  f"{' '*(24-len(str(auth.account_balance)))}"
                   f"Session Token: {auth.session_token}")
-            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), "               ~~~~~~",
-                  "~" * len(str(auth.account_balance)),
-                  "               ~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
+            print(f"~"*7, "~"*len(time_of_the_day), "~"*len(auth.first_name),
+                  " "*(28-len(auth.first_name+time_of_the_day)), "~"*6,
+                  "~" * len(str(auth.account_balance)), " "*(24-len(str(auth.account_balance))), "~~~~~~~~~~~~~~~",
+                  "~" * len(auth.session_token), sep='')
         else:
             display_name = 'SHOW'
             print(end='\n')
-            print(f"Good {time_of_the_day}, {auth.first_name}                                         "
+            print(f"Good {time_of_the_day}, {auth.first_name}"
+                  f"{' '*(58-len(auth.first_name+time_of_the_day))}"
                   f"Session Token: {auth.session_token}")
-            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name), "               ",
-                  "                          ~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
+            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name),
+                  ' '*(58-len(auth.first_name+time_of_the_day)),
+                  "~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
 
         return display_name
     except Exception as e:
@@ -111,7 +124,9 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
 
 
 def signed_in(auth: Authentication):
+    """Function to sign in Users with a Savings or Current account"""
     from banking import transfer_money
+    from banking import fixed_deposit
 
     try:
         if auth.account_type == 'savings' or auth.account_type == 'current':
@@ -131,7 +146,9 @@ def signed_in(auth: Authentication):
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
                 print("|     13. BLOCK ACCOUNT     |  14. VIEW CONTACT INFO  |  15. CHANGE TRANSACTION PIN  |")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print("|  16. UPDATE ACCOUNT INFO  |  17. BANK INFORMATION   |          18. LOGOUT          |")
+                print("|  16. UPDATE ACCOUNT INFO  |  17. BANK INFORMATION   |      18. FIXED DEPOSIT       |")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print("|                                     19. LOGOUT                                     |")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
                 user_input = input(">>> ")
@@ -177,13 +194,20 @@ def signed_in(auth: Authentication):
                 elif re.search('^17$', user_input):
                     continue
                 elif re.search('^18$', user_input):
+                    if auth.fixed_account == 'yes':
+                        pass
+                    if auth.fixed_account == 'no':
+                        fixed_deposit.fixed_deposit(auth)
+                elif re.search('^19$', user_input):
                     auth.user_logout()
                     del user_input
                     go_back('script')
+                    break
                 elif re.search('^(go back|goback)$', user_input.strip().lower()):
                     auth.user_logout()
                     del user_input
                     go_back('script')
+                    break
                 else:
                     del user_input
                     continue

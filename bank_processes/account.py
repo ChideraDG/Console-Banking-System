@@ -1,3 +1,4 @@
+import datetime
 import json
 from abc import abstractmethod, ABC
 from bank_processes.user import User
@@ -10,7 +11,7 @@ class Account(User):
                  account_balance: float = None, minimum_balance: float = None, maximum_balance: float = None,
                  account_fee: float = None, transaction_pin: str = None, account_status: str = None,
                  account_tier: str = None, transaction_limit: int = None, overdraft_protection: str = None,
-                 beneficiaries: dict = None, transfer_limit: float = None):
+                 beneficiaries: dict = None, transfer_limit: float = None, fixed_account: str = None):
         super().__init__()
         self.__account_number = account_number  # Unique identifier for the account.
         self.__account_type = account_type  # Type of account (e.g., savings, checking, credit card).
@@ -26,6 +27,7 @@ class Account(User):
         self.__transaction_limit = transaction_limit  # Limits on the number or amount of transactions allowed within a certain period.
         self.__transfer_limit = transfer_limit
         self.__beneficiaries = beneficiaries  # Beneficiaries of the Account
+        self.__fixed_account = fixed_account
 
     def open_account(self):
         """Method to register a new user with the bank app, including capturing and validating personal information
@@ -490,12 +492,46 @@ class Account(User):
     def transfer_limit(self):
         del self.__transfer_limit
 
+    @property
+    def fixed_account(self):
+        if self.account_number is not None:
+            query = (f"""
+                            SELECT fixed_account 
+                            FROM {self.database.db_tables[3]} 
+                            WHERE account_number = '{self.account_number}'
+                            """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for fixed_account in data:
+                    self.fixed_account = fixed_account
+
+        return self.__fixed_account
+
+    @fixed_account.setter
+    def fixed_account(self, _fixed_account: dict):
+        self.__fixed_account = _fixed_account
+
+    @fixed_account.deleter
+    def fixed_account(self):
+        del self.__fixed_account
+
 
 class FixedDeposit(Account, ABC):
-    def __init__(self, interest_rate: float = 0.0, interest_earned: float = 0.0):
+    def __init__(self, deposit_id: str = None, deposit_title: str = None, initial_deposit: float = None,
+                 interest_rate: float = None, total_interest_earned: float = None, start_date: datetime.date = None,
+                 payback_date: datetime.date = None, payback_time: datetime.time = None, status: str = None):
         super().__init__()
-        self.interest_rate = interest_rate  # Interest rate applied to the account balance (if applicable).
-        self.interest_earned = interest_earned  # Total amount of interest earned on the account balance.
+        self.__deposit_id = deposit_id
+        self.__deposit_title = deposit_title
+        self.__initial_deposit = initial_deposit
+        self.__interest_rate = interest_rate  # Interest rate applied to the account balance (if applicable).
+        self.__total_interest_earned = total_interest_earned  # Total amount of interest earned on the account balance.
+        self.__start_date = start_date
+        self.__payback_date = payback_date
+        self.__payback_time = payback_time
+        self.__status = status
 
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
@@ -506,3 +542,203 @@ class FixedDeposit(Account, ABC):
         """Method to allow users to withdraw money from their account. It should update the account balance and handle
         cases where the withdrawal amount exceeds the available balance."""
         pass
+
+    @property
+    def deposit_id(self):
+        if self.account_number is not None:
+            query = (f"""
+                    SELECT deposit_id 
+                    FROM {self.database.db_tables[4]} 
+                    WHERE account_number = '{self.account_number}'
+                    """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for deposit_id in data:
+                    self.deposit_id = deposit_id
+
+        return self.__deposit_id
+
+    @deposit_id.setter
+    def deposit_id(self, _deposit_id):
+        self.__deposit_id = _deposit_id
+
+    @deposit_id.deleter
+    def deposit_id(self):
+        del self.__deposit_id
+
+    @property
+    def deposit_title(self):
+        if self.account_number is not None:
+            query = (f"""
+                            SELECT deposit_title 
+                            FROM {self.database.db_tables[3]} 
+                            WHERE account_number = '{self.account_number}'
+                            """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for deposit_title in data:
+                    self.deposit_title = deposit_title
+
+        return self.__deposit_title
+
+    @deposit_title.setter
+    def deposit_title(self, _deposit_title):
+        self.__deposit_title = _deposit_title
+
+    @deposit_title.deleter
+    def deposit_title(self):
+        del self.__deposit_title
+
+    @property
+    def initial_deposit(self):
+        if self.account_number is not None:
+            query = (f"""
+                            SELECT initial_deposit 
+                            FROM {self.database.db_tables[3]} 
+                            WHERE account_number = '{self.account_number}'
+                            """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for initial_deposit in data:
+                    self.initial_deposit = initial_deposit
+
+        return self.__initial_deposit
+
+    @initial_deposit.setter
+    def initial_deposit(self, _initial_deposit):
+        self.__initial_deposit = _initial_deposit
+
+    @initial_deposit.deleter
+    def initial_deposit(self):
+        del self.__initial_deposit
+
+    @property
+    def total_interest_earned(self):
+        if self.account_number is not None:
+            query = (f"""
+                            SELECT total_interest_earned 
+                            FROM {self.database.db_tables[3]} 
+                            WHERE account_number = '{self.account_number}'
+                            """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for total_interest_earned in data:
+                    self.total_interest_earned = total_interest_earned
+
+        return self.__total_interest_earned
+
+    @total_interest_earned.setter
+    def total_interest_earned(self, _total_interest_earned):
+        self.__total_interest_earned = _total_interest_earned
+
+    @total_interest_earned.deleter
+    def total_interest_earned(self):
+        del self.__total_interest_earned
+
+    @property
+    def start_date(self):
+        if self.account_number is not None:
+            query = (f"""
+                            SELECT start_date 
+                            FROM {self.database.db_tables[3]} 
+                            WHERE account_number = '{self.account_number}'
+                            """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for start_date in data:
+                    self.start_date = start_date
+
+        return self.__start_date
+
+    @start_date.setter
+    def start_date(self, _start_date):
+        self.__start_date = _start_date
+
+    @start_date.deleter
+    def start_date(self):
+        del self.__start_date
+
+    @property
+    def payback_date(self):
+        if self.account_number is not None:
+            query = (f"""
+                            SELECT payback_date 
+                            FROM {self.database.db_tables[3]} 
+                            WHERE account_number = '{self.account_number}'
+                            """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for payback_date in data:
+                    self.payback_date = payback_date
+
+        return self.__payback_date
+
+    @payback_date.setter
+    def payback_date(self, _payback_date):
+        self.__payback_date = _payback_date
+
+    @payback_date.deleter
+    def payback_date(self):
+        del self.__payback_date
+
+    @property
+    def payback_time(self):
+        if self.account_number is not None:
+            query = (f"""
+                        SELECT payback_time 
+                        FROM {self.database.db_tables[3]} 
+                        WHERE account_number = '{self.account_number}'
+                        """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for payback_time in data:
+                    self.payback_time = payback_time
+
+        return self.__payback_time
+
+    @payback_time.setter
+    def payback_time(self, _payback_time):
+        self.__payback_time = _payback_time
+
+    @payback_time.deleter
+    def payback_time(self):
+        del self.__payback_time
+
+    @property
+    def status(self):
+        if self.account_number is not None:
+            query = (f"""
+                            SELECT status 
+                            FROM {self.database.db_tables[3]} 
+                            WHERE account_number = '{self.account_number}'
+                            """)
+
+            datas: tuple = self.database.fetch_data(query)
+
+            for data in datas:
+                for status in data:
+                    self.status = status
+
+        return self.__status
+
+    @status.setter
+    def status(self, _status):
+        self.__status = _status
+
+    @status.deleter
+    def status(self):
+        del self.__status

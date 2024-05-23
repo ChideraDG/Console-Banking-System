@@ -163,10 +163,6 @@ def amount_to_be_transferred(auth: Authentication):
                             del _input
                             time.sleep(2)
                             continue
-                    elif re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
-                        del _input
-                        time.sleep(1.5)
-                        go_back('signed_in', auth=auth)
                     else:
                         print(f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}")
                         del _input
@@ -264,6 +260,8 @@ def session_token(auth: Authentication):
                 del _input
                 time.sleep(2)
                 continue
+            elif _input == 'skip':
+                break
             else:
                 if _input == auth.session_token:
                     break
@@ -321,8 +319,9 @@ def process_transfer(auth: Authentication):
                     print("\n:: Money Sent Successfully")
                     print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
 
+                    # print("\n:: print Receipt")
                     if beneficiaries(auth, checking_beneficiary=True) is False:
-                        print(f'\nAdd to beneficiaries')
+                        print(f'\nAdd {auth.receiver_name.upper()} to beneficiaries')
                         print('1. Yes  |  2. No')
                         print('~~~~~~     ~~~~~')
                         checking_input = input(">>> ")

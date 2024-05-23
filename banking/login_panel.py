@@ -24,35 +24,35 @@ def username():
             print("~~~~~~~~~~~~~~~~~~~~")
             _username = input(">>> ")
 
-            if re.search('^(goback|go back)$', _username, re.IGNORECASE):
+            if re.search('^1$', _username):
+                return _username
+            elif re.search('^2$', _username):
+                return _username
+            elif re.search('^(go back|goback)$', _username.lower()):
                 del _username
                 go_back('script')
-            else:
-                if re.search('^1$', _username):
-                    return _username
-                elif re.search('^2$', _username):
-                    return _username
-                elif re.search('^go back$', _username.lower()):
-                    go_back('script')
+                break
 
-                if verify_data('username', 1, _username):
-                    if check_account_status(_username)[1] == 'suspended':
-                        print("\n:: Account is SUSPENDED.\n:: Reset your Password.")
-                        del _username
-                        time.sleep(3)
-                        go_back('script')
-                    elif check_account_status(_username)[1] == 'blocked':
-                        print("\n:: Account is BLOCKED.\n:: Meet the admin to UNBLOCK your account.")
-                        del _username
-                        time.sleep(3)
-                        go_back('script')
-                    elif check_account_status(_username)[0]:
-                        auth.username = _username
-                        return _username
-                else:
-                    print("\n:: Wrong Username.")
+            if verify_data('username', 1, _username):
+                if check_account_status(_username)[1] == 'suspended':
+                    print("\n:: Account is SUSPENDED.\n:: Reset your Password.")
+                    del _username
                     time.sleep(3)
-                    continue
+                    go_back('script')
+                    break
+                elif check_account_status(_username)[1] == 'blocked':
+                    print("\n:: Account is BLOCKED.\n:: Meet the admin to UNBLOCK your account.")
+                    del _username
+                    time.sleep(3)
+                    go_back('script')
+                    break
+                elif check_account_status(_username)[0]:
+                    auth.username = _username
+                    return _username
+            else:
+                print("\n:: Wrong Username.")
+                time.sleep(3)
+                continue
     except Exception as e:
         with open('error.txt', 'w') as file:
             file.write(f'Module: login_panel.py \nFunction: username \nError: {repr(e)}')
@@ -114,9 +114,10 @@ def forgot_username():
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").lower()
 
-            if re.search('^(goback|go back)$', _input, re.IGNORECASE):
+            if re.search('^(goback|go back)$', _input.lower()):
                 del _input
                 go_back('script')
+                break
             else:
                 if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _input, re.IGNORECASE):
                     _username: str = get_username_from_database(_input, email=True)

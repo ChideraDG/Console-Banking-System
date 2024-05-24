@@ -154,16 +154,6 @@ class Authentication(Transaction, FixedDeposit, ABC):
         self.transaction_limit = self.transaction_limit
         self.fixed_account = self.fixed_account
 
-        if self.fixed_account == 'yes':
-            self.deposit_id = self.deposit_id
-            self.deposit_title = self.deposit_title
-            self.initial_deposit = self.initial_deposit
-            self.total_interest_earned = self.total_interest_earned
-            self.start_date = self.start_date
-            self.payback_time = self.payback_time
-            self.payback_date = self.payback_date
-            self.status = self.status
-
         if self.account_type == 'savings' and self.account_tier == 'Tier 1':
             if self.last_login_timestamp.date() < datetime.today().date():
                 query = (f"""

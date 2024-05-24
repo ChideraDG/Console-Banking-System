@@ -155,6 +155,7 @@ class Transaction(Account, ABC):
         debited_amount = self.amount + self.charges
         updated_transaction_limit = self.transaction_limit - 1
         updated_transfer_limit = self.transfer_limit - self.amount
+        self.__transaction_date_time = datetime.now()
         if transfer:
             sender_updated_balance = self.account_balance - debited_amount
             sender_query = f"""
@@ -175,7 +176,6 @@ class Transaction(Account, ABC):
             """
             self.database.query(receiver_query)
             del _receiver_object
-            self.__transaction_date_time = datetime.now()
         elif fixed_deposit:
             sender_updated_balance = self.account_balance - self.amount
             query = f"""

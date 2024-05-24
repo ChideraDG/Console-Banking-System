@@ -307,7 +307,7 @@ def process_transfer(auth: Authentication):
                     auth.transaction_type = 'transfer'
                     transaction_pin(auth)
                     session_token(auth)
-                    auth.process_transaction()
+                    auth.process_transaction(transfer=True)
 
                     header()
                     countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
@@ -355,7 +355,7 @@ def process_transfer(auth: Authentication):
                         auth.transaction_type = 'transfer'
                         transaction_pin(auth)
                         session_token(auth)
-                        auth.process_transaction()
+                        auth.process_transaction(transfer=True)
 
                         header()
                         countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)

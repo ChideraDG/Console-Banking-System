@@ -188,7 +188,7 @@ def safelock(auth: Authentication):
                     del deposit_amount
                     time.sleep(2)
                     continue
-                elif int(deposit_amount) < 1000:
+                elif float(deposit_amount) < 1000:
                     print("\n:: Amount MUST be above N1000")
                     del deposit_amount
                     time.sleep(3)
@@ -231,7 +231,7 @@ def safelock(auth: Authentication):
                                 return float(deposit_amount), deposit_title
     except Exception as e:
         with open('error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: fixed_deposit \nError: {repr(e)}')
+            file.write(f'Module: fixed_deposit.py \nFunction: safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
         go_back('script')
@@ -308,8 +308,15 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                             auth.payback_date = datetime.date(int(year), int(month), int(day))
                             auth.payback_time = _time
                             auth.status = 'active'
-
+                            auth.description = f'FIXED_DEPOSIT/CBB/{auth.deposit_id}/{auth.deposit_title.upper()}'
+                            auth.process_transaction(fixed_deposit=True)
+                            auth.transaction_record(fixed_deposit=True)
                             auth.open_fixed_deposit_account()
+
+                            header()
+
+                            print(f'\n:: Congrats. \n:: Fixed Deposit Successfully Created.')
+                            time.sleep(5)
                             break
                         elif re.search('^(2|no)$', _input, re.IGNORECASE):
                             del _input
@@ -612,7 +619,7 @@ def display_deposits(auth: Authentication, data: list, test: list, key: int):
                 # top up
                 pass
             elif re.search('^2$', user_input):
-                pass
+                break
             else:
                 print(":: Digits only.")
                 time.sleep(2)
@@ -658,7 +665,7 @@ def ongoing_deposits(auth: Authentication):
 
                 if re.search('^(go back|goback)$', user_input.strip().lower()):
                     del user_input
-                    go_back('access_safelock', auth)
+                    go_back_here('access_safelock', auth)
                 elif user_input.isdigit():
                     if int(user_input) > len(data):
                         print("\n:: Digits within the list only")
@@ -668,7 +675,7 @@ def ongoing_deposits(auth: Authentication):
                         display_deposits(auth, data, details, int(user_input) - 1)
                         continue
                 else:
-                    print(":: Digits only.")
+                    print("\n:: Digits only.")
                     time.sleep(2)
                     continue
             else:
@@ -729,6 +736,7 @@ def access_safelock(auth: Authentication):
                 continue
             elif re.search('^2$', user_input):
                 ongoing_deposits(auth)
+                continue
             elif re.search('^3$', user_input):
                 pass
             elif re.search('^4$', user_input):

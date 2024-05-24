@@ -1,3 +1,9 @@
+<<<<<<< Updated upstream
 Module: transfer_money.py 
 Function: process_transfer 
 Error: DataError(1406, "Data too long for column 'transaction_id' at row 1")
+=======
+Module: login_panel.py 
+Function: login 
+Error: OperationalError(1054, "Unknown column 'fixed_account' in 'field list'")
+>>>>>>> Stashed changes

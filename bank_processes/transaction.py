@@ -65,6 +65,7 @@ class Transaction(Account, ABC):
 
             _receiver_obj = Account()
             _receiver_obj.account_number = self.receiver_acct_num
+            receiver_description = f'TRF/CBB/TO {self.__receiver_name.upper()} FROM {self.account_holder.upper()}'
             receiver_query = f"""
                             INSERT INTO {self.database.db_tables[2]}
                             (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
@@ -72,7 +73,7 @@ class Transaction(Account, ABC):
                             account_type, account_balance, transaction_mode)
                             VALUES('{self.__transaction_id}', '{self.transaction_type}', {self.__amount},
                             '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
-                            '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
+                            '{self.__receiver_name}', '{self.__transaction_date_time}', '{receiver_description}',
                             '{self.__transaction_status}', '{_receiver_obj.account_type}', 
                             {_receiver_obj.account_balance}, 'credit')
                             """

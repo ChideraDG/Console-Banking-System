@@ -556,6 +556,7 @@ def create_safelock(auth: Authentication):
                             maturity_date_in_date=dates[3],
                             auth=auth,
                         )
+            access_safelock(auth)
             break
     except Exception as e:
         with open('error.txt', 'w') as file:
@@ -736,12 +737,10 @@ def access_safelock(auth: Authentication):
                 continue
             elif re.search('^2$', user_input):
                 ongoing_deposits(auth)
-                continue
             elif re.search('^3$', user_input):
                 pass
             elif re.search('^4$', user_input):
                 create_safelock(auth)
-                continue
             elif re.search('^(go back|goback)$', user_input.strip().lower()):
                 del user_input
                 go_back('signed_in', auth)

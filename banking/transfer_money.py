@@ -84,6 +84,7 @@ def recipient_account_number(auth: Authentication):
                         del checking_input
                         auth.receiver_acct_num = _input
                         auth.receiver_name = recipient_name
+
                         break
                     elif _input.lower() == 'go back' or _input.lower() == 'goback':
                         del _input
@@ -180,7 +181,7 @@ def description(auth):
     try:
         header()
         print(end='\n')
-        print("\nENTER DESCRIPTION:")
+        print("\nENTER NARRATION:")
         print("~~~~~~~~~~~~~~~~~~")
         _input = input(">>> ")
 
@@ -189,7 +190,8 @@ def description(auth):
             time.sleep(1.5)
             go_back('signed_in', auth=auth)
         else:
-            auth.description = _input
+            # auth.description = _input
+            pass
     except Exception as e:
         with open('error.txt', 'w') as file:
             file.write(f'Module: transfer_money.py \nFunction: description \nError: {repr(e)}')
@@ -305,6 +307,7 @@ def process_transfer(auth: Authentication):
                     amount_to_be_transferred(auth)
                     description(auth)
                     auth.transaction_type = 'transfer'
+                    auth.description = f'TRF/CBB/FROM {auth.account_holder.upper()} TO {auth.receiver_name.upper()}'
                     transaction_pin(auth)
                     session_token(auth)
                     auth.process_transaction(transfer=True)
@@ -339,7 +342,7 @@ def process_transfer(auth: Authentication):
                             del checking_input
                             time.sleep(1)
                             continue
-                    time.sleep(4)
+                    time.sleep(3)
                     break
                 elif re.search('^2$', user_input):
                     bene = beneficiaries(auth)
@@ -353,6 +356,7 @@ def process_transfer(auth: Authentication):
                         amount_to_be_transferred(auth)
                         description(auth)
                         auth.transaction_type = 'transfer'
+                        auth.description = f'TRF/CBB/FROM {auth.account_holder.upper()} TO {auth.receiver_name.upper()}'
                         transaction_pin(auth)
                         session_token(auth)
                         auth.process_transaction(transfer=True)
@@ -367,7 +371,7 @@ def process_transfer(auth: Authentication):
                         header()
                         print("\n:: Money Sent Successfully")
                         print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
-                        time.sleep(4)
+                        time.sleep(3)
                         break
                 elif re.search('^(goback|go back)$', user_input.lower(), re.IGNORECASE):
                     del user_input

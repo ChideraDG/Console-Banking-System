@@ -202,7 +202,7 @@ def signed_in(auth: Authentication):
                         fixed_deposit.access_safelock(auth)
                     if auth.fixed_account == 'no':
                         fixed_deposit.create_safelock(auth)
-                        fixed_deposit.access_safelock(auth)
+                        # fixed_deposit.access_safelock(auth)
                 elif re.search('^19$', user_input):
                     auth.user_logout()
                     del user_input

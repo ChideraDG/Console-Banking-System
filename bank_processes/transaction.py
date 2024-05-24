@@ -38,7 +38,7 @@ class Transaction(Account, ABC):
         self.__charges = charges
         self.__transaction_mode = transaction_mode
 
-    def transaction_record(self, transfer: bool = False):
+    def transaction_record(self, transfer: bool = False, fixed_deposit: bool = False):
         """Method to record new transactions made by the sender and the relevant information"""
         from banking.register_panel import verify_data
 
@@ -80,7 +80,30 @@ class Transaction(Account, ABC):
             del _receiver_obj
         elif fixed_deposit:
             # transaction_type = fixed deposit, description, transaction_mode
-            pass
+            self.__transaction_id = str(random.randint(100000000000000000000000000000,
+                                                       999999999999999999999999999999))
+            while verify_data('transaction_id', 2, self.__transaction_id):
+                self.__transaction_id = str({random.randint(100000000000000000000000000000,
+                                                            999999999999999999999999999999)})
+            self.__transaction_type = 'fixed_deposit'
+            self.__transaction_status = 'successful'
+            self.account_type = 'fixed_deposit'
+
+            query = f"""
+                    INSERT INTO {self.database.db_tables[2]}
+                    (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                    receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
+                    account_balance, transaction_mode)
+                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
+                    '{self.account_number}', '{self.account_holder}', 'NULL',
+                    'NULL', '{self.__transaction_date_time}', '{self.__description}',
+                    '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
+                    """
+            self.database.query(query)
+
+    def transaction_receipts(self):
+        """Method to generate receipts for each transaction made"""
+        pass
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""
@@ -126,13 +149,13 @@ class Transaction(Account, ABC):
             return False, 'Maximum Balance passed!!!', _object.account_status, self.receiver_acct_num
         del _object
 
-    def process_transaction(self, fixed_deposit: bool = False):
+    def process_transaction(self, transfer: bool = False,  fixed_deposit: bool = False):
         """Method to process the transaction, including updating account balances, recording transaction details,
         and handling any necessary validations or checks."""
         debited_amount = self.amount + self.charges
         updated_transaction_limit = self.transaction_limit - 1
         updated_transfer_limit = self.transfer_limit - self.amount
-        if self.transaction_type == 'transfer':
+        if transfer:
             sender_updated_balance = self.account_balance - debited_amount
             sender_query = f"""
             UPDATE {self.database.db_tables[3]}
@@ -154,7 +177,14 @@ class Transaction(Account, ABC):
             del _receiver_object
             self.__transaction_date_time = datetime.now()
         elif fixed_deposit:
-            pass
+            sender_updated_balance = self.account_balance - self.amount
+            query = f"""
+            UPDATE {self.database.db_tables[3]}
+            SET account_balance = {sender_updated_balance}, transaction_limit = {updated_transaction_limit},
+            transfer_limit = {updated_transfer_limit}
+            WHERE account_number = {self.account_number}  
+            """
+            self.database.query(query)
 
     def cancel_transaction(self):
         """Method to cancel a pending or incomplete transaction, reversing any changes made to account balances

@@ -1,6 +1,8 @@
 import datetime
 import json
 from abc import abstractmethod, ABC
+from typing import Tuple, List, Any
+
 from bank_processes.user import User
 
 
@@ -578,16 +580,25 @@ class FixedDeposit(Account, ABC):
         cases where the withdrawal amount exceeds the available balance."""
         pass
 
-    def get_actives(self):
+    def get_actives(self) -> tuple[list[Any], int, list[Any]]:
 
         query = f"""
         SELECT * 
         FROM {self.database.db_tables[4]} 
         WHERE account_number = {self.account_number} 
         AND status = 'active'
+        ORDER BY start_date
         """
 
-        return self.database.fetch_data(query)
+        data = list(self.database.fetch_data(query))
+
+        total_balance = 0
+        days = []
+        for item in data:
+            total_balance += item[3]
+            days.append((item[7] - item[6]).days)
+
+        return data, total_balance, days
 
     def get_inactive(self):
         query = f"""
@@ -597,7 +608,9 @@ class FixedDeposit(Account, ABC):
                 AND status = 'inactive'
                 """
 
-        return self.database.fetch_data(query)
+        data = list(self.database.fetch_data(query))
+
+        return data
 
     @property
     def deposit_id(self):

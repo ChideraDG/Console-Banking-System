@@ -587,7 +587,7 @@ class FixedDeposit(Account, ABC):
         AND status = 'active'
         """
 
-        return  self.database.fetch_data(query)
+        return self.database.fetch_data(query)
 
     def get_inactive(self):
         query = f"""

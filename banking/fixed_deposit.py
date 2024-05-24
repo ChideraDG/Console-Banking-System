@@ -560,14 +560,50 @@ def create_safelock(auth: Authentication):
 
 def access_safelock(auth: Authentication):
     try:
-        header()
-        print(f"{bold}{brt_black_bg}{brt_red}" + f"\n8% - 15% per annum{end}")
+        balance = f'N{auth.initial_deposit:,}'
+        eye = 'HIDE'
+        while True:
+            header()
+            print(f"{bold}{brt_black_bg}{brt_red}" + f"\n8% - 15% per annum{end}")
 
-        print(f"{bold}{brt_black_bg}{brt_yellow}")
-        print("Fixed Deposit Balance" + f"{end}")
-        print(f'{bold}N{auth.initial_deposit:,}{end}')
+            print(f"{bold}{brt_black_bg}{brt_yellow}")
+            print("Fixed Deposit Balance" + f"{end}")
 
-        time.sleep(102)
+            print(f'{bold}{balance}{end} \n')
+            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+            print(f"|                   1. {eye} BALANCE                       |")
+            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+            print("|    2. ONGOING DEPOSITS    |    3. PAID BACK DEPOSITS    |")
+            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+            print("|               4. CREATE A NEW FIXED DEPOSIT             |")
+            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+
+            user_input = input(">>> ")
+
+            if re.search('^1$', user_input):
+                if eye == 'SHOW':
+                    eye = 'HIDE'
+                    balance = f'N{auth.initial_deposit:,}'
+                else:
+                    balance = ' * * * *'
+                    eye = 'SHOW'
+
+                continue
+            elif re.search('^2$', user_input):
+                pass
+            elif re.search('^3$', user_input):
+                pass
+            elif re.search('^4$', user_input):
+                pass
+            elif re.search('^(go back|goback)$', user_input.strip().lower()):
+                del user_input
+                go_back('signed_in', auth)
+            else:
+                del user_input
+                continue
+            break
+
+            # time.sleep(102)
 
     except Exception as e:
         with open('error.txt', 'w') as file:

@@ -49,7 +49,6 @@ class Transaction(Account, ABC):
                 self.__transaction_id = str({random.randint(100000000000000000000000000000,
                                                             999999999999999999999999999999)})
 
-            self.__transaction_date_time = datetime.today().now()
             self.__transaction_status = 'successful'
 
             query = f"""
@@ -79,6 +78,9 @@ class Transaction(Account, ABC):
                             """
             self.database.query(receiver_query)
             del _receiver_obj
+        elif fixed_deposit:
+            # transaction_type = fixed deposit, description, transaction_mode
+            pass
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""
@@ -124,7 +126,7 @@ class Transaction(Account, ABC):
             return False, 'Maximum Balance passed!!!', _object.account_status, self.receiver_acct_num
         del _object
 
-    def process_transaction(self):
+    def process_transaction(self, fixed_deposit: bool = False):
         """Method to process the transaction, including updating account balances, recording transaction details,
         and handling any necessary validations or checks."""
         debited_amount = self.amount + self.charges
@@ -150,7 +152,9 @@ class Transaction(Account, ABC):
             """
             self.database.query(receiver_query)
             del _receiver_object
-        self.__transaction_date_time= datetime.now()
+            self.__transaction_date_time = datetime.now()
+        elif fixed_deposit:
+            pass
 
     def cancel_transaction(self):
         """Method to cancel a pending or incomplete transaction, reversing any changes made to account balances

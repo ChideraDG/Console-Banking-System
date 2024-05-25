@@ -689,7 +689,6 @@ def ongoing_deposits(auth: Authentication):
                 print("You don't have any Ongoing Deposit")
                 time.sleep(5)
                 go_back_here('access_safelock', auth)
-
     except Exception as e:
         with open('error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: ongoing_deposits \nError: {repr(e)}')

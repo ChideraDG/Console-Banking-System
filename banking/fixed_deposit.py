@@ -647,17 +647,21 @@ def ongoing_deposits(auth: Authentication):
 
             if data:
                 for key, value in enumerate(data):
-                    details.append((f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+" + '\n'
-                                    + f"|                                                        |" + '\n'
-                                    + f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}   |" + '\n'
-                                    + f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))}|" + '\n'
-                                    + f"|      Locked{' ' * (50 - len('locked'))}|" + '\n'
-                                    + f"|                                                        |" + '\n'
+                    if len(str(days[key])) == 2:
+                        space = '  '
+                    elif len(str(days[key])) == 3:
+                        space = ' '
+                    details.append((f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+" + '\n'
+                                    + f"|                                                         |" + '\n'
+                                    + f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    |" + '\n'
+                                    + f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} |" + '\n'
+                                    + f"|      Locked{' ' * (50 - len('locked'))} |" + '\n'
+                                    + f"|                                                         |" + '\n'
                                     +
                                     f"| {brt_blue_bg}{' ' * (46 // days[key])}{brt_white_bg}"
                                     f"{' ' * (46 - (46 // days[key]))}{end} "
-                                    f"{days[key]} days |" + '\n'
-                                    + f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+"))
+                                    f"{days[key]} days{space}|" + '\n'
+                                    + f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+"))
 
                     print(details[key])
                     print()

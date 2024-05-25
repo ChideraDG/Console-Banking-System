@@ -102,7 +102,7 @@ class Transaction(Account, ABC):
                     """
             self.database.query(query)
 
-    def transaction_receipts(self):
+    def transaction_receipts(self, receipt: bool = False):
         """Method to generate receipts for each transaction made"""
         pass
 
@@ -150,7 +150,7 @@ class Transaction(Account, ABC):
             return False, 'Maximum Balance passed!!!', _object.account_status, self.receiver_acct_num
         del _object
 
-    def process_transaction(self, transfer: bool = False,  fixed_deposit: bool = False):
+    def process_transaction(self, transfer: bool = False, fixed_deposit: bool = False):
         """Method to process the transaction, including updating account balances, recording transaction details,
         and handling any necessary validations or checks."""
         debited_amount = self.amount + self.charges

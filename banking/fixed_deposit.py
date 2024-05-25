@@ -636,7 +636,7 @@ def display_deposits(auth: Authentication, data: list, test: list, key: int):
 
 def ongoing_deposits(auth: Authentication):
     try:
-        data, balance, days = auth.get_actives()
+        data, balance, days, days_remaining = auth.get_actives()
         details = []
 
         while True:
@@ -648,6 +648,12 @@ def ongoing_deposits(auth: Authentication):
             if data:
                 for key, value in enumerate(data):
                     space = None
+                    value = None
+
+                    if days_remaining[key] == 0:
+                        value = 0
+                    else:
+                        value = (46 // days[key])
 
                     if len(str(days[key])) == 2:
                         space = '  '
@@ -659,10 +665,9 @@ def ongoing_deposits(auth: Authentication):
                                     + f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} |" + '\n'
                                     + f"|      Locked{' ' * (50 - len('locked'))} |" + '\n'
                                     + f"|                                                         |" + '\n'
-                                    +
-                                    f"| {brt_blue_bg}{' ' * (46 // days[key])}{brt_white_bg}"
-                                    f"{' ' * (46 - (46 // days[key]))}{end} "
-                                    f"{days[key]} days{space}|" + '\n'
+                                    + f"| {brt_blue_bg}{' ' * (value * (days[key] - days_remaining[key]))}"
+                                      f"{brt_white_bg}{' ' * (46 - (value * (days[key] - days_remaining[key])))}{end} "
+                                      f"{days_remaining[key]} days{space}|" + '\n'
                                     + f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+"))
 
                     print(details[key])
@@ -710,8 +715,8 @@ def paid_back_deposits(auth: Authentication):
 
 def access_safelock(auth: Authentication):
     try:
-        data, balance, days = auth.get_actives()
-        sl_balance = f'N{balance:,}'
+        data, balance, days, days_remaining = auth.get_actives()
+        sl_balance = f'N{balance:,.2f}'
         eye = 'HIDE'
         while True:
             header()
@@ -734,7 +739,7 @@ def access_safelock(auth: Authentication):
             if re.search('^1$', user_input):
                 if eye == 'SHOW':
                     eye = 'HIDE'
-                    sl_balance = f'N{balance:,}'
+                    sl_balance = f'N{balance:,.2f}'
                 else:
                     sl_balance = ' * * * * *'
                     eye = 'SHOW'

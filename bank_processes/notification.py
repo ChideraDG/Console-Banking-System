@@ -1,7 +1,7 @@
 from plyer import notification
 
 
-class Notification():
+class Notification:
 
     def __init__(self, recipient: str = None, message: str = None, timestamp: str = None, notification_type: str = None,
                  delivery_method: str = None, status: str = None, delivery_channel: str = None, priority: str = None,

@@ -1,9 +1,12 @@
-class Notification:
+from plyer import notification
+
+
+class Notification():
 
     def __init__(self, recipient: str = None, message: str = None, timestamp: str = None, notification_type: str = None,
-                 delivery_method: str = None, status: str = None, delivery_channel: str = None, priority: str = None, notification_id: str = None,
+                 delivery_method: str = None, status: str = None, delivery_channel: str = None, priority: str = None,
+                 notification_id: str = None,
                  acknowledgement_status: str = None, sender: str = None, attachments: str = None):
-
         self.recipient = recipient  # The user or users who will receive the notification.
         self.message = message  # The content of the notification to be sent.
         self.timestamp = timestamp  # The timestamp indicating when the notification was generated
@@ -17,13 +20,10 @@ class Notification:
         self.sender = sender  # The entity or system responsible for sending the notification
         self.attachments = attachments  # Any additional files or media included with the notification
 
-
-
     def send_notification(self):
         """Method to send notifications to users via their preferred channels,
          such as email, SMS, push notifications, or in-app messages."""
         pass
-
 
     def format_notification(self):
         """ Method to format notification content based on the type of notification and user preferences,
@@ -64,4 +64,3 @@ class Notification:
         """Method to filter notifications based on user preferences, allowing users to customize
         which notifications they receive based on criteria such as transaction type, account activity, or urgency."""
         pass
-

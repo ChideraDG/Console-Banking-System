@@ -743,6 +743,7 @@ def access_safelock(auth: Authentication):
                 else:
                     sl_balance = ' * * * * *'
                     eye = 'SHOW'
+
                 continue
             elif re.search('^2$', user_input):
                 ongoing_deposits(auth)

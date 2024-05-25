@@ -6,6 +6,7 @@ from bank_processes.account import FixedDeposit
 from bank_processes.database import DataBase
 from plyer import notification as note
 from bank_processes.transaction import Transaction
+from bank_processes.notification import Notification
 
 
 def verify_data(get_column: str, table_number: int, _object: str) -> bool:
@@ -112,7 +113,7 @@ def token_auth():
     return token
 
 
-class Authentication(Transaction, FixedDeposit, ABC):
+class Authentication(Transaction, FixedDeposit, Notification, ABC):
 
     def __init__(self, username: str = None, password: str = None, failed_login_attempts: int = 0,
                  auth_outcome: bool = None, login_time_stamp: datetime = None, session_token: str = None):

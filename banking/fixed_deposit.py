@@ -647,6 +647,8 @@ def ongoing_deposits(auth: Authentication):
 
             if data:
                 for key, value in enumerate(data):
+                    space = None
+
                     if len(str(days[key])) == 2:
                         space = '  '
                     elif len(str(days[key])) == 3:

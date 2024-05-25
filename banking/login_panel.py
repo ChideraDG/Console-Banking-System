@@ -22,7 +22,7 @@ def username():
         while True:
             print("\nENTER YOUR USERNAME:")
             print("~~~~~~~~~~~~~~~~~~~~")
-            _username = input(">>> ")
+            _username = input(">>> ").strip()
 
             if re.search('^1$', _username):
                 return _username
@@ -67,7 +67,7 @@ def password():
         while auth.login_attempts < 3:
             print("\nENTER YOUR PASSWORD:")
             print("~~~~~~~~~~~~~~~~~~~~")
-            _password = input(">>> ")
+            _password = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', _password, re.IGNORECASE):
                 del _password
@@ -112,7 +112,7 @@ def forgot_username():
         while True:
             print("\nENTER YOUR REGISTERED PHONE NUMBER/E-MAIL:")
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            _input = input(">>> ").lower()
+            _input = input(">>> ").strip().lower()
 
             if re.search('^(goback|go back)$', _input.lower()):
                 del _input
@@ -141,7 +141,7 @@ def forgot_username():
                     while True:
                         print("\nENTER YOUR TOKEN NUMBER:")
                         print("~~~~~~~~~~~~~~~~~~~~~~~~")
-                        _tokenNumber = input(">>> ")
+                        _tokenNumber = input(">>> ").strip()
 
                         if re.search('^(goback|go back)$', _tokenNumber, re.IGNORECASE):
                             del _tokenNumber
@@ -190,7 +190,7 @@ def forgot_password():
         while True:
             print("\nENTER YOUR USERNAME:")
             print("~~~~~~~~~~~~~~~~~~~~")
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', _input, re.IGNORECASE):
                 del _input

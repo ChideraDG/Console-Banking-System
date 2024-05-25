@@ -175,7 +175,7 @@ def safelock(auth: Authentication):
             header()
             print("\nAmount to Deposit: (must be Greater than N1000)")
             print("~~~~~~~~~~~~~~~~~~")
-            deposit_amount = input(">>> ")
+            deposit_amount = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', deposit_amount, re.IGNORECASE):
                 del deposit_amount
@@ -214,7 +214,7 @@ def safelock(auth: Authentication):
                         header()
                         print("\nTitle of Deposit")
                         print("~~~~~~~~~~~~~~~~")
-                        deposit_title = input(">>> ")
+                        deposit_title = input(">>> ").strip()
 
                         if re.search('^(goback|go back)$', deposit_title, re.IGNORECASE):
                             del deposit_title
@@ -266,7 +266,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                   f'I confirm and approve this transaction.')
             print('1. Yes  |  2. No')
             print('~~~~~~     ~~~~~')
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', _input, re.IGNORECASE):
                 del _input
@@ -280,7 +280,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                           f'created')
                     print('1. Yes  |  2. No')
                     print('~~~~~~     ~~~~~')
-                    _input = input(">>> ")
+                    _input = input(">>> ").strip()
                     if re.search('^(goback|go back)$', _input, re.IGNORECASE):
                         del _input
                         time.sleep(1.5)
@@ -366,7 +366,7 @@ def create_safelock(auth: Authentication):
             print("[6] -: 271 - 365 days", "\t\t\t\t\t", "at ~ 14% p.a\n", sep='')
             print("[7] -: Above 1 - 2 years", "\t\t\t\t", "at ~ 14.5% p.a\n", sep='')
             print("[8] -: Above 2 years", "\t\t\t\t\t", "at ~ 15% p.a\n", sep='')
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', _input, re.IGNORECASE):
                 del _input
@@ -612,7 +612,7 @@ def display_deposits(auth: Authentication, data: list, test: list, key: int):
             print(f'|      1. TOP UP DEPOSIT      |        2. RETURN         |')
             print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
 
-            user_input = input(">>> ")
+            user_input = input(">>> ").strip()
 
             if re.search('^(go back|goback)$', user_input.strip().lower()):
                 pass
@@ -662,7 +662,7 @@ def ongoing_deposits(auth: Authentication):
                     print(details[key])
                     print()
 
-                user_input = input(">>> ")
+                user_input = input(">>> ").strip()
 
                 if re.search('^(go back|goback)$', user_input.strip().lower()):
                     del user_input
@@ -724,7 +724,7 @@ def access_safelock(auth: Authentication):
             print("|              4. CREATE A NEW FIXED DEPOSIT              |")
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
-            user_input = input(">>> ")
+            user_input = input(">>> ").strip()
 
             if re.search('^1$', user_input):
                 if eye == 'SHOW':

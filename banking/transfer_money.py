@@ -58,7 +58,7 @@ def recipient_account_number(auth: Authentication):
             print(end='\n')
             print("\nENTER YOUR RECIPIENT ACCOUNT NUMBER:")
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if _input.lower() == 'go back' or _input.lower() == 'goback':
                 del _input
@@ -78,7 +78,7 @@ def recipient_account_number(auth: Authentication):
                     print('\nis this the correct RECIPIENT NAME you want to send money to?')
                     print('1. Yes  |  2. No')
                     print('~~~~~~     ~~~~~')
-                    checking_input = input(">>> ")
+                    checking_input = input(">>> ").strip()
 
                     if checking_input == '1' or checking_input.lower() == 'yes':
                         del checking_input
@@ -121,7 +121,7 @@ def amount_to_be_transferred(auth: Authentication):
             print(end='\n')
             print("\nENTER AMOUNT:")
             print("~~~~~~~~~~~~~")
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', _input, re.IGNORECASE):
                 del _input
@@ -145,7 +145,7 @@ def amount_to_be_transferred(auth: Authentication):
                             print(f'\nyou will be charged N{auth.charges} for this transfer')
                             print('1. Yes  |  2. No')
                             print('~~~~~~     ~~~~~')
-                            checking_input = input(">>> ")
+                            checking_input = input(">>> ").strip()
 
                             if checking_input == '1' or checking_input.lower() == 'yes':
                                 break
@@ -183,7 +183,7 @@ def description(auth):
         print(end='\n')
         print("\nENTER NARRATION:")
         print("~~~~~~~~~~~~~~~~~~")
-        _input = input(">>> ")
+        _input = input(">>> ").strip()
 
         if re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
             del _input
@@ -207,7 +207,7 @@ def transaction_pin(auth: Authentication):
             print(end='\n')
             print("\nENTER TRANSACTION PIN:")
             print("~~~~~~~~~~~~~~~~~~~~~~")
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
                 del _input
@@ -251,7 +251,7 @@ def session_token(auth: Authentication):
             print(end='\n')
             print("\nENTER SESSION TOKEN:")
             print("~~~~~~~~~~~~~~~~~~~~")
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
                 del _input
@@ -300,7 +300,7 @@ def process_transfer(auth: Authentication):
                 print(" ~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~ ")
                 print("|  1. to BANK  |  2. to BENEFICIARY  |")
                 print(" ~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~ ")
-                user_input = input(">>> ")
+                user_input = input(">>> ").strip()
 
                 if re.search('^1$', user_input):
                     recipient_account_number(auth)
@@ -327,7 +327,7 @@ def process_transfer(auth: Authentication):
                         print(f'\nAdd {auth.receiver_name.upper()} to beneficiaries')
                         print('1. Yes  |  2. No')
                         print('~~~~~~     ~~~~~')
-                        checking_input = input(">>> ")
+                        checking_input = input(">>> ").strip()
 
                         if checking_input == '1' or checking_input.lower() == 'yes':
                             auth.add_beneficiaries(_account_holder=auth.receiver_name,

@@ -2,7 +2,8 @@ from datetime import datetime
 import random
 from abc import ABC
 from typing import Tuple, Any
-
+from prettytable import PrettyTable
+from pymysql.cursors import DictCursor
 from bank_processes.account import Account
 
 
@@ -16,7 +17,8 @@ class Transaction(Account, ABC):
                  receiver_acct_num: str = None,
                  description: str = None, transaction_status: str = None, fees: float = None, merchant_info: str = None,
                  transaction_category: str = None, user_id: str = None, account_type: str = None,
-                 receiver_name: str = None, balance: float = None, transfer_limit: float = None, charges: float = None):
+                 receiver_name: str = None, balance: float = None, transfer_limit: float = None, charges: float = None,
+                 transaction_mode: str = None):
         super().__init__()
         self.__transaction_type = transaction_type
         self.__amount = amount
@@ -34,44 +36,75 @@ class Transaction(Account, ABC):
         self.__balance = balance
         self.__transfer_limit = transfer_limit
         self.__charges = charges
+        self.__transaction_mode = transaction_mode
 
-    def transaction_record(self):
+    def transaction_record(self, transfer: bool = False, fixed_deposit: bool = False):
         """Method to record new transactions made by the sender and the relevant information"""
         from banking.register_panel import verify_data
-        self.__transaction_id = str(random.randint(100000000000000000000000000000,
-                                                   999999999999999999999999999999))
-        while verify_data('transaction_id', 2, self.__transaction_id):
-            self.__transaction_id = str({random.randint(100000000000000000000000000000,
-                                                        999999999999999999999999999999)})
 
-        self.__transaction_date_time = datetime.today().now()
-        self.__transaction_status = 'successful'
+        if transfer:
+            self.__transaction_id = str(random.randint(100000000000000000000000000000,
+                                                       999999999999999999999999999999))
+            while verify_data('transaction_id', 2, self.__transaction_id):
+                self.__transaction_id = str({random.randint(100000000000000000000000000000,
+                                                            999999999999999999999999999999)})
 
-        query = f"""
-                INSERT INTO {self.database.db_tables[2]}
-                (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
-                receiver_account_number, receiver_name, transaction_date_time, description, status, account_type)
-                VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
-                '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
-                '{self.__receiver_name}', {self.__transaction_date_time}, '{self.__description}',
-                '{self.__transaction_status}', '{self.account_type}')
-                 """
-        self.database.query(query)
+            self.__transaction_status = 'successful'
 
-        _receiver_obj = Account()
-        _receiver_obj.account_number = self.receiver_acct_num
-        receiver_query = f"""
-                        INSERT INTO {self.database.db_tables[2]}
-                        (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
-                        receiver_account_number, receiver_name, transaction_date_time, description, status,
-                        account_type)
-                        VALUES('{self.__transaction_id}', '{self.transaction_type}', {self.__amount},
-                        '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
-                        '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
-                        '{self.__transaction_status}', '{_receiver_obj.account_type}')
-                        """
-        self.database.query(receiver_query)
-        del _receiver_obj
+            query = f"""
+                    INSERT INTO {self.database.db_tables[2]}
+                    (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                    receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
+                    account_balance, transaction_mode)
+                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount + self.charges},
+                    '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
+                    '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
+                    '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
+                     """
+            self.database.query(query)
+
+            _receiver_obj = Account()
+            _receiver_obj.account_number = self.receiver_acct_num
+            receiver_description = f'TRF/CBB/TO {self.__receiver_name.upper()} FROM {self.account_holder.upper()}'
+            receiver_query = f"""
+                            INSERT INTO {self.database.db_tables[2]}
+                            (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                            receiver_account_number, receiver_name, transaction_date_time, description, status,
+                            account_type, account_balance, transaction_mode)
+                            VALUES('{self.__transaction_id}', '{self.transaction_type}', {self.__amount},
+                            '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
+                            '{self.__receiver_name}', '{self.__transaction_date_time}', '{receiver_description}',
+                            '{self.__transaction_status}', '{_receiver_obj.account_type}', 
+                            {_receiver_obj.account_balance}, 'credit')
+                            """
+            self.database.query(receiver_query)
+            del _receiver_obj
+        elif fixed_deposit:
+            # transaction_type = fixed deposit, description, transaction_mode
+            self.__transaction_id = str(random.randint(100000000000000000000000000000,
+                                                       999999999999999999999999999999))
+            while verify_data('transaction_id', 2, self.__transaction_id):
+                self.__transaction_id = str({random.randint(100000000000000000000000000000,
+                                                            999999999999999999999999999999)})
+            self.__transaction_type = 'fixed_deposit'
+            self.__transaction_status = 'successful'
+            self.account_type = 'fixed_deposit'
+
+            query = f"""
+                    INSERT INTO {self.database.db_tables[2]}
+                    (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                    receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
+                    account_balance, transaction_mode)
+                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
+                    '{self.account_number}', '{self.account_holder}', 'NULL',
+                    'NULL', '{self.__transaction_date_time}', '{self.__description}',
+                    '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
+                    """
+            self.database.query(query)
+
+    def transaction_receipts(self):
+        """Method to generate receipts for each transaction made"""
+        pass
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""
@@ -117,13 +150,14 @@ class Transaction(Account, ABC):
             return False, 'Maximum Balance passed!!!', _object.account_status, self.receiver_acct_num
         del _object
 
-    def process_transaction(self):
+    def process_transaction(self, transfer: bool = False,  fixed_deposit: bool = False):
         """Method to process the transaction, including updating account balances, recording transaction details,
         and handling any necessary validations or checks."""
         debited_amount = self.amount + self.charges
         updated_transaction_limit = self.transaction_limit - 1
         updated_transfer_limit = self.transfer_limit - self.amount
-        if self.transaction_type == 'transfer':
+        self.__transaction_date_time = datetime.now()
+        if transfer:
             sender_updated_balance = self.account_balance - debited_amount
             sender_query = f"""
             UPDATE {self.database.db_tables[3]}
@@ -143,7 +177,15 @@ class Transaction(Account, ABC):
             """
             self.database.query(receiver_query)
             del _receiver_object
-        self.__transaction_date_time= datetime.now()
+        elif fixed_deposit:
+            sender_updated_balance = self.account_balance - self.amount
+            query = f"""
+            UPDATE {self.database.db_tables[3]}
+            SET account_balance = {sender_updated_balance}, transaction_limit = {updated_transaction_limit},
+            transfer_limit = {updated_transfer_limit}
+            WHERE account_number = {self.account_number}  
+            """
+            self.database.query(query)
 
     def cancel_transaction(self):
         """Method to cancel a pending or incomplete transaction, reversing any changes made to account balances
@@ -162,11 +204,9 @@ class Transaction(Account, ABC):
 
     def transaction_history(self, start_date: datetime = None, end_date: datetime = None, year: int = None,
                             month: str = None, time_period: bool = False, is_month: bool = False):
-
         """ Method to retrieve the transaction history associated with a specific account or user,
          providing details of past transactions for reference and auditing purposes."""
-        from prettytable import PrettyTable
-        from pymysql.cursors import DictCursor
+
         original = self.database.db_cursor  # storing the original query here
         self.database.db_cursor = self.database.db_connection.cursor(DictCursor)
 

@@ -1,6 +1,8 @@
 import datetime
 import json
 from abc import abstractmethod, ABC
+from typing import Tuple, List, Any
+
 from bank_processes.user import User
 
 
@@ -578,16 +580,25 @@ class FixedDeposit(Account, ABC):
         cases where the withdrawal amount exceeds the available balance."""
         pass
 
-    def get_actives(self):
+    def get_actives(self) -> tuple[list[Any], int, list[Any]]:
 
         query = f"""
         SELECT * 
         FROM {self.database.db_tables[4]} 
         WHERE account_number = {self.account_number} 
         AND status = 'active'
+        ORDER BY start_date
         """
 
-        return  self.database.fetch_data(query)
+        data = list(self.database.fetch_data(query))
+
+        total_balance = 0
+        days = []
+        for item in data:
+            total_balance += item[3]
+            days.append((item[7] - item[6]).days)
+
+        return data, total_balance, days
 
     def get_inactive(self):
         query = f"""
@@ -597,22 +608,12 @@ class FixedDeposit(Account, ABC):
                 AND status = 'inactive'
                 """
 
-        return self.database.fetch_data(query)
+        data = list(self.database.fetch_data(query))
+
+        return data
 
     @property
     def deposit_id(self):
-        if self.account_number is not None:
-            query = (f"""
-                    SELECT deposit_id 
-                    FROM {self.database.db_tables[4]} 
-                    WHERE account_number = '{self.account_number}'
-                    """)
-
-            datas: tuple = self.database.fetch_data(query)
-
-            for data in datas:
-                for deposit_id in data:
-                    self.deposit_id = deposit_id
 
         return self.__deposit_id
 
@@ -626,19 +627,6 @@ class FixedDeposit(Account, ABC):
 
     @property
     def deposit_title(self):
-        if self.account_number is not None:
-            query = (f"""
-                        SELECT deposit_title 
-                        FROM {self.database.db_tables[4]} 
-                        WHERE account_number = '{self.account_number}'
-                        """)
-
-            datas: tuple = self.database.fetch_data(query)
-
-            for data in datas:
-                for deposit_title in data:
-                    self.deposit_title = deposit_title
-
         return self.__deposit_title
 
     @deposit_title.setter
@@ -651,19 +639,6 @@ class FixedDeposit(Account, ABC):
 
     @property
     def initial_deposit(self):
-        if self.account_number is not None:
-            query = (f"""
-                            SELECT initial_deposit 
-                            FROM {self.database.db_tables[4]} 
-                            WHERE account_number = '{self.account_number}'
-                            """)
-
-            datas: tuple = self.database.fetch_data(query)
-
-            for data in datas:
-                for initial_deposit in data:
-                    self.initial_deposit = initial_deposit
-
         return self.__initial_deposit
 
     @initial_deposit.setter
@@ -676,19 +651,6 @@ class FixedDeposit(Account, ABC):
 
     @property
     def interest_rate(self):
-        if self.account_number is not None:
-            query = (f"""
-                                SELECT interest_rate 
-                                FROM {self.database.db_tables[4]} 
-                                WHERE account_number = '{self.account_number}'
-                                """)
-
-            datas: tuple = self.database.fetch_data(query)
-
-            for data in datas:
-                for interest_rate in data:
-                    self.interest_rate = interest_rate
-
         return self.__interest_rate
 
     @interest_rate.setter
@@ -701,19 +663,6 @@ class FixedDeposit(Account, ABC):
 
     @property
     def total_interest_earned(self):
-        if self.account_number is not None:
-            query = (f"""
-                            SELECT total_interest_earned 
-                            FROM {self.database.db_tables[4]} 
-                            WHERE account_number = '{self.account_number}'
-                            """)
-
-            datas: tuple = self.database.fetch_data(query)
-
-            for data in datas:
-                for total_interest_earned in data:
-                    self.total_interest_earned = total_interest_earned
-
         return self.__total_interest_earned
 
     @total_interest_earned.setter
@@ -726,19 +675,6 @@ class FixedDeposit(Account, ABC):
 
     @property
     def start_date(self):
-        if self.account_number is not None:
-            query = (f"""
-                            SELECT start_date 
-                            FROM {self.database.db_tables[4]} 
-                            WHERE account_number = '{self.account_number}'
-                            """)
-
-            datas: tuple = self.database.fetch_data(query)
-
-            for data in datas:
-                for start_date in data:
-                    self.start_date = start_date
-
         return self.__start_date
 
     @start_date.setter
@@ -751,19 +687,6 @@ class FixedDeposit(Account, ABC):
 
     @property
     def payback_date(self):
-        if self.account_number is not None:
-            query = (f"""
-                            SELECT payback_date 
-                            FROM {self.database.db_tables[4]} 
-                            WHERE account_number = '{self.account_number}'
-                            """)
-
-            datas: tuple = self.database.fetch_data(query)
-
-            for data in datas:
-                for payback_date in data:
-                    self.payback_date = payback_date
-
         return self.__payback_date
 
     @payback_date.setter
@@ -776,19 +699,6 @@ class FixedDeposit(Account, ABC):
 
     @property
     def payback_time(self):
-        if self.account_number is not None:
-            query = (f"""
-                        SELECT payback_time 
-                        FROM {self.database.db_tables[4]} 
-                        WHERE account_number = '{self.account_number}'
-                        """)
-
-            datas: tuple = self.database.fetch_data(query)
-
-            for data in datas:
-                for payback_time in data:
-                    self.payback_time = payback_time
-
         return self.__payback_time
 
     @payback_time.setter
@@ -801,19 +711,6 @@ class FixedDeposit(Account, ABC):
 
     @property
     def status(self):
-        if self.account_number is not None:
-            query = (f"""
-                            SELECT status 
-                            FROM {self.database.db_tables[4]} 
-                            WHERE account_number = '{self.account_number}'
-                            """)
-
-            datas: tuple = self.database.fetch_data(query)
-
-            for data in datas:
-                for status in data:
-                    self.status = status
-
         return self.__status
 
     @status.setter

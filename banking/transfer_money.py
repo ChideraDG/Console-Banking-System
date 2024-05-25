@@ -58,7 +58,7 @@ def recipient_account_number(auth: Authentication):
             print(end='\n')
             print("\nENTER YOUR RECIPIENT ACCOUNT NUMBER:")
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if _input.lower() == 'go back' or _input.lower() == 'goback':
                 del _input
@@ -78,12 +78,13 @@ def recipient_account_number(auth: Authentication):
                     print('\nis this the correct RECIPIENT NAME you want to send money to?')
                     print('1. Yes  |  2. No')
                     print('~~~~~~     ~~~~~')
-                    checking_input = input(">>> ")
+                    checking_input = input(">>> ").strip()
 
                     if checking_input == '1' or checking_input.lower() == 'yes':
                         del checking_input
                         auth.receiver_acct_num = _input
                         auth.receiver_name = recipient_name
+
                         break
                     elif _input.lower() == 'go back' or _input.lower() == 'goback':
                         del _input
@@ -120,7 +121,7 @@ def amount_to_be_transferred(auth: Authentication):
             print(end='\n')
             print("\nENTER AMOUNT:")
             print("~~~~~~~~~~~~~")
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', _input, re.IGNORECASE):
                 del _input
@@ -144,7 +145,7 @@ def amount_to_be_transferred(auth: Authentication):
                             print(f'\nyou will be charged N{auth.charges} for this transfer')
                             print('1. Yes  |  2. No')
                             print('~~~~~~     ~~~~~')
-                            checking_input = input(">>> ")
+                            checking_input = input(">>> ").strip()
 
                             if checking_input == '1' or checking_input.lower() == 'yes':
                                 break
@@ -180,16 +181,17 @@ def description(auth):
     try:
         header()
         print(end='\n')
-        print("\nENTER DESCRIPTION:")
+        print("\nENTER NARRATION:")
         print("~~~~~~~~~~~~~~~~~~")
-        _input = input(">>> ")
+        _input = input(">>> ").strip()
 
         if re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
             del _input
             time.sleep(1.5)
             go_back('signed_in', auth=auth)
         else:
-            auth.description = _input
+            # auth.description = _input
+            pass
     except Exception as e:
         with open('error.txt', 'w') as file:
             file.write(f'Module: transfer_money.py \nFunction: description \nError: {repr(e)}')
@@ -205,7 +207,7 @@ def transaction_pin(auth: Authentication):
             print(end='\n')
             print("\nENTER TRANSACTION PIN:")
             print("~~~~~~~~~~~~~~~~~~~~~~")
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
                 del _input
@@ -249,7 +251,7 @@ def session_token(auth: Authentication):
             print(end='\n')
             print("\nENTER SESSION TOKEN:")
             print("~~~~~~~~~~~~~~~~~~~~")
-            _input = input(">>> ")
+            _input = input(">>> ").strip()
 
             if re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
                 del _input
@@ -298,20 +300,21 @@ def process_transfer(auth: Authentication):
                 print(" ~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~ ")
                 print("|  1. to BANK  |  2. to BENEFICIARY  |")
                 print(" ~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~ ")
-                user_input = input(">>> ")
+                user_input = input(">>> ").strip()
 
                 if re.search('^1$', user_input):
                     recipient_account_number(auth)
                     amount_to_be_transferred(auth)
                     description(auth)
                     auth.transaction_type = 'transfer'
+                    auth.description = f'TRF/CBB/FROM {auth.account_holder.upper()} TO {auth.receiver_name.upper()}'
                     transaction_pin(auth)
                     session_token(auth)
-                    auth.process_transaction()
+                    auth.process_transaction(transfer=True)
 
                     header()
                     countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
-                    auth.transaction_record()
+                    auth.transaction_record(transfer=True)
                     auth.receiver_transaction_validation()
                     # notification missing
 
@@ -324,7 +327,7 @@ def process_transfer(auth: Authentication):
                         print(f'\nAdd {auth.receiver_name.upper()} to beneficiaries')
                         print('1. Yes  |  2. No')
                         print('~~~~~~     ~~~~~')
-                        checking_input = input(">>> ")
+                        checking_input = input(">>> ").strip()
 
                         if checking_input == '1' or checking_input.lower() == 'yes':
                             auth.add_beneficiaries(_account_holder=auth.receiver_name,
@@ -339,7 +342,7 @@ def process_transfer(auth: Authentication):
                             del checking_input
                             time.sleep(1)
                             continue
-                    time.sleep(2)
+                    time.sleep(3)
                     break
                 elif re.search('^2$', user_input):
                     bene = beneficiaries(auth)
@@ -353,21 +356,22 @@ def process_transfer(auth: Authentication):
                         amount_to_be_transferred(auth)
                         description(auth)
                         auth.transaction_type = 'transfer'
+                        auth.description = f'TRF/CBB/FROM {auth.account_holder.upper()} TO {auth.receiver_name.upper()}'
                         transaction_pin(auth)
                         session_token(auth)
-                        auth.process_transaction()
+                        auth.process_transaction(transfer=True)
 
                         header()
                         countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
+                        auth.transaction_record(transfer=True)
                         auth.receiver_transaction_validation()
                         # notification missing
-                        # Process Transaction missing
                         # receipt
 
                         header()
                         print("\n:: Money Sent Successfully")
                         print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
-                        time.sleep(2)
+                        time.sleep(3)
                         break
                 elif re.search('^(goback|go back)$', user_input.lower(), re.IGNORECASE):
                     del user_input

@@ -371,3 +371,4 @@ zope.interface @ file:///Users/ec2-user/ci_py311/zope.interface_1678379536727/wo
 zstandard @ file:///Users/ec2-user/ci_py311_2/zstandard_1679338593428/work
 
 PyMySQL~=1.1.0
+prettytable~=3.10.0

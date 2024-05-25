@@ -66,7 +66,7 @@ def signing_in():
         print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
         print(magenta, bold, end='')
-        user_input = input(">>> ")
+        user_input = input(">>> ").strip()
         print(end, end='')
 
         if re.search('^1$', user_input):
@@ -155,7 +155,7 @@ def signed_in(auth: Authentication):
                 print("|                                     19. LOGOUT                                     |")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
-                user_input = input(">>> ")
+                user_input = input(">>> ").strip()
 
                 if re.search('^1$', user_input):
                     if display_name == 'SHOW':
@@ -202,7 +202,7 @@ def signed_in(auth: Authentication):
                         fixed_deposit.access_safelock(auth)
                     if auth.fixed_account == 'no':
                         fixed_deposit.create_safelock(auth)
-                        fixed_deposit.access_safelock(auth)
+                        # fixed_deposit.access_safelock(auth)
                 elif re.search('^19$', user_input):
                     auth.user_logout()
                     del user_input

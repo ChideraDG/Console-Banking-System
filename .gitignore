@@ -5,4 +5,3 @@ __pycache__/
 *.py[cod]
 *$py.class
 bank_processes/__pycache__/
-*.pyc

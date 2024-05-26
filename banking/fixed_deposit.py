@@ -17,8 +17,16 @@ def go_back_here(return_place, auth: Authentication = None):
         access_safelock(auth)
 
 
-def get_month(month):
-    max_year = 2006
+def get_month(month: int) -> tuple[str, int]:
+    """Generates the month name and days within that month according to the month number received.
+
+    Args:
+        month (int): the number of the month you want.
+
+    Returns:
+        tuple[str, int]: month_name, days within the month
+    """
+    year = 2006
     month_name = None
     days = None
 
@@ -27,7 +35,7 @@ def get_month(month):
         days = 31
     elif month == 2:
         month_name = 'February'
-        if (max_year % 4 == 0 and max_year % 100 != 0) or (max_year % 400 == 0):
+        if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
             days = 29
         else:
             days = 28

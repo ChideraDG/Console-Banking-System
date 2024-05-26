@@ -643,6 +643,13 @@ def display_deposits(auth: Authentication, data: list, test: list, key: int):
 
 
 def ongoing_deposits(auth: Authentication):
+    """ Displays the User's fixed deposits that are still running active.
+
+        Parameters
+        ----------
+        auth : Authentication
+              Contains the entire details of the User.
+        """
     try:
         data, balance, days, days_remaining = auth.get_actives()
         details = []
@@ -712,6 +719,7 @@ def ongoing_deposits(auth: Authentication):
 
 def paid_back_deposits(auth: Authentication):
     """ Displays the deposits that have been completed and returned to the User.
+
     Parameters
     ----------
     auth : Authentication

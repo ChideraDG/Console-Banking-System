@@ -711,6 +711,12 @@ def ongoing_deposits(auth: Authentication):
 
 
 def paid_back_deposits(auth: Authentication):
+    """ Displays the deposits that have been completed and returned to the User.
+    Parameters
+    ----------
+    auth : Authentication
+          Contains the entire details of the User.
+    """
     try:
         pass
     except Exception as e:
@@ -722,12 +728,12 @@ def paid_back_deposits(auth: Authentication):
 
 
 def access_safelock(auth: Authentication):
-    """ HomePage for a fixed deposit user.
+    """ HomePage for a fixed deposit User.
 
     Parameters
     ---------
     auth : Authentication
-          Contains the entire details of the user.
+          Contains the entire details of the User.
     """
     try:
         data, balance, days, days_remaining = auth.get_actives()

@@ -170,7 +170,7 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
                     time.sleep(3)
                     continue
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: fixed_deposit \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -238,7 +238,7 @@ def safelock(auth: Authentication):
                             else:
                                 return float(deposit_amount), deposit_title
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -347,7 +347,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                     time.sleep(3)
                     continue
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: preview_safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -567,7 +567,7 @@ def create_safelock(auth: Authentication):
             access_safelock(auth)
             break
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: create_safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -635,7 +635,7 @@ def display_deposits(auth: Authentication, data: list, test: list, key: int):
                 continue
 
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: display_deposits \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -703,7 +703,7 @@ def ongoing_deposits(auth: Authentication):
                 time.sleep(5)
                 go_back_here('access_safelock', auth)
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: ongoing_deposits \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -714,7 +714,7 @@ def paid_back_deposits(auth: Authentication):
     try:
         pass
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: paid_back_deposits \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -767,7 +767,7 @@ def access_safelock(auth: Authentication):
                 continue
             break
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: access_safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)

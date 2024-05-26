@@ -120,7 +120,7 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
 
         return display_name
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: script.py \nFunction: signed_in_header \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -218,7 +218,7 @@ def signed_in(auth: Authentication):
                     continue
                 break
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: script.py \nFunction: signed_in \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)

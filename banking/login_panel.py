@@ -54,7 +54,7 @@ def username():
                 time.sleep(3)
                 continue
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: login_panel.py \nFunction: username \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -99,7 +99,7 @@ def password():
         time.sleep(1)
         go_back('script')
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: login_panel.py \nFunction: password \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -177,7 +177,7 @@ def forgot_username():
                     time.sleep(3)
                     continue
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: login_panel.py \nFunction: forgot_username \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -207,7 +207,7 @@ def forgot_password():
                     time.sleep(3)
                     continue
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: login_panel.py \nFunction: forgot_password \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -307,7 +307,7 @@ def login():
         
         signed_in(auth=auth)
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: login_panel.py \nFunction: login \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)

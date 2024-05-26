@@ -649,7 +649,7 @@ def ongoing_deposits(auth: Authentication):
         ----------
         auth : Authentication
               Contains the entire details of the User.
-        """
+    """
     try:
         data, balance, days, days_remaining = auth.get_actives()
         details = []

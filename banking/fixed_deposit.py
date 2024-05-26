@@ -722,6 +722,13 @@ def paid_back_deposits(auth: Authentication):
 
 
 def access_safelock(auth: Authentication):
+    """ HomePage for a fixed deposit user.
+
+    Parameters
+    ---------
+    auth : Authentication
+          Contains the entire details of the user.
+    """
     try:
         data, balance, days, days_remaining = auth.get_actives()
         sl_balance = f'N{balance:,.2f}'

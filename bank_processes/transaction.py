@@ -3,6 +3,7 @@ import random
 from abc import ABC
 from typing import Tuple, Any
 from prettytable import PrettyTable
+from animation.colors import *
 from pymysql.cursors import DictCursor
 from bank_processes.account import Account
 
@@ -102,10 +103,16 @@ class Transaction(Account, ABC):
                     """
             self.database.query(query)
 
-    def transaction_receipts(self, receipt: bool = False):
+    def transaction_receipts(self, receipt: bool = False, sender: bool = False, receiver: bool = False):
         """Method to generate receipts for each transaction made"""
+        if receipt:
+            if sender:
+                print('           TRANSACTION RECEIPT')
+                print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
+                print('| Recipient                               |')
+                print(f'| {bold}{self.receiver_name}{' ' * (31 - (len(self.receiver_name) - 9))}|')
         pass
-
+    
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""
         pass

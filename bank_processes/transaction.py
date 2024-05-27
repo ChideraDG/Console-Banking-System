@@ -107,12 +107,26 @@ class Transaction(Account, ABC):
         """Method to generate receipts for each transaction made"""
         if receipt:
             if sender:
-                print('           TRANSACTION RECEIPT')
-                print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-                print('| Recipient                               |')
-                print(f'| {bold}{self.receiver_name}{' ' * (31 - (len(self.receiver_name) - 9))}|')
-        pass
-    
+                print('                      {bold}TRANSACTION RECEIPT')
+                print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
+                print('| Recipient                                                    |\n')
+                print(f'| {bold}{self.receiver_name}{' ' * (52 - (len(self.receiver_name) - 9))}|\n')
+                print('| Recipient Bank                   Amount                      |')
+                print(f'| {bold}Console Beta Bank         {bold}{self.receiver_acct_num}')
+                print('|                                                              |')
+                print('| Description                                                  |')
+                print(f'| {bold}{self.description}')
+                print('|                                                              |')
+                print(f'Sent {bold}{self.amount} to Console Beta Bank-{bold}{self.receiver_acct_num}')
+                print('|                                                              |')
+                print(f'| Date                                                         |')
+                print(f'| {bold}{self.__transaction_date_time}')
+                print('|                                                              |')
+                print('| Transaction type                Transaction status           |')
+                print(f'| {bold}{self.transaction_type}                    {bold}{self.__transaction_status}')
+                print('|                                                              |')
+                print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+\n')
+
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""
         pass

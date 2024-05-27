@@ -1,3 +1,0 @@
-Module: login_panel.py 
-Function: username 
-Error: ProgrammingError(1146, "Table 'bankapp_db.user' doesn't exist")

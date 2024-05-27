@@ -17,8 +17,16 @@ def go_back_here(return_place, auth: Authentication = None):
         access_safelock(auth)
 
 
-def get_month(month):
-    max_year = 2006
+def get_month(month: int) -> tuple[str, int]:
+    """Generates the month name and days within that month according to the month number received.
+
+    Args:
+        month (int): the number of the month you want.
+
+    Returns:
+        tuple[str, int]: month_name, days within the month
+    """
+    year = 2006
     month_name = None
     days = None
 
@@ -27,7 +35,7 @@ def get_month(month):
         days = 31
     elif month == 2:
         month_name = 'February'
-        if (max_year % 4 == 0 and max_year % 100 != 0) or (max_year % 400 == 0):
+        if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
             days = 29
         else:
             days = 28
@@ -162,7 +170,7 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
                     time.sleep(3)
                     continue
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: fixed_deposit \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -230,7 +238,7 @@ def safelock(auth: Authentication):
                             else:
                                 return float(deposit_amount), deposit_title
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -339,7 +347,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                     time.sleep(3)
                     continue
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: preview_safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -559,7 +567,7 @@ def create_safelock(auth: Authentication):
             access_safelock(auth)
             break
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: create_safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -627,7 +635,7 @@ def display_deposits(auth: Authentication, data: list, test: list, key: int):
                 continue
 
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: display_deposits \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -635,8 +643,15 @@ def display_deposits(auth: Authentication, data: list, test: list, key: int):
 
 
 def ongoing_deposits(auth: Authentication):
+    """ Displays the User's fixed deposits that are still running active.
+
+        Parameters
+        ----------
+        auth : Authentication
+              Contains the entire details of the User.
+    """
     try:
-        data, balance, days = auth.get_actives()
+        data, balance, days, days_remaining = auth.get_actives()
         details = []
 
         while True:
@@ -648,6 +663,12 @@ def ongoing_deposits(auth: Authentication):
             if data:
                 for key, value in enumerate(data):
                     space = None
+                    value = None
+
+                    if days_remaining[key] == 0:
+                        value = 0
+                    else:
+                        value = (46 // days[key])
 
                     if len(str(days[key])) == 2:
                         space = '  '
@@ -659,10 +680,9 @@ def ongoing_deposits(auth: Authentication):
                                     + f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} |" + '\n'
                                     + f"|      Locked{' ' * (50 - len('locked'))} |" + '\n'
                                     + f"|                                                         |" + '\n'
-                                    +
-                                    f"| {brt_blue_bg}{' ' * (46 // days[key])}{brt_white_bg}"
-                                    f"{' ' * (46 - (46 // days[key]))}{end} "
-                                    f"{days[key]} days{space}|" + '\n'
+                                    + f"| {brt_blue_bg}{' ' * (value * (days[key] - days_remaining[key]))}"
+                                      f"{brt_white_bg}{' ' * (46 - (value * (days[key] - days_remaining[key])))}{end} "
+                                      f"{days_remaining[key]} days{space}|" + '\n'
                                     + f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+"))
 
                     print(details[key])
@@ -690,7 +710,7 @@ def ongoing_deposits(auth: Authentication):
                 time.sleep(5)
                 go_back_here('access_safelock', auth)
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: ongoing_deposits \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -698,10 +718,17 @@ def ongoing_deposits(auth: Authentication):
 
 
 def paid_back_deposits(auth: Authentication):
+    """ Displays the deposits that have been completed and returned to the User.
+
+    Parameters
+    ----------
+    auth : Authentication
+          Contains the entire details of the User.
+    """
     try:
         pass
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: paid_back_deposits \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
@@ -709,9 +736,16 @@ def paid_back_deposits(auth: Authentication):
 
 
 def access_safelock(auth: Authentication):
+    """ HomePage for a fixed deposit User.
+
+    Parameters
+    ---------
+    auth : Authentication
+          Contains the entire details of the User.
+    """
     try:
-        data, balance, days = auth.get_actives()
-        sl_balance = f'N{balance:,}'
+        data, balance, days, days_remaining = auth.get_actives()
+        sl_balance = f'N{balance:,.2f}'
         eye = 'HIDE'
         while True:
             header()
@@ -734,7 +768,7 @@ def access_safelock(auth: Authentication):
             if re.search('^1$', user_input):
                 if eye == 'SHOW':
                     eye = 'HIDE'
-                    sl_balance = f'N{balance:,}'
+                    sl_balance = f'N{balance:,.2f}'
                 else:
                     sl_balance = ' * * * * *'
                     eye = 'SHOW'
@@ -754,7 +788,7 @@ def access_safelock(auth: Authentication):
                 continue
             break
     except Exception as e:
-        with open('error.txt', 'w') as file:
+        with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: access_safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)

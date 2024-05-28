@@ -28,7 +28,7 @@ def username():
                 return _username
             elif re.search('^2$', _username):
                 return _username
-            elif re.search('^(go back|goback)$', _username.lower()):
+            elif re.search('^.*(back|return).*$', _username.lower()):
                 del _username
                 go_back('script')
                 break
@@ -47,6 +47,7 @@ def username():
                     go_back('script')
                     break
                 elif check_account_status(_username)[0]:
+                    print('me')
                     auth.username = _username
                     return _username
             else:
@@ -69,7 +70,7 @@ def password():
             print("~~~~~~~~~~~~~~~~~~~~")
             _password = input(">>> ").strip()
 
-            if re.search('^(goback|go back)$', _password, re.IGNORECASE):
+            if re.search('^.*(back|return).*$', _password, re.IGNORECASE):
                 del _password
                 go_back('script')
             else:
@@ -114,7 +115,7 @@ def forgot_username():
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").strip().lower()
 
-            if re.search('^(goback|go back)$', _input.lower()):
+            if re.search('^.*(back|return).*$', _input.lower()):
                 del _input
                 go_back('script')
                 break
@@ -143,7 +144,7 @@ def forgot_username():
                         print("~~~~~~~~~~~~~~~~~~~~~~~~")
                         _tokenNumber = input(">>> ").strip()
 
-                        if re.search('^(goback|go back)$', _tokenNumber, re.IGNORECASE):
+                        if re.search('^.*(back|return).*$', _tokenNumber, re.IGNORECASE):
                             del _tokenNumber
                             go_back('script')
                         else:
@@ -192,7 +193,7 @@ def forgot_password():
             print("~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").strip()
 
-            if re.search('^(goback|go back)$', _input, re.IGNORECASE):
+            if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 go_back('script')
             else:

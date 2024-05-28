@@ -580,7 +580,7 @@ class FixedDeposit(Account, ABC):
         cases where the withdrawal amount exceeds the available balance."""
         pass
 
-    def get_actives(self) -> tuple[list[Any], float, list[Any], list[Any]]:
+    def get_active(self) -> tuple[list[Any], float, list[Any], list[Any]]:
 
         query = f"""
         SELECT * 
@@ -602,12 +602,13 @@ class FixedDeposit(Account, ABC):
 
         return data, total_balance, days, days_remaining
 
-    def get_inactive(self):
+    def get_inactive(self) -> list[Any]:
         query = f"""
                 SELECT * 
                 FROM {self.database.db_tables[4]} 
                 WHERE account_number = {self.account_number} 
                 AND status = 'inactive'
+                ORDER BY start_date 
                 """
 
         data = list(self.database.fetch_data(query))

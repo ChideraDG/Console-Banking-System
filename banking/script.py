@@ -42,6 +42,13 @@ def header():
 
 
 def go_back(return_place, auth: Authentication = None):
+    """Placeholder function to handle going back to a previous step.
+        This should be defined elsewhere in the actual implementation.
+
+    Args:
+        return_place (str): The place to return to ('script' or 'signed_in').
+        auth (Authentication, optional): The authentication object. Defaults to None.
+    """
     if return_place == 'script':
         signing_in()
     if return_place == 'signed_in':
@@ -202,7 +209,6 @@ def signed_in(auth: Authentication):
                         fixed_deposit.access_safelock(auth)
                     if auth.fixed_account == 'no':
                         fixed_deposit.create_safelock(auth)
-                        # fixed_deposit.access_safelock(auth)
                 elif re.search('^19$', user_input):
                     auth.user_logout()
                     del user_input

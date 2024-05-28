@@ -35,9 +35,11 @@ def verify_data(get_column: str, table_number: int, _object: str) -> bool:
 def check_account_status(username: str) -> tuple[bool, Any | None, Any | None] | tuple[bool, Any | None]:
     """Checks the status of an Account.
 
-    Argument:
-
-    username - the username of the account you want to check its status"""
+    Parameters
+    ----------
+    username : str
+        the username of the account you want to check its status
+    """
     db: DataBase = DataBase()
 
     query = (f"""
@@ -182,6 +184,27 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
                 """)
 
         self.database.query(query)
+
+        #  Check Fixed Deposits if the PayBack date is due or not
+        query = f"""
+        select * from {self.database.db_tables[4]} where status = 'active'
+        ORDER BY start_date
+        """
+
+        data = self.database.fetch_data(query)
+
+        for value in data:
+            hour, minute, second = str(value[8]).split(':')
+
+            if datetime(year=value[7].year, month=value[7].month, day=value[7].day, hour=int(hour), minute=int(minute),
+                        second=int(second)) <= datetime.today().now():
+                query = f"""
+                        UPDATE {self.database.db_tables[4]}
+                        SET status = 'inactive'
+                        WHERE deposit_id = '{value[0]}'
+                        """
+                # deposit their money back to their accounts
+                self.database.query(query)
 
     def user_logout(self):
         """Method to log out the currently logged-in user from the bank app, terminating their session and clearing

@@ -1,3 +1,3 @@
-Module: fixed_deposit.py 
-Function: access_safelock 
-Error: ValueError("Invalid format specifier ',2f' for object of type 'float'")
+Module: script.py 
+Function: signed_in 
+Error: OperationalError(2006, "MySQL server has gone away (BrokenPipeError(32, 'Broken pipe'))")

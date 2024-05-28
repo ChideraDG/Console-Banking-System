@@ -2,16 +2,12 @@ import datetime
 import re
 import time
 import random
-
 from animation.colors import *
 from bank_processes.authentication import Authentication, verify_data
 from banking.register_panel import countdown_timer
 from banking.script import go_back, header
 
 
-#
-# auth = Authentication()
-# auth.account_number = 1513500889
 def go_back_here(return_place, auth: Authentication = None):
     if return_place == 'access_safelock':
         access_safelock(auth)
@@ -73,7 +69,44 @@ def get_month(month: int) -> tuple[str, int]:
     return month_name, days
 
 
+def get_ordinal_suffix(day: int) -> str:
+    """Determine the ordinal suffix for the start and payback dates
+
+    Parameters
+    ----------
+    day : int
+        day of the month
+
+    Returns
+    -------
+    str:
+        the ordinal suffix of the day
+
+    """
+    if 10 <= day % 100 <= 20:
+        return 'th'
+    elif day % 10 == 1:
+        return 'st'
+    elif day % 10 == 2:
+        return 'nd'
+    elif day % 10 == 3:
+        return 'rd'
+    else:
+        return 'th'
+
+
 def calculate_interest(principal: float, rate_per_year: float, days: int):
+    """Calculate the interest accrued over a period of days using the formula
+
+    Parameters
+    ----------
+    principal : float
+        The initial amount of money being invested
+    rate_per_year : float
+        The annual interest rate as a percentage.
+    days : int
+        The number of days the money is invested.
+    """
     interest: float = (principal * rate_per_year * days) / 36500
 
     rate_of_interest: float = (interest * 100) / principal
@@ -83,6 +116,27 @@ def calculate_interest(principal: float, rate_per_year: float, days: int):
 
 def payback_date(current_year: int, current_month: int, current_day: int, start_day: int, end_day: int,
                  auth: Authentication, percentage_rate: float, deposit_amount: float):
+    """Displays the list of days for the User to select their Payback date.
+
+    Parameters
+    ----------
+    current_year : int
+        The Current year
+    current_month : int
+        The Current month
+    current_day : int
+         The Current day
+    start_day : int
+        The Start day of the User periodic choice.
+    end_day : int
+        The End day of the User periodic choice.
+    auth : Authentication
+        Contains the entire details of the User.
+    percentage_rate : float
+        The Interest rate with respect to the Start day and End day.
+    deposit_amount : float
+        The Amount the user wants to deposit.
+    """
     try:
         while True:
             header()
@@ -151,7 +205,7 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
 
             _input = input("\n>>> ")
 
-            if re.search('^(goback|go back)$', _input, re.IGNORECASE):
+            if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
@@ -178,6 +232,13 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
 
 
 def safelock(auth: Authentication):
+    """ Filling the form for Amount to Deposit.
+
+    Parameters
+    ----------
+    auth : Authentication
+        Contains the entire details of the User.
+    """
     try:
         while True:
             header()
@@ -185,7 +246,7 @@ def safelock(auth: Authentication):
             print("~~~~~~~~~~~~~~~~~~")
             deposit_amount = input(">>> ").strip()
 
-            if re.search('^(goback|go back)$', deposit_amount, re.IGNORECASE):
+            if re.search('^.*(back|return).*$', deposit_amount, re.IGNORECASE):
                 del deposit_amount
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
@@ -224,7 +285,7 @@ def safelock(auth: Authentication):
                         print("~~~~~~~~~~~~~~~~")
                         deposit_title = input(">>> ").strip()
 
-                        if re.search('^(goback|go back)$', deposit_title, re.IGNORECASE):
+                        if re.search('^.*(back|return).*$', deposit_title, re.IGNORECASE):
                             del deposit_title
                             time.sleep(1.5)
                             go_back('signed_in', auth=auth)
@@ -248,6 +309,30 @@ def safelock(auth: Authentication):
 def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, interest_to_earn: float,
                      maturity_date: str, lock_duration: str, maturity_location: str, maturity_date_in_date: str,
                      auth: Authentication):
+    """ Previews the details of a Fixed Deposit before the Deposit is documented into the database.
+    A Safelock is a Fixed Deposit that is locked.
+
+    Parameters
+    ----------
+    safelock_title : str
+        Title of the safelock.
+    amount_to_lock : float
+        Amount the user wants to lock away for a certain period.
+    interest : str
+        Rate of Interest used to process the amount with respect to the period.
+    interest_to_earn : float
+        Amount of money to earn with respect to the interest allocated.
+    maturity_date : str
+        Maturity Date of the Fixed Deposit in (27th September 2024) format.
+    lock_duration : str
+        Amount of Days the Fixed Deposit will be locked.
+    maturity_location : str
+        Maturity Location of the funds after the lock duration is exhausted.
+    maturity_date_in_date : str
+        Maturity Date of the Fixed Deposit in (2024-09-27) format.
+    auth : Authentication
+        Contains the entire details of the User.
+    """
     try:
         _time = datetime.datetime.today().now().time()
         while True:
@@ -276,7 +361,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
             print('~~~~~~     ~~~~~')
             _input = input(">>> ").strip()
 
-            if re.search('^(goback|go back)$', _input, re.IGNORECASE):
+            if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
@@ -289,7 +374,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                     print('1. Yes  |  2. No')
                     print('~~~~~~     ~~~~~')
                     _input = input(">>> ").strip()
-                    if re.search('^(goback|go back)$', _input, re.IGNORECASE):
+                    if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                         del _input
                         time.sleep(1.5)
                         go_back('signed_in', auth=auth)
@@ -355,6 +440,13 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
 
 
 def create_safelock(auth: Authentication):
+    """ Creates a Fixed Deposit for a User.
+
+    Parameters
+    ----------
+    auth : Authentication
+        Contains the entire details of the User.
+    """
     try:
         time.sleep(1)
         header()
@@ -376,7 +468,7 @@ def create_safelock(auth: Authentication):
             print("[8] -: Above 2 years", "\t\t\t\t\t", "at ~ 15% p.a\n", sep='')
             _input = input(">>> ").strip()
 
-            if re.search('^(goback|go back)$', _input, re.IGNORECASE):
+            if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
@@ -574,46 +666,48 @@ def create_safelock(auth: Authentication):
         go_back('script')
 
 
-# pay interests to the account number immediately after deposit is made
-#
-# fixed_deposit(auth=auth)
+def ongoing_display_deposits(data: list, _details: list, _key: int):
+    """ Displays details of a specific ongoing deposit
 
-
-def display_deposits(auth: Authentication, data: list, test: list, key: int):
+    Parameters
+    ----------
+    data : list
+        Contains the details of the Deposit in a database format
+    _details : list
+        Contains the details of the Deposit in a structured pictorial format
+    _key : int
+        Gets the number of the selected Deposit
+    """
     try:
-        payback_time: datetime.time = data[key][8]
+        payback_time: datetime.time = data[_key][8]
 
-        if str(data[key][6].day)[-1] == '1':
-            start_date = f'{data[key][6].day}st {get_month(data[key][6].month)[0]} {data[key][6].year}'
-            payback_date = f'{data[key][7].day}st {get_month(data[key][7].month)[0]} {data[key][7].year}'
-        elif str(data[key][6].day)[-1] == '2':
-            start_date = f'{data[key][6].day}nd {get_month(data[key][6].month)[0]} {data[key][6].year}'
-            payback_date = f'{data[key][7].day}nd {get_month(data[key][7].month)[0]} {data[key][7].year}'
-        elif str(data[key][6].day)[-1] == '3':
-            start_date = f'{data[key][6].day}rd {get_month(data[key][6].month)[0]} {data[key][6].year}'
-            payback_date = f'{data[key][7].day}rd {get_month(data[key][7].month)[0]} {data[key][7].year}'
-        else:
-            start_date = f'{data[key][6].day}th {get_month(data[key][6].month)[0]} {data[key][6].year}'
-            payback_date = f'{data[key][7].day}th {get_month(data[key][7].month)[0]} {data[key][7].year}'
+        start_day = data[_key][6].day
+        payback_day = data[_key][7].day
+        start_suffix = get_ordinal_suffix(start_day)
+        payback_suffix = get_ordinal_suffix(payback_day)
+
+        # Format the start and payback dates
+        start_date = f'{start_day}{start_suffix} {get_month(data[_key][6].month)} {data[_key][6].year}'
+        payback_date = f'{payback_day}{payback_suffix} {get_month(data[_key][7].month)} {data[_key][7].year}'
 
         while True:
             header()
 
-            print()
-            print(test[key])
+            print('\n', _details[_key])
             print('\n')
 
             print(f"                 FIXED DEPOSIT DETAILS                    ")
             print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
             print(f'| Initial Deposit                  Total Interest Earned |')
             print(
-                f'| N{data[key][3]}{" " * (32 - len(str(data[key][3])))}N{data[key][5]}{" " * (21 - len(str(data[key][5])))}|')
+                f'| N{data[_key][3]}{" " * (32 - len(str(data[_key][3])))}N{data[_key][5]}'
+                f'{" " * (21 - len(str(data[_key][5])))}|')
             print(f"|                                                        |")
             print(f'| Start Date                       Payback Date          |')
             print(f'| {start_date}{" " * (33 - len(start_date))}{payback_date}{" " * (22 - len(payback_date))}|')
             print(f"|                                                        |")
             print(f'| Payback Time                     Safelock ID           |')
-            print(f'| {payback_time}{" " * (33 - 8)}{data[key][0]}{" " * (22 - len(data[key][0]))}|')
+            print(f'| {payback_time}{" " * (33 - 8)}{data[_key][0]}{" " * (22 - len(data[_key][0]))}|')
             print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n')
 
             print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
@@ -622,7 +716,7 @@ def display_deposits(auth: Authentication, data: list, test: list, key: int):
 
             user_input = input(">>> ").strip()
 
-            if re.search('^(go back|goback)$', user_input.strip().lower()):
+            if re.search('^.*(back|return).*$', user_input.strip().lower()):
                 pass
             elif re.search('^1$', user_input):
                 # top up
@@ -642,16 +736,81 @@ def display_deposits(auth: Authentication, data: list, test: list, key: int):
         go_back('script')
 
 
+def paid_display_deposits(data: list, _details: list, _key: int):
+    """ Displays details of a specific paid-back deposit
+
+    Parameters
+    ----------
+    data : list
+        Contains the details of the Deposit in a database format
+    _details : list
+        Contains the details of the Deposit in a structured pictorial format
+    _key : int
+        number of the selected Deposit
+    """
+    try:
+        payback_time: datetime.time = data[_key][8]
+
+        start_day = data[_key][6].day
+        payback_day = data[_key][7].day
+        start_suffix = get_ordinal_suffix(start_day)
+        payback_suffix = get_ordinal_suffix(payback_day)
+
+        # Format the start and payback dates
+        start_date = f'{start_day}{start_suffix} {get_month(data[_key][6].month)} {data[_key][6].year}'
+        payback_date = f'{payback_day}{payback_suffix} {get_month(data[_key][7].month)} {data[_key][7].year}'
+
+        while True:
+            header()
+
+            print('\n', _details[_key])
+
+            print(f"/n                 FIXED DEPOSIT DETAILS                    ")
+            print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+            print(f'| Initial Deposit                  Total Interest Earned |')
+            print(
+                f'| N{data[_key][3]}{" " * (32 - len(str(data[_key][3])))}N{data[_key][5]}'
+                f'{" " * (21 - len(str(data[_key][5])))}|')
+            print(f"|                                                        |")
+            print(f'| Start Date                       Payback Date          |')
+            print(f'| {start_date}{" " * (33 - len(start_date))}{payback_date}{" " * (22 - len(payback_date))}|')
+            print(f"|                                                        |")
+            print(f'| Payback Time                     Safelock ID           |')
+            print(f'| {payback_time}{" " * (33 - 8)}{data[_key][0]}{" " * (22 - len(data[_key][0]))}|')
+            print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n')
+
+            print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+            print(f'|                       1. RETURN                        |')
+            print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+
+            user_input = input(">>> ").strip()
+
+            if re.search('^.*(back|return).*$', user_input.strip().lower()):
+                pass
+            elif re.search('^(1|return)$', user_input):
+                break
+            else:
+                print(":: Digits only.")
+                time.sleep(2)
+                continue
+    except Exception as e:
+        with open('notification/error.txt', 'w') as file:
+            file.write(f'Module: fixed_deposit.py \nFunction: display_deposits \nError: {repr(e)}')
+        print(f'\nError: {repr(e)}')
+        time.sleep(3)
+        go_back('script')
+
+
 def ongoing_deposits(auth: Authentication):
     """ Displays the User's fixed deposits that are still running active.
 
-        Parameters
-        ----------
-        auth : Authentication
-              Contains the entire details of the User.
+    Parameters
+    ----------
+    auth : Authentication
+          Contains the entire details of the User.
     """
     try:
-        data, balance, days, days_remaining = auth.get_actives()
+        data, balance, days, days_remaining = auth.get_active()
         details = []
 
         while True:
@@ -663,7 +822,6 @@ def ongoing_deposits(auth: Authentication):
             if data:
                 for key, value in enumerate(data):
                     space = None
-                    value = None
 
                     if days_remaining[key] == 0:
                         value = 0
@@ -690,7 +848,7 @@ def ongoing_deposits(auth: Authentication):
 
                 user_input = input(">>> ").strip()
 
-                if re.search('^(go back|goback)$', user_input.strip().lower()):
+                if re.search('^.*(back|return).*$', user_input.strip().lower()):
                     del user_input
                     go_back_here('access_safelock', auth)
                 elif user_input.isdigit():
@@ -699,7 +857,7 @@ def ongoing_deposits(auth: Authentication):
                         time.sleep(2)
                         continue
                     else:
-                        display_deposits(auth, data, details, int(user_input) - 1)
+                        ongoing_display_deposits(data, details, int(user_input) - 1)
                         continue
                 else:
                     print("\n:: Digits only.")
@@ -726,7 +884,51 @@ def paid_back_deposits(auth: Authentication):
           Contains the entire details of the User.
     """
     try:
-        pass
+        data = auth.get_inactive()
+        details = []
+
+        while True:
+            header()
+
+            print("\nPAID BACK DEPOSITS")
+            print("~~~~~~~~~~~~~~~~~~\n")
+
+            if data:
+                for key, value in enumerate(data):
+
+                    details.append((f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+" + '\n'
+                                    + f"|                                                         |" + '\n'
+                                    + f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    |" + '\n'
+                                    + f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} |" + '\n'
+                                    + f"|      Unlocked{' ' * (50 - len('Unlocked'))} |" + '\n'
+                                    + f"|                                                         |" + '\n'
+                                    + f"| {brt_blue_bg}{' ' * 48} {end}  Paid |" + '\n'
+                                    + f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+"))
+
+                    print(details[key])
+                    print()
+
+                user_input = input(">>> ").strip()
+
+                if re.search('^.*(back|return).*$', user_input.strip().lower()):
+                    del user_input
+                    go_back_here('access_safelock', auth)
+                elif user_input.isdigit():
+                    if int(user_input) > len(data):
+                        print("\n:: Digits within the list only")
+                        time.sleep(2)
+                        continue
+                    else:
+                        paid_display_deposits(data, details, int(user_input) - 1)
+                        continue
+                else:
+                    print("\n:: Digits only.")
+                    time.sleep(2)
+                    continue
+            else:
+                print("You don't have any Paid Back Deposit")
+                time.sleep(5)
+                go_back_here('access_safelock', auth)
     except Exception as e:
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: paid_back_deposits \nError: {repr(e)}')
@@ -736,7 +938,8 @@ def paid_back_deposits(auth: Authentication):
 
 
 def access_safelock(auth: Authentication):
-    """ HomePage for a fixed deposit User.
+    """ To display the homepage for a fixed deposit user, providing options to view balance, ongoing deposits,
+    paid back deposits, and create new fixed deposits.
 
     Parameters
     ---------
@@ -744,7 +947,7 @@ def access_safelock(auth: Authentication):
           Contains the entire details of the User.
     """
     try:
-        data, balance, days, days_remaining = auth.get_actives()
+        data, balance, days, days_remaining = auth.get_active()
         sl_balance = f'N{balance:,.2f}'
         eye = 'HIDE'
         while True:
@@ -777,10 +980,10 @@ def access_safelock(auth: Authentication):
             elif re.search('^2$', user_input):
                 ongoing_deposits(auth)
             elif re.search('^3$', user_input):
-                pass
+                paid_back_deposits(auth)
             elif re.search('^4$', user_input):
                 create_safelock(auth)
-            elif re.search('^(go back|goback)$', user_input.strip().lower()):
+            elif re.search('^.*(back|return).*$', user_input.strip().lower()):
                 del user_input
                 go_back('signed_in', auth)
             else:

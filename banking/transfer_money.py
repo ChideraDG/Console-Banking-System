@@ -35,7 +35,7 @@ def beneficiaries(auth: Authentication, checking_beneficiary: bool = False) -> A
                             for key in beneficiary.keys():
                                 if _input == key:
                                     return beneficiary[key]
-                    elif _input.lower() == 'go back' or _input.lower() == 'goback':
+                    elif re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                         del _input
                         time.sleep(1.5)
                         go_back('signed_in', auth=auth)
@@ -60,7 +60,7 @@ def recipient_account_number(auth: Authentication):
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").strip()
 
-            if _input.lower() == 'go back' or _input.lower() == 'goback':
+            if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
@@ -86,7 +86,7 @@ def recipient_account_number(auth: Authentication):
                         auth.receiver_name = recipient_name
 
                         break
-                    elif _input.lower() == 'go back' or _input.lower() == 'goback':
+                    elif re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                         del _input
                         time.sleep(1.5)
                         go_back('signed_in', auth=auth)
@@ -123,7 +123,7 @@ def amount_to_be_transferred(auth: Authentication):
             print("~~~~~~~~~~~~~")
             _input = input(">>> ").strip()
 
-            if re.search('^(goback|go back)$', _input, re.IGNORECASE):
+            if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
@@ -185,7 +185,7 @@ def description(auth):
         print("~~~~~~~~~~~~~~~~~~")
         _input = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
+        if re.search('^.*(back|return).*$', _input.lower(), re.IGNORECASE):
             del _input
             time.sleep(1.5)
             go_back('signed_in', auth=auth)
@@ -209,7 +209,7 @@ def transaction_pin(auth: Authentication):
             print("~~~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").strip()
 
-            if re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
+            if re.search('^.*(back|return).*$', _input.lower(), re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
@@ -253,7 +253,7 @@ def session_token(auth: Authentication):
             print("~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").strip()
 
-            if re.search('^(goback|go back)$', _input.lower(), re.IGNORECASE):
+            if re.search('^.*(back|return).*$', _input.lower(), re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
@@ -334,7 +334,7 @@ def process_transfer(auth: Authentication):
                                                    _account_number=auth.receiver_acct_num)
 
                             print("\n:: Beneficiary Added Successfully")
-                        elif re.search('^(goback|go back)$', checking_input.lower(), re.IGNORECASE):
+                        elif re.search('^.*(back|return).*$', checking_input.lower(), re.IGNORECASE):
                             del checking_input
                             time.sleep(1.5)
                             go_back('signed_in', auth=auth)
@@ -373,7 +373,7 @@ def process_transfer(auth: Authentication):
                         print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
                         time.sleep(3)
                         break
-                elif re.search('^(goback|go back)$', user_input.lower(), re.IGNORECASE):
+                elif re.search('^.*(back|return).*$', user_input.lower(), re.IGNORECASE):
                     del user_input
                     time.sleep(1.5)
                     go_back('signed_in', auth=auth)

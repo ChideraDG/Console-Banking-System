@@ -14,23 +14,46 @@ account = Account()
 
 
 def countdown_timer(_register, _duty: str = 'creation', countdown: int = 3):
-    """Countdown for the bank or bvn creation. It enhances users' experience."""
+    """Countdown for any bank process.
+    It enhances users' experience.
+
+    Parameters
+    ----------
+    _register : str
+        A variable that holds some identifier or name related to the process being executed.
+    _duty : str
+        A variable that holds the task or duty related to the process being executed.
+    countdown : int
+        A variable that starts with a certain value
+        and is decremented until it reaches 0. Represents the time remaining.
+    """
+
     print()
     while countdown != 0:
         print(f"processing {_register} {_duty}... {countdown}", end='')
         countdown -= 1
         time.sleep(1)
+
+        # Move the cursor to the beginning of the line without adding a new line
         print(end='\r')
 
 
 def first_name() -> str:
-    """Gets the first name of the User."""
+    """To prompt the user to input their first name,
+    ensure the input is valid, and return the name formatted in title case.
+
+    Returns
+    -------
+    str:
+        A string representing the user's first name in title case.
+
+    """
     while True:
         print("\nInput your First Name:")
         print("~~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', name, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', name, re.IGNORECASE):
             del name
             go_back('script')
         else:
@@ -48,13 +71,20 @@ def first_name() -> str:
 
 
 def middle_name() -> str:
-    """Gets the middle name of the User."""
+    """Gets the middle name of the User.
+
+    Returns
+    --------
+    str:
+        Middle name of the User
+
+    """
     while True:
         print("\nInput your Middle Name:")
         print("~~~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', name, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', name, re.IGNORECASE):
             del name
             go_back('script')
         else:
@@ -78,7 +108,7 @@ def last_name() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~")
         name = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', name, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', name, re.IGNORECASE):
             del name
             go_back('script')
         else:
@@ -102,7 +132,7 @@ def gender() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~")
         _gender = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', _gender, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', _gender, re.IGNORECASE):
             del _gender
             go_back('script')
         else:
@@ -122,7 +152,7 @@ def address() -> str:
     print("~~~~~~~~~~~~~~~~~~~")
     _address = input(">>> ").strip()
 
-    if re.search('^(goback|go back)$', _address, re.IGNORECASE):
+    if re.search('^.*(back|return).*$', _address, re.IGNORECASE):
         del _address
         go_back('script')
     else:
@@ -141,7 +171,7 @@ def date_of_birth() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~~~")
         year_of_birth = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', year_of_birth, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', year_of_birth, re.IGNORECASE):
             del year_of_birth
             go_back('script')
         else:
@@ -165,7 +195,7 @@ def date_of_birth() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~")
         month_of_birth = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', month_of_birth, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', month_of_birth, re.IGNORECASE):
             del month_of_birth
             go_back('script')
         else:
@@ -228,7 +258,7 @@ def date_of_birth() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
         day_of_birth = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', day_of_birth, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', day_of_birth, re.IGNORECASE):
             del day_of_birth
             go_back('script')
         else:
@@ -253,7 +283,7 @@ def e_mail() -> str:
         print("~~~~~~~~~~~~~~~~~~")
         email = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', email, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', email, re.IGNORECASE):
             del email
             go_back('script')
         else:
@@ -280,7 +310,7 @@ def phone_number() -> str:
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
         phoneNumber = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', phoneNumber, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', phoneNumber, re.IGNORECASE):
             del phoneNumber
             go_back('script')
         else:
@@ -307,7 +337,7 @@ def account_type() -> str:
         print('1 -> Saving \n2 -> Current')
         accountType = input('>>> ')
 
-        if re.search('^(goback|go back)$', accountType, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', accountType, re.IGNORECASE):
             del accountType
             go_back('script')
         else:
@@ -333,7 +363,7 @@ def account_password() -> str:
         print("\nEnter Password:")
         accountPassword = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', accountPassword, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', accountPassword, re.IGNORECASE):
             del accountPassword
             go_back('script')
         else:
@@ -365,7 +395,7 @@ def transaction_pin():
         print("\nEnter Transaction Pin:")
         transactionPin = input(">>> ").strip()
 
-        if re.search('^(goback|go back)$', transactionPin, re.IGNORECASE):
+        if re.search('^.*(back|return).*$', transactionPin, re.IGNORECASE):
             del transactionPin
             go_back('script')
         else:

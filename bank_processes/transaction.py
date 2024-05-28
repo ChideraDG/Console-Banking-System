@@ -109,7 +109,7 @@ class Transaction(Account, ABC):
             if sender:
                 print('                      {bold}TRANSACTION RECEIPT')
                 print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-                print('| Recipient                                                    |\n')
+                print('| Recipient                                                    |')
                 print(f'| {bold}{self.receiver_name}{' ' * (52 - (len(self.receiver_name) - 9))}|\n')
                 print('| Recipient Bank                   Amount                      |')
                 print(f'| {bold}Console Beta Bank         {bold}{self.receiver_acct_num}')

@@ -527,11 +527,13 @@ def ongoing_display_deposits(data: list, _details: list, _key: int):
     _details : list
         Contains the details of the Deposit in a structured pictorial format
     _key : int
-        Gets the number of the selected Deposit
+        Number of the selected Deposit
     """
     try:
+        # Extract the payback time for the selected deposit
         payback_time: datetime.time = data[_key][8]
 
+        # Extract the start and payback dates
         start_day = data[_key][6].day
         payback_day = data[_key][7].day
         start_suffix = get_ordinal_suffix(start_day)
@@ -544,6 +546,7 @@ def ongoing_display_deposits(data: list, _details: list, _key: int):
         while True:
             header()
 
+            # Display the details in a structured format
             print('\n', _details[_key])
             print('\n')
 
@@ -597,11 +600,13 @@ def paid_display_deposits(data: list, _details: list, _key: int):
     _details : list
         Contains the details of the Deposit in a structured pictorial format
     _key : int
-        number of the selected Deposit
+        Number of the selected Deposit
     """
     try:
+        # Extract the payback time for the selected deposit
         payback_time: datetime.time = data[_key][8]
 
+        # Extract the start and payback dates
         start_day = data[_key][6].day
         payback_day = data[_key][7].day
         start_suffix = get_ordinal_suffix(start_day)
@@ -614,6 +619,7 @@ def paid_display_deposits(data: list, _details: list, _key: int):
         while True:
             header()
 
+            # Display the details in a structured format
             print('\n', _details[_key])
 
             print(f"/n                 FIXED DEPOSIT DETAILS                    ")
@@ -637,7 +643,7 @@ def paid_display_deposits(data: list, _details: list, _key: int):
             user_input = input(">>> ").strip()
 
             if re.search('^.*(back|return).*$', user_input.strip().lower()):
-                pass
+                break
             elif re.search('^(1|return)$', user_input):
                 break
             else:
@@ -661,6 +667,7 @@ def ongoing_deposits(auth: Authentication):
           Contains the entire details of the User.
     """
     try:
+        # Fetch active (ongoing) deposit details
         data, balance, days, days_remaining = auth.get_active()
         details = []
 
@@ -672,18 +679,17 @@ def ongoing_deposits(auth: Authentication):
 
             if data:
                 for key, value in enumerate(data):
-                    space = '  ' if len(str(days_remaining[key])) == 2 else ' ' \
-                        if len(str(days_remaining[key])) == 3 else '   '
+                    # Determine space based on length of days_remaining
+                    space = '  ' if len(str(days_remaining[key])) == 2 else ' ' if len(
+                        str(days_remaining[key])) == 3 else '   '
+
+                    # Calculate progress bar lengths
                     bar_length = 46
-
-                    if days_remaining[key] == 0:
-                        progress_length = 0
-                    else:
-                        progress_length = bar_length // days[key]
-
+                    progress_length = 0 if days_remaining[key] == 0 else bar_length // days[key]
                     progress = progress_length * (days[key] - days_remaining[key])
                     remaining = bar_length - progress
 
+                    # Format each deposit detail for display
                     detail = (f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"
                               f"|                                                         |\n"
                               f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    |\n"
@@ -697,23 +703,21 @@ def ongoing_deposits(auth: Authentication):
                     details.append(detail)
                     print(detail, '\n')
 
+                # Get user input
                 user_input = input(">>> ").strip()
 
                 if re.search('^.*(back|return).*$', user_input.strip().lower()):
-                    del user_input
-                    go_back_here('access_safelock', auth)
+                    go_back_here('access_safelock', auth)  # Go back to the previous menu
                 elif user_input.isdigit():
-                    if int(user_input) > len(data):
+                    user_selection = int(user_input)
+                    if user_selection > len(data):
                         print("\n:: Digits within the list only")
                         time.sleep(2)
-                        continue
                     else:
-                        ongoing_display_deposits(data, details, int(user_input) - 1)
-                        continue
+                        ongoing_display_deposits(data, details, user_selection - 1)
                 else:
                     print("\n:: Digits only.")
                     time.sleep(2)
-                    continue
             else:
                 print("You don't have any Ongoing Deposit")
                 time.sleep(5)
@@ -735,6 +739,7 @@ def paid_back_deposits(auth: Authentication):
           Contains the entire details of the User.
     """
     try:
+        # Fetch inactive (paid back) deposit details
         data = auth.get_inactive()
         details = []
 
@@ -746,6 +751,7 @@ def paid_back_deposits(auth: Authentication):
 
             if data:
                 for key, value in enumerate(data):
+                    # Format each deposit detail for display
                     detail = (f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"
                               f"|                                                         |\n"
                               f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    |\n"
@@ -758,23 +764,21 @@ def paid_back_deposits(auth: Authentication):
                     details.append(detail)
                     print(detail, '\n')
 
+                # Get user input
                 user_input = input(">>> ").strip()
 
                 if re.search('^.*(back|return).*$', user_input.strip().lower()):
-                    del user_input
-                    go_back_here('access_safelock', auth)
+                    go_back_here('access_safelock', auth)  # Go back to the previous menu
                 elif user_input.isdigit():
-                    if int(user_input) > len(data):
+                    user_selection = int(user_input)
+                    if user_selection > len(data):
                         print("\n:: Digits within the list only")
                         time.sleep(2)
-                        continue
                     else:
-                        paid_display_deposits(data, details, int(user_input) - 1)
-                        continue
+                        paid_display_deposits(data, details, user_selection - 1)
                 else:
                     print("\n:: Digits only.")
                     time.sleep(2)
-                    continue
             else:
                 print("You don't have any Paid Back Deposit")
                 time.sleep(5)
@@ -797,17 +801,20 @@ def access_safelock(auth: Authentication):
           Contains the entire details of the User.
     """
     try:
+        # Fetch active fixed deposit details
         data, balance, days, days_remaining = auth.get_active()
-        sl_balance = f'N{balance:,.2f}'
-        eye = 'HIDE'
+        sl_balance = f'N{balance:,.2f}'  # Format the balance for display
+        eye = 'HIDE'  # Initial state to show the balance
+
         while True:
+            # Display the header and fixed deposit information
             header()
-            print(f"{bold}{brt_black_bg}{brt_red}" + f"\n8% - 15% per annum{end}")
+            print(f"{bold}{brt_black_bg}{brt_red}\n8% - 15% per annum{end}")
 
             print(f"{bold}{brt_black_bg}{brt_yellow}")
             print("Fixed Deposit Balance" + f"{end}")
 
-            print(f'{bold}{sl_balance}{end} \n')
+            print(f'{bold}{sl_balance}{end}\n')
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
             print(f"|                   1. {eye} BALANCE                       |")
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
@@ -816,30 +823,31 @@ def access_safelock(auth: Authentication):
             print("|              4. CREATE A NEW FIXED DEPOSIT              |")
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
+            # Get user input
             user_input = input(">>> ").strip()
 
             if re.search('^1$', user_input):
+                # Toggle balance visibility
                 if eye == 'SHOW':
                     eye = 'HIDE'
-                    sl_balance = f'N{balance:,.2f}'
+                    sl_balance = f'N{balance:,.2f}'  # Show balance
                 else:
-                    sl_balance = ' * * * * *'
+                    sl_balance = ' * * * * *'  # Hide balance
                     eye = 'SHOW'
-
                 continue
             elif re.search('^2$', user_input):
-                ongoing_deposits(auth)
+                ongoing_deposits(auth)  # View ongoing deposits
             elif re.search('^3$', user_input):
-                paid_back_deposits(auth)
+                paid_back_deposits(auth)  # View paid back deposits
             elif re.search('^4$', user_input):
-                create_safelock(auth)
+                create_safelock(auth)  # Create a new fixed deposit
             elif re.search('^.*(back|return).*$', user_input.strip().lower()):
-                del user_input
-                go_back('signed_in', auth)
+                go_back('signed_in', auth)  # Go back to the signed-in menu
             else:
-                del user_input
+                print("\n:: Invalid input, please try again.")
+                time.sleep(2)
                 continue
-            break
+            break  # Exit loop after handling the input
     except Exception as e:
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: access_safelock \nError: {repr(e)}')

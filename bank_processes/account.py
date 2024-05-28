@@ -593,12 +593,12 @@ class FixedDeposit(Account, ABC):
         data = list(self.database.fetch_data(query))
 
         total_balance = 0
-        days = []
-        days_remaining = []
+
         for item in data:
             total_balance += item[3]
-            days.append((item[7] - item[6]).days)
-            days_remaining.append((item[7] - datetime.datetime.today().date()).days)
+
+        days = [(item[7] - item[6]).days for item in data]
+        days_remaining = [(item[7] - datetime.datetime.today().date()).days for item in data]
 
         return data, total_balance, days, days_remaining
 

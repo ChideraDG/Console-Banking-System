@@ -47,7 +47,6 @@ def username():
                     go_back('script')
                     break
                 elif check_account_status(_username)[0]:
-                    print('me')
                     auth.username = _username
                     return _username
             else:

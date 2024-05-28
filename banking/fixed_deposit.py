@@ -440,7 +440,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
 
 
 def create_safelock(auth: Authentication):
-    """ Creates a Fixed Deposit for a User.
+    """Creates a Fixed Deposit for a User.
 
     Parameters
     ----------
@@ -454,18 +454,30 @@ def create_safelock(auth: Authentication):
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         print("'You want a new Fixed Deposit Account. Let's Create one for You.'")
         time.sleep(3)
+
+        duration_options = {
+            '1': (10, 30, 8),
+            '2': (31, 60, 9),
+            '3': (61, 90, 11),
+            '4': (91, 180, 11.5),
+            '5': (181, 270, 13.5),
+            '6': (271, 365, 14),
+            '7': (366, 730, 14.5),
+            '8': (731, 1000, 15),
+        }
+
         while True:
             header()
             print("\nHow long do you want to lock funds?")
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            print("[1] -: 10 - 30 days", "\t\t\t\t\t", "at ~ 8% p.a\n", sep='')
-            print("[2] -: 31 - 60 days", "\t\t\t\t\t", "at ~ 9% p.a\n", sep='')
-            print("[3] -: 61 - 90 days", "\t\t\t\t\t", "at ~ 11% p.a\n", sep='')
-            print("[4] -: 91 - 180 days", "\t\t\t\t\t", "at ~ 11.5% p.a\n", sep='')
-            print("[5] -: 181 - 270 days", "\t\t\t\t\t", "at ~ 13.5% p.a\n", sep='')
-            print("[6] -: 271 - 365 days", "\t\t\t\t\t", "at ~ 14% p.a\n", sep='')
-            print("[7] -: Above 1 - 2 years", "\t\t\t\t", "at ~ 14.5% p.a\n", sep='')
-            print("[8] -: Above 2 years", "\t\t\t\t\t", "at ~ 15% p.a\n", sep='')
+            print("[1] -: 10 - 30 days\t\t\t\t\tat ~ 8% p.a")
+            print("[2] -: 31 - 60 days\t\t\t\t\tat ~ 9% p.a")
+            print("[3] -: 61 - 90 days\t\t\t\t\tat ~ 11% p.a")
+            print("[4] -: 91 - 180 days\t\t\t\t\tat ~ 11.5% p.a")
+            print("[5] -: 181 - 270 days\t\t\t\t\tat ~ 13.5% p.a")
+            print("[6] -: 271 - 365 days\t\t\t\t\tat ~ 14% p.a")
+            print("[7] -: Above 1 - 2 years\t\t\t\tat ~ 14.5% p.a")
+            print("[8] -: Above 2 years\t\t\t\t\tat ~ 15% p.a")
             _input = input(">>> ").strip()
 
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
@@ -473,191 +485,30 @@ def create_safelock(auth: Authentication):
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
                 break
+            elif _input in duration_options:
+                start_day, end_day, percentage_rate = duration_options[_input]
+                date = datetime.datetime.today()
+                deposit_amount, deposit_title = safelock(auth)
+                dates, lock_duration, maturity_location = payback_date(
+                    date.year, date.month, date.day, start_day, end_day,
+                    auth, deposit_amount=deposit_amount, percentage_rate=percentage_rate
+                )
+                preview_safelock(
+                    safelock_title=deposit_title,
+                    amount_to_lock=deposit_amount,
+                    interest=dates[0],
+                    interest_to_earn=float(dates[1]),
+                    maturity_date=dates[2],
+                    lock_duration=lock_duration,
+                    maturity_location=maturity_location,
+                    maturity_date_in_date=dates[3],
+                    auth=auth,
+                )
+                access_safelock(auth)
+                break
             else:
-                if re.search('^[1-8]$', _input) is None:
-                    print("\n:: Wrong Input")
-                    time.sleep(2)
-                    continue
-                else:
-                    date = datetime.datetime.today()
-                    if _input == '1':
-                        start_day = 10
-                        end_day = 30
-                        deposit_amount, deposit_title = safelock(auth)
-                        dates, lock_duration, maturity_location = (
-                            payback_date(
-                                date.year, date.month, date.day, start_day, end_day,
-                                auth, deposit_amount=deposit_amount, percentage_rate=8
-                            )
-                        )
-
-                        preview_safelock(
-                            safelock_title=deposit_title,
-                            amount_to_lock=deposit_amount,
-                            interest=dates[0],
-                            interest_to_earn=float(dates[1]),
-                            maturity_date=dates[2],
-                            lock_duration=lock_duration,
-                            maturity_location=maturity_location,
-                            maturity_date_in_date=dates[3],
-                            auth=auth,
-                        )
-                    elif _input == '2':
-                        start_day = 31
-                        end_day = 60
-                        deposit_amount, deposit_title = safelock(auth)
-                        dates, lock_duration, maturity_location = (
-                            payback_date(
-                                date.year, date.month, date.day, start_day, end_day,
-                                auth, deposit_amount=deposit_amount, percentage_rate=9
-                            )
-                        )
-
-                        preview_safelock(
-                            safelock_title=deposit_title,
-                            amount_to_lock=deposit_amount,
-                            interest=dates[0],
-                            interest_to_earn=float(dates[1]),
-                            maturity_date=dates[2],
-                            lock_duration=lock_duration,
-                            maturity_location=maturity_location,
-                            maturity_date_in_date=dates[3],
-                            auth=auth,
-                        )
-                    elif _input == '3':
-                        start_day = 61
-                        end_day = 90
-                        deposit_amount, deposit_title = safelock(auth)
-                        dates, lock_duration, maturity_location = (
-                            payback_date(
-                                date.year, date.month, date.day, start_day, end_day,
-                                auth, deposit_amount=deposit_amount, percentage_rate=11
-                            )
-                        )
-
-                        preview_safelock(
-                            safelock_title=deposit_title,
-                            amount_to_lock=deposit_amount,
-                            interest=dates[0],
-                            interest_to_earn=float(dates[1]),
-                            maturity_date=dates[2],
-                            lock_duration=lock_duration,
-                            maturity_location=maturity_location,
-                            maturity_date_in_date=dates[3],
-                            auth=auth,
-                        )
-                    elif _input == '4':
-                        start_day = 91
-                        end_day = 180
-                        deposit_amount, deposit_title = safelock(auth)
-                        dates, lock_duration, maturity_location = (
-                            payback_date(
-                                date.year, date.month, date.day, start_day, end_day,
-                                auth, deposit_amount=deposit_amount, percentage_rate=11.5
-                            )
-                        )
-
-                        preview_safelock(
-                            safelock_title=deposit_title,
-                            amount_to_lock=deposit_amount,
-                            interest=dates[0],
-                            interest_to_earn=float(dates[1]),
-                            maturity_date=dates[2],
-                            lock_duration=lock_duration,
-                            maturity_location=maturity_location,
-                            maturity_date_in_date=dates[3],
-                            auth=auth,
-                        )
-                    elif _input == '5':
-                        start_day = 181
-                        end_day = 270
-                        deposit_amount, deposit_title = safelock(auth)
-                        dates, lock_duration, maturity_location = (
-                            payback_date(
-                                date.year, date.month, date.day, start_day, end_day,
-                                auth, deposit_amount=deposit_amount, percentage_rate=13.5
-                            )
-                        )
-
-                        preview_safelock(
-                            safelock_title=deposit_title,
-                            amount_to_lock=deposit_amount,
-                            interest=dates[0],
-                            interest_to_earn=float(dates[1]),
-                            maturity_date=dates[2],
-                            lock_duration=lock_duration,
-                            maturity_location=maturity_location,
-                            maturity_date_in_date=dates[3],
-                            auth=auth,
-                        )
-                    elif _input == '6':
-                        start_day = 270
-                        end_day = 365
-                        deposit_amount, deposit_title = safelock(auth)
-                        dates, lock_duration, maturity_location = (
-                            payback_date(
-                                date.year, date.month, date.day, start_day, end_day,
-                                auth, deposit_amount=deposit_amount, percentage_rate=14
-                            )
-                        )
-
-                        preview_safelock(
-                            safelock_title=deposit_title,
-                            amount_to_lock=deposit_amount,
-                            interest=dates[0],
-                            interest_to_earn=float(dates[1]),
-                            maturity_date=dates[2],
-                            lock_duration=lock_duration,
-                            maturity_location=maturity_location,
-                            maturity_date_in_date=dates[3],
-                            auth=auth,
-                        )
-                    elif _input == '7':
-                        start_day = 366
-                        end_day = 730
-                        deposit_amount, deposit_title = safelock(auth)
-                        dates, lock_duration, maturity_location = (
-                            payback_date(
-                                date.year, date.month, date.day, start_day, end_day,
-                                auth, deposit_amount=deposit_amount, percentage_rate=14.5
-                            )
-                        )
-
-                        preview_safelock(
-                            safelock_title=deposit_title,
-                            amount_to_lock=deposit_amount,
-                            interest=dates[0],
-                            interest_to_earn=float(dates[1]),
-                            maturity_date=dates[2],
-                            lock_duration=lock_duration,
-                            maturity_location=maturity_location,
-                            maturity_date_in_date=dates[3],
-                            auth=auth,
-                        )
-                    elif _input == '8':
-                        start_day = 731
-                        end_day = 1000
-                        deposit_amount, deposit_title = safelock(auth)
-                        dates, lock_duration, maturity_location = (
-                            payback_date(
-                                date.year, date.month, date.day, start_day, end_day,
-                                auth, deposit_amount=deposit_amount, percentage_rate=15
-                            )
-                        )
-
-                        preview_safelock(
-                            safelock_title=deposit_title,
-                            amount_to_lock=deposit_amount,
-                            interest=dates[0],
-                            interest_to_earn=float(dates[1]),
-                            maturity_date=dates[2],
-                            lock_duration=lock_duration,
-                            maturity_location=maturity_location,
-                            maturity_date_in_date=dates[3],
-                            auth=auth,
-                        )
-            access_safelock(auth)
-            break
+                print("\n:: Wrong Input")
+                time.sleep(2)
     except Exception as e:
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: create_safelock \nError: {repr(e)}')
@@ -821,30 +672,30 @@ def ongoing_deposits(auth: Authentication):
 
             if data:
                 for key, value in enumerate(data):
-                    space = None
+                    space = '  ' if len(str(days_remaining[key])) == 2 else ' ' \
+                        if len(str(days_remaining[key])) == 3 else '   '
+                    bar_length = 46
 
                     if days_remaining[key] == 0:
-                        value = 0
+                        progress_length = 0
                     else:
-                        value = (46 // days[key])
+                        progress_length = bar_length // days[key]
 
-                    if len(str(days[key])) == 2:
-                        space = '  '
-                    elif len(str(days[key])) == 3:
-                        space = ' '
-                    details.append((f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+" + '\n'
-                                    + f"|                                                         |" + '\n'
-                                    + f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    |" + '\n'
-                                    + f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} |" + '\n'
-                                    + f"|      Locked{' ' * (50 - len('locked'))} |" + '\n'
-                                    + f"|                                                         |" + '\n'
-                                    + f"| {brt_blue_bg}{' ' * (value * (days[key] - days_remaining[key]))}"
-                                      f"{brt_white_bg}{' ' * (46 - (value * (days[key] - days_remaining[key])))}{end} "
-                                      f"{days_remaining[key]} days{space}|" + '\n'
-                                    + f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+"))
+                    progress = progress_length * (days[key] - days_remaining[key])
+                    remaining = bar_length - progress
 
-                    print(details[key])
-                    print()
+                    detail = (f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"
+                              f"|                                                         |\n"
+                              f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    |\n"
+                              f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} |\n"
+                              f"|      Locked{' ' * (50 - len('locked'))} |\n"
+                              f"|                                                         |\n"
+                              f"| {brt_blue_bg}{' ' * progress}{brt_white_bg}{' ' * remaining}{end} "
+                              f"{days_remaining[key]} days{space}|\n"
+                              f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+
+                    details.append(detail)
+                    print(detail, '\n')
 
                 user_input = input(">>> ").strip()
 
@@ -895,18 +746,17 @@ def paid_back_deposits(auth: Authentication):
 
             if data:
                 for key, value in enumerate(data):
+                    detail = (f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"
+                              f"|                                                         |\n"
+                              f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    |\n"
+                              f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} |\n"
+                              f"|      Unlocked{' ' * (50 - len('Unlocked'))} |\n"
+                              f"|                                                         |\n"
+                              f"| {brt_blue_bg}{' ' * 48} {end}  Paid |\n"
+                              f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
-                    details.append((f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+" + '\n'
-                                    + f"|                                                         |" + '\n'
-                                    + f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    |" + '\n'
-                                    + f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} |" + '\n'
-                                    + f"|      Unlocked{' ' * (50 - len('Unlocked'))} |" + '\n'
-                                    + f"|                                                         |" + '\n'
-                                    + f"| {brt_blue_bg}{' ' * 48} {end}  Paid |" + '\n'
-                                    + f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+"))
-
-                    print(details[key])
-                    print()
+                    details.append(detail)
+                    print(detail, '\n')
 
                 user_input = input(">>> ").strip()
 

@@ -3,6 +3,7 @@ import random
 from abc import ABC
 from typing import Tuple, Any
 from prettytable import PrettyTable
+from animation.colors import *
 from pymysql.cursors import DictCursor
 from bank_processes.account import Account
 
@@ -102,9 +103,29 @@ class Transaction(Account, ABC):
                     """
             self.database.query(query)
 
-    def transaction_receipts(self):
+    def transaction_receipts(self, receipt: bool = False, sender: bool = False, receiver: bool = False):
         """Method to generate receipts for each transaction made"""
-        pass
+        if receipt:
+            if sender:
+                print('                      {bold}TRANSACTION RECEIPT')
+                print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
+                print('| Recipient                                                    |')
+                print(f'| {bold}{self.receiver_name}{' ' * (52 - (len(self.receiver_name) - 9))}|\n')
+                print('| Recipient Bank                   Amount                      |')
+                print(f'| {bold}Console Beta Bank         {bold}{self.receiver_acct_num}')
+                print('|                                                              |')
+                print('| Description                                                  |')
+                print(f'| {bold}{self.description}')
+                print('|                                                              |')
+                print(f'Sent {bold}{self.amount} to Console Beta Bank-{bold}{self.receiver_acct_num}')
+                print('|                                                              |')
+                print(f'| Date                                                         |')
+                print(f'| {bold}{self.__transaction_date_time}')
+                print('|                                                              |')
+                print('| Transaction type                Transaction status           |')
+                print(f'| {bold}{self.transaction_type}                    {bold}{self.__transaction_status}')
+                print('|                                                              |')
+                print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+\n')
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""

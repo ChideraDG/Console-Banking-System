@@ -1,0 +1,3 @@
+Module: login_panel.py 
+Function: login 
+Error: OperationalError(1054, "Unknown column 'fixed_account' in 'field list'")

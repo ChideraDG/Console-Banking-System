@@ -181,22 +181,9 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
 
                 print(f'[{day}] -> {current_day}/{_month}/{current_year} - {rate_of_interest:.2f}%', end='\t\t\t\t\t')
 
-                if str(current_day)[-1] == '1':
-                    dates[f'{day}'] = [f'{rate_of_interest:.3f}%', f'{interest:.3f}',
-                                       f'{current_day}st {_month} {current_year}',
-                                       f'{current_year}-{current_month}-{current_day}']
-                elif str(current_day)[-1] == '2':
-                    dates[f'{day}'] = [f'{rate_of_interest:.3f}%', f'{interest:.3f}',
-                                       f'{current_day}nd {_month} {current_year}',
-                                       f'{current_year}-{current_month}-{current_day}']
-                elif str(current_day)[-1] == '3':
-                    dates[f'{day}'] = [f'{rate_of_interest:.3f}%', f'{interest:.3f}',
-                                       f'{current_day}rd {_month} {current_year}',
-                                       f'{current_year}-{current_month}-{current_day}']
-                else:
-                    dates[f'{day}'] = [f'{rate_of_interest:.3f}%', f'{interest:.3f}',
-                                       f'{current_day}th {_month} {current_year}',
-                                       f'{current_year}-{current_month}-{current_day}']
+                dates[f'{day}'] = [f'{rate_of_interest:.3f}%', f'{interest:.3f}',
+                                   f'{current_day}{get_ordinal_suffix(current_day)} {_month} {current_year}',
+                                   f'{current_year}-{current_month}-{current_day}']
 
                 current_day += 1
 

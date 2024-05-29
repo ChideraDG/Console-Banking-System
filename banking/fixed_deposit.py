@@ -2,15 +2,12 @@ import datetime
 import re
 import time
 import random
+from typing import Tuple
+
 from animation.colors import *
 from bank_processes.authentication import Authentication, verify_data
 from banking.register_panel import countdown_timer
 from banking.script import go_back, header
-
-
-def go_back_here(return_place, auth: Authentication = None):
-    if return_place == 'access_safelock':
-        access_safelock(auth)
 
 
 def get_month(month: int) -> tuple[str, int]:
@@ -218,13 +215,18 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
         go_back('script')
 
 
-def safelock(auth: Authentication):
+def safelock(auth: Authentication) -> tuple[float, str]:
     """ Filling the form for Amount to Deposit.
 
     Parameters
     ----------
     auth : Authentication
         Contains the entire details of the User.
+
+    Returns
+    -------
+    tuple[float, str]
+        amount to be deposited and the deposition title.
     """
     try:
         while True:
@@ -351,7 +353,6 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
-                go_back('signed_in', auth=auth)
                 break
             else:
                 if re.search('^(1|yes)$', _input, re.IGNORECASE):
@@ -364,7 +365,6 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                     if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                         del _input
                         time.sleep(1.5)
-                        go_back('signed_in', auth=auth)
                         break
                     else:
                         if re.search('^(1|yes)$', _input, re.IGNORECASE):
@@ -401,7 +401,6 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                         elif re.search('^(2|no)$', _input, re.IGNORECASE):
                             del _input
                             time.sleep(1.5)
-                            go_back('signed_in', auth=auth)
                             break
                         else:
                             print("\n:: Wrong Input")
@@ -411,7 +410,6 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                 elif re.search('^(2|no)$', _input, re.IGNORECASE):
                     del _input
                     time.sleep(1.5)
-                    go_back('signed_in', auth=auth)
                     break
                 else:
                     print("\n:: Wrong Input")
@@ -470,7 +468,6 @@ def create_safelock(auth: Authentication):
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
-                go_back('signed_in', auth=auth)
                 break
             elif _input in duration_options:
                 start_day, end_day, percentage_rate = duration_options[_input]
@@ -505,7 +502,7 @@ def create_safelock(auth: Authentication):
 
 
 days_left: int = 0
-deposit_id, deposit, interest_earned = (None, 0.0, 0.0)
+deposit_id, deposit, interest_earned = ('', 0.0, 0.0)
 upfront_interest = 0
 
 
@@ -543,6 +540,8 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
             for key, value in duration_options.items():
                 if value[0] <= days_left <= value[1]:
                     upfront_interest = value[2]
+                elif 10 > days_left:
+                    upfront_interest = 8
 
             header()
 
@@ -554,7 +553,6 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
             if re.search('^.*(back|return).*$', deposit_amount, re.IGNORECASE):
                 del deposit_amount
                 time.sleep(1.5)
-                go_back('signed_in', auth=auth)
                 break
             else:
                 # Check for invalid input
@@ -568,7 +566,6 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
                     if not auth.transaction_validation(transfer_limit=True)[0]:
                         print(f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}")
                         time.sleep(3)
-                        go_back('signed_in', auth=auth)
                         break
 
                     if not auth.transaction_validation(amount=True)[0]:
@@ -596,7 +593,6 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
                     if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                         del _input
                         time.sleep(1.5)
-                        go_back('signed_in', auth=auth)
                         break
                     elif re.search('^(1|yes)$', _input, re.IGNORECASE):
                         # Update deposit details and process transaction
@@ -614,8 +610,10 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
                         auth.transaction_record(fixed_deposit=True)
 
                         auth.update_deposit(deposit_id)
+
+                        countdown_timer(_register='Top Up deposit', _duty='', countdown=5)
                         print("\n:: Deposit Successfully Topped Up.")
-                        time.sleep(3)
+                        time.sleep(2)
                         break
                     elif re.search('^(2|no)$', _input, re.IGNORECASE):
                         time.sleep(1)
@@ -785,13 +783,13 @@ def ongoing_deposits(auth: Authentication):
         Contains the entire details of the User.
     """
     try:
-        # Fetch active (ongoing) deposit details
-        data, balance, days, days_remaining = auth.get_active()
-        details = []
-        global days_left
-        global deposit_id, deposit, interest_earned
-
         while True:
+            # Fetch active (ongoing) deposit details
+            data, balance, days, days_remaining = auth.get_active()
+            details = []
+            global days_left
+            global deposit_id, deposit, interest_earned
+
             header()
 
             print("\nONGOING DEPOSITS")
@@ -827,7 +825,7 @@ def ongoing_deposits(auth: Authentication):
                 user_input = input(">>> ").strip()
 
                 if re.search('^.*(back|return).*$', user_input.strip().lower()):
-                    go_back_here('access_safelock', auth)  # Go back to the previous menu
+                    break  # Go back to the previous menu
                 elif user_input.isdigit():
                     user_selection = int(user_input)
                     if user_selection > len(data):
@@ -838,14 +836,14 @@ def ongoing_deposits(auth: Authentication):
                         deposit_id, deposit, interest_earned = (
                             data[user_selection - 1][0], data[user_selection - 1][3], data[user_selection - 1][5])
                         ongoing_display_deposits(auth, data, details, user_selection - 1)
-                        break
+                        continue
                 else:
                     print("\n:: Digits only.")
                     time.sleep(2)
             else:
                 print("You don't have any Ongoing Deposit")
                 time.sleep(5)
-                go_back_here('access_safelock', auth)
+                break
     except Exception as e:
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: ongoing_deposits \nError: {repr(e)}')
@@ -892,7 +890,7 @@ def paid_back_deposits(auth: Authentication):
                 user_input = input(">>> ").strip()
 
                 if re.search('^.*(back|return).*$', user_input.strip().lower()):
-                    go_back_here('access_safelock', auth)  # Go back to the previous menu
+                    break  # Go back to the previous menu
                 elif user_input.isdigit():
                     user_selection = int(user_input)
                     if user_selection > len(data):
@@ -905,8 +903,8 @@ def paid_back_deposits(auth: Authentication):
                     time.sleep(2)
             else:
                 print("You don't have any Paid Back Deposit")
-                time.sleep(5)
-                go_back_here('access_safelock', auth)
+                time.sleep(3.5)
+                break
     except Exception as e:
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: paid_back_deposits \nError: {repr(e)}')
@@ -961,12 +959,15 @@ def access_safelock(auth: Authentication):
                 continue
             elif re.search('^2$', user_input):
                 ongoing_deposits(auth)  # View ongoing deposits
+                continue
             elif re.search('^3$', user_input):
                 paid_back_deposits(auth)  # View paid back deposits
+                continue
             elif re.search('^4$', user_input):
                 create_safelock(auth)  # Create a new fixed deposit
+                continue
             elif re.search('^.*(back|return).*$', user_input.strip().lower()):
-                go_back('signed_in', auth)  # Go back to the signed-in menu
+                pass  # Go back to the signed-in menu
             else:
                 print("\n:: Invalid input, please try again.")
                 time.sleep(2)

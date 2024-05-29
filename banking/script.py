@@ -138,6 +138,7 @@ def signed_in(auth: Authentication):
     """Function to sign in Users with a Savings or Current account"""
     from banking import transfer_money
     from banking import fixed_deposit
+    from banking.login_panel import login
 
     try:
         if auth.account_type == 'savings' or auth.account_type == 'current':
@@ -207,14 +208,16 @@ def signed_in(auth: Authentication):
                 elif re.search('^18$', user_input):
                     if auth.fixed_account == 'yes':
                         fixed_deposit.access_safelock(auth)
-                    if auth.fixed_account == 'no':
+                        continue
+                    elif auth.fixed_account == 'no':
                         fixed_deposit.create_safelock(auth)
+                        continue
                 elif re.search('^19$', user_input):
                     auth.user_logout()
                     del user_input
-                    go_back('script')
+                    login()
                     break
-                elif re.search('^(go back|goback)$', user_input.strip().lower()):
+                elif re.search('^.*(back|return).*$', user_input.strip().lower()):
                     auth.user_logout()
                     del user_input
                     go_back('script')
@@ -222,7 +225,6 @@ def signed_in(auth: Authentication):
                 else:
                     del user_input
                     continue
-                break
     except Exception as e:
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: script.py \nFunction: signed_in \nError: {repr(e)}')

@@ -1,3 +1,3 @@
-Module: script.py 
-Function: signed_in 
-Error: OperationalError(2006, "MySQL server has gone away (BrokenPipeError(32, 'Broken pipe'))")
+Module: fixed_deposit.py 
+Function: top_up_deposit 
+Error: TypeError("unsupported operand type(s) for +: 'float' and 'NoneType'")

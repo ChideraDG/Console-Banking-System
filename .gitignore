@@ -9,3 +9,5 @@ bank_processes/__pycache__
 banking/__pycache__/fixed_deposit.cpython-312.pyc
 /bank_processes/__pycache__
 /banking
+bank_processes/__pycache__/account.cpython-312.pyc
+bank_processes/__pycache__/transaction.cpython-312.pyc

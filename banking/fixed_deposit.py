@@ -504,11 +504,142 @@ def create_safelock(auth: Authentication):
         go_back('script')
 
 
-def ongoing_display_deposits(data: list, _details: list, _key: int):
+days_left: int = 0
+deposit_id, deposit, interest_earned = (None, 0.0, 0.0)
+upfront_interest = 0
+
+
+def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time):
+    """Allows the user to top up an existing Fixed Deposit with additional funds.
+
+    Parameters
+    ----------
+    auth : Authentication
+        Contains the entire details of the User.
+    pay_back_date : str
+        The date when the deposit will mature.
+    pay_back_time : time
+        The time of day when the deposit will mature.
+    """
+    try:
+        global days_left
+        global deposit_id, deposit, interest_earned
+        global upfront_interest
+
+        while True:
+            # Duration options mapping to their respective upfront interest rates
+            duration_options = {
+                '1': (10, 30, 8),
+                '2': (31, 60, 9),
+                '3': (61, 90, 11),
+                '4': (91, 180, 11.5),
+                '5': (181, 270, 13.5),
+                '6': (271, 365, 14),
+                '7': (366, 730, 14.5),
+                '8': (731, 1000, 15),
+            }
+
+            # Determine the upfront interest rate based on the days left
+            for key, value in duration_options.items():
+                if value[0] <= days_left <= value[1]:
+                    upfront_interest = value[2]
+
+            header()
+
+            print("\nAmount to Deposit: (must be Greater than N1000)")
+            print("~~~~~~~~~~~~~~~~~~")
+            deposit_amount = input(">>> ").strip()
+
+            # Check for back or return commands
+            if re.search('^.*(back|return).*$', deposit_amount, re.IGNORECASE):
+                del deposit_amount
+                time.sleep(1.5)
+                go_back('signed_in', auth=auth)
+                break
+            else:
+                # Check for invalid input
+                if not deposit_amount.isdigit() or float(deposit_amount) < 1000:
+                    print("\n:: Amount MUST be above N1000 and should be a valid number")
+                    time.sleep(3)
+                    continue
+                else:
+                    auth.amount = float(deposit_amount)
+                    # Validate transaction limits and amounts
+                    if not auth.transaction_validation(transfer_limit=True)[0]:
+                        print(f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}")
+                        time.sleep(3)
+                        go_back('signed_in', auth=auth)
+                        break
+
+                    if not auth.transaction_validation(amount=True)[0]:
+                        print(f"\n:: {auth.transaction_validation(amount=True)[1]}")
+                        time.sleep(2)
+                        continue
+
+                    auth.initial_deposit = float(deposit_amount)
+                    # Calculate interest
+                    interest, rate_of_interest = calculate_interest(auth.initial_deposit, upfront_interest, days_left)
+
+                    # Display calculated interest and confirmation prompt
+                    print(f"\nYou will earn an upfront interest of {rate_of_interest:.2f}% on any amount you add into "
+                          f"\nthis Fixed Deposit, because it has {days_left} days left. Safelock can't be broken, and "
+                          f"\nfunds in this particular Safelock can't be accessed until {pay_back_date} "
+                          f"by {pay_back_time}.\n")
+
+                    print(f"You will earn N {interest:,.2f} upfront interest on your {auth.initial_deposit:,} naira "
+                          f"addition to this Safelock")
+
+                    print('1. Yes  |  2. No')
+                    print('~~~~~~     ~~~~~')
+                    _input = input(">>> ").strip()
+
+                    if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
+                        del _input
+                        time.sleep(1.5)
+                        go_back('signed_in', auth=auth)
+                        break
+                    elif re.search('^(1|yes)$', _input, re.IGNORECASE):
+                        # Update deposit details and process transaction
+                        auth.initial_deposit += deposit
+                        auth.total_interest_earned = interest_earned + interest
+
+                        _id = 'cbb' + str(random.randint(100000000, 999999999))
+                        auth.deposit_id = _id
+                        while verify_data('deposit_id', 4, _id):
+                            _id = 'cbb' + str(random.randint(100000000, 999999999))
+                            auth.deposit_id = _id
+
+                        auth.description = f'FIXED_DEPOSIT/CBB/{auth.deposit_id}/TOP UP DEPOSIT'
+                        auth.process_transaction(fixed_deposit=True)
+                        auth.transaction_record(fixed_deposit=True)
+
+                        auth.update_deposit(deposit_id)
+                        print("\n:: Deposit Successfully Topped Up.")
+                        time.sleep(3)
+                        break
+                    elif re.search('^(2|no)$', _input, re.IGNORECASE):
+                        time.sleep(1)
+                        break
+                    else:
+                        print("\n:: Wrong Input")
+                        del _input
+                        time.sleep(3)
+                        continue
+    except Exception as e:
+        with open('notification/error.txt', 'w') as file:
+            file.write(f'Module: fixed_deposit.py \nFunction: top_up_deposit \nError: {repr(e)}')
+        print(f'\nError: {repr(e)}')
+        time.sleep(3)
+        go_back('script')
+
+
+def ongoing_display_deposits(auth: Authentication, data: list, _details: list, _key: int):
     """ Displays details of a specific ongoing deposit
 
     Parameters
     ----------
+    auth : Authentication
+        Contains the entire details of the User.
     data : list
         Contains the details of the Deposit in a database format
     _details : list
@@ -527,14 +658,14 @@ def ongoing_display_deposits(data: list, _details: list, _key: int):
         payback_suffix = get_ordinal_suffix(payback_day)
 
         # Format the start and payback dates
-        start_date = f'{start_day}{start_suffix} {get_month(data[_key][6].month)} {data[_key][6].year}'
-        payback_date = f'{payback_day}{payback_suffix} {get_month(data[_key][7].month)} {data[_key][7].year}'
+        start_date = f'{start_day}{start_suffix} {get_month(data[_key][6].month)[0]} {data[_key][6].year}'
+        payback_date = f'{payback_day}{payback_suffix} {get_month(data[_key][7].month)[0]} {data[_key][7].year}'
 
         while True:
             header()
 
             # Display the details in a structured format
-            print('\n', _details[_key])
+            print('\n', _details[_key], sep='')
             print('\n')
 
             print(f"                 FIXED DEPOSIT DETAILS                    ")
@@ -560,8 +691,8 @@ def ongoing_display_deposits(data: list, _details: list, _key: int):
             if re.search('^.*(back|return).*$', user_input.strip().lower()):
                 pass
             elif re.search('^1$', user_input):
-                # top up
-                pass
+                top_up_deposit(auth, payback_date, payback_time)
+                break
             elif re.search('^2$', user_input):
                 break
             else:
@@ -651,12 +782,14 @@ def ongoing_deposits(auth: Authentication):
     Parameters
     ----------
     auth : Authentication
-          Contains the entire details of the User.
+        Contains the entire details of the User.
     """
     try:
         # Fetch active (ongoing) deposit details
         data, balance, days, days_remaining = auth.get_active()
         details = []
+        global days_left
+        global deposit_id, deposit, interest_earned
 
         while True:
             header()
@@ -677,15 +810,15 @@ def ongoing_deposits(auth: Authentication):
                     remaining = bar_length - progress
 
                     # Format each deposit detail for display
-                    detail = (f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"
-                              f"|                                                         |\n"
-                              f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    |\n"
-                              f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} |\n"
-                              f"|      Locked{' ' * (50 - len('locked'))} |\n"
-                              f"|                                                         |\n"
+                    detail = (f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"
+                              f"|                                                              |\n"
+                              f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}         |\n"
+                              f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))}      |\n"
+                              f"|      Locked{' ' * (50 - len('locked'))}      |\n"
+                              f"|                                                              |\n"
                               f"| {brt_blue_bg}{' ' * progress}{brt_white_bg}{' ' * remaining}{end} "
-                              f"{days_remaining[key]} days{space}|\n"
-                              f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                              f"{days_remaining[key]} days left{space}|\n"
+                              f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
                     details.append(detail)
                     print(detail, '\n')
@@ -701,7 +834,11 @@ def ongoing_deposits(auth: Authentication):
                         print("\n:: Digits within the list only")
                         time.sleep(2)
                     else:
-                        ongoing_display_deposits(data, details, user_selection - 1)
+                        days_left = days_remaining[user_selection - 1]
+                        deposit_id, deposit, interest_earned = (
+                            data[user_selection - 1][0], data[user_selection - 1][3], data[user_selection - 1][5])
+                        ongoing_display_deposits(auth, data, details, user_selection - 1)
+                        break
                 else:
                     print("\n:: Digits only.")
                     time.sleep(2)

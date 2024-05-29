@@ -40,7 +40,15 @@ class Transaction(Account, ABC):
         self.__transaction_mode = transaction_mode
 
     def transaction_record(self, transfer: bool = False, fixed_deposit: bool = False):
-        """Method to record new transactions made by the sender and the relevant information"""
+        """Method to record new transactions made by the sender and the relevant information
+
+        Parameters
+        ----------
+        transfer : bool, optional
+            If set to True, records a transfer transaction.
+        fixed_deposit : bool, optional
+            If set to True, records a fixed deposit transaction.
+        """
         from banking.register_panel import verify_data
 
         if transfer:
@@ -81,7 +89,6 @@ class Transaction(Account, ABC):
             self.database.query(receiver_query)
             del _receiver_obj
         elif fixed_deposit:
-            # transaction_type = fixed deposit, description, transaction_mode
             self.__transaction_id = str(random.randint(100000000000000000000000000000,
                                                        999999999999999999999999999999))
             while verify_data('transaction_id', 2, self.__transaction_id):
@@ -138,7 +145,21 @@ class Transaction(Account, ABC):
 
     def transaction_validation(self, amount: bool = False, transfer_limit: bool = False) -> tuple[bool, str]:
         """Method to validate the transaction, ensuring that it meets any requirements or constraints imposed by
-        the bank or regulatory authorities. """
+        the bank or regulatory authorities.
+
+        Parameters
+        ----------
+        amount : bool, optional
+            If set to True, validates whether the user's account has sufficient funds for the transaction.
+        transfer_limit : bool, optional
+            If set to True, validates whether the transaction amount exceeds the user's daily transfer limit.
+
+        Returns
+        -------
+        tuple[bool, str]
+            A tuple where the first element is a boolean indicating if the validation passed (True) or failed (False),
+            and the second element is a string message describing the result.
+        """
         debited_amount = self.amount + self.charges
         sender_updated_balance = self.account_balance - debited_amount
 
@@ -173,7 +194,16 @@ class Transaction(Account, ABC):
 
     def process_transaction(self, transfer: bool = False, fixed_deposit: bool = False):
         """Method to process the transaction, including updating account balances, recording transaction details,
-        and handling any necessary validations or checks."""
+        and handling any necessary validations or checks.
+
+        Parameters
+        ----------
+        transfer : bool, optional
+            If set to True, processes a transfer transaction between accounts.
+        fixed_deposit : bool, optional
+            If set to True, processes a fixed deposit transaction.
+
+        """
         debited_amount = self.amount + self.charges
         updated_transaction_limit = self.transaction_limit - 1
         updated_transfer_limit = self.transfer_limit - self.amount
@@ -479,7 +509,7 @@ class Transaction(Account, ABC):
         if self.amount <= 5000:
             self.charges = 10.53
 
-        elif self.amount <= 50_000:
+        elif self.amount <= 50000:
             self.charges = 26.88
 
         else:

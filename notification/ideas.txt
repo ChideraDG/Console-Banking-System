@@ -1,1 +1,2 @@
 fixed interest deposited into balance
+safelock amount deposited to a central bank

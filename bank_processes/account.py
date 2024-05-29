@@ -1,5 +1,6 @@
 import datetime
 import json
+import time
 from abc import abstractmethod, ABC
 from typing import Tuple, List, Any
 
@@ -580,7 +581,39 @@ class FixedDeposit(Account, ABC):
         cases where the withdrawal amount exceeds the available balance."""
         pass
 
+    def update_deposit(self, deposit_id):
+        """Method to update the initial deposit and total interest earned for a specific fixed deposit.
+
+        Parameters
+        ----------
+        deposit_id : str
+            The unique identifier for the fixed deposit to be updated.
+
+        """
+
+        query = (f"""
+                UPDATE {self.database.db_tables[4]}
+                SET initial_deposit = {self.initial_deposit}, total_interest_earned = {self.total_interest_earned}
+                WHERE deposit_id = '{deposit_id}'
+                """)
+
+        self.database.query(query)
+    
     def get_active(self) -> tuple[list[Any], float, list[Any], list[Any]]:
+        """Fetches the user's active fixed deposits.
+
+        This method queries the database for all active fixed deposits associated with the user's account number,
+        calculates the total balance of these deposits, and determines the duration and remaining days for each deposit.
+
+        Returns
+        -------
+        tuple[list[Any], float, list[Any], list[Any]]
+            A tuple containing:
+            - A list of active deposit records.
+            - The total balance of all active deposits.
+            - A list of durations (in days) for each deposit.
+            - A list of remaining days for each deposit.
+        """
 
         query = f"""
         SELECT * 
@@ -589,30 +622,49 @@ class FixedDeposit(Account, ABC):
         AND status = 'active'
         ORDER BY start_date
         """
-
+        # Fetch the data from the database
         data = list(self.database.fetch_data(query))
 
+        # Initialize the total balance
         total_balance = 0
 
+        # Calculate the total balance by summing the initial deposits
         for item in data:
             total_balance += item[3]
 
+        # Calculate the number of days between the start and payback dates for each deposit
         days = [(item[7] - item[6]).days for item in data]
+
+        # Calculate the remaining days for each deposit
         days_remaining = [(item[7] - datetime.datetime.today().date()).days for item in data]
 
         return data, total_balance, days, days_remaining
 
     def get_inactive(self) -> list[Any]:
-        query = f"""
-                SELECT * 
-                FROM {self.database.db_tables[4]} 
-                WHERE account_number = {self.account_number} 
-                AND status = 'inactive'
-                ORDER BY start_date 
-                """
+        """Fetches the user's inactive fixed deposits.
 
+        This method queries the database for all inactive fixed deposits associated with the user's account number,
+        ordered by the start date.
+
+        Returns
+        -------
+        list[Any]
+            A list of inactive deposit records.
+        """
+
+        # Query to select all inactive fixed deposits for the user's account number
+        query = f"""
+            SELECT * 
+            FROM {self.database.db_tables[4]} 
+            WHERE account_number = {self.account_number} 
+            AND status = 'inactive'
+            ORDER BY start_date 
+            """
+
+        # Fetch the data from the database and convert it to a list
         data = list(self.database.fetch_data(query))
 
+        # Return the list of inactive deposit records
         return data
 
     @property

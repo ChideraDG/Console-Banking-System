@@ -60,33 +60,38 @@ class Transaction(Account, ABC):
 
             self.__transaction_status = 'successful'
 
-            query = f"""
-                    INSERT INTO {self.database.db_tables[2]}
-                    (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
-                    receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
-                    account_balance, transaction_mode)
-                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount + self.charges},
-                    '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
-                    '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
-                    '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
-                     """
-            self.database.query(query)
+            try:
+                query = f"""
+                        INSERT INTO {self.database.db_tables[2]}
+                        (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                        receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
+                        account_balance, transaction_mode)
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount + self.charges},
+                        '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
+                        '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
+                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
+                         """
+                self.database.query(query)
 
-            _receiver_obj = Account()
-            _receiver_obj.account_number = self.receiver_acct_num
-            receiver_description = f'TRF/CBB/TO {self.__receiver_name.upper()} FROM {self.account_holder.upper()}'
-            receiver_query = f"""
-                            INSERT INTO {self.database.db_tables[2]}
-                            (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
-                            receiver_account_number, receiver_name, transaction_date_time, description, status,
-                            account_type, account_balance, transaction_mode)
-                            VALUES('{self.__transaction_id}', '{self.transaction_type}', {self.__amount},
-                            '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
-                            '{self.__receiver_name}', '{self.__transaction_date_time}', '{receiver_description}',
-                            '{self.__transaction_status}', '{_receiver_obj.account_type}', 
-                            {_receiver_obj.account_balance}, 'credit')
-                            """
-            self.database.query(receiver_query)
+                _receiver_obj = Account()
+                _receiver_obj.account_number = self.receiver_acct_num
+                receiver_description = f'TRF/CBB/TO {self.__receiver_name.upper()} FROM {self.account_holder.upper()}'
+                receiver_query = f"""
+                                INSERT INTO {self.database.db_tables[2]}
+                                (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                                receiver_account_number, receiver_name, transaction_date_time, description, status,
+                                account_type, account_balance, transaction_mode)
+                                VALUES('{self.__transaction_id}', '{self.transaction_type}', {self.__amount},
+                                '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
+                                '{self.__receiver_name}', '{self.__transaction_date_time}', '{receiver_description}',
+                                '{self.__transaction_status}', '{_receiver_obj.account_type}', 
+                                {_receiver_obj.account_balance}, 'credit')
+                                """
+                self.database.query(receiver_query)
+            except Exception as e:
+                # Rollback changes if an error occurs
+                self.database.rollback()
+
             del _receiver_obj
         elif fixed_deposit:
             self.__transaction_id = str(random.randint(100000000000000000000000000000,
@@ -98,17 +103,21 @@ class Transaction(Account, ABC):
             self.__transaction_status = 'successful'
             self.account_type = 'fixed_deposit'
 
-            query = f"""
-                    INSERT INTO {self.database.db_tables[2]}
-                    (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
-                    receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
-                    account_balance, transaction_mode)
-                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
-                    '{self.account_number}', '{self.account_holder}', 'NULL',
-                    'NULL', '{self.__transaction_date_time}', '{self.__description}',
-                    '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
-                    """
-            self.database.query(query)
+            try:
+                query = f"""
+                        INSERT INTO {self.database.db_tables[2]}
+                        (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                        receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
+                        account_balance, transaction_mode)
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
+                        '{self.account_number}', '{self.account_holder}', 'NULL',
+                        'NULL', '{self.__transaction_date_time}', '{self.__description}',
+                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
+                        """
+                self.database.query(query)
+            except Exception as e:
+                # Rollback changes if an error occurs
+                self.database.rollback()
 
     def transaction_receipts(self, receipt: bool = False, sender: bool = False, receiver: bool = False):
         """Method to generate receipts for each transaction made"""
@@ -232,24 +241,29 @@ class Transaction(Account, ABC):
         updated_transfer_limit = self.transfer_limit - self.amount
         self.__transaction_date_time = datetime.now()
         if transfer:
-            sender_updated_balance = self.account_balance - debited_amount
-            sender_query = f"""
-            UPDATE {self.database.db_tables[3]}
-            SET account_balance = {sender_updated_balance}, transaction_limit = {updated_transaction_limit},
-            transfer_limit = {updated_transfer_limit}
-            WHERE account_number = {self.account_number}  
-            """
-            self.database.query(sender_query)
+            try:
+                sender_updated_balance = self.account_balance - debited_amount
+                sender_query = f"""
+                UPDATE {self.database.db_tables[3]}
+                SET account_balance = {sender_updated_balance}, transaction_limit = {updated_transaction_limit},
+                transfer_limit = {updated_transfer_limit}
+                WHERE account_number = {self.account_number}  
+                """
+                self.database.query(sender_query)
 
-            _receiver_object = Account()
-            _receiver_object.account_number = self.receiver_acct_num
-            receiver_updated_balance = _receiver_object.account_balance + self.amount
-            receiver_query = f"""
-            UPDATE {self.database.db_tables[3]}
-            SET account_balance = {receiver_updated_balance}
-            WHERE account_number = {self.receiver_acct_num}
-            """
-            self.database.query(receiver_query)
+                _receiver_object = Account()
+                _receiver_object.account_number = self.receiver_acct_num
+                receiver_updated_balance = _receiver_object.account_balance + self.amount
+                receiver_query = f"""
+                UPDATE {self.database.db_tables[3]}
+                SET account_balance = {receiver_updated_balance}
+                WHERE account_number = {self.receiver_acct_num}
+                """
+                self.database.query(receiver_query)
+            except Exception as e:
+                # Rollback changes if an error occurs
+                self.database.rollback()
+
             del _receiver_object
         elif fixed_deposit:
             sender_updated_balance = self.account_balance - self.amount

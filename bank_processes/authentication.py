@@ -177,15 +177,19 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
 
                 self.database.query(query)
 
-        query = (f"""
-                UPDATE {self.database.db_tables[1]} 
-                SET last_login_timestamp = '{self.login_time_stamp}' 
-                WHERE username = '{self.username}'
-                """)
+        try:
+            query = (f"""
+                    UPDATE {self.database.db_tables[1]} 
+                    SET last_login_timestamp = '{self.login_time_stamp}' 
+                    WHERE username = '{self.username}'
+                    """)
 
-        self.database.query(query)
+            self.database.query(query)
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
 
-        #  Check Fixed Deposits if the PayBack date is due or not
+        # Check Fixed Deposits if the PayBack date is due or not
         query = f"""
         select * from {self.database.db_tables[4]} where status = 'active'
         ORDER BY start_date
@@ -198,13 +202,17 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
 
             if datetime(year=value[7].year, month=value[7].month, day=value[7].day, hour=int(hour), minute=int(minute),
                         second=int(second)) <= datetime.today().now():
-                query = f"""
-                        UPDATE {self.database.db_tables[4]}
-                        SET status = 'inactive'
-                        WHERE deposit_id = '{value[0]}'
-                        """
-                # deposit their money back to their accounts
-                self.database.query(query)
+                try:
+                    query = f"""
+                            UPDATE {self.database.db_tables[4]}
+                            SET status = 'inactive'
+                            WHERE deposit_id = '{value[0]}'
+                            """
+                    # deposit their money back to their accounts
+                    self.database.query(query)
+                except Exception as e:
+                    # Rollback changes if an error occurs
+                    self.database.rollback()
 
     def user_logout(self):
         """Method to log out the currently logged-in user from the bank app, terminating their session and clearing

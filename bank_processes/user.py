@@ -32,17 +32,21 @@ class User:
         """Method to register a new user with the bank app, including capturing and validating personal information
         such as name, address, contact details, and identification documents."""
 
-        query = f"""
-                INSERT INTO {self.database.db_tables[1]}
-                (username, password, first_name, middle_name, last_name, gender, email, phone_number, address, 
-                date_of_birth, linked_accounts, last_login_timestamp, account_open_date)
-                VALUES('{self.__username}', '{self.__password}', '{self.__first_name}', '{self.__middle_name}', 
-                '{self.__last_name}', '{self.__gender}', '{self.__email}', '{self.__phone_number}', '{self.__address}', 
-                '{self.__date_of_birth}', '{self.__linked_accounts}', '{self.__last_login_timestamp}', 
-                '{self.__account_open_date}')
-                """
+        try:
+            query = f"""
+                    INSERT INTO {self.database.db_tables[1]}
+                    (username, password, first_name, middle_name, last_name, gender, email, phone_number, address, 
+                    date_of_birth, linked_accounts, last_login_timestamp, account_open_date)
+                    VALUES('{self.__username}', '{self.__password}', '{self.__first_name}', '{self.__middle_name}', 
+                    '{self.__last_name}', '{self.__gender}', '{self.__email}', '{self.__phone_number}', '{self.__address}', 
+                    '{self.__date_of_birth}', '{self.__linked_accounts}', '{self.__last_login_timestamp}', 
+                    '{self.__account_open_date}')
+                    """
 
-        self.database.query(query)
+            self.database.query(query)
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
 
     @abstractmethod
     def user_login(self):
@@ -73,13 +77,18 @@ class User:
     def change_password(self):
         """Method to allow users to change their password, providing a mechanism for updating login credentials
         securely."""
-        query = (f"""
-        UPDATE {self.database.db_tables[1]} 
-        SET password = '{self.password}' 
-        WHERE username = '{self.username}'
-        """)
 
-        self.database.query(query)
+        try:
+            query = (f"""
+            UPDATE {self.database.db_tables[1]} 
+            SET password = '{self.password}' 
+            WHERE username = '{self.username}'
+            """)
+
+            self.database.query(query)
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
 
     def reset_password(self):
         """Method to initiate the password reset process, sending a temporary password or password reset link to the
@@ -190,12 +199,6 @@ class User:
         """Method to initiate the transaction pin reset process, sending a temporary password or password reset link
         to the user's registered email or phone number."""
         pass
-
-    def __str__(self):
-        """For debugging"""
-        return f"""{self.username} {self.password} {self.first_name} {self.middle_name} {self.last_name} 
-                {self.phone_number} {self.email} {self.date_of_birth} {self.gender} {self.address} 
-                {self.linked_accounts}"""
 
     @property
     def user_id(self):

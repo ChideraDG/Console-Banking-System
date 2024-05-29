@@ -36,38 +36,42 @@ class Account(User):
         """Method to register a new user with the bank app, including capturing and validating personal information
         such as name, address, contact details, and identification documents."""
 
-        query = f"""
-                INSERT INTO {self.database.db_tables[3]}
-                (account_number, 
-                account_type, 
-                account_holder, 
-                account_balance, 
-                minimum_balance, 
-                maximum_balance, 
-                account_fee, 
-                transaction_pin, 
-                account_status, 
-                account_tier, 
-                overdraft_protection, 
-                transaction_limit, 
-                transfer_limit)
-                VALUES(
-                '{self.__account_number}', 
-                '{self.__account_type}', 
-                '{self.__account_holder}', 
-                {self.__account_balance}, 
-                {self.__minimum_balance}, 
-                {self.__maximum_balance}, 
-                {self.__account_fee}, 
-                '{self.__transaction_pin}', 
-                '{self.__account_status}', 
-                '{self.__account_tier}', 
-                '{self.__overdraft_protection}', 
-                {self.__transaction_limit}, 
-                {self.__transfer_limit})
-                """
+        try:
+            query = f"""
+                    INSERT INTO {self.database.db_tables[3]}
+                    (account_number, 
+                    account_type, 
+                    account_holder, 
+                    account_balance, 
+                    minimum_balance, 
+                    maximum_balance, 
+                    account_fee, 
+                    transaction_pin, 
+                    account_status, 
+                    account_tier, 
+                    overdraft_protection, 
+                    transaction_limit, 
+                    transfer_limit)
+                    VALUES(
+                    '{self.__account_number}', 
+                    '{self.__account_type}', 
+                    '{self.__account_holder}', 
+                    {self.__account_balance}, 
+                    {self.__minimum_balance}, 
+                    {self.__maximum_balance}, 
+                    {self.__account_fee}, 
+                    '{self.__transaction_pin}', 
+                    '{self.__account_status}', 
+                    '{self.__account_tier}', 
+                    '{self.__overdraft_protection}', 
+                    {self.__transaction_limit}, 
+                    {self.__transfer_limit})
+                    """
 
-        self.database.query(query)
+            self.database.query(query)
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
 
     @abstractmethod
     def deposit(self):
@@ -119,13 +123,17 @@ class Account(User):
     def block_account(self):
         """Method to block user accounts after multiple failed pin attempts, preventing brute force
         attacks and unauthorized access."""
-        query = (f""" 
-        UPDATE {self.database.db_tables[3]}
-        SET account_status = 'blocked'
-        WHERE account_number = {self.account_number}
-        """)
+        try:
+            query = (f""" 
+            UPDATE {self.database.db_tables[3]}
+            SET account_status = 'blocked'
+            WHERE account_number = {self.account_number}
+            """)
 
-        self.database.query(query)
+            self.database.query(query)
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
 
     def add_beneficiaries(self, _account_number: str, _account_holder: str):
         """Method to add new beneficiaries to an Account"""
@@ -133,17 +141,16 @@ class Account(User):
 
         self.__beneficiaries.update({str(value + 1): [_account_number, _account_holder]})
 
-        query = (f"""
-        UPDATE {self.database.db_tables[3]}
-        SET beneficiaries = '{str(self.__beneficiaries).replace("'", '"')}'
-        WHERE account_number = {self.account_number}
-        """)
-        self.database.query(query)
-
-    def for_debugging(self):
-        """For Debugging"""
-        return f"""{self.account_number} {self.account_type} {self.account_balance} {self.account_holder} 
-{self.account_tier} {self.account_status} {self.transaction_limit} {self.overdraft_protection} {self.transaction_pin}"""
+        try:
+            query = (f"""
+            UPDATE {self.database.db_tables[3]}
+            SET beneficiaries = '{str(self.__beneficiaries).replace("'", '"')}'
+            WHERE account_number = {self.account_number}
+            """)
+            self.database.query(query)
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
 
     @property
     def account_number(self):
@@ -537,39 +544,43 @@ class FixedDeposit(Account, ABC):
         self.__status = status
 
     def open_fixed_deposit_account(self):
-        query = f"""
-                INSERT INTO {self.database.db_tables[4]}
-                (deposit_id, 
-                account_number, 
-                deposit_title, 
-                initial_deposit, 
-                interest_rate, 
-                total_interest_earned, 
-                start_date, 
-                payback_date, 
-                payback_time, 
-                status)
-                VALUES(
-                '{self.__deposit_id}', 
-                '{self.account_number}', 
-                '{self.__deposit_title}', 
-                {self.__initial_deposit}, 
-                '{self.__interest_rate}', 
-                {self.__total_interest_earned}, 
-                '{self.__start_date}', 
-                '{self.__payback_date}', 
-                '{self.__payback_time}', 
-                '{self.__status}')
-                """
+        try:
+            query = f"""
+                    INSERT INTO {self.database.db_tables[4]}
+                    (deposit_id, 
+                    account_number, 
+                    deposit_title, 
+                    initial_deposit, 
+                    interest_rate, 
+                    total_interest_earned, 
+                    start_date, 
+                    payback_date, 
+                    payback_time, 
+                    status)
+                    VALUES(
+                    '{self.__deposit_id}', 
+                    '{self.account_number}', 
+                    '{self.__deposit_title}', 
+                    {self.__initial_deposit}, 
+                    '{self.__interest_rate}', 
+                    {self.__total_interest_earned}, 
+                    '{self.__start_date}', 
+                    '{self.__payback_date}', 
+                    '{self.__payback_time}', 
+                    '{self.__status}')
+                    """
 
-        self.database.query(query)
+            self.database.query(query)
 
-        query = (f"""
-                UPDATE {self.database.db_tables[3]}
-                SET fixed_account = 'yes'
-                WHERE account_number = {self.account_number}
-                """)
-        self.database.query(query)
+            query = (f"""
+                    UPDATE {self.database.db_tables[3]}
+                    SET fixed_account = 'yes'
+                    WHERE account_number = {self.account_number}
+                    """)
+            self.database.query(query)
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
 
     def deposit(self):
         """Method to allow users to deposit money into their account. It should update the account balance
@@ -591,13 +602,17 @@ class FixedDeposit(Account, ABC):
 
         """
 
-        query = (f"""
-                UPDATE {self.database.db_tables[4]}
-                SET initial_deposit = {self.initial_deposit}, total_interest_earned = {self.total_interest_earned}
-                WHERE deposit_id = '{deposit_id}'
-                """)
+        try:
+            query = (f"""
+                    UPDATE {self.database.db_tables[4]}
+                    SET initial_deposit = {self.initial_deposit}, total_interest_earned = {self.total_interest_earned}
+                    WHERE deposit_id = '{deposit_id}'
+                    """)
 
-        self.database.query(query)
+            self.database.query(query)
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
     
     def get_active(self) -> tuple[list[Any], float, list[Any], list[Any]]:
         """Fetches the user's active fixed deposits.

@@ -30,11 +30,6 @@ class DataBase:
     data_models = None  # Class definitions representing database tables, mapping attributes to database columns.
 
     @classmethod
-    def connect(cls):
-        """Method to establish a connection to the database server, including authentication and authorization if
-        required."""
-
-    @classmethod
     def disconnect(cls):
         """Method to gracefully close the connection to the database server, releasing any resources allocated by the
         connection."""
@@ -51,23 +46,56 @@ class DataBase:
 
     @classmethod
     def fetch_data(cls, query) -> tuple[tuple[Any, ...], ...]:
-        """Method to retrieve data from the database in response to a query, returning the results in a structured
-        format such as lists, dictionaries, or objects."""
+        """Retrieve data from the database in response to a query.
 
+        This method executes the provided SQL query using the database cursor,
+        fetches all the results, and returns them in a structured format.
+
+        Parameters
+        ----------
+        query : str
+            The SQL query to be executed.
+
+        Returns
+        -------
+        tuple[tuple[Any, ...], ...]
+            The fetched data from the database, returned as a tuple of tuples.
+        """
+        # Execute the provided query
         cls.db_cursor.execute(query)
+        # Fetch all results from the executed query
         data = cls.db_cursor.fetchall()
 
+        # Return the fetched data
         return data
 
     @classmethod
     def commit(cls):
-        """Method to commit changes made within a transaction to the database, persisting the changes permanently."""
+        """Persist changes made within a transaction to the database.
 
+        This method commits all the changes made during the current transaction
+        to the database, making the changes permanent.
+
+        Usage
+        -----
+        - Typically called after a series of database operations that should
+          be saved as a single transaction.
+        - Ensures that all changes are written to the database.
+        """
         cls.db_connection.commit()
 
     @classmethod
     def rollback(cls):
-        """Method to rollback changes made within a transaction, reverting the database to its state before the
-        transaction started."""
+        """Revert the database to its state before the transaction.
 
+        This method rolls back any changes made during the current transaction,
+        reverting the database to its state before the transaction started.
+
+        Usage
+        -----
+        - Typically called in error-handling scenarios to undo changes made
+          during a failed transaction.
+        - Helps maintain data integrity by reverting to a consistent state.
+
+        """
         cls.db_connection.rollback()

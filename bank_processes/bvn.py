@@ -27,16 +27,20 @@ class BVN:
         """Method to register a new Bank Verification Number for a user, capturing their personal information and
         biometric data."""
 
-        query = f"""
-        insert into {self.database.db_tables[0]}
-        (first_name, middle_name, last_name, gender, address, phone_number, date_of_birth, nationality, email,
-        bvn_number, created_date, last_updated, bvn_status)
-        values('{self.__first_name}', '{self.__middle_name}', '{self.__last_name}', '{self.__gender}', '{self.__address}', 
-        '{self.__phone_number}', '{self.__date_of_birth}', '{self.__nationality}', '{self.__email}', '{self.__bvn_number}', 
-        '{self.__created_date}', '{self.__last_updated}', '{self.__bvn_status}')
-        """
+        try:
+            query = f"""
+            insert into {self.database.db_tables[0]}
+            (first_name, middle_name, last_name, gender, address, phone_number, date_of_birth, nationality, email,
+            bvn_number, created_date, last_updated, bvn_status)
+            values('{self.__first_name}', '{self.__middle_name}', '{self.__last_name}', '{self.__gender}', '{self.__address}', 
+            '{self.__phone_number}', '{self.__date_of_birth}', '{self.__nationality}', '{self.__email}', '{self.__bvn_number}', 
+            '{self.__created_date}', '{self.__last_updated}', '{self.__bvn_status}')
+            """
 
-        self.database.query(query)
+            self.database.query(query)
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
 
     def verify_bvn(self):
         """Method to verify the authenticity of a BVN, validating it against the central database or authority to

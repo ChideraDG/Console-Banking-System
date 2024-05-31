@@ -7,11 +7,38 @@ from banking.script import header, go_back
 
 
 def beneficiaries(auth: Authentication, checking_beneficiary: bool = False) -> Any | None:
-    """To get the list of beneficiaries or Check if a beneficiary already exists."""
+    """
+    Retrieves the list of beneficiaries or checks if a specific beneficiary exists.
+
+    Parameters
+    ----------
+    auth : Authentication
+        The authentication object containing user information.
+    checking_beneficiary : bool, optional
+        Flag to indicate if the function should check for an existing beneficiary (default is False).
+
+    Returns
+    -------
+    Any or None
+        Returns True if the beneficiary exists when checking_beneficiary is True,
+        otherwise returns None or the selected beneficiary.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the signed-in menu.
+
+    Notes
+    -----
+    The function performs two main tasks:
+    1. If checking_beneficiary is True, it checks if the specified beneficiary exists in the user's beneficiary list.
+    2. If checking_beneficiary is False, it displays the list of beneficiaries and allows the user to select one.
+    """
     try:
         beneficiary = auth.beneficiaries
 
         if checking_beneficiary:
+            # Check if the beneficiary exists
             for account_number, account_name in beneficiary.items():
                 if [auth.receiver_acct_num, auth.receiver_name] == account_name:
                     return True
@@ -23,6 +50,7 @@ def beneficiaries(auth: Authentication, checking_beneficiary: bool = False) -> A
                     header()
                     print('\n')
 
+                    # Display the list of beneficiaries
                     for account_number, account_name in beneficiary.items():
                         print(f'{account_number} - {account_name[0]} : {account_name[1].upper()}')
                         print('    ~~~', "~" * (len(account_name[0]) + len(account_name[1])), sep='')
@@ -52,6 +80,27 @@ def beneficiaries(auth: Authentication, checking_beneficiary: bool = False) -> A
 
 
 def recipient_account_number(auth: Authentication):
+    """
+    Prompts the user to enter the recipient's account number and validates it.
+
+    Parameters
+    ----------
+    auth : Authentication
+        The authentication object containing user information.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the signed-in menu.
+
+    Notes
+    -----
+    This function performs the following tasks:
+    1. Prompts the user to enter the recipient's account number.
+    2. Validates the entered account number.
+    3. Confirms the recipient's name with the user.
+    4. Sets the recipient's account number and name in the authentication object.
+    """
     try:
         while True:
             header()
@@ -97,7 +146,7 @@ def recipient_account_number(auth: Authentication):
                         time.sleep(2)
                         continue
                 else:
-                    print("\n:: Account Number can not be your own Account Number")
+                    print("\n:: Account Number cannot be your own Account Number")
                     del _input
                     time.sleep(3)
                     continue
@@ -115,6 +164,27 @@ def recipient_account_number(auth: Authentication):
 
 
 def amount_to_be_transferred(auth: Authentication):
+    """
+    Prompts the user to enter the amount to be transferred and validates it.
+
+    Parameters
+    ----------
+    auth : Authentication
+        The authentication object containing user information.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the signed-in menu.
+
+    Notes
+    -----
+    This function performs the following tasks:
+    1. Prompts the user to enter the amount to be transferred.
+    2. Validates the entered amount.
+    3. Confirms the transaction charges with the user.
+    4. Sets the amount in the authentication object if the user confirms.
+    """
     try:
         while True:
             header()
@@ -167,7 +237,7 @@ def amount_to_be_transferred(auth: Authentication):
                     else:
                         print(f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}")
                         del _input
-                        time.sleep(3)
+                        time.sleep(2)
                         go_back('signed_in', auth=auth)
     except Exception as e:
         with open('notification/error.txt', 'w') as file:
@@ -178,6 +248,24 @@ def amount_to_be_transferred(auth: Authentication):
 
 
 def description(auth):
+    """
+    Prompts the user to enter a narration for the transaction.
+
+    Parameters
+    ----------
+    auth : Authentication
+        The authentication object containing user information.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the signed-in menu.
+
+    Notes
+    -----
+    This function prompts the user to enter a narration for the transaction. The narration typically describes the purpose
+    or details of the transaction. It then assigns the narration to the authentication object.
+    """
     try:
         header()
         print(end='\n')

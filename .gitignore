@@ -1,9 +1,1 @@
 
-*.pyc
-banking/__pycache__
-__pycache__
-*.py[cod]
-*$py.class
-bank_processes/__pycache__
-/banking/__pycache__
-banking/__pycache__/fixed_deposit.cpython-312.pyc

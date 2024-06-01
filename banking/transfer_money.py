@@ -438,8 +438,10 @@ def process_transfer(auth: Authentication):
     This function prompts the user to choose whether to transfer money to a bank account or a beneficiary.
     It then follows a series of steps to complete the transaction, including entering the recipient's account
     number, the amount to be transferred, a description, and validating the transaction with a PIN and session
-    token. If the transaction is successful, the user is given the option to add the recipient to their
-    list of beneficiaries. If the daily transaction limit is exceeded, the function exits and prompts the
+    token.
+    If the transaction is successful, the user is given the option to add the recipient to their
+    list of beneficiaries.
+    If the daily transaction limit is exceeded, the function exits and prompts the
     user to try again the next day.
     """
     try:

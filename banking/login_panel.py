@@ -17,7 +17,28 @@ auth = Authentication()
 
 
 def username():
-    """Validates the Username of the User"""
+    """
+    Validates the username of the user.
+
+    Returns
+    -------
+    str
+        The validated username.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the main script.
+
+    Notes
+    -----
+    This function prompts the user to enter a username and validates it against the existing database. It checks if
+    the username matches specific criteria (such as being equal to '1' or '2'), allows the user to go back to the
+    previous menu by entering 'back' or 'return', and verifies if the username exists in the database. If the
+    username exists and the account is suspended or blocked, it provides appropriate messages and navigates back to
+    the main script. If the username is valid and the account is active, it returns the username. If the username is
+    incorrect, it prompts the user to try again.
+    """
     try:
         while True:
             print("\nENTER YOUR USERNAME:")
@@ -62,7 +83,28 @@ def username():
 
 
 def password():
-    """Validates the Password of the User"""
+    """
+    Validates the password of the user.
+
+    Returns
+    -------
+    str
+        The validated password.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the main script.
+
+    Notes
+    -----
+    This function prompts the user to enter a password and validates it. The user has up to 3 attempts to enter the
+    correct password. If the user enters 'back' or 'return', the function navigates back to the main script. If the
+    user enters '1' or '2', the function returns the password as valid. Otherwise, the function checks the password
+    against the stored password. If the password is correct, it returns the password. If the password is incorrect,
+    the function increments the login attempts and prompts the user to try again. After 3 unsuccessful attempts,
+    the account is suspended, and the user is prompted to reset the password.
+    """
     try:
         while auth.login_attempts < 3:
             print("\nENTER YOUR PASSWORD:")
@@ -107,7 +149,22 @@ def password():
 
 
 def forgot_username():
-    """Get the Username of the User"""
+    """
+    Retrieves the username of the user based on the registered phone number or email.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the main script.
+
+    Notes
+    -----
+    This function prompts the user to enter their registered phone number or email. It validates the input and checks
+    if the phone number or email exists in the database. If valid, it retrieves the associated username and initiates
+    a password and token authentication process. Upon successful token verification, the username is displayed to the
+    user and saved in a notification file. If the token verification fails within 5 minutes, the function re-sends
+    the token for re-authentication.
+    """
     try:
         while True:
             print("\nENTER YOUR REGISTERED PHONE NUMBER/E-MAIL:")
@@ -185,7 +242,21 @@ def forgot_username():
 
 
 def forgot_password():
-    """Reset the Password of the User"""
+    """
+    Resets the password of the user.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the main script.
+
+    Notes
+    -----
+    This function prompts the user to enter their username. It verifies if the username exists in the database. If the
+    username exists, the function initiates the password reset process, allowing the user to set a new password. If the
+    username does not exist, it prompts the user to try again. The user can also choose to go back to the main script
+    by entering 'back' or 'return'.
+    """
     try:
         while True:
             print("\nENTER YOUR USERNAME:")
@@ -215,7 +286,21 @@ def forgot_password():
 
 
 def login():
-    """Processes the User's Login"""
+    """
+    Processes the user's login.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the main script.
+
+    Notes
+    -----
+    This function handles the user's login process. It prompts the user to enter their username and password, providing
+    options to go back to the main script or retrieve forgotten username/password. Upon successful login, it displays a
+    welcome message, logs the login event, and navigates the user to the signed-in section. The function also sends a
+    login notification.
+    """
     try:
         header()
 

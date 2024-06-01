@@ -11,57 +11,29 @@ from banking.script import go_back, header
 
 
 def get_month(month: int) -> tuple[str, int]:
-    """Generates the month name and days within that month according to the month number received.
+    """
+    Generates the month name and days within that month according to the month number received.
 
     Args:
-        month (int): the number of the month you want.
+        month (int): The number of the month you want.
 
     Returns:
-        tuple[str, int]: month_name, days within the month
+        tuple[str, int]: The name of the month and the number of days in that month.
     """
-    year = 2006
-    month_name = None
-    days = None
 
-    if month == 1:
-        month_name = 'January'
-        days = 31
-    elif month == 2:
-        month_name = 'February'
-        if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
-            days = 29
-        else:
-            days = 28
-    elif month == 3:
-        month_name = 'March'
-        days = 31
-    elif month == 4:
-        month_name = 'April'
-        days = 30
-    elif month == 5:
-        month_name = 'May'
-        days = 31
-    elif month == 6:
-        month_name = 'June'
-        days = 30
-    elif month == 7:
-        month_name = 'July'
-        days = 31
-    elif month == 8:
-        month_name = 'August'
-        days = 30
-    elif month == 9:
-        month_name = 'September'
-        days = 30
-    elif month == 10:
-        month_name = 'October'
-        days = 31
-    elif month == 11:
-        month_name = 'November'
-        days = 30
-    elif month == 12:
-        month_name = 'December'
-        days = 31
+    year = 2006
+
+    month_names = {
+        1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June',
+        7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December'
+    }
+    days_in_month = {
+        1: 31, 2: 29 if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0) else 28,
+        3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31
+    }
+
+    month_name = month_names.get(month)
+    days = days_in_month.get(month)
 
     return month_name, days
 

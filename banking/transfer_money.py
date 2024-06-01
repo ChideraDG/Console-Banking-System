@@ -183,7 +183,7 @@ def amount_to_be_transferred(auth: Authentication):
     1. Prompts the user to enter the amount to be transferred.
     2. Validates the entered amount.
     3. Confirms the transaction charges with the user.
-    4. Sets the amount in the authentication object if the user confirms.
+    4. Set the amount in the authentication object if the user confirms.
     """
     try:
         while True:
@@ -289,6 +289,26 @@ def description(auth):
 
 
 def transaction_pin(auth: Authentication):
+    """
+    Prompts the user to enter the transaction PIN for authentication.
+
+    Parameters
+    ----------
+    auth : Authentication
+        The authentication object containing user information.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the signed-in menu.
+
+    Notes
+    -----
+    This function prompts the user to enter the transaction PIN for authentication.
+    It allows a maximum of 3 attempts to enter the correct PIN. If the correct PIN is
+    not entered within 3 attempts, the account is blocked, and the user is prompted
+    to reset their PIN.
+    """
     try:
         while auth.login_attempts < 3:
             header()
@@ -333,6 +353,27 @@ def transaction_pin(auth: Authentication):
 
 
 def session_token(auth: Authentication):
+    """
+    Prompts the user to enter the session token for authentication.
+
+    Parameters
+    ----------
+    auth : Authentication
+        The authentication object containing user information.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the signed-in menu.
+
+    Notes
+    -----
+    This function prompts the user to enter the session token for authentication.
+    It allows a maximum of 3 attempts to enter the correct token. If the correct
+    token is not entered within 3 attempts, the account is blocked, and the user
+    is prompted to reset their pin. The user can also choose to skip this step
+    by entering 'skip'.
+    """
     try:
         while auth.login_attempts < 3:
             header()
@@ -379,6 +420,28 @@ def session_token(auth: Authentication):
 
 
 def process_transfer(auth: Authentication):
+    """
+    Handles the process of transferring money either to a bank account or to a beneficiary.
+
+    Parameters
+    ----------
+    auth : Authentication
+        The authentication object containing user information and methods for transaction processing.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the signed-in menu.
+
+    Notes
+    -----
+    This function prompts the user to choose whether to transfer money to a bank account or a beneficiary.
+    It then follows a series of steps to complete the transaction, including entering the recipient's account
+    number, the amount to be transferred, a description, and validating the transaction with a PIN and session
+    token. If the transaction is successful, the user is given the option to add the recipient to their
+    list of beneficiaries. If the daily transaction limit is exceeded, the function exits and prompts the
+    user to try again the next day.
+    """
     try:
         if auth.transaction_limit > 0:
             while True:

@@ -419,7 +419,23 @@ def transaction_pin():
 
 
 def register_bvn_account():
-    """Registration Form"""
+    """
+    Registration form for creating a Bank Verification Number (BVN) and a bank account.
+
+    Notes
+    -----
+    This function guides the user through the process of creating a BVN first, followed by creating a bank account.
+    The BVN form collects personal details such as name, gender, address, date of birth, email, and phone number.
+    After successfully creating the BVN, the function proceeds to create a bank account, where it sets up account
+    details like account type, balance, minimum balance, fees, and limits. The user is also prompted to create a
+    password and a transaction PIN. Finally, the function confirms the successful creation of both the BVN and the
+    bank account, displaying the relevant details to the user.
+
+    Raises
+    ------
+    Exception
+        If there is an error during the process, it logs the error and navigates back to the main script.
+    """
 
     header()
     print('\nMessage from the CUSTOMER SERVICE OFFICER:::')

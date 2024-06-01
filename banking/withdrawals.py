@@ -5,6 +5,16 @@ from banking.script import go_back, header
 
 
 def withdraw(auth: Authentication):
+    """
+    
+    Parameters
+    ----------
+    auth
+
+    Returns
+    -------
+
+    """
     try:
         while True:
             header()

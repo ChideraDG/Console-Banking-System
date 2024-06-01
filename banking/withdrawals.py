@@ -6,7 +6,7 @@ from banking.script import go_back, header
 
 def withdraw(auth: Authentication):
     """
-    
+
     Parameters
     ----------
     auth

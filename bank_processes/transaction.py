@@ -88,7 +88,7 @@ class Transaction(Account, ABC):
                                 {_receiver_obj.account_balance}, 'credit')
                                 """
                 self.database.query(receiver_query)
-            except Exception as e:
+            except Exception:
                 # Rollback changes if an error occurs
                 self.database.rollback()
 
@@ -110,7 +110,7 @@ class Transaction(Account, ABC):
                         '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
                         """
                 self.database.query(query)
-            except Exception as e:
+            except Exception:
                 # Rollback changes if an error occurs
                 self.database.rollback()
 
@@ -120,7 +120,7 @@ class Transaction(Account, ABC):
 
             try:
                 query = f"""
-                        INSERT INTO{self.database.db_tables[2]}
+                        INSERT INTO {self.database.db_tables[2]}
                         (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                         receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                         account_balance, transaction_mode)
@@ -132,7 +132,7 @@ class Transaction(Account, ABC):
                 """
                 self.database.query(query)
 
-            except Exception as e:
+            except Exception:
                 # Rollback changes if an error occurs
                 self.database.rollback()
 
@@ -280,7 +280,7 @@ class Transaction(Account, ABC):
                 WHERE account_number = {self.receiver_acct_num}
                 """
                 self.database.query(receiver_query)
-            except Exception as e:
+            except Exception:
                 # Rollback changes if an error occurs
                 self.database.rollback()
 

@@ -39,7 +39,7 @@ def withdraw(auth: Authentication):
                 auth.amount = float(amount)
                 if auth.transaction_validation(transfer_limit=True)[0]:
                     if auth.transaction_validation(amount=True)[0]:
-                        auth.narration = f'WTD/CBB/WITHDRAWN FROM {auth.account_holder}'
+                        auth.description = f'WTD/CBB/WITHDRAWN FROM {auth.account_holder}'
                         transaction_pin(auth)
                         session_token(auth)
 

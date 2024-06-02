@@ -39,7 +39,7 @@ class Transaction(Account, ABC):
         self.__charges = charges
         self.__transaction_mode = transaction_mode
 
-    def transaction_record(self, transfer: bool = False, fixed_deposit: bool = False):
+    def transaction_record(self, transfer: bool = False, fixed_deposit: bool = False, withdrawal: bool = False):
         """Method to record new transactions made by the sender and the relevant information
 
         Parameters
@@ -48,16 +48,16 @@ class Transaction(Account, ABC):
             If set to True, records a transfer transaction.
         fixed_deposit : bool, optional
             If set to True, records a fixed deposit transaction.
+        withdrawal: bool, optional
+            If set to True, processes a withdrawal transaction.
         """
         from banking.register_panel import verify_data
-
+        self.__transaction_id = str(random.randint(100000000000000000000000000000,
+                                                   999999999999999999999999999999))
+        while verify_data('transaction_id', 2, self.__transaction_id):
+            self.__transaction_id = str({random.randint(100000000000000000000000000000,
+                                                        999999999999999999999999999999)})
         if transfer:
-            self.__transaction_id = str(random.randint(100000000000000000000000000000,
-                                                       999999999999999999999999999999))
-            while verify_data('transaction_id', 2, self.__transaction_id):
-                self.__transaction_id = str({random.randint(100000000000000000000000000000,
-                                                            999999999999999999999999999999)})
-
             self.__transaction_status = 'successful'
 
             try:
@@ -94,11 +94,6 @@ class Transaction(Account, ABC):
 
             del _receiver_obj
         elif fixed_deposit:
-            self.__transaction_id = str(random.randint(100000000000000000000000000000,
-                                                       999999999999999999999999999999))
-            while verify_data('transaction_id', 2, self.__transaction_id):
-                self.__transaction_id = str({random.randint(100000000000000000000000000000,
-                                                            999999999999999999999999999999)})
             self.__transaction_type = 'fixed_deposit'
             self.__transaction_status = 'successful'
             self.account_type = 'fixed_deposit'
@@ -119,29 +114,50 @@ class Transaction(Account, ABC):
                 # Rollback changes if an error occurs
                 self.database.rollback()
 
-    def transaction_receipts(self, receipt: bool = False, sender: bool = False, receiver: bool = False):
+        elif withdrawal:
+            self.__transaction_type = 'withdrawal'
+            self.__transaction_status = 'successful'
+
+            try:
+                query = f"""
+                        INSERT INTO{self.database.db_tables[2]}
+                        (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                        receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
+                        account_balance, transaction_mode)
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
+                        '{self.account_number}', '{self.account_holder}', 'NULL',
+                        'NULL', '{self.__transaction_date_time}', '{self.__description}',
+                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
+                        
+                """
+                self.database.query(query)
+
+            except Exception as e:
+                # Rollback changes if an error occurs
+                self.database.rollback()
+
+    def transaction_receipts(self):
         """Method to generate receipts for each transaction made"""
-        if receipt:
-            if sender:
-                print('                      {bold}TRANSACTION RECEIPT')
-                print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-                print('| Recipient                                                    |')
-                print(f'| {bold}{self.receiver_name}{' ' * (52 - (len(self.receiver_name) - 9))}|\n')
-                print('| Recipient Bank                   Amount                      |')
-                print(f'| {bold}Console Beta Bank         {bold}{self.receiver_acct_num}')
-                print('|                                                              |')
-                print('| Description                                                  |')
-                print(f'| {bold}{self.description}')
-                print('|                                                              |')
-                print(f'Sent {bold}{self.amount} to Console Beta Bank-{bold}{self.receiver_acct_num}')
-                print('|                                                              |')
-                print(f'| Date                                                         |')
-                print(f'| {bold}{self.__transaction_date_time}')
-                print('|                                                              |')
-                print('| Transaction type                Transaction status           |')
-                print(f'| {bold}{self.transaction_type}                    {bold}{self.__transaction_status}')
-                print('|                                                              |')
-                print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+\n')
+
+        print('                      {bold}TRANSACTION RECEIPT')
+        print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
+        print('| Recipient                                                    |')
+        print(f'| {bold}{self.receiver_name}{' ' * (52 - (len(self.receiver_name) - 9))}|\n')
+        print('| Recipient Bank                   Amount                      |')
+        print(f'| {bold}Console Beta Bank         {bold}{self.receiver_acct_num}')
+        print('|                                                              |')
+        print('| Description                                                  |')
+        print(f'| {bold}{self.description}')
+        print('|                                                              |')
+        print(f'Sent {bold}{self.amount} to Console Beta Bank-{bold}{self.receiver_acct_num}')
+        print('|                                                              |')
+        print(f'| Date                                                         |')
+        print(f'| {bold}{self.__transaction_date_time}')
+        print('|                                                              |')
+        print('| Transaction type                Transaction status           |')
+        print(f'| {bold}{self.transaction_type}                    {bold}{self.__transaction_status}')
+        print('|                                                              |')
+        print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+\n')
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""
@@ -175,6 +191,7 @@ class Transaction(Account, ABC):
         if amount:
             if debited_amount > self.account_balance:
                 return False, 'Insufficient Balance!!!'
+
             elif sender_updated_balance < self.minimum_balance:
                 return False, 'Insufficient Balance!!!'
 
@@ -224,16 +241,19 @@ class Transaction(Account, ABC):
         # Clean up the _object instance
         del _object
 
-    def process_transaction(self, transfer: bool = False, fixed_deposit: bool = False):
+    def process_transaction(self, transfer: bool = False, fixed_deposit: bool = False, withdrawal: bool = False):
         """Method to process the transaction, including updating account balances, recording transaction details,
         and handling any necessary validations or checks.
 
         Parameters
         ----------
+
         transfer : bool, optional
             If set to True, processes a transfer transaction between accounts.
         fixed_deposit : bool, optional
             If set to True, processes a fixed deposit transaction.
+        withdrawal: bool, optional
+            If set to True, processes a withdrawal transaction.
 
         """
         debited_amount = self.amount + self.charges
@@ -275,6 +295,16 @@ class Transaction(Account, ABC):
             """
             self.database.query(query)
 
+        elif withdrawal:
+            withdrawer_updated_balance = self.account_balance - self.amount
+            query = f"""
+            UPDATE {self.database.db_tables[3]}
+            SET account_balance = {withdrawer_updated_balance}, transaction_limit = {updated_transaction_limit},
+            transfer_limit = {updated_transfer_limit}
+            WHERE account_number = {self.account_number}  
+            """
+            self.database.query(query)
+
     def cancel_transaction(self):
         """Method to cancel a pending or incomplete transaction, reversing any changes made to account balances
         and transaction records."""
@@ -288,6 +318,11 @@ class Transaction(Account, ABC):
     def transaction_authorization(self):
         """Method to authorize the transaction, verifying the identity and authorization of the user or
         entity initiating the transaction."""
+        pass
+
+    def transaction_statement(self):
+        """Method to generate statement of account providing a summary of all transactions within a particular
+        period of time by a user."""
         pass
 
     def transaction_history(self, start_date: datetime = None, end_date: datetime = None, year: int = None,
@@ -310,7 +345,7 @@ class Transaction(Account, ABC):
         is_month : bool, optional
             Flag to indicate if the query should be for a specific month.
         """
-        
+
         # Store the original cursor and switch to a dictionary cursor for this query
         original = self.database.db_cursor
         self.database.db_cursor = self.database.db_connection.cursor(DictCursor)

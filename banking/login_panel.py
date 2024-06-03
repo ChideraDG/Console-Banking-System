@@ -210,7 +210,8 @@ def forgot_username():
                                 if _token == _tokenNumber:
                                     notify.forgot_username_notification(
                                         title='Username Notification',
-                                        message=f"Your Username: {_username}. \nDon't Share it."
+                                        message=f"Your Username: {_username}. \nDon't Share it.",
+                                        channel='Console Beta F_Username'
                                     )
                                     print("\nUsername Successfully Recovered. \nUsername sent to your notification")
                                     break

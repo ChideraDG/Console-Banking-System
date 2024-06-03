@@ -4,6 +4,7 @@ import os
 import re
 import time
 from bank_processes.authentication import Authentication
+from bank_processes.notification import Notification
 from animation.colors import *
 
 
@@ -106,6 +107,10 @@ def go_back(return_place, auth: Authentication = None):
 def signing_in():
     from banking.login_panel import login
     from banking.register_panel import register_bvn_account
+    Notification.sign_in(
+        title="Log in Notification",
+        message=f"Hello a log in has been made!"
+    )
 
     while True:
         header()

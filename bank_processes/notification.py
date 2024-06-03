@@ -30,7 +30,7 @@ class Notification:
             timeout=30
         )
 
-        with open('notification.txt', 'a') as file:
+        with open('../notification/notification.txt', 'a') as file:
             file.write(self.message)
 
     def forgot_username_notification(self, *, title: str, message: str):
@@ -44,7 +44,7 @@ class Notification:
         allowing users to set reminders or receive alerts at specific times or dates."""
         pass
 
-    def bvn_notification(self, *, title: str, message: str):
+    def bvn_creation(self, *, title: str, message: str):
         """Method to trigger notifications in response to each BVN creation."""
         self.status = title
         self.message = message
@@ -58,22 +58,59 @@ class Notification:
 
         self.send_notification()
 
-    def track_notification_delivery(self):
-        """Method to track the delivery status of notifications, including delivery timestamps,
-        delivery channel, and delivery status (success, failure)."""
-        pass
+    def sign_in(self, *, title: str, message: str):
+        """Method to notify a sign in has been made."""
+        self.status = title
+        self.message = message
 
-    def handle_notification_responses(self):
-        """Method to handle user responses to notifications, such as acknowledging receipt,
-        confirming actions, or opting out of future notifications."""
-        pass
+        self.send_notification()
 
-    def notification_history(self):
-        """Method to maintain a history of sent notifications, including details such as recipient,
-        content, delivery status, and timestamp."""
-        pass
 
-    def notification_filters(self):
-        """Method to filter notifications based on user preferences, allowing users to customize
-        which notifications they receive based on criteria such as transaction type, account activity, or urgency."""
-        pass
+    def forgot_password(self, *, title: str, message:str):
+        """Method to handle user forgetting their password, a notification."""
+        self.status = title
+        self.message = message
+
+        self.send_notification()
+
+    def sign_out(self, *, title: str, message: str):
+        """Method to maintain a user signing out notfication."""
+        self.status = title
+        self.message = message
+
+        self.send_notification()
+
+    def transfer_notification(self, *, title: str, message: str):
+        """Method to trigger a transfer notification."""
+        self.status = title
+        self.message = message
+
+        self.send_notification()
+
+    def withdraw_notification(self, *, title: str, message: str):
+        """Method to trigger a withdrawal notification."""
+        self.status = title
+        self.message = message
+
+        self.send_notification()
+
+    def deposit_notification(self, *, title: str, message: str):
+        """Method to trigger a deposit notification."""
+        self.status = title
+        self.message = message
+
+        self.send_notification()
+
+    def fixed_deposit_creation_notification(self, *, title: str, message: str):
+        """Method to trigger a fixed deposit creation notification."""
+        self.status = title
+        self.message = message
+
+        self.send_notification()
+
+    def fixed_deposit_top_up_notification(self, *, title: str, message: str):
+        """Method to trigger a fixed deposit top up notification."""
+        self.status = title
+        self.message = message
+
+        self.send_notification()

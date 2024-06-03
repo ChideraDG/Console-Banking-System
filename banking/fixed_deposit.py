@@ -84,41 +84,44 @@ def calculate_interest(principal: float, rate_per_year: float, days: int):
 
 def payback_date(current_year: int, current_month: int, current_day: int, start_day: int, end_day: int,
                  auth: Authentication, percentage_rate: float, deposit_amount: float):
-    """Displays the list of days for the User to select their Payback date.
+    """
+    Displays the list of days for the User to select their Payback date.
 
     Parameters
     ----------
     current_year : int
-        The Current year
+        The current year.
     current_month : int
-        The Current month
+        The current month.
     current_day : int
-         The Current day
+        The current day.
     start_day : int
-        The Start day of the User periodic choice.
+        The start day of the user periodic choice.
     end_day : int
-        The End day of the User periodic choice.
+        The end day of the user periodic choice.
     auth : Authentication
-        Contains the entire details of the User.
+        Contains the entire details of the user.
     percentage_rate : float
-        The Interest rate with respect to the Start day and End day.
+        The interest rate with respect to the start day and end day.
     deposit_amount : float
-        The Amount the user wants to deposit.
+        The amount the user wants to deposit.
     """
     try:
         while True:
-            header()
+            header()  # Call the function to print the header.
             print("\nChoose Payback Date")
             print("~~~~~~~~~~~~~~~~~~~\n")
 
-            dates: dict = {}
-            start = start_day
+            dates: dict = {}  # Dictionary to store the payback date options.
+            start = start_day  # Initialize the start day for calculating dates.
 
+            # Calculate the starting payback date.
             while start != 0:
-                _month, _days = get_month(current_month)
+                _month, _days = get_month(current_month)  # Get the current month and the number of days in it.
                 current_day += 1
                 start -= 1
 
+                # Check if the current day exceeds the number of days in the month.
                 if current_day > _days:
                     if current_month == 12:
                         current_year += 1
@@ -127,16 +130,18 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
                     current_month += 1
                     current_day = 1
 
+            # Display the range of payback date options.
             for i, day in enumerate(range(start_day, end_day + 1)):
-
+                # Calculate interest and rate of interest for each day.
                 interest, rate_of_interest = calculate_interest(
                     principal=deposit_amount,
                     rate_per_year=percentage_rate,
                     days=day
                 )
 
-                _month, _days = get_month(current_month)
+                _month, _days = get_month(current_month)  # Get the current month and the number of days in it.
 
+                # Check if the current day exceeds the number of days in the month.
                 if current_day > _days:
                     if current_month == 12:
                         current_month = 0
@@ -145,27 +150,35 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
                     current_month += 1
                     current_day = 1
 
-                _month, _days = get_month(current_month)
+                _month, _days = get_month(current_month)  # Get the updated month and the number of days in it.
 
+                # Print the payback date option with the interest rate.
                 print(f'[{day}] -> {current_day}/{_month}/{current_year} - {rate_of_interest:.2f}%', end='\t\t\t\t\t')
 
-                dates[f'{day}'] = [f'{rate_of_interest:.3f}%', f'{interest:.3f}',
-                                   f'{current_day}{get_ordinal_suffix(current_day)} {_month} {current_year}',
-                                   f'{current_year}-{current_month}-{current_day}']
+                # Store the date information in the dictionary.
+                dates[f'{day}'] = [
+                    f'{rate_of_interest:.3f}%',
+                    f'{interest:.3f}',
+                    f'{current_day}{get_ordinal_suffix(current_day)} {_month} {current_year}',
+                    f'{current_year}-{current_month}-{current_day}'
+                ]
 
-                current_day += 1
+                current_day += 1  # Move to the next day.
 
+                # Print a newline after every third option.
                 if i % 3 == 2:
                     print()
 
-            _input = input("\n>>> ")
+            _input = input("\n>>> ")  # Get user input.
 
+            # Check if the user wants to go back.
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
                 break
             else:
+                # Validate the user input.
                 if not _input.isdigit():
                     print("\n:: Numbers Only")
                     del _input
@@ -187,7 +200,8 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
 
 
 def safelock(auth: Authentication) -> tuple[float, str]:
-    """ Filling the form for Amount to Deposit.
+    """
+    Filling the form for Amount to Deposit.
 
     Parameters
     ----------
@@ -197,21 +211,23 @@ def safelock(auth: Authentication) -> tuple[float, str]:
     Returns
     -------
     tuple[float, str]
-        amount to be deposited and the deposition title.
+        Amount to be deposited and the deposition title.
     """
     try:
         while True:
-            header()
+            header()  # Display the header.
             print("\nAmount to Deposit: (must be Greater than N1000)")
             print("~~~~~~~~~~~~~~~~~~")
             deposit_amount = input(">>> ").strip()
 
+            # Check if the user wants to go back.
             if re.search('^.*(back|return).*$', deposit_amount, re.IGNORECASE):
                 del deposit_amount
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
                 break
             else:
+                # Validate the deposit amount input.
                 if re.search("^[0-9]*.[0-9]{0,2}$", deposit_amount, re.IGNORECASE) is None:
                     print("\n:: Digits Only")
                     del deposit_amount
@@ -224,7 +240,9 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                     continue
                 else:
                     auth.amount = float(deposit_amount)
+                    # Validate the transaction against transfer limit.
                     if auth.transaction_validation(transfer_limit=True)[0]:
+                        # Validate the transaction amount.
                         if auth.transaction_validation(amount=True)[0]:
                             auth.initial_deposit = float(deposit_amount)
                         else:
@@ -239,18 +257,21 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                         go_back('signed_in', auth=auth)
                         break
 
+                    # Prompt for the title of the deposit.
                     while True:
                         header()
                         print("\nTitle of Deposit")
                         print("~~~~~~~~~~~~~~~~")
                         deposit_title = input(">>> ").strip()
 
+                        # Check if the user wants to go back.
                         if re.search('^.*(back|return).*$', deposit_title, re.IGNORECASE):
                             del deposit_title
                             time.sleep(1.5)
                             go_back('signed_in', auth=auth)
                             break
                         else:
+                            # Validate the length of the deposit title.
                             if len(deposit_title) > 29:
                                 print("\n:: Title can't be more than 30 characters")
                                 del deposit_title
@@ -259,6 +280,7 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                             else:
                                 return float(deposit_amount), deposit_title
     except Exception as e:
+        # Log any exceptions to a file and navigate back to the main script.
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
@@ -269,7 +291,8 @@ def safelock(auth: Authentication) -> tuple[float, str]:
 def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, interest_to_earn: float,
                      maturity_date: str, lock_duration: str, maturity_location: str, maturity_date_in_date: str,
                      auth: Authentication):
-    """ Previews the details of a Fixed Deposit before the Deposit is documented into the database.
+    """
+    Previews the details of a Fixed Deposit before the Deposit is documented into the database.
     A Safelock is a Fixed Deposit that is locked.
 
     Parameters
@@ -296,10 +319,11 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
     try:
         _time = datetime.datetime.today().now().time()
         while True:
-            header()
+            header()  # Display the header
             print("\nPreview your Fixed Deposit slip")
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
+            # Displaying details for the user to review
             print('Fixed Deposit Title')
             print(safelock_title, '\n')
             print('Initial Deposit                             Interest')
@@ -309,11 +333,13 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
             print('Lock Duration                               Matures Into Your')
             print(f'{lock_duration}{' ' * (44 - len(lock_duration))}{maturity_location}\n')
 
+            # Calculate and display the payback time
             if _time.hour > 12:
                 payback_time = f'{(_time.hour - 12)}:{_time.minute} PM'
             else:
                 payback_time = f'{_time.hour}:{_time.minute} AM'
 
+            # Display authorization message
             print(f'I authorize Console Beta Banking to SafeLock {amount_to_lock} immediately and return it in full on'
                   f'\nthe {maturity_date} by {payback_time} to my Beta Account Balance. \n'
                   f'I confirm and approve this transaction.')
@@ -321,6 +347,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
             print('~~~~~~     ~~~~~')
             _input = input(">>> ").strip()
 
+            # Check if the user wants to go back
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
@@ -339,17 +366,19 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                         break
                     else:
                         if re.search('^(1|yes)$', _input, re.IGNORECASE):
-                            transaction_pin(auth)
-                            session_token(auth)
+                            transaction_pin(auth)  # Prompt user for transaction pin
+                            session_token(auth)  # Generate a session token
 
-                            countdown_timer(_register='fixed deposit', countdown=5)
+                            countdown_timer(_register='fixed deposit', countdown=5)  # Show countdown timer
 
+                            # Generate a unique deposit ID
                             _id = 'cbb' + str(random.randint(100000000, 999999999))
                             auth.deposit_id = _id
                             while verify_data('deposit_id', 4, _id):
                                 _id = 'cbb' + str(random.randint(100000000, 999999999))
                                 auth.deposit_id = _id
 
+                            # Set various attributes of the auth object
                             auth.deposit_title = safelock_title
                             auth.initial_deposit = float(amount_to_lock)
                             auth.interest_rate = interest
@@ -361,9 +390,9 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                             auth.payback_time = _time
                             auth.status = 'active'
                             auth.description = f'FIXED_DEPOSIT/CBB/{auth.deposit_id}/{auth.deposit_title.upper()}'
-                            auth.process_transaction(fixed_deposit=True)
-                            auth.transaction_record(fixed_deposit=True)
-                            auth.open_fixed_deposit_account()
+                            auth.process_transaction(fixed_deposit=True)  # Process the transaction
+                            auth.transaction_record(fixed_deposit=True)  # Record the transaction
+                            auth.open_fixed_deposit_account()  # Open the fixed deposit account
 
                             header()
 
@@ -389,6 +418,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                     time.sleep(3)
                     continue
     except Exception as e:
+        # Log any exceptions to a file and navigate back to the main script
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: fixed_deposit.py \nFunction: preview_safelock \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')

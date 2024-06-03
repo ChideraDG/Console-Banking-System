@@ -3,9 +3,11 @@ import json
 import time
 from abc import abstractmethod, ABC
 from typing import Tuple, List, Any
-
+from bank_processes.notification import Notification
 from bank_processes.user import User
 
+
+notify = Notification()
 
 class Account(User):
     currency: str = 'Naira'  # Currency in which the account is denominated.
@@ -69,6 +71,10 @@ class Account(User):
                     """
 
             self.database.query(query)
+            notify.account_creation(
+                title= 'Account Creation',
+                message= f'Hello {self.__account_holder}, you are now banking with us. Welcome!'
+            )
         except Exception as e:
             # Rollback changes if an error occurs
             self.database.rollback()

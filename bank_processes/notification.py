@@ -1,4 +1,5 @@
 from plyer import notification
+# import time, datetime
 
 
 class Notification:
@@ -23,27 +24,39 @@ class Notification:
     def send_notification(self):
         """Method to send notifications to users via their preferred channels,
          such as email, SMS, push notifications, or in-app messages."""
-        pass
+        notification.notify(
+            title=self.status,
+            message=self.message,
+            timeout=30
+        )
 
-    def format_notification(self):
-        """ Method to format notification content based on the type of notification and user preferences,
-        including personalized information such as account balances or transaction details."""
-        pass
+        with open('notification.txt', 'a') as file:
+            file.write(self.message)
+
+    def forgot_username_notification(self, *, title: str, message: str):
+        self.status = title
+        self.message = message
+
+        self.send_notification()
 
     def schedule_notification(self):
         """Method to schedule notifications for future delivery,
         allowing users to set reminders or receive alerts at specific times or dates."""
         pass
 
-    def trigger_event_based_notifications(self):
-        """Method to trigger notifications in response to specific events or triggers,
-        such as account transactions, account activity, or account balance thresholds."""
-        pass
+    def bvn_notification(self, *, title: str, message: str):
+        """Method to trigger notifications in response to each BVN creation."""
+        self.status = title
+        self.message = message
 
-    def notification_templates(self):
-        """Method to manage notification templates, allowing administrators to define standardized message
-        formats for different types of notifications."""
-        pass
+        self.send_notification()
+
+    def account_creation(self, *, title: str, message: str):
+        """Method to manage notification account creation."""
+        self.status = title
+        self.message = message
+
+        self.send_notification()
 
     def track_notification_delivery(self):
         """Method to track the delivery status of notifications, including delivery timestamps,

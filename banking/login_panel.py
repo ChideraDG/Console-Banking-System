@@ -12,8 +12,10 @@ from bank_processes.authentication import (Authentication,
                                            check_account_status,
                                            get_username_from_database,
                                            token_auth)
+from bank_processes.notification import Notification
 
 auth = Authentication()
+notify = Notification()
 
 
 def username():
@@ -207,13 +209,10 @@ def forgot_username():
                             elapsed_time = time.time() - start_time
                             if elapsed_time < 300.0:
                                 if _token == _tokenNumber:
-                                    note.notify(
+                                    notify.forgot_username_notification(
                                         title='Username Notification',
-                                        message=f"Your Username: {_username}. \nDon't Share it.",
-                                        timeout=30
+                                        message=f"Your Username: {_username}. \nDon't Share it."
                                     )
-                                    with open('notification.txt', 'w') as file:
-                                        file.write(f"Your Username: {_username}. Don't Share it.")
                                     print("\nUsername Successfully Recovered. \nUsername sent to your notification")
                                     break
                                 else:

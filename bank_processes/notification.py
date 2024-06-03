@@ -65,7 +65,6 @@ class Notification:
 
         self.send_notification()
 
-
     def forgot_password(self, *, title: str, message:str):
         """Method to handle user forgetting their password, a notification."""
         self.status = title

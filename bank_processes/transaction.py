@@ -39,7 +39,8 @@ class Transaction(Account, ABC):
         self.__charges = charges
         self.__transaction_mode = transaction_mode
 
-    def transaction_record(self, transfer: bool = False, fixed_deposit: bool = False, withdrawal: bool = False):
+    def transaction_record(self, transfer: bool = False, fixed_deposit: bool = False, withdrawal: bool = False,
+                           deposit: bool = False):
         """Method to record new transactions made by the sender and the relevant information
 
         Parameters
@@ -49,7 +50,9 @@ class Transaction(Account, ABC):
         fixed_deposit : bool, optional
             If set to True, records a fixed deposit transaction.
         withdrawal: bool, optional
-            If set to True, processes a withdrawal transaction.
+            If set to True, records a withdrawal transaction.
+        deposit: bool, optional
+            If set to True, records a deposit transaction
         """
         from banking.register_panel import verify_data
         self.__transaction_id = str(random.randint(100000000000000000000000000000,
@@ -133,6 +136,28 @@ class Transaction(Account, ABC):
                 self.database.query(query)
 
             except Exception:
+                # Rollback changes if an error occurs
+                self.database.rollback()
+
+        elif deposit:
+            self.__transaction_type = 'deposit'
+            self.__transaction_status = 'successful'
+
+            try:
+                query = f"""
+                        INSERT INTO {self.database.db_tables[2]}
+                        (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                        receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
+                        account_balance, transaction_mode)
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
+                        'NULL', 'NULL', '{self.__receiver_name}',
+                        '{self.__receiver_acct_num}', '{self.__transaction_date_time}', '{self.__description}',
+                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'credit')
+
+                """
+                self.database.query(query)
+
+            except Exception as e:
                 # Rollback changes if an error occurs
                 self.database.rollback()
 
@@ -241,7 +266,8 @@ class Transaction(Account, ABC):
         # Clean up the _object instance
         del _object
 
-    def process_transaction(self, transfer: bool = False, fixed_deposit: bool = False, withdrawal: bool = False):
+    def process_transaction(self, transfer: bool = False, fixed_deposit: bool = False, withdrawal: bool = False,
+                            deposit: bool = False):
         """Method to process the transaction, including updating account balances, recording transaction details,
         and handling any necessary validations or checks.
 
@@ -254,7 +280,8 @@ class Transaction(Account, ABC):
             If set to True, processes a fixed deposit transaction.
         withdrawal: bool, optional
             If set to True, processes a withdrawal transaction.
-
+        deposit: bool, optional
+            If set to True, processes a deposit transaction
         """
         debited_amount = self.amount + self.charges
         updated_transaction_limit = self.transaction_limit - 1
@@ -300,6 +327,16 @@ class Transaction(Account, ABC):
             query = f"""
             UPDATE {self.database.db_tables[3]}
             SET account_balance = {withdrawer_updated_balance}, transaction_limit = {updated_transaction_limit},
+            transfer_limit = {updated_transfer_limit}
+            WHERE account_number = {self.account_number}  
+            """
+            self.database.query(query)
+
+        elif deposit:
+            depositor_updated_balance = self.account_balance + self.amount
+            query = f"""
+            UPDATE {self.database.db_tables[3]}
+            SET account_balance = {depositor_updated_balance}, transaction_limit = {updated_transaction_limit},
             transfer_limit = {updated_transfer_limit}
             WHERE account_number = {self.account_number}  
             """

@@ -2,12 +2,11 @@ import datetime
 import re
 import time
 import random
-from typing import Tuple
-
 from animation.colors import *
 from bank_processes.authentication import Authentication, verify_data
 from banking.register_panel import countdown_timer
 from banking.script import go_back, header
+from banking.transfer_money import session_token, transaction_pin
 
 
 def get_month(month: int) -> tuple[str, int]:
@@ -340,9 +339,10 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                         break
                     else:
                         if re.search('^(1|yes)$', _input, re.IGNORECASE):
+                            transaction_pin(auth)
+                            session_token(auth)
 
                             countdown_timer(_register='fixed deposit', countdown=5)
-                            print('\rFixed Deposit Account Successfully Created.')
 
                             _id = 'cbb' + str(random.randint(100000000, 999999999))
                             auth.deposit_id = _id

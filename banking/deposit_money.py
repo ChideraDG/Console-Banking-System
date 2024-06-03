@@ -1,7 +1,9 @@
 import re
 import time
 from bank_processes.authentication import Authentication
+from banking.register_panel import countdown_timer
 from banking.script import go_back, header
+from banking.transfer_money import session_token, transaction_pin
 
 
 def deposit(auth: Authentication):
@@ -37,6 +39,20 @@ def deposit(auth: Authentication):
             else:
                 auth.amount = amount
                 auth.narration = f'DEP/CBB/DEPOSIT TO {auth.account_holder}'
+                transaction_pin(auth)
+                session_token(auth)
+
+                header()
+                countdown_timer(_register='\rProcessing Deposit', _duty='', countdown=5)
+                # auth.process_transaction(deposit=True)
+                # auth.transaction_record(deposit=True)
+                # receipt and notification missing
+
+                header()
+                print("\n:: Deposition Successfully")
+                print(f":: You deposited N{auth.amount} into your Beta Account")
+                time.sleep(3)
+                break
 
     except Exception as e:
         with open('notification/error.txt', 'w') as file:

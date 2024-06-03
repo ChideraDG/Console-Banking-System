@@ -1,7 +1,9 @@
 import re
 import time
 from bank_processes.authentication import Authentication
+from banking.register_panel import countdown_timer
 from banking.script import go_back, header
+from banking.transfer_money import session_token, transaction_pin
 
 
 def withdraw(auth: Authentication):
@@ -19,7 +21,7 @@ def withdraw(auth: Authentication):
         while True:
             header()
 
-            print('AMOUNT TO BE WITHDRAWN: (more than N10.0)')
+            print('\nAMOUNT TO BE WITHDRAWN: (more than N10.0)')
             print('~~~~~~~~~~~~~~~~~~~~~~~')
 
             amount = input('>>> ')
@@ -37,7 +39,21 @@ def withdraw(auth: Authentication):
                 auth.amount = float(amount)
                 if auth.transaction_validation(transfer_limit=True)[0]:
                     if auth.transaction_validation(amount=True)[0]:
-                        auth.narration = f'WTD/CBB/WITHDRAWN FROM {auth.account_holder}'
+                        auth.description = f'WTD/CBB/WITHDRAWN FROM {auth.account_holder}'
+                        transaction_pin(auth)
+                        session_token(auth)
+
+                        header()
+                        countdown_timer(_register='\rProcessing Withdrawal', _duty='', countdown=5)
+                        auth.process_transaction(withdrawal=True)
+                        auth.transaction_record(withdrawal=True)
+                        # receipt and notification missing
+
+                        header()
+                        print("\n:: Withdraw Successfully")
+                        print(f":: You withdraw N{auth.amount}")
+                        time.sleep(3)
+                        break
                     else:
                         print(f"\n:: {auth.transaction_validation(amount=True)[1]}")
                         time.sleep(2)

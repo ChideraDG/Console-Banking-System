@@ -203,8 +203,8 @@ def amount_to_be_transferred(auth: Authentication):
                     del _input
                     time.sleep(3)
                     continue
-                elif re.search("^[a-z]$", _input):
-                    print("\n:: No Alphabets")
+                elif re.search("^[0-9]*.[0-9]{0,2}$", _input, re.IGNORECASE) is None:
+                    print("\n:: Digits Only")
                     del _input
                     time.sleep(2)
                     continue
@@ -312,7 +312,6 @@ def transaction_pin(auth: Authentication):
     try:
         while auth.login_attempts < 3:
             header()
-            print(end='\n')
             print("\nENTER TRANSACTION PIN:")
             print("~~~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").strip()
@@ -377,7 +376,6 @@ def session_token(auth: Authentication):
     try:
         while auth.login_attempts < 3:
             header()
-            print(end='\n')
             print("\nENTER SESSION TOKEN:")
             print("~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").strip()
@@ -469,13 +467,14 @@ def process_transfer(auth: Authentication):
                     countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
                     auth.transaction_record(transfer=True)
                     auth.receiver_transaction_validation()
-                    # notification missing
+                    # TODO:
+                    #  notification missing
+                    #  receipt
 
                     header()
                     print("\n:: Money Sent Successfully")
                     print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
 
-                    # print("\n:: print Receipt")
                     if beneficiaries(auth, checking_beneficiary=True) is False:
                         print(f'\nAdd {auth.receiver_name.upper()} to beneficiaries')
                         print('1. Yes  |  2. No')
@@ -518,8 +517,9 @@ def process_transfer(auth: Authentication):
                         countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
                         auth.transaction_record(transfer=True)
                         auth.receiver_transaction_validation()
-                        # notification missing
-                        # receipt
+                        # TODO:
+                        #  notification missing
+                        #  receipt
 
                         header()
                         print("\n:: Money Sent Successfully")

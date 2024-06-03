@@ -114,8 +114,7 @@ def password():
             _password = input(">>> ").strip()
 
             if re.search('^.*(back|return).*$', _password, re.IGNORECASE):
-                del _password
-                go_back('script')
+                return 'back'
             else:
                 if re.search('^1$', _password):
                     return _password
@@ -301,98 +300,85 @@ def login():
     login notification.
     """
     try:
-        header()
-
-        print("\nGo Back? Press 1")
-        print("----------------")
-
-        print("Forgot Username? Press 2")
-        print("------------------------")
-
-        time.sleep(1)
-
-        _username: str = username()
-
-        time.sleep(1)
-
-        if re.search('^1$', _username):
-            del _username
-            if auth.username is not None:
-                del auth.username
-            go_back('script')
-        elif re.search('^2$', _username):
-            del _username
-            if auth.username is not None:
-                del auth.username
+        while True:
+            # Display the header for the login section.
             header()
-            forgot_username()
-            time.sleep(2)
+
+            # Provide options for going back or retrieving a forgotten username.
+            print("\nGo Back? Press 1")
+            print("----------------")
+            print("Forgot Username? Press 2")
+            print("------------------------")
+
+            # Prompt the user to enter their username.
+            _username: str = username()
+            time.sleep(0.5)
+
+            # Check if the user wants to go back to the main script.
+            if re.search('^1$', _username):
+                break
+            # Check if the user wants to retrieve their forgotten username.
+            elif re.search('^2$', _username):
+                header()
+                forgot_username()
+                time.sleep(2)
+                continue
+
+            # Display the header again after retrieving the username.
             header()
-            _username = username()
 
-        header()
+            # Provide options for going back or retrieving a forgotten password.
+            print("\nGo Back? Press 1")
+            print("----------------")
+            print("Forgot Password? Press 2")
+            print("------------------------")
+            print(f"\nWelcome Back, {auth.first_name}")
+            print("~~~~~~~~~~~~~~" + '~' * len(auth.first_name))
 
-        print("\nGo Back? Press 1")
-        print("----------------")
+            # Prompt the user to enter their password.
+            _password = password()
 
-        print("Forgot Password? Press 2")
-        print("------------------------")
+            # Check if the user wants to go back to the main script.
+            if re.search('^1$', _password) or re.search('^back$', _password):
+                continue
+            # Check if the user wants to retrieve their forgotten password.
+            elif re.search('^2$', _password):
+                time.sleep(2)
+                header()
+                forgot_password()
+                continue
 
-        print(f"\nWelcome Back, {auth.first_name}")
-        print("~~~~~~~~~~~~~~" + '~' * len(auth.first_name))
+            print(end='\n')
 
-        _password = password()
+            # Display a countdown timer while logging in.
+            countdown_timer(_register='\rLogging in', _duty='')
 
-        if re.search('^1$', _password):
-            del _username
-            del _password
+            # Get the current date and format it.
+            date = datetime.today().date()
+            day_in_words, day, month, year = findDate(str(date))
 
-            if auth.username is not None:
-                del auth.username
-            if auth.password is not None:
-                del auth.password
+            # Set the username and password for authentication.
+            auth.username = _username
+            auth.password = _password
 
-            go_back('script')
-        elif re.search('^2$', _password):
-            del _username
-            del _password
+            # Perform the user login process.
+            auth.user_login()
 
-            if auth.username is not None:
-                del auth.username
-            if auth.password is not None:
-                del auth.password
+            # Send a login notification to the user.
+            note.notify(
+                title='Login Notification',
+                message=f"You logged into your Account on {day_in_words}, {day} {month} {year}.",
+                timeout=30
+            )
 
-            time.sleep(2)
-            header()
-            forgot_password()
-
-            if auth.username is not None:
-                del auth.username
-            if auth.password is not None:
-                del auth.password
-
-            login()
-
-        print(end='\n')
-        countdown_timer(_register='\rLogging in', _duty='')
-
-        date = datetime.today().date()
-        day_in_words, day, month, year = findDate(str(date))
-
-        auth.username = _username
-        auth.password = _password
-        auth.user_login()
-
-        note.notify(
-            title='Login Notification',
-            message=f"You logged into your Account on {day_in_words}, {day} {month} {year}.",
-            timeout=30
-        )
-        
-        signed_in(auth=auth)
+            # Navigate to the signed-in section.
+            signed_in(auth=auth)
+            break
     except Exception as e:
+        # Handle any exceptions by logging the error and navigating back to the main script.
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: login_panel.py \nFunction: login \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
         go_back('script')
+

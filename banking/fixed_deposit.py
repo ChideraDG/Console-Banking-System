@@ -212,8 +212,8 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                 go_back('signed_in', auth=auth)
                 break
             else:
-                if re.search("^[a-z]$", deposit_amount):
-                    print("\n:: No Alphabets")
+                if re.search("^[0-9]*.[0-9]{0,2}$", deposit_amount, re.IGNORECASE) is None:
+                    print("\n:: Digits Only")
                     del deposit_amount
                     time.sleep(2)
                     continue

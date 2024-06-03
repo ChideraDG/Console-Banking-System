@@ -189,7 +189,7 @@ class User:
                     time.sleep(3)
                     continue
         except Exception as e:
-            with open('error.txt', 'w') as file:
+            with open('notification/error.txt', 'w') as file:
                 file.write(f'Error: {repr(e)}')
             print(f'\nError: {repr(e)}')
             time.sleep(3)

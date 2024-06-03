@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 import random
 from abc import ABC
@@ -55,11 +56,11 @@ class Transaction(Account, ABC):
             If set to True, records a deposit transaction
         """
         from banking.register_panel import verify_data
-        self.__transaction_id = str(random.randint(100000000000000000000000000000,
-                                                   999999999999999999999999999999))
+        self.__transaction_id = 'cbb' + str(random.randint(10000000000000000000000000,
+                                                           99999999999999999999999999))
         while verify_data('transaction_id', 2, self.__transaction_id):
-            self.__transaction_id = str({random.randint(100000000000000000000000000000,
-                                                        999999999999999999999999999999)})
+            self.__transaction_id = 'cbb' + str({random.randint(10000000000000000000000000,
+                                                                99999999999999999999999999)})
         if transfer:
             self.__transaction_status = 'successful'
 
@@ -150,14 +151,14 @@ class Transaction(Account, ABC):
                         receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                         account_balance, transaction_mode)
                         VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
-                        'NULL', 'NULL', '{self.__receiver_name}',
-                        '{self.__receiver_acct_num}', '{self.__transaction_date_time}', '{self.__description}',
-                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'credit')
+                        'NULL', 'NULL', '{self.account_number}', '{self.account_holder}', 
+                        '{self.__transaction_date_time}', '{self.__description}', '{self.__transaction_status}', 
+                        '{self.account_type}', {self.account_balance}, 'credit')
 
                 """
                 self.database.query(query)
 
-            except Exception as e:
+            except Exception:
                 # Rollback changes if an error occurs
                 self.database.rollback()
 
@@ -336,8 +337,7 @@ class Transaction(Account, ABC):
             depositor_updated_balance = self.account_balance + self.amount
             query = f"""
             UPDATE {self.database.db_tables[3]}
-            SET account_balance = {depositor_updated_balance}, transaction_limit = {updated_transaction_limit},
-            transfer_limit = {updated_transfer_limit}
+            SET account_balance = {depositor_updated_balance}
             WHERE account_number = {self.account_number}  
             """
             self.database.query(query)

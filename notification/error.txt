@@ -1,3 +1,3 @@
-Module: transfer_money.py 
-Function: process_transfer 
-Error: ProgrammingError(1146, "Table 'bankapp_db.intotransaction' doesn't exist")
+Module: deposit_money.py 
+Function: deposit 
+Error: TypeError("'>' not supported between instances of 'NoneType' and 'NoneType'")

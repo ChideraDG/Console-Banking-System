@@ -133,12 +133,12 @@ def signing_in():
             register_bvn_account()
             time.sleep(5)
             login()
-            break
+            continue
         elif re.search('^2$', user_input):
             login()
-            break
+            continue
         elif re.search('^3$', user_input):
-            break
+            continue
         else:
             del user_input
             continue
@@ -212,7 +212,7 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
 
 def signed_in(auth: Authentication):
     """Function to sign in Users with a Savings or Current account"""
-    from banking import transfer_money
+    from banking.transfer_money import process_transfer
     from banking.fixed_deposit import create_safelock, access_safelock
     from banking.deposit_money import deposit
     from banking.login_panel import login
@@ -221,89 +221,95 @@ def signed_in(auth: Authentication):
     try:
         account_balance_display = None
         while True:
-            display_name = signed_in_header(auth, account_balance_display)
+            if auth.account_status == 'active':
+                display_name = signed_in_header(auth, account_balance_display)
 
-            print(end='\n')
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print(f"|  1. {display_name} ACCOUNT BALANCE  |    2. TRANSFER MONEY    |   3. CARD-LESS WITHDRAWAL    |")
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print("|      4. DEPOSIT MONEY     |     5. COLLECT LOAN     |        6. UPDATE BVN         |")
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print("|  7. TRANSACTION HISTORY   |  8. GENERATE STATEMENT  |       9. BENEFICIARIES       |")
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print("|    10. UPGRADE ACCOUNT    |    11. OPEN ACCOUNT     |       12. CLOSE ACCOUNT      |")
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print("|     13. BLOCK ACCOUNT     |  14. VIEW CONTACT INFO  |  15. CHANGE TRANSACTION PIN  |")
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print("|  16. UPDATE ACCOUNT INFO  |  17. BANK INFORMATION   |      18. FIXED DEPOSIT       |")
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print("|                                     19. LOGOUT                                     |")
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print(end='\n')
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print(f"|  1. {display_name} ACCOUNT BALANCE  |    2. TRANSFER MONEY    |   3. CARD-LESS WITHDRAWAL    |")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print("|      4. DEPOSIT MONEY     |     5. COLLECT LOAN     |        6. UPDATE BVN         |")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print("|  7. TRANSACTION HISTORY   |  8. GENERATE STATEMENT  |       9. BENEFICIARIES       |")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print("|    10. UPGRADE ACCOUNT    |    11. OPEN ACCOUNT     |       12. CLOSE ACCOUNT      |")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print("|     13. BLOCK ACCOUNT     |  14. VIEW CONTACT INFO  |  15. CHANGE TRANSACTION PIN  |")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print("|  16. UPDATE ACCOUNT INFO  |  17. BANK INFORMATION   |      18. FIXED DEPOSIT       |")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print("|                                     19. LOGOUT                                     |")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
-            user_input = input(">>> ").strip()
+                user_input = input(">>> ").strip()
 
-            if re.search('^1$', user_input):
-                if display_name == 'SHOW':
-                    account_balance_display = True
+                if re.search('^1$', user_input):
+                    if display_name == 'SHOW':
+                        account_balance_display = True
+                    else:
+                        account_balance_display = False
+
+                    continue
+                elif re.search('^2$', user_input):
+                    process_transfer(auth)
+                    continue
+                elif re.search('^3$', user_input):
+                    withdraw(auth)
+                    continue
+                elif re.search('^4$', user_input):
+                    deposit(auth)
+                    continue
+                elif re.search('^5$', user_input):
+                    continue
+                elif re.search('^6$', user_input):
+                    continue
+                elif re.search('^7$', user_input):
+                    continue
+                elif re.search('^8$', user_input):
+                    continue
+                elif re.search('^9$', user_input):
+                    continue
+                elif re.search('^10$', user_input):
+                    continue
+                elif re.search('^11$', user_input):
+                    continue
+                elif re.search('^12$', user_input):
+                    continue
+                elif re.search('^13$', user_input):
+                    continue
+                elif re.search('^14$', user_input):
+                    continue
+                elif re.search('^15$', user_input):
+                    continue
+                elif re.search('^16$', user_input):
+                    continue
+                elif re.search('^17$', user_input):
+                    continue
+                elif re.search('^18$', user_input):
+                    if auth.fixed_account == 'yes':
+                        access_safelock(auth)
+                        continue
+                    elif auth.fixed_account == 'no':
+                        create_safelock(auth)
+                        continue
+                elif re.search('^19$', user_input):
+                    auth.user_logout()
+                    del user_input
+                    login()
+                    break
+                elif re.search('^.*(back|return).*$', user_input.strip().lower()):
+                    auth.user_logout()
+                    del user_input
+                    go_back('script')
+                    break
                 else:
-                    account_balance_display = False
-
-                continue
-            elif re.search('^2$', user_input):
-                transfer_money.process_transfer(auth)
-                continue
-            elif re.search('^3$', user_input):
-                withdraw(auth)
-                continue
-            elif re.search('^4$', user_input):
-                deposit(auth)
-                continue
-            elif re.search('^5$', user_input):
-                continue
-            elif re.search('^6$', user_input):
-                continue
-            elif re.search('^7$', user_input):
-                continue
-            elif re.search('^8$', user_input):
-                continue
-            elif re.search('^9$', user_input):
-                continue
-            elif re.search('^10$', user_input):
-                continue
-            elif re.search('^11$', user_input):
-                continue
-            elif re.search('^12$', user_input):
-                continue
-            elif re.search('^13$', user_input):
-                continue
-            elif re.search('^14$', user_input):
-                continue
-            elif re.search('^15$', user_input):
-                continue
-            elif re.search('^16$', user_input):
-                continue
-            elif re.search('^17$', user_input):
-                continue
-            elif re.search('^18$', user_input):
-                if auth.fixed_account == 'yes':
-                    access_safelock(auth)
+                    del user_input
                     continue
-                elif auth.fixed_account == 'no':
-                    create_safelock(auth)
-                    continue
-            elif re.search('^19$', user_input):
-                auth.user_logout()
-                del user_input
-                login()
-                break
-            elif re.search('^.*(back|return).*$', user_input.strip().lower()):
-                auth.user_logout()
-                del user_input
-                go_back('script')
-                break
             else:
-                del user_input
-                continue
+                header()
+                print("\n:: Account is BLOCKED.\n:: Meet the admin to UNBLOCK your account.")
+                time.sleep(5)
+                break
     except Exception as e:
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: script.py \nFunction: signed_in \nError: {repr(e)}')

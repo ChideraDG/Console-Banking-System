@@ -21,7 +21,7 @@ class Notification:
         self.sender = sender  # The entity or system responsible for sending the notification
         self.attachments = attachments  # Any additional files or media included with the notification
 
-    def send_notification(self):
+    def send_notification(self, path: str):
         """Method to send notifications to users via their preferred channels,
          such as email, SMS, push notifications, or in-app messages."""
         notification.notify(
@@ -30,14 +30,38 @@ class Notification:
             timeout=30
         )
 
-        with open('../notification/notification.txt', 'a') as file:
+        with open(f'../notification/{path}.txt', 'a') as file:
             file.write(self.message)
+            file.write('\n')
 
-    def forgot_username_notification(self, *, title: str, message: str):
+    def forgot_username_notification(self, *, title: str, message: str, channel: str):
+        """
+        Sends a notification to the user regarding their forgotten username.
+
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The message content of the notification.
+        channel : str
+            The Location of the notification
+
+        Notes
+        -----
+        This function sets the notification title and message, then triggers the sending of the notification.
+        """
+        # Set the status of the notification with the provided title.
         self.status = title
+
+        # Set the message of the notification with the provided message.
         self.message = message
 
-        self.send_notification()
+        # Set the location of the notification with the provided path
+        self.deliver_channel = channel
+
+        # Call the method to send the notification.
+        self.send_notification(self.deliver_channel)
 
     def schedule_notification(self):
         """Method to schedule notifications for future delivery,

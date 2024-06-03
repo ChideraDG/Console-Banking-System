@@ -107,10 +107,6 @@ def go_back(return_place, auth: Authentication = None):
 def signing_in():
     from banking.login_panel import login
     from banking.register_panel import register_bvn_account
-    Notification.sign_in(
-        title="Log in Notification",
-        message=f"Hello a log in has been made!"
-    )
 
     while True:
         header()

@@ -212,6 +212,7 @@ def signed_in(auth: Authentication):
     from banking.deposit_money import deposit
     from banking.login_panel import login
     from banking.withdrawals import withdraw
+    from banking.collect_loan import preview
 
     try:
         account_balance_display = None
@@ -255,6 +256,7 @@ def signed_in(auth: Authentication):
                     deposit(auth)
                     continue
                 elif re.search('^5$', user_input):
+                    preview(auth)
                     continue
                 elif re.search('^6$', user_input):
                     continue

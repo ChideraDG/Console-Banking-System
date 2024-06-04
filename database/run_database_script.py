@@ -24,155 +24,113 @@ connection = sql.connect(
 
 my_cursor = connection.cursor()
 
-account_data = """
-CREATE TABLE `Account` (
-  `account_id` int(11) NOT NULL,
-  `account_number` varchar(10) NOT NULL,
-  `account_type` varchar(15) NOT NULL,
-  `account_holder` varchar(70) NOT NULL,
-  `account_balance` float NOT NULL,
-  `minimum_balance` float NOT NULL,
-  `maximum_balance` float NOT NULL,
-  `account_fee` float NOT NULL,
-  `transaction_pin` varchar(4) NOT NULL,
-  `account_status` varchar(10) NOT NULL,
-  `account_tier` varchar(10) NOT NULL,
-  `overdraft_protection` enum('yes','no') NOT NULL,
-  `transaction_limit` int(11) NOT NULL,
-  `transfer_limit` float NOT NULL,
-  `beneficiaries` varchar(100) NOT NULL,
-  `fixed_account` varchar(5) NOT NULL DEFAULT 'no'
-) 
-"""
-
-bvn_data = """
-CREATE TABLE `Bank_Verification_Number` (
-  `id` int(11) NOT NULL,
-  `first_name` varchar(50) NOT NULL,
-  `middle_name` varchar(50) NOT NULL,
-  `last_name` varchar(50) NOT NULL,
-  `gender` enum('Male','Female') NOT NULL,
-  `address` varchar(100) NOT NULL,
-  `phone_number` varchar(16) NOT NULL,
-  `date_of_birth` date NOT NULL,
-  `nationality` varchar(20) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `bvn_number` varchar(12) NOT NULL,
-  `created_date` datetime NOT NULL,
-  `last_updated` datetime NOT NULL,
-  `bvn_status` varchar(20) NOT NULL
-) 
-"""
-
-transaction_data = """
-CREATE TABLE `Transaction` (
-  `transaction_id` varchar(20) NOT NULL,
-  `transaction_type` varchar(15) NOT NULL,
-  `transaction_amount` float NOT NULL,
-  `sender_account_number` varchar(10) NOT NULL,
-  `sender_name` varchar(50) NOT NULL,
-  `receiver_account_number` varchar(10) NOT NULL,
-  `receiver_name` varchar(50) NOT NULL,
-  `transaction_date_time` datetime NOT NULL,
-  `description` varchar(100) NOT NULL,
-  `status` enum('successful','failed') NOT NULL,
-  `account_type` varchar(15) NOT NULL,
-  `account_balance` float NOT NULL,
-  `transaction_mode` varchar(10) NOT NULL
-) 
-"""
-
-user_data = """
-CREATE TABLE `User` (
-  `id` int(11) NOT NULL,
-  `username` varchar(20) NOT NULL,
-  `password` varchar(20) NOT NULL,
-  `first_name` varchar(20) NOT NULL,
-  `middle_name` varchar(20) NOT NULL,
-  `last_name` varchar(20) NOT NULL,
-  `gender` enum('Male','Female') NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `phone_number` varchar(15) NOT NULL,
-  `address` varchar(100) NOT NULL,
-  `date_of_birth` date NOT NULL,
-  `linked_accounts` varchar(100) NOT NULL,
-  `last_login_timestamp` datetime NOT NULL,
-  `account_open_date` datetime NOT NULL,
-  `account_close_date` datetime DEFAULT NULL
-) 
-"""
-
-fixed_deposit_data = """
-CREATE TABLE `Fixed_Deposit` (
-  `deposit_id` varchar(15) NOT NULL,
-  `account_number` varchar(11) NOT NULL,
-  `deposit_title` varchar(30) DEFAULT NULL,
-  `initial_deposit` float NOT NULL,
-  `interest_rate` varchar(10) NOT NULL,
-  `total_interest_earned` float NOT NULL,
-  `start_date` date NOT NULL,
-  `payback_date` date NOT NULL,
-  `payback_time` time NOT NULL,
-  `status` varchar(10) NOT NULL
-)
-"""
-
-cb_data = """
-CREATE TABLE `Central_Bank` (
-  `account_number` varchar(15) NOT NULL,
-  `account_balance` float NOT NULL
-)
-"""
-
-alter_account = """
-ALTER TABLE `Account`
-  ADD PRIMARY KEY (`account_id`),
-  ADD UNIQUE KEY `account_number` (`account_number`);
-"""
-
-alter_bvn = """
-ALTER TABLE `Bank_Verification_Number`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `phone_number` (`phone_number`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `bvn_number` (`bvn_number`);
-"""
-
-alert_user = """
-ALTER TABLE `User`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `phone_number` (`phone_number`);
-"""
-
-alert_modify_account = """
-ALTER TABLE `Account`
-  MODIFY `account_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-"""
-
-alert_modify_bvn = """
-ALTER TABLE `Bank_Verification_Number`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-"""
-
-alert_modify_user = """
-ALTER TABLE `User`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-"""
-
-alter_fixed_deposit = """
-ALTER TABLE `Fixed_Deposit`
-  ADD UNIQUE KEY `deposit_id` (`deposit_id`);
-"""
-
-alter_cb = """
-ALTER TABLE `Central_Bank`
-  ADD UNIQUE KEY `account_number` (`account_number`);
-"""
-
 queries = [
-    account_data, bvn_data, transaction_data, user_data, fixed_deposit_data, cb_data, alter_account, alter_bvn,
-    alert_user, alert_modify_account, alert_modify_bvn, alert_modify_user, alter_fixed_deposit, alter_cb,
+    """
+    CREATE TABLE `Account` (
+      `account_id` int(11) NOT NULL AUTO_INCREMENT,
+      `account_number` varchar(10) NOT NULL,
+      `account_type` varchar(15) NOT NULL,
+      `account_holder` varchar(70) NOT NULL,
+      `account_balance` float NOT NULL,
+      `minimum_balance` float NOT NULL,
+      `maximum_balance` float NOT NULL,
+      `account_fee` float NOT NULL,
+      `transaction_pin` varchar(4) NOT NULL,
+      `account_status` varchar(10) NOT NULL,
+      `account_tier` varchar(10) NOT NULL,
+      `overdraft_protection` enum('yes','no') NOT NULL,
+      `transaction_limit` int(11) NOT NULL,
+      `transfer_limit` float NOT NULL,
+      `beneficiaries` varchar(100) NOT NULL,
+      `fixed_account` varchar(5) NOT NULL DEFAULT 'no',
+      PRIMARY KEY (`account_id`),
+      UNIQUE KEY `account_number` (`account_number`)
+    ) AUTO_INCREMENT=2;
+    """,
+    """
+    CREATE TABLE `Bank_Verification_Number` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `first_name` varchar(50) NOT NULL,
+      `middle_name` varchar(50) NOT NULL,
+      `last_name` varchar(50) NOT NULL,
+      `gender` enum('Male','Female') NOT NULL,
+      `address` varchar(100) NOT NULL,
+      `phone_number` varchar(16) NOT NULL,
+      `date_of_birth` date NOT NULL,
+      `nationality` varchar(20) NOT NULL,
+      `email` varchar(50) NOT NULL,
+      `bvn_number` varchar(12) NOT NULL,
+      `created_date` datetime NOT NULL,
+      `last_updated` datetime NOT NULL,
+      `bvn_status` varchar(20) NOT NULL,
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `phone_number` (`phone_number`),
+      UNIQUE KEY `email` (`email`),
+      UNIQUE KEY `bvn_number` (`bvn_number`)
+    ) AUTO_INCREMENT=6;
+    """,
+    """
+    CREATE TABLE `Transaction` (
+      `transaction_id` varchar(20) NOT NULL,
+      `transaction_type` varchar(15) NOT NULL,
+      `transaction_amount` float NOT NULL,
+      `sender_account_number` varchar(10) NOT NULL,
+      `sender_name` varchar(50) NOT NULL,
+      `receiver_account_number` varchar(10) NOT NULL,
+      `receiver_name` varchar(50) NOT NULL,
+      `transaction_date_time` datetime NOT NULL,
+      `description` varchar(100) NOT NULL,
+      `status` enum('successful','failed') NOT NULL,
+      `account_type` varchar(15) NOT NULL,
+      `account_balance` float NOT NULL,
+      `transaction_mode` varchar(10) NOT NULL,
+      PRIMARY KEY (`transaction_id`)
+    );
+    """,
+    """
+    CREATE TABLE `User` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `username` varchar(20) NOT NULL,
+      `password` varchar(20) NOT NULL,
+      `first_name` varchar(20) NOT NULL,
+      `middle_name` varchar(20) NOT NULL,
+      `last_name` varchar(20) NOT NULL,
+      `gender` enum('Male','Female') NOT NULL,
+      `email` varchar(50) NOT NULL,
+      `phone_number` varchar(15) NOT NULL,
+      `address` varchar(100) NOT NULL,
+      `date_of_birth` date NOT NULL,
+      `linked_accounts` varchar(100) NOT NULL,
+      `last_login_timestamp` datetime NOT NULL,
+      `account_open_date` datetime NOT NULL,
+      `account_close_date` datetime DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `username` (`username`),
+      UNIQUE KEY `phone_number` (`phone_number`)
+    ) AUTO_INCREMENT=2;
+    """,
+    """
+    CREATE TABLE `Fixed_Deposit` (
+      `deposit_id` varchar(15) NOT NULL,
+      `account_number` varchar(11) NOT NULL,
+      `deposit_title` varchar(30) DEFAULT NULL,
+      `initial_deposit` float NOT NULL,
+      `interest_rate` varchar(10) NOT NULL,
+      `total_interest_earned` float NOT NULL,
+      `start_date` date NOT NULL,
+      `payback_date` date NOT NULL,
+      `payback_time` time NOT NULL,
+      `status` varchar(10) NOT NULL,
+      PRIMARY KEY (`deposit_id`)
+    );
+    """,
+    """
+    CREATE TABLE `Central_Bank` (
+      `account_number` varchar(15) NOT NULL,
+      `account_balance` float NOT NULL,
+      PRIMARY KEY (`account_number`)
+    );
+    """
 ]
 
 for query in queries:

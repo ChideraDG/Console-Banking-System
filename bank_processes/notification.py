@@ -30,7 +30,7 @@ class Notification:
             timeout=30
         )
 
-        with open(f'../notification/{path}.txt', 'a') as file:
+        with open(f'notification/{path}.txt', 'a') as file:
             file.write(self.message)
             file.write('\n')
 
@@ -61,7 +61,7 @@ class Notification:
         self.deliver_channel = channel
 
         # Call the method to send the notification.
-        self.send_notification(self.deliver_channel)
+        self.send_notification(path=self.deliver_channel)
 
     def schedule_notification(self):
         """Method to schedule notifications for future delivery,

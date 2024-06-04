@@ -228,7 +228,7 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                 break
             else:
                 # Validate the deposit amount input.
-                if re.search("^[0-9]*.[0-9]{0,2}$", deposit_amount, re.IGNORECASE) is None:
+                if re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", deposit_amount, re.IGNORECASE) is None:
                     print("\n:: Digits Only")
                     del deposit_amount
                     time.sleep(2)
@@ -339,7 +339,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
             else:
                 payback_time = f'{_time.hour}:{_time.minute} AM'
 
-            # Display authorization message
+            # Display an authorization message
             print(f'I authorize Console Beta Banking to SafeLock {amount_to_lock} immediately and return it in full on'
                   f'\nthe {maturity_date} by {payback_time} to my Beta Account Balance. \n'
                   f'I confirm and approve this transaction.')
@@ -808,6 +808,8 @@ def ongoing_deposits(auth: Authentication):
                     progress_length = 0 if days_remaining[key] == 0 else bar_length // days[key]
                     progress = progress_length * (days[key] - days_remaining[key])
                     remaining = bar_length - progress
+                    if days_remaining[key] == 0:
+                        progress, remaining = 46, 0
 
                     # Format each deposit detail for display
                     detail = (f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"

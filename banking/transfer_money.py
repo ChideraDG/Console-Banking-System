@@ -203,7 +203,7 @@ def amount_to_be_transferred(auth: Authentication):
                     del _input
                     time.sleep(3)
                     continue
-                elif re.search("^[0-9]*.[0-9]{0,2}$", _input, re.IGNORECASE) is None:
+                elif re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", _input, re.IGNORECASE) is None:
                     print("\n:: Digits Only")
                     del _input
                     time.sleep(2)

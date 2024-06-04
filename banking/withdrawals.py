@@ -35,7 +35,7 @@ def withdraw(auth: Authentication):
                 break
 
             # Ensure the input is a valid number
-            elif re.search("^[0-9]*.[0-9]{0,2}$", amount, re.IGNORECASE) is None:
+            elif re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", amount, re.IGNORECASE) is None:
                 print('\n:: Digits Only')
                 time.sleep(3)
                 continue
@@ -76,7 +76,7 @@ def withdraw(auth: Authentication):
 
                         header()
                         print("\n:: Withdraw Successfully")
-                        print(f":: You withdraw N{auth.amount}")
+                        print(f":: You withdrew N{auth.amount}")
                         time.sleep(3)
                         break
                     else:

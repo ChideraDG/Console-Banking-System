@@ -35,7 +35,7 @@ def deposit(auth: Authentication):
                 break
 
             # Ensure the input is a valid number
-            elif re.search("^[0-9]*.[0-9]{0,2}$", amount, re.IGNORECASE) is None:
+            elif re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", amount, re.IGNORECASE) is None:
                 print('\n:: Digits Only')
                 time.sleep(3)
                 continue

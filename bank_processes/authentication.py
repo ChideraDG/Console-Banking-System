@@ -109,7 +109,7 @@ def token_auth():
         message=f"Your Token Number: {token}. Don't Share it.\nExpires after 30 minutes.",
         timeout=30
     )
-    with open('token_notification.txt', 'w') as file:
+    with open('notification/token_notification.txt', 'w') as file:
         file.write(f"Your Token Number: {token}. Don't Share it.\nExpires after 30 minutes.")
 
     return token

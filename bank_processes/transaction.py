@@ -162,7 +162,7 @@ class Transaction(Account, ABC):
                 # Rollback changes if an error occurs
                 self.database.rollback()
 
-    def transaction_receipts(self):
+    def transaction_receipts(self, user_session_token):
         """Method to generate receipts for each transaction made"""
 
         print('                      {bold}TRANSACTION RECEIPT')
@@ -183,6 +183,13 @@ class Transaction(Account, ABC):
         print('| Transaction type                Transaction status           |')
         print(f'| {bold}{self.transaction_type}                    {bold}{self.__transaction_status}')
         print('|                                                              |')
+        print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+\n')
+        print('| Transaction reference:                                       |')
+        print(f'| {bold}{self.__transaction_id}                                ')
+        print('| Status:                                                      |')
+        print(f'| {bold}{self.__transaction_status}                            ')
+        print('| Session ID:                                                  |')
+        print(f'| {bold}{user_session_token}                                   ')
         print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+\n')
 
     def retrieve_transaction(self):

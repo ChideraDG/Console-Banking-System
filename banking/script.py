@@ -4,7 +4,6 @@ import os
 import re
 import time
 from bank_processes.authentication import Authentication
-from bank_processes.notification import Notification
 from animation.colors import *
 
 

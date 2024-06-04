@@ -9,6 +9,22 @@ from pymysql.cursors import DictCursor
 from bank_processes.account import Account
 
 
+def get_month_values(input_month: str, input_year: int):
+    """ function to return the numerical value of a month and the last days in any month in a tuple"""
+
+    # Determine the number of days in February based on whether it is a leap year
+    february_days = 29 if input_year % 4 == 0 else 28
+    # Dictionary of the number of days in each month and their corresponding numeric values
+    month_values = {'january': (31, 1), 'february': (february_days, 2), 'march': (31, 3), 'april': (30, 4),
+                    'may': (31, 5), 'june': (30, 6), 'july': (31, 7), 'august': (31, 8), 'september': (30, 9),
+                    'october': (31, 10), 'november': (30, 11), 'december': (31, 12)}
+
+    # Get the numeric value and end day for the specified month
+    month_val = month_values.get(input_month.lower())
+    # return the month value and ending day of the specified month
+    return month_val
+
+
 class Transaction(Account, ABC):
     currency: str = 'Naira'
 
@@ -367,7 +383,7 @@ class Transaction(Account, ABC):
         entity initiating the transaction."""
         pass
 
-    def transaction_statement(self):
+    def transaction_statement(self, start_date: datetime = None, end_date: datetime = None):
         """Method to generate statement of account providing a summary of all transactions within a particular
         period of time by a user."""
         pass
@@ -441,23 +457,7 @@ class Transaction(Account, ABC):
                                                    transaction['status'], transaction['transaction_date_time']])
 
         elif is_month:
-            # Determine the number of days in February based on whether it is a leap year
-            february_days = 29 if year % 4 == 0 else 28
-
-            # Dictionary of the number of days in each month
-            no_of_month_days = {'january': 31, 'february': february_days, 'march': 31, 'april': 30, 'may': 31,
-                                'june': 30, 'july': 31, 'august': 31, 'september': 30, 'october': 31,
-                                'november': 30,
-                                'december': 31}
-
-            # Dictionary to convert month names to their corresponding numeric values
-            months = {'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
-                      'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11,
-                      'december': 12}
-
-            # Get the numeric value and end day for the specified month
-            month_value = months.get(month, 'The month entered does not exist')
-            end_day = no_of_month_days.get(month)
+            (end_day, month_value) = get_month_values(month, year)
             start_date = datetime(year, month_value, 1)
             end_date = datetime(year, month_value, end_day)
 

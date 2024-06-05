@@ -1,4 +1,6 @@
+import os
 import re
+import sys
 import time
 from typing import Any
 from bank_processes.authentication import Authentication, verify_data
@@ -6,6 +8,16 @@ from banking.register_panel import countdown_timer
 from banking.script import header, go_back
 
 
+def log_error(error: Exception):
+    """Logs errors to a file."""
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    with open('notification/error.txt', 'w') as file:
+        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
+                   f'\nError: {repr(error)}')
+    print(f'\nError: {repr(error)}')
+    time.sleep(3)
+    
+    
 def beneficiaries(auth: Authentication, checking_beneficiary: bool = False) -> Any | None:
     """
     Retrieves the list of beneficiaries or checks if a specific beneficiary exists.
@@ -72,10 +84,7 @@ def beneficiaries(auth: Authentication, checking_beneficiary: bool = False) -> A
                 else:
                     return None
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: transfer_money.py \nFunction: beneficiaries \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(e)
         go_back('signed_in', auth=auth)
 
 
@@ -156,10 +165,7 @@ def recipient_account_number(auth: Authentication):
                 time.sleep(2)
                 continue
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: transfer_money.py \nFunction: recipient_account_number \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(e)
         go_back('signed_in', auth=auth)
 
 
@@ -240,10 +246,7 @@ def amount_to_be_transferred(auth: Authentication):
                         time.sleep(2)
                         go_back('signed_in', auth=auth)
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: transfer_money.py \nFunction: amount_to_be_transferred \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(5)
+        log_error(e)
         go_back('signed_in', auth=auth)
 
 
@@ -281,10 +284,7 @@ def description(auth):
             # auth.description = _input
             pass
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: transfer_money.py \nFunction: description \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(5)
+        log_error(e)
         go_back('signed_in', auth=auth)
 
 
@@ -344,10 +344,7 @@ def transaction_pin(auth: Authentication):
                         time.sleep(3)
                         continue
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: transfer_money.py \nFunction: transaction_pin \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(5)
+        log_error(e)
         go_back('signed_in', auth=auth)
 
 
@@ -410,10 +407,7 @@ def session_token(auth: Authentication):
                         time.sleep(3)
                         continue
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: transfer_money.py \nFunction: session_token \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(5)
+        log_error(e)
         go_back('signed_in', auth=auth)
 
 
@@ -571,8 +565,5 @@ def process_transfer(auth: Authentication):
             time.sleep(3)
             go_back('signed_in', auth=auth)
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: transfer_money.py \nFunction: process_transfer \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(e)
         go_back('signed_in', auth=auth)

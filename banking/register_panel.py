@@ -1,5 +1,7 @@
 import datetime as dt
+import os
 import re
+import sys
 import time
 import random
 from bank_processes.bvn import BVN
@@ -13,6 +15,16 @@ bvn = BVN()
 account = Account()
 
 
+def log_error(error: Exception):
+    """Logs errors to a file."""
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    with open('notification/error.txt', 'w') as file:
+        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
+                   f'\nError: {repr(error)}')
+    print(f'\nError: {repr(error)}')
+    time.sleep(3)
+    
+    
 def countdown_timer(_register, _duty: str = 'creation', countdown: int = 3):
     """Countdown for any bank process.
     It enhances users' experience.
@@ -506,10 +518,7 @@ def register_bvn_account():
         print(f"\nUser: {bvn.last_name} {bvn.first_name} {bvn.middle_name}")
         print(f"BVN NUMBER: {bvn.bvn_number}")
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: register_panel.py \nFunction: register_bvn_account \nError: {repr(e)}')
-        print(f"\n*ERROR*\nError Creating BVN")
-        go_back('script')
+        log_error(e)
 
     time.sleep(5)
 
@@ -605,7 +614,5 @@ def register_bvn_account():
         print(f"\nUSERNAME: {user.username}")
         print(f"ACCOUNT NUMBER: {account.account_number}")
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: register_panel.py \nFunction: register_panel \nError: {repr(e)}')
-        print(f"\n*ERROR*\nError Creating Bank Account")
+        log_error(e)
         go_back('script')

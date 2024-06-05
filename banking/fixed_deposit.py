@@ -11,6 +11,16 @@ from banking.script import go_back, header
 from banking.transfer_money import session_token, transaction_pin
 
 
+def log_error(error: Exception):
+    """Logs errors to a file."""
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    with open('notification/error.txt', 'w') as file:
+        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
+                   f'\nError: {repr(error)}')
+    print(f'\nError: {repr(error)}')
+    time.sleep(3)
+
+
 def get_month(month: int) -> tuple[str, int]:
     """
     Generates the month name and days within that month according to the month number received.
@@ -55,14 +65,9 @@ def get_ordinal_suffix(day: int) -> str:
     """
     if 10 <= day % 100 <= 20:
         return 'th'
-    elif day % 10 == 1:
-        return 'st'
-    elif day % 10 == 2:
-        return 'nd'
-    elif day % 10 == 3:
-        return 'rd'
-    else:
+    elif 11 <= day <= 13:
         return 'th'
+    return {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
 
 
 def calculate_interest(principal: float, rate_per_year: float, days: int):
@@ -194,10 +199,7 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
                     time.sleep(3)
                     continue
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: fixed_deposit \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(error=e)
         go_back('script')
 
 
@@ -283,12 +285,7 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                                 return float(deposit_amount), deposit_title
     except Exception as e:
         # Log any exceptions to a file and navigate back to the main script.
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
-                       f'\nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(error=e)
         go_back('script')
 
 
@@ -443,12 +440,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                     continue
     except Exception as e:
         # Log any exceptions to a file and navigate back to the main script
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
-                       f'\nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(error=e)
         go_back('script')
 
 
@@ -522,10 +514,7 @@ def create_safelock(auth: Authentication):
                 print("\n:: Wrong Input")
                 time.sleep(2)
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: create_safelock \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(error=e)
         go_back('script')
 
 
@@ -652,10 +641,7 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
                         time.sleep(3)
                         continue
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: top_up_deposit \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(error=e)
         go_back('script')
 
 
@@ -727,10 +713,7 @@ def ongoing_display_deposits(auth: Authentication, data: list, _details: list, _
                 continue
 
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: display_deposits \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(error=e)
         go_back('script')
 
 
@@ -795,10 +778,7 @@ def paid_display_deposits(data: list, _details: list, _key: int):
                 time.sleep(2)
                 continue
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: display_deposits \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(error=e)
         go_back('script')
 
 
@@ -875,10 +855,7 @@ def ongoing_deposits(auth: Authentication):
                 time.sleep(5)
                 break
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: ongoing_deposits \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(error=e)
         go_back('script')
 
 
@@ -936,10 +913,7 @@ def paid_back_deposits(auth: Authentication):
                 time.sleep(3.5)
                 break
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: paid_back_deposits \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(error=e)
         go_back('script')
 
 
@@ -1004,8 +978,5 @@ def access_safelock(auth: Authentication):
                 continue
             break  # Exit loop after handling the input
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: access_safelock \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(error=e)
         go_back('script')

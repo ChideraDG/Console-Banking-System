@@ -1,9 +1,21 @@
 import re
 import time
+import sys
+import os
 from bank_processes.authentication import Authentication
 from banking.register_panel import countdown_timer
 from banking.script import go_back, header
 from banking.transfer_money import session_token, transaction_pin
+
+
+def log_error(error: Exception):
+    """Logs errors to a file."""
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    with open('notification/error.txt', 'w') as file:
+        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
+                   f'\nError: {repr(error)}')
+    print(f'\nError: {repr(error)}')
+    time.sleep(3)
 
 
 def withdraw(auth: Authentication):

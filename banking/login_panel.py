@@ -1,4 +1,6 @@
+import os
 import re
+import sys
 import time
 from datetime import datetime
 from banking.register_panel import countdown_timer
@@ -18,6 +20,16 @@ auth = Authentication()
 notify = Notification()
 
 
+def log_error(error: Exception):
+    """Logs errors to a file."""
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    with open('notification/error.txt', 'w') as file:
+        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
+                   f'\nError: {repr(error)}')
+    print(f'\nError: {repr(error)}')
+    time.sleep(3)
+    
+    
 def username():
     """
     Validates the username of the user.
@@ -77,10 +89,7 @@ def username():
                 time.sleep(3)
                 continue
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: login_panel.py \nFunction: username \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(e)
         go_back('script')
 
 
@@ -142,10 +151,7 @@ def password():
         time.sleep(1)
         go_back('script')
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: login_panel.py \nFunction: password \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(e)
         go_back('script')
 
 
@@ -233,10 +239,7 @@ def forgot_username():
                     time.sleep(3)
                     continue
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: login_panel.py \nFunction: forgot_username \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(e)
         go_back('script')
 
 
@@ -277,10 +280,7 @@ def forgot_password():
                     time.sleep(3)
                     continue
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: login_panel.py \nFunction: forgot_password \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(e)
         go_back('script')
 
 
@@ -377,9 +377,6 @@ def login():
             break
     except Exception as e:
         # Handle any exceptions by logging the error and navigating back to the main script.
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: login_panel.py \nFunction: login \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(e)
         go_back('script')
 

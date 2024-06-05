@@ -2,11 +2,22 @@ import datetime
 import calendar
 import os
 import re
+import sys
 import time
 from bank_processes.authentication import Authentication
 from animation.colors import *
 
 
+def log_error(error: Exception):
+    """Logs errors to a file."""
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    with open('notification/error.txt', 'w') as file:
+        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
+                   f'\nError: {repr(error)}')
+    print(f'\nError: {repr(error)}')
+    time.sleep(3)
+    
+    
 def clear():
     """
     Clears the output console.
@@ -198,10 +209,7 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
         return display_name
     except Exception as e:
         # Handle any exceptions by logging the error and navigating back
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: script.py \nFunction: signed_in_header \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(e)
         go_back('script')
 
 
@@ -308,8 +316,5 @@ def signed_in(auth: Authentication):
                 time.sleep(5)
                 break
     except Exception as e:
-        with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: script.py \nFunction: signed_in \nError: {repr(e)}')
-        print(f'\nError: {repr(e)}')
-        time.sleep(3)
+        log_error(e)
         go_back('script')

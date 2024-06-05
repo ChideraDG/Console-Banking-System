@@ -417,6 +417,34 @@ def session_token(auth: Authentication):
         go_back('signed_in', auth=auth)
 
 
+def receipt(auth: Authentication):
+    while True:
+        header()
+
+        print(end='\n')
+
+        auth.transaction_receipts(auth.session_token)
+
+        print('\nDo you want to save the receipt?')
+        print('1. Yes  |  2. No')
+        print('~~~~~~     ~~~~~')
+        user_input = input(">>> ").strip()
+
+        if re.search('^.*(back|return).*$', user_input.lower(), re.IGNORECASE):
+            break
+        elif re.search('^(1|yes)$', user_input.lower()):
+            with open('notification/receipt', 'w') as file:
+                file.write(auth.transaction_receipts(auth.session_token))
+
+            print('Receipt Saved Successfully')
+            time.sleep(2)
+            break
+        elif re.search('^(2|no)$', user_input.lower()):
+            break
+        else:
+            continue
+
+
 def process_transfer(auth: Authentication):
     """
     Handles the process of transferring money either to a bank account or to a beneficiary.
@@ -448,9 +476,9 @@ def process_transfer(auth: Authentication):
                 header()
 
                 print(end='\n')
-                print(" ~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~ ")
+                print("+~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
                 print("|  1. to BANK  |  2. to BENEFICIARY  |")
-                print(" ~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~ ")
+                print("+~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
                 user_input = input(">>> ").strip()
 
                 if re.search('^1$', user_input):
@@ -494,6 +522,9 @@ def process_transfer(auth: Authentication):
                             del checking_input
                             time.sleep(1)
                             continue
+
+                    receipt(auth)
+
                     time.sleep(3)
                     break
                 elif re.search('^2$', user_input):
@@ -524,6 +555,9 @@ def process_transfer(auth: Authentication):
                         header()
                         print("\n:: Money Sent Successfully")
                         print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
+
+                        receipt(auth)
+
                         time.sleep(3)
                         break
                 elif re.search('^.*(back|return).*$', user_input.lower(), re.IGNORECASE):
@@ -540,5 +574,5 @@ def process_transfer(auth: Authentication):
         with open('notification/error.txt', 'w') as file:
             file.write(f'Module: transfer_money.py \nFunction: process_transfer \nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
-        time.sleep(5)
+        time.sleep(3)
         go_back('signed_in', auth=auth)

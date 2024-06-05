@@ -256,7 +256,7 @@ def signed_in(auth: Authentication):
                     deposit(auth)
                     continue
                 elif re.search('^5$', user_input):
-                    preview(auth)
+                    preview()
                     continue
                 elif re.search('^6$', user_input):
                     continue

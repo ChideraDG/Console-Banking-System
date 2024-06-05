@@ -240,7 +240,7 @@ class Account(User):
 
             for data in datas:
                 for account_balance in data:
-                    self.account_balance = account_balance
+                    self.account_balance = float(account_balance)
 
         return self.__account_balance
 
@@ -415,7 +415,7 @@ class Account(User):
 
             for data in datas:
                 for minimum_balance in data:
-                    self.minimum_balance = minimum_balance
+                    self.minimum_balance = float(minimum_balance)
 
         return self.__minimum_balance
 
@@ -440,7 +440,7 @@ class Account(User):
 
             for data in datas:
                 for account_fee in data:
-                    self.account_fee = account_fee
+                    self.account_fee = float(account_fee)
 
         return self.__account_fee
 
@@ -465,7 +465,7 @@ class Account(User):
 
             for data in datas:
                 for maximum_balance in data:
-                    self.maximum_balance = maximum_balance
+                    self.maximum_balance = float(maximum_balance)
 
         return self.__maximum_balance
 
@@ -490,7 +490,7 @@ class Account(User):
 
             for data in datas:
                 for transfer_limit in data:
-                    self.transfer_limit = transfer_limit
+                    self.transfer_limit = float(transfer_limit)
 
         return self.__transfer_limit
 
@@ -526,6 +526,20 @@ class Account(User):
     @fixed_account.deleter
     def fixed_account(self):
         del self.__fixed_account
+
+    @property
+    def central_bank(self):
+        query = (f"""
+                SELECT account_balance 
+                FROM {self.database.db_tables[5]} 
+                WHERE account_number = '1000000009'
+                """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for acc_balance in data:
+                return float(acc_balance)
 
 
 class FixedDeposit(Account, ABC):

@@ -57,7 +57,7 @@ class Transaction(Account, ABC):
         self.__transaction_mode = transaction_mode
 
     def transaction_record(self, transfer: bool = False, fixed_deposit: bool = False, withdrawal: bool = False,
-                           deposit: bool = False):
+                           deposit: bool = False, central_bank: bool = False):
         """Method to record new transactions made by the sender and the relevant information
 
         Parameters
@@ -70,6 +70,8 @@ class Transaction(Account, ABC):
             If set to True, records a withdrawal transaction.
         deposit: bool, optional
             If set to True, records a deposit transaction
+        central_bank: bool, optional
+            If set to True, record a central bank deposit
         """
         from banking.register_panel import verify_data
         self.__transaction_id = 'cbb' + str(random.randint(10000000000000000000000000,
@@ -144,10 +146,10 @@ class Transaction(Account, ABC):
                         (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                         receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                         account_balance, transaction_mode)
-                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', '{self.__amount}',
                         '{self.account_number}', '{self.account_holder}', 'NULL',
                         'NULL', '{self.__transaction_date_time}', '{self.__description}',
-                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
+                        '{self.__transaction_status}', '{self.account_type}', '{self.account_balance}', 'debit')
                         
                 """
                 self.database.query(query)
@@ -166,12 +168,34 @@ class Transaction(Account, ABC):
                         (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                         receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                         account_balance, transaction_mode)
-                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', '{self.__amount}',
                         'NULL', 'NULL', '{self.account_number}', '{self.account_holder}', 
                         '{self.__transaction_date_time}', '{self.__description}', '{self.__transaction_status}', 
-                        '{self.account_type}', {self.account_balance}, 'credit')
+                        '{self.account_type}', '{self.account_balance}', 'credit')
 
                 """
+                self.database.query(query)
+
+            except Exception:
+                # Rollback changes if an error occurs
+                self.database.rollback()
+
+        elif central_bank:
+            self.__transaction_type = 'deposit'
+            self.__transaction_status = 'successful'
+
+            try:
+                query = f"""
+                                    INSERT INTO {self.database.db_tables[2]}
+                                    (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                                    receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
+                                    account_balance, transaction_mode)
+                                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', '{self.__amount}',
+                                    'NULL', 'NULL', '1000000009', 'CENTRAL BANK', '{self.__transaction_date_time}', 
+                                    '{self.__description}', '{self.__transaction_status}', 
+                                    '{self.account_type}', '{self.central_bank}', 'credit')
+
+                            """
                 self.database.query(query)
 
             except Exception:
@@ -183,11 +207,12 @@ class Transaction(Account, ABC):
 
         print('                      {bold}TRANSACTION RECEIPT')
         print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-        print('| You sent:                                                     ')
-        print(f'| {bold}{self.amount}                                          ')
+        print('| You sent:                                                    |')
+        print(f'| {bold}{self.amount}                                         |')
         print('|                                                              |')
         print('| Recipient:                                                   |')
         print(f'| {bold}{self.receiver_name}{' ' * (52 - (len(self.receiver_name) - 9))}|')
+        print('|                                                              |')
         print('| Recipient Bank:                   Recipient Account Number:  |')
         print(f'| {bold}Console Beta Bank         {bold}{self.receiver_acct_num}')
         print('|                                                              |')
@@ -202,13 +227,15 @@ class Transaction(Account, ABC):
         print('| Transaction type:                Transaction status:         |')
         print(f'| {bold}{self.transaction_type}                    {bold}{self.__transaction_status}')
         print('|                                                              |')
-        print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+\n')
+        print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
         print('| Transaction reference:                                       |')
-        print(f'| {bold}{self.__transaction_id}                                ')
+        print(f'| {bold}{self.__transaction_id}                                |')
+        print('|                                                              |')
         print('| Status:                                                      |')
-        print(f'| {bold}{self.__transaction_status}                            ')
+        print(f'| {bold}{self.__transaction_status}                            |')
+        print('|                                                              |')
         print('| Session ID:                                                  |')
-        print(f'| {bold}{user_session_token}                                   ')
+        print(f'| {bold}{user_session_token}                                   |')
         print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+\n')
 
     def retrieve_transaction(self):
@@ -294,7 +321,7 @@ class Transaction(Account, ABC):
         del _object
 
     def process_transaction(self, transfer: bool = False, fixed_deposit: bool = False, withdrawal: bool = False,
-                            deposit: bool = False):
+                            deposit: bool = False, central_bank: bool = False):
         """Method to process the transaction, including updating account balances, recording transaction details,
         and handling any necessary validations or checks.
 
@@ -309,6 +336,8 @@ class Transaction(Account, ABC):
             If set to True, processes a withdrawal transaction.
         deposit: bool, optional
             If set to True, processes a deposit transaction
+        central_bank: bool, optional
+            If set to True, processes a central bank deposit
         """
         debited_amount = self.amount + self.charges
         updated_transaction_limit = self.transaction_limit - 1
@@ -319,8 +348,8 @@ class Transaction(Account, ABC):
                 sender_updated_balance = self.account_balance - debited_amount
                 sender_query = f"""
                 UPDATE {self.database.db_tables[3]}
-                SET account_balance = {sender_updated_balance}, transaction_limit = {updated_transaction_limit},
-                transfer_limit = {updated_transfer_limit}
+                SET account_balance = '{sender_updated_balance}', transaction_limit = {updated_transaction_limit},
+                transfer_limit = '{updated_transfer_limit}'
                 WHERE account_number = {self.account_number}  
                 """
                 self.database.query(sender_query)
@@ -330,7 +359,7 @@ class Transaction(Account, ABC):
                 receiver_updated_balance = _receiver_object.account_balance + self.amount
                 receiver_query = f"""
                 UPDATE {self.database.db_tables[3]}
-                SET account_balance = {receiver_updated_balance}
+                SET account_balance = '{receiver_updated_balance}'
                 WHERE account_number = {self.receiver_acct_num}
                 """
                 self.database.query(receiver_query)
@@ -343,8 +372,8 @@ class Transaction(Account, ABC):
             sender_updated_balance = self.account_balance - self.amount
             query = f"""
             UPDATE {self.database.db_tables[3]}
-            SET account_balance = {sender_updated_balance}, transaction_limit = {updated_transaction_limit},
-            transfer_limit = {updated_transfer_limit}
+            SET account_balance = '{sender_updated_balance}', transaction_limit = {updated_transaction_limit},
+            transfer_limit = '{updated_transfer_limit}'
             WHERE account_number = {self.account_number}  
             """
             self.database.query(query)
@@ -353,8 +382,8 @@ class Transaction(Account, ABC):
             withdrawer_updated_balance = self.account_balance - self.amount
             query = f"""
             UPDATE {self.database.db_tables[3]}
-            SET account_balance = {withdrawer_updated_balance}, transaction_limit = {updated_transaction_limit},
-            transfer_limit = {updated_transfer_limit}
+            SET account_balance = '{withdrawer_updated_balance}', transaction_limit = {updated_transaction_limit},
+            transfer_limit = '{updated_transfer_limit}'
             WHERE account_number = {self.account_number}  
             """
             self.database.query(query)
@@ -363,9 +392,18 @@ class Transaction(Account, ABC):
             depositor_updated_balance = self.account_balance + self.amount
             query = f"""
             UPDATE {self.database.db_tables[3]}
-            SET account_balance = {depositor_updated_balance}
+            SET account_balance = '{depositor_updated_balance}'
             WHERE account_number = {self.account_number}  
             """
+            self.database.query(query)
+
+        elif central_bank:
+            updated_balance = self.central_bank + self.amount
+            query = f"""
+                    UPDATE {self.database.db_tables[3]}
+                    SET account_balance = '{updated_balance}'
+                    WHERE account_number = '1000000009'
+                    """
             self.database.query(query)
 
     def cancel_transaction(self):
@@ -587,7 +625,7 @@ class Transaction(Account, ABC):
 
             for data in datas:
                 for transfer_limit in data:
-                    self.transfer_limit = transfer_limit
+                    self.transfer_limit = float(transfer_limit)
 
         return self.__transfer_limit
 

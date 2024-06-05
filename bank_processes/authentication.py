@@ -203,6 +203,13 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
             if datetime(year=value[7].year, month=value[7].month, day=value[7].day, hour=int(hour), minute=int(minute),
                         second=int(second)) <= datetime.today().now():
                 try:
+                    get_deposit = f"""
+                    SELECT initial_deposit 
+                    FROM {self.database.db_tables[4]} 
+                    WHERE deposit_id = '{value[0]}'
+                    """
+                    datas = self.database.fetch_data(get_deposit)
+
                     query = f"""
                             UPDATE {self.database.db_tables[4]}
                             SET status = 'inactive'
@@ -210,7 +217,21 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
                             """
                     # deposit their money back to their accounts
                     self.database.query(query)
-                except Exception as e:
+
+                    self.receiver_acct_num = self.account_number
+
+                    # Set the amount and narration for the deposit
+                    self.description = f'FIXED_DEPOSIT/CBB/DEPOSIT TO {self.account_holder}'
+
+                    for data in datas:
+                        for amount in data:
+                            self.amount = float(amount)
+
+                    self.process_transaction(deposit=True)
+                    self.transaction_record(deposit=True)
+                    self.receiver_transaction_validation()
+
+                except Exception:
                     # Rollback changes if an error occurs
                     self.database.rollback()
 

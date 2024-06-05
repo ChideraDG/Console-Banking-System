@@ -5,7 +5,7 @@ import pymysql as sql
 
 class DataBase:
     db_name = {'database': 'bankApp_db'}  # Name of the database storing bank-related data.
-    db_tables = ['Bank_Verification_Number', 'User', 'Transaction', 'Account', 'Fixed_Deposit']  # List of tables within the db, representing different entities.
+    db_tables = ['Bank_Verification_Number', 'User', 'Transaction', 'Account', 'Fixed_Deposit', 'Central_Bank']  # List of tables within the db, representing different entities.
 
     # Credentials (e.g., username, password) required to authenticate and access the database.
     db_credentials = {

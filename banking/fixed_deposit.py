@@ -1,5 +1,7 @@
 import datetime
+import os
 import re
+import sys
 import time
 import random
 from animation.colors import *
@@ -240,7 +242,7 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                     continue
                 else:
                     auth.amount = float(deposit_amount)
-                    # Validate the transaction against transfer limit.
+                    # Validate the transaction against the transfer limit.
                     if auth.transaction_validation(transfer_limit=True)[0]:
                         # Validate the transaction amount.
                         if auth.transaction_validation(amount=True)[0]:
@@ -281,8 +283,10 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                                 return float(deposit_amount), deposit_title
     except Exception as e:
         # Log any exceptions to a file and navigate back to the main script.
+        exc_type, exc_obj, exc_tb = sys.exc_info()
         with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: safelock \nError: {repr(e)}')
+            file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
+                       f'\nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
         go_back('script')
@@ -389,10 +393,30 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                             auth.payback_date = datetime.date(int(year), int(month), int(day))
                             auth.payback_time = _time
                             auth.status = 'active'
+
                             auth.description = f'FIXED_DEPOSIT/CBB/{auth.deposit_id}/{auth.deposit_title.upper()}'
                             auth.process_transaction(fixed_deposit=True)  # Process the transaction
                             auth.transaction_record(fixed_deposit=True)  # Record the transaction
-                            auth.open_fixed_deposit_account()  # Open the fixed deposit account
+
+                            # Process the transaction whereby Fixed Interest is deposited into the account immediately
+                            auth.description = f'FIXED_DEPOSIT/CBB/INTEREST DEPOSIT TO {auth.account_holder}'
+                            auth.receiver_acct_num = auth.account_number
+                            auth.amount = float(interest_to_earn)
+
+                            auth.process_transaction(deposit=True)
+                            auth.transaction_record(deposit=True)
+                            auth.receiver_transaction_validation()
+
+                            # Process the transaction whereby the Locked Amount is deposited into the Central Bank.
+                            auth.description = f'FIXED_DEPOSIT/CBB/DEPOSIT TO CENTRAL BANK'
+                            auth.receiver_acct_num = '1000000009'
+                            auth.amount = float(amount_to_lock)
+
+                            auth.process_transaction(central_bank=True)
+                            auth.transaction_record(deposit=True)
+
+                            # Open the fixed deposit account
+                            auth.open_fixed_deposit_account()
 
                             header()
 
@@ -419,8 +443,10 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                     continue
     except Exception as e:
         # Log any exceptions to a file and navigate back to the main script
+        exc_type, exc_obj, exc_tb = sys.exc_info()
         with open('notification/error.txt', 'w') as file:
-            file.write(f'Module: fixed_deposit.py \nFunction: preview_safelock \nError: {repr(e)}')
+            file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
+                       f'\nError: {repr(e)}')
         print(f'\nError: {repr(e)}')
         time.sleep(3)
         go_back('script')

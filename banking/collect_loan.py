@@ -185,4 +185,4 @@ def preview():
         sleep(3)
         go_back('script')
 
-preview()
+# preview()

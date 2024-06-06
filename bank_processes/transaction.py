@@ -88,10 +88,10 @@ class Transaction(Account, ABC):
                         (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                         receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                         account_balance, transaction_mode)
-                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount + self.charges},
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', '{self.__amount + self.charges}',
                         '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
                         '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
-                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
+                        '{self.__transaction_status}', '{self.account_type}', '{self.account_balance}', 'debit')
                          """
                 self.database.query(query)
 
@@ -103,11 +103,11 @@ class Transaction(Account, ABC):
                                 (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                                 receiver_account_number, receiver_name, transaction_date_time, description, status,
                                 account_type, account_balance, transaction_mode)
-                                VALUES('{self.__transaction_id}', '{self.transaction_type}', {self.__amount},
+                                VALUES('{self.__transaction_id}', '{self.transaction_type}', '{self.__amount}',
                                 '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
                                 '{self.__receiver_name}', '{self.__transaction_date_time}', '{receiver_description}',
                                 '{self.__transaction_status}', '{_receiver_obj.account_type}', 
-                                {_receiver_obj.account_balance}, 'credit')
+                                '{_receiver_obj.account_balance}', 'credit')
                                 """
                 self.database.query(receiver_query)
             except Exception:
@@ -126,10 +126,10 @@ class Transaction(Account, ABC):
                         (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                         receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                         account_balance, transaction_mode)
-                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', '{self.__amount}',
                         '{self.account_number}', '{self.account_holder}', 'NULL',
                         'NULL', '{self.__transaction_date_time}', '{self.__description}',
-                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
+                        '{self.__transaction_status}', '{self.account_type}', '{self.account_balance}', 'debit')
                         """
                 self.database.query(query)
             except Exception:
@@ -422,7 +422,7 @@ class Transaction(Account, ABC):
         pass
 
     def transaction_statement(self, start_date: datetime = None, end_date: datetime = None, time_period: bool = False):
-        """Method to generate statement of account providing a summary of all transactions within a particular
+        """Method to generate a statement of account providing a summary of all transactions within a particular
         period of time by a user.
         Parameters
         ----------

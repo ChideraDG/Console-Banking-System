@@ -519,7 +519,7 @@ def process_transfer(auth: Authentication):
 
                     receipt(auth)
 
-                    time.sleep(3)
+                    time.sleep(1.5)
                     break
                 elif re.search('^2$', user_input):
                     bene = beneficiaries(auth)
@@ -552,7 +552,7 @@ def process_transfer(auth: Authentication):
 
                         receipt(auth)
 
-                        time.sleep(3)
+                        time.sleep(1.5)
                         break
                 elif re.search('^.*(back|return).*$', user_input.lower(), re.IGNORECASE):
                     del user_input

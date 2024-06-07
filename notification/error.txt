@@ -1,4 +1,4 @@
-<class 'TypeError'>, 
-transfer_money.py, 
-520, 
-Error: TypeError('write() argument must be str, not None')
+<class 'ValueError'>, 
+collect_loan.py, 
+177, 
+Error: ValueError("could not convert string to float: '1,098.63'")

@@ -82,7 +82,7 @@ def calculate_interest(principal: float, rate_per_year: float, days: int):
     days : int
         The number of days the money is invested.
     """
-    interest: float = (principal * rate_per_year * days) / 36500
+    interest:   float = (principal * rate_per_year * days) / 36500
 
     rate_of_interest: float = (interest * 100) / principal
 
@@ -678,9 +678,8 @@ def ongoing_display_deposits(auth: Authentication, data: list, _details: list, _
 
             # Display the details in a structured format
             print('\n', _details[_key], sep='')
-            print('\n')
 
-            print(f"                 FIXED DEPOSIT DETAILS                    ")
+            print(f"\n                 FIXED DEPOSIT DETAILS                    ")
             print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
             print(f'| Initial Deposit                  Total Interest Earned |')
             print(
@@ -740,16 +739,16 @@ def paid_display_deposits(data: list, _details: list, _key: int):
         payback_suffix = get_ordinal_suffix(payback_day)
 
         # Format the start and payback dates
-        start_date = f'{start_day}{start_suffix} {get_month(data[_key][6].month)} {data[_key][6].year}'
-        payback_date = f'{payback_day}{payback_suffix} {get_month(data[_key][7].month)} {data[_key][7].year}'
+        start_date = f'{start_day}{start_suffix} {get_month(data[_key][6].month)[0]} {data[_key][6].year}'
+        payback_date = f'{payback_day}{payback_suffix} {get_month(data[_key][7].month)[0]} {data[_key][7].year}'
 
         while True:
             header()
 
             # Display the details in a structured format
-            print('\n', _details[_key])
+            print('\n', _details[_key], sep='')
 
-            print(f"/n                 FIXED DEPOSIT DETAILS                    ")
+            print(f"\n                 FIXED DEPOSIT DETAILS                    ")
             print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
             print(f'| Initial Deposit                  Total Interest Earned |')
             print(

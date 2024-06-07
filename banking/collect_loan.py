@@ -22,7 +22,7 @@ def repayment_period():
     while True:
         sleep(0.5)
 
-        print('\nRepayment period in months: (2 means February)')
+        print('\nRepayment period in months: (2 means Two months)')
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
         period = input('>>> ')
@@ -89,6 +89,60 @@ def amount_of_the_loan():
             continue
 
 
+def payment_info(*, _loan_amount, _annual_rate, _repayment_period, _payment_period, _total_payment, _interest):
+    try:
+        while True:
+            header()
+
+            print('\nAmount of the Loan: (Naira)')
+            print('~~~~~~~~~~~~~~~~~~~')
+            print(f':: {_loan_amount}\n')
+
+            print('\nAnnual percentage rate of interest: (%)')
+            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            print(f':: {_annual_rate}\n')
+
+            print('\nRepayment period in months: (2 means Two months)')
+            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            print(f':: {_repayment_period}\n')
+
+            print('\nPayment Information:')
+            print('~~~~~~~~~~~~~~~~~~~~\n')
+
+            print(f'+{'~' * (38 + len(_payment_period))}+')
+            print(f'|  Your monthly payment will be  ::  {_payment_period}  |')
+            print(f'+{'~' * (38 + len(_payment_period))}+\n')
+
+            print(f'+{'~' * (36 + len(_total_payment))}+')
+            print(f'|  Your total payment will be  ::  {_total_payment}  |')
+            print(f'+{'~' * (36 + len(_total_payment))}+\n')
+
+            print(f'+{'~' * (46 + len(_interest))}+')
+            print(f'|  Your total interest payments will be  ::  {_interest}  |')
+            print(f'+{'~' * (46 + len(_interest))}+\n')
+
+            print('\nDo you want to Repeat process?')
+            print('1. Yes  |  2. No')
+            print('~~~~~~     ~~~~~')
+            _input = input(">>> ").strip()
+
+            if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
+                del _input
+                return 'back'
+            elif re.search('^1$', _input, re.IGNORECASE):
+                return 'continue'
+            elif re.search('^2$', _input, re.IGNORECASE):
+                return 'break'
+            else:
+                print(f"\n:: Wrong Input")
+                sleep(1.5)
+                continue
+
+    except Exception as e:
+        log_error(e)
+        go_back('script')
+
+
 def loan_calculator():
     try:
         while True:
@@ -111,49 +165,33 @@ def loan_calculator():
             interest, rate_of_interest = calculate_interest(
                 principal=loan_amount,
                 rate_per_year=annual_rate,
-                days=period*4
+                days=period*30
             )
 
             countdown_timer(_register='\rComputing Payment Information', _duty='', countdown=5)
 
-            payment_period = f'{((interest * 4 + loan_amount) / period):,.2f}'
-            total_payment = f'{(interest * 4 + loan_amount):,.2f}'
-            _interest = f'{(interest * 4):,.2f}'
+            payment_period = f'{((interest + loan_amount) / period):,.2f}'
+            total_payment = f'{(interest + loan_amount):,.2f}'
+            _interest = f'{interest:,.2f}'
 
-            print('\nPayment Information:')
-            print('~~~~~~~~~~~~~~~~~~~~\n')
+            _payment_info = payment_info(
+                                _loan_amount=loan_amount,
+                                _annual_rate=annual_rate,
+                                _repayment_period=period,
+                                _payment_period=payment_period,
+                                _total_payment=total_payment,
+                                _interest=_interest
+                            )
 
-            print(f'+{'~'*(38 + len(payment_period))}+')
-            print(f'|  Your monthly payment will be  ::  {payment_period}  |')
-            print(f'+{'~'*(38 + len(payment_period))}+\n')
-
-            print(f'+{'~'*(36 + len(total_payment))}+')
-            print(f'|  Your total payment will be  ::  {total_payment}  |')
-            print(f'+{'~' * (36 + len(total_payment))}+\n')
-
-            print(f'+{'~'*(46 + len(_interest))}+')
-            print(f'|  Your total interest payments will be  ::  {_interest}  |')
-            print(f'+{'~' * (46 + len(_interest))}+\n')
-
-            print('\nDo you want to Repeat process?')
-            print('1. Yes  |  2. No')
-            print('~~~~~~     ~~~~~')
-            _input = input(">>> ").strip()
-
-            if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
-                del _input
-                sleep(1.5)
+            if re.search('^back$', _payment_info, re.IGNORECASE):
+                del _payment_info
                 break
-            elif re.search('^1$', _input, re.IGNORECASE):
-                sleep(1.5)
+            elif re.search('^break$', _payment_info, re.IGNORECASE):
+                sleep(0.5)
+                break
+            elif re.search('^continue$', _payment_info, re.IGNORECASE):
+                sleep(0.5)
                 continue
-            elif re.search('^2$', _input, re.IGNORECASE):
-                sleep(1.5)
-                break
-            else:
-                print(f"\n:: Wrong Input")
-                sleep(3)
-                break
 
     except Exception as e:
         log_error(e)
@@ -180,13 +218,8 @@ def preview():
                 continue
             else:
                 print(f"\n:: Wrong Input")
-                sleep(2)
+                sleep(1.5)
                 continue
-
-            # else:
-            #     print(f"\n:: {auth.account_holder}, You are already on a Loan.")
-            #     time.sleep(4)
-            #     break
     except Exception as e:
         log_error(e)
         go_back('script')

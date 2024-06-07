@@ -1,3 +1,4 @@
-Module: transfer_money.py 
-Function: process_transfer 
+<class 'TypeError'>, 
+transfer_money.py, 
+520, 
 Error: TypeError('write() argument must be str, not None')

@@ -205,38 +205,45 @@ class Transaction(Account, ABC):
     def transaction_receipts(self, user_session_token):
         """Method to generate receipts for each transaction made"""
 
-        print('                      {bold}TRANSACTION RECEIPT')
-        print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-        print('| You sent:                                                    |')
-        print(f'| {bold}{self.amount}                                         |')
-        print('|                                                              |')
-        print('| Recipient:                                                   |')
-        print(f'| {bold}{self.receiver_name}{' ' * (52 - (len(self.receiver_name) - 9))}|')
-        print('|                                                              |')
-        print('| Recipient Bank:                   Recipient Account Number:  |')
-        print(f'| {bold}Console Beta Bank         {bold}{self.receiver_acct_num}')
-        print('|                                                              |')
-        print('| Description:                                                 |')
-        print(f'| {bold}{self.description}')
-        print('|                                                              |')
-        print(f'Sent {bold}{self.amount} to Console Beta Bank-{bold}{self.receiver_acct_num}')
-        print('|                                                              |')
-        print(f'| Date:                                                        |')
-        print(f'| {bold}{self.__transaction_date_time}')
-        print('|                                                              |')
-        print('| Transaction type:                Transaction status:         |')
-        print(f'| {bold}{self.transaction_type}                    {bold}{self.__transaction_status}')
-        print('|                                                              |')
-        print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-        print('| Transaction reference:                                       |')
-        print(f'| {bold}{self.__transaction_id}                                |')
-        print('|                                                              |')
-        print('| Status:                                                      |')
-        print(f'| {bold}{self.__transaction_status}                            |')
-        print('|                                                              |')
-        print('| Session ID:                                                  |')
-        print(f'| {bold}{user_session_token}                                   |')
-        print('+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+\n')
+        top_alignment = '+~~~~~~~~~~~~~~~~~~+' * len(self.description)
+        top_alignment_padding = top_alignment[:len(self.description)] + '~~'
+        center_heading_alignment = int((len(top_alignment_padding) - 19) / 2)
+
+        transaction_receipt = (f'{' ' * center_heading_alignment}{bold}TRANSACTION RECEIPT\n'
+        f'{top_alignment_padding}\n'
+        f'| You sent:{' ' * (len(self.description) - 9)}|\n'
+        f'| {bold}{self.amount}{' ' * (len(self.description) - (len(str(self.amount))))}|\n'
+        f'|{' ' * len(self.description)} |\n'
+        f'| Recipient:{' ' * (len(self.description) - 10)}|\n'
+        f'| {bold}{self.receiver_name}{' ' * (len(self.description) - (len(self.receiver_name)))}|\n'
+        f'|{' ' * len(self.description)} |\n'
+        f'| Recipient Bank:                   Recipient Account Number:{' ' * (len(self.description) - 59)}|\n'
+        f'| {bold}Console Beta Bank                 {bold}{self.receiver_acct_num}{' ' * (len(self.description) - (34 + len(self.receiver_acct_num)))}|\n'
+        f'|{' ' * len(self.description)} |\n'
+        f'| Description:{' ' * (len(self.description) - 12)}|\n'
+        f'| {bold}{self.description}|\n'
+        f'|{' ' * len(self.description)} |\n'
+        f'| Sent {bold}{self.amount} to Console Beta Bank-{bold}{self.receiver_acct_num}{' ' * (len(self.description) - (27 + len(str(self.amount)) + len(self.receiver_acct_num)))}|\n'
+        f'|{' ' * len(self.description)} |\n'
+        f'| Date:{' ' * (len(self.description) - 5)}|\n'
+        f'| {bold}{self.__transaction_date_time}{' ' * (len(self.description) - len(str(self.__transaction_date_time)))}|\n'
+        f'|{' ' * len(self.description)} |\n'
+        f'| Transaction type:                Transaction status:{' ' * (len(self.description) - 52)}|\n'
+        f'| {bold}{self.transaction_type}{' ' * (33 - (len(self.transaction_type)))}{bold}{self.__transaction_status}{' ' * (len(self.description) - ((33 - (len(self.transaction_type))) + len(self.transaction_type) + len(self.__transaction_status)))}|\n'
+        f'|{' ' * len(self.description)} |\n'
+        f'{top_alignment_padding}\n'
+        f'| Transaction reference:{' ' * (len(self.description) - 22)}|\n'
+        f'| {bold}{self.__transaction_id}{' ' * (len(self.description) - (len(self.__transaction_id)))}|\n'
+        f'|{' ' * len(self.description)} |\n'
+        f'| Status:{' ' * (len(self.description) - 7)}|\n'
+        f'| {bold}{self.__transaction_status}{' ' * (len(self.description) - (len(self.__transaction_status)))}|\n'
+        f'|{' ' * len(self.description)} |\n'
+        f'| Session ID:{' ' * (len(self.description) - 11)}|\n'
+        f'| {bold}{user_session_token}{' ' * (len(self.description) - (len(user_session_token)))}|\n'
+        f'{top_alignment_padding}\n')
+
+        print(transaction_receipt)
+        return transaction_receipt
 
     def retrieve_transaction(self):
         """Method to retrieve a list of transaction based on a certain criteria"""

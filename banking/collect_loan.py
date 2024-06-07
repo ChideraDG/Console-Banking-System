@@ -223,5 +223,3 @@ def preview():
     except Exception as e:
         log_error(e)
         go_back('script')
-
-# preview()

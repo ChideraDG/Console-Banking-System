@@ -29,12 +29,13 @@ class BVN:
 
         try:
             query = f"""
-            insert into {self.database.db_tables[0]}
+            INSERT INTO {self.database.db_tables[0]}
             (first_name, middle_name, last_name, gender, address, phone_number, date_of_birth, nationality, email,
             bvn_number, created_date, last_updated, bvn_status)
-            values('{self.__first_name}', '{self.__middle_name}', '{self.__last_name}', '{self.__gender}', '{self.__address}', 
-            '{self.__phone_number}', '{self.__date_of_birth}', '{self.__nationality}', '{self.__email}', '{self.__bvn_number}', 
-            '{self.__created_date}', '{self.__last_updated}', '{self.__bvn_status}')
+            VALUES
+            ('{self.__first_name}', '{self.__middle_name}', '{self.__last_name}', '{self.__gender}', '{self.__address}', 
+            '{self.__phone_number}', '{self.__date_of_birth}', '{self.__nationality}', '{self.__email}', 
+            '{self.__bvn_number}', '{self.__created_date}', '{self.__last_updated}', '{self.__bvn_status}')
             """
 
             self.database.query(query)
@@ -47,10 +48,17 @@ class BVN:
         ensure it is valid and active."""
         pass
 
-    def update_bvn(self):
+    def update_bvn(self, *, _column_name: str, _data: str, _id_number: int):
         """Method to update the information associated with a BVN, such as personal details or biometric data,
         ensuring the data remains accurate and up to date."""
-        pass
+
+        query = f"""
+        UPDATE {self.database.db_tables[0]} 
+        SET {_column_name} = '{_data}', last_updated = {datetime.datetime.today().now()}
+        WHERE id = {_id_number}
+        """
+
+        self.database.query(query)
 
     def link_bvn_to_account(self):
         """Method to link a BVN to a user's bank account, enabling seamless identification and verification during

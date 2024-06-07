@@ -49,15 +49,28 @@ class BVN:
         pass
 
     def update_bvn(self, *, _column_name: str, _data: str, _id_number: int):
-        """Method to update the information associated with a BVN, such as personal details or biometric data,
-        ensuring the data remains accurate and up to date."""
+        """
+        Method to update the information associated with a BVN, such as personal details or biometric data,
+        ensuring the data remains accurate and up to date.
 
+        Parameters
+        ----------
+        _column_name : str
+            The name of the column to update.
+        _data : str
+            The new data to be inserted into the specified column.
+        _id_number : int
+            The ID number identifying the specific BVN record to be updated.
+        """
+
+        # Construct the SQL query as a formatted string
         query = f"""
         UPDATE {self.database.db_tables[0]} 
         SET {_column_name} = '{_data}', last_updated = {datetime.datetime.today().now()}
         WHERE id = {_id_number}
         """
 
+        # Execute the query using the database's query method
         self.database.query(query)
 
     def link_bvn_to_account(self):

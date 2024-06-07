@@ -208,7 +208,7 @@ class Transaction(Account, ABC):
         top_alignment = '+~~~~~~~~~~~~~~~~~~+' * len(self.description)
         top_alignment_padding = top_alignment[:len(self.description)] + '~~'
         center_heading_alignment = int((len(top_alignment_padding) - 19) / 2)
-
+        
         transaction_receipt = (f'{' ' * center_heading_alignment}TRANSACTION RECEIPT\n'
         f'{top_alignment_padding}\n'
         f'| You sent:{' ' * (len(self.description) - 9)}|\n'

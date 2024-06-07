@@ -7,6 +7,7 @@ from prettytable import PrettyTable
 from animation.colors import *
 from pymysql.cursors import DictCursor
 from bank_processes.account import Account
+from functools import reduce
 
 
 def get_month_values(input_month: str, input_year: int):
@@ -205,42 +206,44 @@ class Transaction(Account, ABC):
     def transaction_receipts(self, user_session_token):
         """Method to generate receipts for each transaction made"""
 
-        top_alignment = '+~~~~~~~~~~~~~~~~~~~' * len(self.description)
-        top_alignment_padding = top_alignment[:len(self.description)] + '~~'
+        alignment_criteria = [59, len(self.description)]
+        highest = reduce((lambda x, y: x if x > y else y), alignment_criteria)
+        top_alignment = '+~~~~~~~~~~~~~~~~~~~' * highest
+        top_alignment_padding = top_alignment[:highest] + '~~'
         center_heading_alignment = int((len(top_alignment_padding) - 19) / 2)
-        space_line = f'|{' ' * len(self.description)} |\n'
+        space_line = f'|{' ' * highest} |\n'
 
         transaction_receipt = (f'{' ' * center_heading_alignment}TRANSACTION RECEIPT\n'
                                f'{top_alignment_padding}+\n'
-                               f'| You sent:{' ' * (len(self.description) - 9)}|\n'
-                               f'| {self.amount}{' ' * (len(self.description) - (len(str(self.amount))))}|\n'
+                               f'| You sent:{' ' * (highest - 9)}|\n'
+                               f'| {self.amount}{' ' * (highest - (len(str(self.amount))))}|\n'
                                f'{space_line}'
-                               f'| Recipient:{' ' * (len(self.description) - 10)}|\n'
-                               f'| {self.receiver_name}{' ' * (len(self.description) - (len(self.receiver_name)))}|\n'
+                               f'| Recipient:{' ' * (highest - 10)}|\n'
+                               f'| {self.receiver_name}{' ' * (highest - (len(self.receiver_name)))}|\n'
                                f'{space_line}'
-                               f'| Recipient Bank:                   Recipient Account Number:{' ' * (len(self.description) - 59)}|\n'
-                               f'| Console Beta Bank                 {self.receiver_acct_num}{' ' * (len(self.description) - (34 + len(self.receiver_acct_num)))}|\n'
+                               f'| Recipient Bank:                   Recipient Account Number:{' ' * (highest - 59)}|\n'
+                               f'| Console Beta Bank                 {self.receiver_acct_num}{' ' * (highest - (34 + len(self.receiver_acct_num)))}|\n'
                                f'{space_line}'
-                               f'| Description:{' ' * (len(self.description) - 12)}|\n'
-                               f'| {self.description}|\n'
+                               f'| Description:{' ' * (highest - 12)}|\n'
+                               f'| {self.description}{' ' * (highest - (len(self.description)))}|\n'
                                f'{space_line}'
-                               f'| Sent {self.amount} to Console Beta Bank-{self.receiver_acct_num}{' ' * (len(self.description) - (27 + len(str(self.amount)) + len(self.receiver_acct_num)))}|\n'
+                               f'| Sent {self.amount} to Console Beta Bank-{self.receiver_acct_num}{' ' * (highest - (27 + len(str(self.amount)) + len(self.receiver_acct_num)))}|\n'
                                f'{space_line}'
-                               f'| Date:{' ' * (len(self.description) - 5)}|\n'
-                               f'| {self.__transaction_date_time}{' ' * (len(self.description) - len(str(self.__transaction_date_time)))}|\n'
+                               f'| Date:{' ' * (highest - 5)}|\n'
+                               f'| {self.__transaction_date_time}{' ' * (highest - len(str(self.__transaction_date_time)))}|\n'
                                f'{space_line}'
-                               f'| Transaction type:                Transaction status:{' ' * (len(self.description) - 52)}|\n'
-                               f'| {self.transaction_type}{' ' * (33 - (len(self.transaction_type)))}{self.__transaction_status}{' ' * (len(self.description) - ((33 - (len(self.transaction_type))) + len(self.transaction_type) + len(self.__transaction_status)))}|\n'
+                               f'| Transaction type:                Transaction status:{' ' * (highest - 52)}|\n'
+                               f'| {self.transaction_type}{' ' * (33 - (len(self.transaction_type)))}{self.__transaction_status}{' ' * (highest - ((33 - (len(self.transaction_type))) + len(self.transaction_type) + len(self.__transaction_status)))}|\n'
                                f'{space_line}'
                                f'{top_alignment_padding}+\n'
-                               f'| Transaction reference:{' ' * (len(self.description) - 22)}|\n'
-                               f'| {self.__transaction_id}{' ' * (len(self.description) - (len(self.__transaction_id)))}|\n'
+                               f'| Transaction reference:{' ' * (highest - 22)}|\n'
+                               f'| {self.__transaction_id}{' ' * (highest - (len(self.__transaction_id)))}|\n'
                                f'{space_line}'
-                               f'| Status:{' ' * (len(self.description) - 7)}|\n'
-                               f'| {self.__transaction_status}{' ' * (len(self.description) - (len(self.__transaction_status)))}|\n'
+                               f'| Status:{' ' * (highest - 7)}|\n'
+                               f'| {self.transaction_type} {self.__transaction_status}{' ' * (highest - (len(self.transaction_type) + len(self.__transaction_status) + 1))}|\n'
                                f'{space_line}'
-                               f'| Session ID:{' ' * (len(self.description) - 11)}|\n'
-                               f'| {user_session_token}{' ' * (len(self.description) - (len(user_session_token)))}|\n'
+                               f'| Session ID:{' ' * (highest - 11)}|\n'
+                               f'| {user_session_token}{' ' * (highest - (len(user_session_token)))}|\n'
                                f'{top_alignment_padding}+\n')
 
         print(transaction_receipt)

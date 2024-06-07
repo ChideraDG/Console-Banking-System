@@ -206,46 +206,61 @@ class Transaction(Account, ABC):
     def transaction_receipts(self, user_session_token):
         """Method to generate receipts for each transaction made"""
 
+        # Create a list with the fixed value 59 and the length of the description
         alignment_criteria = [59, len(self.description)]
+
+        # Find the highest value in alignment_criteria using reduce and a lambda function
         highest = reduce((lambda x, y: x if x > y else y), alignment_criteria)
-        top_alignment = '+~~~~~~~~~~~~~~~~~~~' * highest
+
+        # Create a string for the top alignment line by repeating '~' 'highest' times
+        top_alignment = '~~~~~~~~~~~~~~~~~~~' * highest
+
+        # Trim the top_alignment string to the length of 'highest' and add '~~' at the end
         top_alignment_padding = top_alignment[:highest] + '~~'
+
+        # Calculate the center alignment for the heading
         center_heading_alignment = int((len(top_alignment_padding) - 19) / 2)
-        space_line = f'|{' ' * highest} |\n'
 
-        transaction_receipt = (f'{' ' * center_heading_alignment}TRANSACTION RECEIPT\n'
-                               f'{top_alignment_padding}+\n'
-                               f'| You sent:{' ' * (highest - 9)}|\n'
-                               f'| {self.amount}{' ' * (highest - (len(str(self.amount))))}|\n'
-                               f'{space_line}'
-                               f'| Recipient:{' ' * (highest - 10)}|\n'
-                               f'| {self.receiver_name}{' ' * (highest - (len(self.receiver_name)))}|\n'
-                               f'{space_line}'
-                               f'| Recipient Bank:                   Recipient Account Number:{' ' * (highest - 59)}|\n'
-                               f'| Console Beta Bank                 {self.receiver_acct_num}{' ' * (highest - (34 + len(self.receiver_acct_num)))}|\n'
-                               f'{space_line}'
-                               f'| Description:{' ' * (highest - 12)}|\n'
-                               f'| {self.description}{' ' * (highest - (len(self.description)))}|\n'
-                               f'{space_line}'
-                               f'| Sent {self.amount} to Console Beta Bank-{self.receiver_acct_num}{' ' * (highest - (27 + len(str(self.amount)) + len(self.receiver_acct_num)))}|\n'
-                               f'{space_line}'
-                               f'| Date:{' ' * (highest - 5)}|\n'
-                               f'| {self.__transaction_date_time}{' ' * (highest - len(str(self.__transaction_date_time)))}|\n'
-                               f'{space_line}'
-                               f'| Transaction type:                Transaction status:{' ' * (highest - 52)}|\n'
-                               f'| {self.transaction_type}{' ' * (33 - (len(self.transaction_type)))}{self.__transaction_status}{' ' * (highest - ((33 - (len(self.transaction_type))) + len(self.transaction_type) + len(self.__transaction_status)))}|\n'
-                               f'{space_line}'
-                               f'{top_alignment_padding}+\n'
-                               f'| Transaction reference:{' ' * (highest - 22)}|\n'
-                               f'| {self.__transaction_id}{' ' * (highest - (len(self.__transaction_id)))}|\n'
-                               f'{space_line}'
-                               f'| Status:{' ' * (highest - 7)}|\n'
-                               f'| {self.transaction_type} {self.__transaction_status}{' ' * (highest - (len(self.transaction_type) + len(self.__transaction_status) + 1))}|\n'
-                               f'{space_line}'
-                               f'| Session ID:{' ' * (highest - 11)}|\n'
-                               f'| {user_session_token}{' ' * (highest - (len(user_session_token)))}|\n'
-                               f'{top_alignment_padding}+\n')
+        # Create a space line with a pipe at the beginning and end, and the 'highest' number of spaces in between
+        space_line = f'|{" " * highest}  |\n'
 
+        # Construct the transaction receipt string with the appropriate alignment and spacing
+        transaction_receipt = (
+            f'{" " * center_heading_alignment}TRANSACTION RECEIPT\n'
+            f'+{top_alignment_padding}+\n'
+            f'| You sent:{" " * (highest - 9)} |\n'
+            f'| {self.amount}{" " * (highest - len(str(self.amount)))} |\n'
+            f'{space_line}'
+            f'| Recipient:{" " * (highest - 10)} |\n'
+            f'| {self.receiver_name}{" " * (highest - len(self.receiver_name))} |\n'
+            f'{space_line}'
+            f'| Recipient Bank:                   Recipient Account Number:{" " * (highest - 59)} |\n'
+            f'| Console Beta Bank                 {self.receiver_acct_num}{" " * (highest - (34 + len(self.receiver_acct_num)))} |\n'
+            f'{space_line}'
+            f'| Description:{" " * (highest - 12)} |\n'
+            f'| {self.description}{" " * (highest - len(self.description))} |\n'
+            f'{space_line}'
+            f'| Sent {self.amount} to Console Beta Bank-{self.receiver_acct_num}{" " * (highest - (27 + len(str(self.amount)) + len(self.receiver_acct_num)))} |\n'
+            f'{space_line}'
+            f'| Date:{" " * (highest - 5)} |\n'
+            f'| {self.__transaction_date_time}{" " * (highest - len(str(self.__transaction_date_time)))} |\n'
+            f'{space_line}'
+            f'| Transaction type:                Transaction status:{" " * (highest - 52)} |\n'
+            f'| {self.transaction_type}{" " * (33 - len(self.transaction_type))}{self.__transaction_status}{" " * (highest - ((33 - len(self.transaction_type)) + len(self.transaction_type) + len(self.__transaction_status)))} |\n'
+            f'{space_line}'
+            f'+{top_alignment_padding}+\n'
+            f'| Transaction reference:{" " * (highest - 22)} |\n'
+            f'| {self.__transaction_id}{" " * (highest - len(self.__transaction_id))} |\n'
+            f'{space_line}'
+            f'| Status:{" " * (highest - 7)} |\n'
+            f'| {self.__transaction_status}{" " * (highest - (len(self.__transaction_status)))} |\n'
+            f'{space_line}'
+            f'| Session ID:{" " * (highest - 11)} |\n'
+            f'| {user_session_token}{" " * (highest - len(user_session_token))} |\n'
+            f'+{top_alignment_padding}+\n'
+        )
+
+        # Print and return the transaction receipt
         print(transaction_receipt)
         return transaction_receipt
 

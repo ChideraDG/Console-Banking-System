@@ -1,32 +1,32 @@
-                            TRANSACTION RECEIPT
-+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~+
-| You sent:                                                                |
-| 200.0                                                                    |
-|                                                                          |
-| Recipient:                                                               |
-| Ohanenye-Ohiaekpete Chidera Divine-Gift                                  |
-|                                                                          |
-| Recipient Bank:                   Recipient Account Number:              |
-| Console Beta Bank                 4773494548                             |
-|                                                                          |
-| Description:                                                             |
-| TRF/CBB/FROM BENITA DOZIE ERIC TO OHANENYE-OHIAEKPETE CHIDERA DIVINE-GIFT|
-|                                                                          |
-| Sent 200.0 to Console Beta Bank-4773494548                               |
-|                                                                          |
-| Date:                                                                    |
-| 2024-06-06 21:59:10.563693                                               |
-|                                                                          |
-| Transaction type:                Transaction status:                     |
-| transfer                         successful                              |
-|                                                                          |
-+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~+
-| Transaction reference:                                                   |
-| cbb89395002554418157762779371                                            |
-|                                                                          |
-| Status:                                                                  |
-| transfer successful                                                      |
-|                                                                          |
-| Session ID:                                                              |
-| 224168                                                                   |
-+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~+
+                                TRANSACTION RECEIPT
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+| You sent:                                                                         |
+| 123.0                                                                             |
+|                                                                                   |
+| Recipient:                                                                        |
+| Ezenwa Chiedozie Emmanuel                                                         |
+|                                                                                   |
+| Recipient Bank:                   Recipient Account Number:                       |
+| Console Beta Bank                 5409484424                                      |
+|                                                                                   |
+| Description:                                                                      |
+| TRF/CBB/FROM OHANENYE-OHIAEKPETE CHIDERA DIVINE-GIFT TO EZENWA CHIEDOZIE EMMANUEL |
+|                                                                                   |
+| Sent 123.0 to Console Beta Bank-5409484424                                        |
+|                                                                                   |
+| Date:                                                                             |
+| 2024-06-07 12:07:57.519877                                                        |
+|                                                                                   |
+| Transaction type:                Transaction status:                              |
+| transfer                         successful                                       |
+|                                                                                   |
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+
+| Transaction reference:                                                            |
+| cbb26699342514575837872950002                                                     |
+|                                                                                   |
+| Status:                                                                           |
+| transfer successful                                                               |
+|                                                                                   |
+| Session ID:                                                                       |
+| 518244                                                                            |
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+

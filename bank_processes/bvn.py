@@ -66,7 +66,7 @@ class BVN:
         # Construct the SQL query as a formatted string
         query = f"""
         UPDATE {self.database.db_tables[0]} 
-        SET {_column_name} = '{_data}', last_updated = {datetime.datetime.today().now()}
+        SET {_column_name} = '{_data}', last_updated = '{datetime.datetime.today().now()}'
         WHERE id = {_id_number}
         """
 

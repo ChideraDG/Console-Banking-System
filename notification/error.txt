@@ -1,4 +1,4 @@
-<class 'ValueError'>, 
-collect_loan.py, 
-177, 
-Error: ValueError("could not convert string to float: '1,098.63'")
+<class 'pymysql.err.IntegrityError'>, 
+transfer_money.py, 
+543, 
+Error: IntegrityError(1062, "Duplicate entry 'cbb56235501254147142154072713' for key 'PRIMARY'")

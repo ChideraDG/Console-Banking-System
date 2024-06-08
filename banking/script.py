@@ -221,6 +221,7 @@ def signed_in(auth: Authentication):
     from banking.login_panel import login
     from banking.withdrawals import withdraw
     from banking.collect_loan import preview
+    from banking.update_bvn import update_bvn
 
     try:
         account_balance_display = None
@@ -267,6 +268,7 @@ def signed_in(auth: Authentication):
                     preview()
                     continue
                 elif re.search('^6$', user_input):
+                    update_bvn()
                     continue
                 elif re.search('^7$', user_input):
                     continue

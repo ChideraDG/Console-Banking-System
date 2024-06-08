@@ -1,8 +1,20 @@
+import os
 import re
+import sys
 import time
 from animation.colors import *
-from banking.script import go_back
+from banking.script import go_back, header
 from banking.register_panel import countdown_timer
+
+
+def log_error(error: Exception):
+    """Logs errors to a file."""
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    with open('notification/error.txt', 'w') as file:
+        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
+                   f'\nError: {repr(error)}')
+    print(f'\nError: {repr(error)}')
+    time.sleep(3)
 
 
 def date_of_birth() -> str:
@@ -275,66 +287,77 @@ def email() -> str:
 def update_bvn():
     try:
         while True:
+            header()
+
             print('\nEnter what to update ')
-            time.sleep(1)
             print(end='\n')
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print('|        1. FIRST NAME      |       2. SECOND NAME             |         3. LAST NAME             |')
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print('|        4. PHONE NUMBER    |       5. DATE OF BIRTH           |         6. ADDRESS               |')
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print('|                    7. NATIONALITY          |                8. EMAIL                            |')
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+            print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
+            print('|   1. FIRST NAME   |   2. SECOND NAME   |   3. LAST NAME   |')
+            print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
+            print('|  4. PHONE NUMBER  |  5. DATE OF BIRTH  |   6. ADDRESS     |')
+            print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
+            print('|        7. NATIONALITY        |          8. EMAIL          |')
+            print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
 
             user_input = input(">>> ").strip()
 
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
-                return 'break'
+                break
 
             elif user_input == '1':
                 name = first_name()
-                break
+                if name == 'break':
+                    continue
 
             elif user_input == '2':
                 name = second_name()
-                break
+                if name == 'break':
+                    continue
 
             elif user_input == '3':
                 name = last_name()
-                break
+                if name == 'break':
+                    continue
 
             elif user_input == '4':
                 number = phone_number()
-                break
+                if number == 'break':
+                    continue
 
             elif user_input == '5':
                 dob = date_of_birth()
                 countdown_timer('3')
                 print('Date of birth successfully changed')
                 time.sleep(2)
-                break
+                if dob == 'break':
+                    continue
 
             elif user_input == '6':
                 _address = address()
                 countdown_timer('3')
                 print('Address successfully change')
                 time.sleep(2)
-                break
+                if _address == 'break':
+                    continue
 
             elif user_input == '7':
                 nation = nationality()
-                break
+                if nation == 'break':
+                    continue
 
             elif user_input == '8':
                 mail = email()
-                break
+                if mail == 'break':
+                    continue
 
             else:
                 print('invalid input. Try again\n')
                 time.sleep(2)
+                continue
 
     except Exception as e:
-        print('An error occurred: ', e)
+        log_error(e)
+        go_back('script')
 
 
 update_bvn()

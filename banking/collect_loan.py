@@ -96,11 +96,11 @@ def payment_info(*, _loan_amount, _annual_rate, _repayment_period, _payment_peri
 
             print('\nAmount of the Loan: (Naira)')
             print('~~~~~~~~~~~~~~~~~~~')
-            print(f':: {_loan_amount}\n')
+            print(f':: N{_loan_amount}\n')
 
             print('\nAnnual percentage rate of interest: (%)')
             print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-            print(f':: {_annual_rate}\n')
+            print(f':: {_annual_rate}%\n')
 
             print('\nRepayment period in months: (2 means Two months)')
             print('~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -198,6 +198,92 @@ def loan_calculator():
         go_back('script')
 
 
+# def calculate_monthly_rate(annual_rate: float):
+#     monthly_rate = (1 + annual_rate / 100) ** (1 / 12) - 1
+#     return monthly_rate * 100
+
+
+def loan_questions():
+    while True:
+        header()
+
+        print('\nHow much money do you need to borrow? (greater than 10000)')
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        amount = input(">>> ")
+
+        if re.search('^.*(back|return).*$', amount, re.IGNORECASE):
+            return 'break'
+
+        # Ensure the input is a valid number
+        elif re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", amount, re.IGNORECASE) is None:
+            print('\n:: Digits Only')
+            sleep(2)
+            continue
+
+        # Check if the amount is greater than 10.0 naira
+        elif float(amount) < 10000.0:
+            print('\n:: Amount must be more than 10000.0 naira.')
+            sleep(2)
+            continue
+
+        else:
+            amount = float(amount)
+
+
+def types_of_loans():
+    try:
+        while True:
+            header()
+            print('\nWhat Type of Loan do you want?')
+            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
+            print('\n+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+            print('|      1. Personal Loan     |        2. Mortgage Loan        |        3. Auto Loan        |')
+            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+            print('|      4. Student Loan      |     5. Small Business Loan     |       6. Payday Loan       |')
+            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+            print('|    7. Home Equity Loan    |   8. Debt Consolidation Loan   |   9. Credit Builder Loan   |')
+            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+            print('|   10. Peer to Peer Loan   |         11. Title Loan         |       12. Bridge Loan      |')
+            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+
+            user_input = input('>>> ')
+
+            if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
+                break
+            elif re.search('^1$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('^2$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('^3$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('4$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('^5$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('^6$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('^7$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('^8$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('^9$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('^10$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('^11$', user_input, re.IGNORECASE):
+                continue
+            elif re.search('^12$', user_input, re.IGNORECASE):
+                continue
+            else:
+                print(f"\n:: Wrong Input")
+                sleep(1.5)
+                continue
+    except Exception as e:
+        log_error(e)
+        go_back('script')
+
+
 def preview():
     try:
         while True:
@@ -212,6 +298,7 @@ def preview():
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                 break
             elif re.search('^1$', user_input, re.IGNORECASE):
+                types_of_loans()
                 continue
             elif re.search('^2$', user_input, re.IGNORECASE):
                 loan_calculator()

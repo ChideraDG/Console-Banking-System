@@ -68,72 +68,81 @@ class Notification:
         allowing users to set reminders or receive alerts at specific times or dates."""
         pass
 
-    def bvn_creation(self, *, title: str, message: str):
+    def bvn_creation(self, *, title: str, message: str, channel: str):
         """Method to trigger notifications in response to each BVN creation."""
         self.status = title
         self.message = message
+        self.deliver_channel = channel
 
-        self.send_notification()
+        self.send_notification(self.deliver_channel)
 
-    def account_creation(self, *, title: str, message: str):
+    def account_creation(self, *, title: str, message: str, channel: str):
         """Method to manage notification account creation."""
         self.status = title
         self.message = message
+        self.deliver_channel = channel
 
-        self.send_notification()
+        self.send_notification(self.deliver_channel)
 
-    def sign_in(self, *, title: str, message: str):
+    def sign_in(self, *, title: str, message: str, channel: str):
         """Method to notify a sign in has been made."""
         self.status = title
         self.message = message
+        self.deliver_channel = channel
 
-        self.send_notification()
+        self.send_notification(self.deliver_channel)
 
-    def forgot_password(self, *, title: str, message:str):
+    def forgot_password(self, *, title: str, message:str, channel: str):
         """Method to handle user forgetting their password, a notification."""
         self.status = title
         self.message = message
+        self.deliver_channel = channel
+        self.send_notification(self.deliver_channel)
 
-        self.send_notification()
-
-    def sign_out(self, *, title: str, message: str):
-        """Method to maintain a user signing out notfication."""
+    def sign_out(self, *, title: str, message: str, channel: str):
+        """Method to maintain a user signing out notification."""
         self.status = title
         self.message = message
+        self.deliver_channel = channel
 
-        self.send_notification()
+        self.send_notification(self.deliver_channel)
 
-    def transfer_notification(self, *, title: str, message: str):
+    def transfer_notification(self, *, title: str, message: str, channel: str):
         """Method to trigger a transfer notification."""
         self.status = title
         self.message = message
+        self.deliver_channel = channel
 
-        self.send_notification()
+        self.send_notification(self.deliver_channel)
 
-    def withdraw_notification(self, *, title: str, message: str):
+    def withdraw_notification(self, *, title: str, message: str, channel: str):
         """Method to trigger a withdrawal notification."""
         self.status = title
         self.message = message
+        self.deliver_channel = channel
 
-        self.send_notification()
+        self.send_notification(self.deliver_channel)
 
-    def deposit_notification(self, *, title: str, message: str):
+    def deposit_notification(self, *, title: str, message: str, channel: str):
         """Method to trigger a deposit notification."""
         self.status = title
         self.message = message
+        self.deliver_channel = channel
 
-        self.send_notification()
+        self.send_notification(self.deliver_channel)
 
-    def fixed_deposit_creation_notification(self, *, title: str, message: str):
+    def fixed_deposit_creation_notification(self, *, title: str, message: str, channel: str):
         """Method to trigger a fixed deposit creation notification."""
         self.status = title
         self.message = message
+        self.deliver_channel = channel
 
-        self.send_notification()
+        self.send_notification(self.deliver_channel)
 
-    def fixed_deposit_top_up_notification(self, *, title: str, message: str):
+    def fixed_deposit_top_up_notification(self, *, title: str, message: str, channel: str):
         """Method to trigger a fixed deposit top up notification."""
         self.status = title
         self.message = message
-
-        self.send_notification()
+        self.deliver_channel = channel
+        
+        self.send_notification(self.deliver_channel)

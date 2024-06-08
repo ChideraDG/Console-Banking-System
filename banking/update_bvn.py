@@ -18,8 +18,7 @@ def date_of_birth() -> str:
         year_of_birth = input(">>> ").strip()
 
         if re.search('^.*(back|return).*$', year_of_birth, re.IGNORECASE):
-            del year_of_birth
-            go_back('script')
+            return 'break'
         else:
             if year_of_birth.isdigit() and 1900 < int(year_of_birth) <= max_year:
                 break
@@ -42,8 +41,7 @@ def date_of_birth() -> str:
         month_of_birth = input(">>> ").strip()
 
         if re.search('^.*(back|return).*$', month_of_birth, re.IGNORECASE):
-            del month_of_birth
-            go_back('script')
+            return 'break'
         else:
             if month_of_birth.isdigit() and 0 < int(month_of_birth) <= month:
                 break
@@ -105,8 +103,7 @@ def date_of_birth() -> str:
         day_of_birth = input(">>> ").strip()
 
         if re.search('^.*(back|return).*$', day_of_birth, re.IGNORECASE):
-            del day_of_birth
-            go_back('script')
+            return 'break'
         else:
             if day_of_birth.isdigit() and 0 < int(day_of_birth) <= days:
                 break
@@ -130,22 +127,19 @@ def address() -> str:
         _address = input(">>> ").strip()
 
         if re.search('^.*(back|return).*$', _address, re.IGNORECASE):
-            del _address
-            break
+            return 'break'
         else:
             return _address.title()
 
 
 def first_name() -> str:
-    print()
     while True:
-        print('Enter new first name')
+        print('\nEnter new first name')
         print("~~~~~~~~~~~~~~~~~~~~~~")
-        print()
         name = input('>>> ').strip().title()
 
         if re.search('^.*(back|return).*$', name, re.IGNORECASE):
-            break
+            return 'break'
 
         else:
             if re.fullmatch(r'[A-Za-z]+', name):
@@ -156,22 +150,19 @@ def first_name() -> str:
 
             else:
                 time.sleep(1)
-                print('\n:: Name must contain only alphabet.\nExample: James, Mary, etc.')
-                print()
+                print('\n:: Name must contain only alphabet.\nExample: James, Mary, etc.\n')
                 continue
     return name.title()
 
 
 def second_name() -> str:
-    print()
     while True:
-        print('Enter new second name')
+        print('\nEnter new second name')
         print("~~~~~~~~~~~~~~~~~~~~~~")
-        print()
         name = input('>>>').strip().title()
 
         if re.search('^.*(back|return).*$', name, re.IGNORECASE):
-            break
+            return 'break'
 
         else:
             if re.fullmatch(r'[A-Za-z]+', name):
@@ -182,22 +173,20 @@ def second_name() -> str:
 
             else:
                 time.sleep(1)
-                print('\n:: Name must contain only alphabet.\nExample: James, Mary, etc.')
+                print('\n:: Name must contain only alphabet.\nExample: James, Mary, etc.\n')
                 print()
                 continue
     return name.title()
 
 
 def last_name() -> str:
-    print()
     while True:
-        print('Enter new Last name')
+        print('\nEnter new Last name')
         print("~~~~~~~~~~~~~~~~~~~~~~")
-        print()
         name = input('>>>').strip().title()
 
         if re.search('^.*(back|return).*$', name, re.IGNORECASE):
-            break
+            return 'break'
 
         else:
             if re.fullmatch(r'[A-Za-z]+', name):
@@ -208,22 +197,20 @@ def last_name() -> str:
 
             else:
                 time.sleep(1)
-                print('\n:: Name must contain only alphabet.\nExample: James, Mary, etc.')
-                print()
+                print('\n:: Name must contain only alphabet.\nExample: James, Mary, etc.\n')
                 continue
     return name.title()
 
 
 def phone_number() -> str:
-    print()
     while True:
-        print('Enter new phone number')
+        print('\nEnter new phone number')
         print("~~~~~~~~~~~~~~~~~~~~~~")
         print()
         number = input('>>>').strip()
 
         if re.search('^.*(back|return).*$', number, re.IGNORECASE):
-            break
+            return 'break'
 
         else:
             if re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', number) and 11 <= len(number) <= 15:
@@ -234,9 +221,7 @@ def phone_number() -> str:
 
             else:
                 time.sleep(1)
-                print()
-                print(':: Phone Number should be in digits only.\nExample: 08076542879,+2348033327493 etc.')
-                print()
+                print(':: \nPhone Number should be in digits only.\nExample: 08076542879,+2348033327493 etc.\n')
                 continue
     return number
 
@@ -248,7 +233,7 @@ def nationality() -> str:
         nation = input(">>> ").strip().title()
 
         if re.search('^.*(back|return).*$', nation, re.IGNORECASE):
-            break
+            return 'break'
 
         else:
             if re.fullmatch(r'[A-Za-z]+', nation):
@@ -259,8 +244,7 @@ def nationality() -> str:
 
             else:
                 time.sleep(1)
-                print('\n:: Nationality must contain only alphabet.\nExample: USA, Korea, etc.')
-                print()
+                print('\n:: Nationality must contain only alphabet.\nExample: USA, Korea, etc.\n')
                 continue
     return nation.title()
 
@@ -272,7 +256,7 @@ def email() -> str:
         _email = input(">>> ").strip()
 
         if re.search('^.*(back|return).*$', _email, re.IGNORECASE):
-            break
+            return 'break'
 
         else:
             if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _email, re.IGNORECASE):
@@ -282,9 +266,8 @@ def email() -> str:
                 break
 
             else:
-                print("\n:: Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.")
+                print("\n:: Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.\n")
                 time.sleep(2)
-                print()
                 continue
     return _email.lower()
 
@@ -302,11 +285,11 @@ def update_bvn():
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
             print('|                    7. NATIONALITY          |                8. EMAIL                            |')
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            time.sleep(1)
-            user_input = input("\n>>> ").strip()
+
+            user_input = input(">>> ").strip()
 
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
-                break
+                return 'break'
 
             elif user_input == '1':
                 name = first_name()
@@ -347,8 +330,7 @@ def update_bvn():
                 break
 
             else:
-                print('invalid input. Try again')
-                print()
+                print('invalid input. Try again\n')
                 time.sleep(2)
 
     except Exception as e:

@@ -89,10 +89,10 @@ class Transaction(Account, ABC):
                         (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                         receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                         account_balance, transaction_mode)
-                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', '{self.__amount + self.charges}',
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount + self.charges},
                         '{self.account_number}', '{self.account_holder}', '{self.__receiver_acct_num}',
                         '{self.__receiver_name}', '{self.__transaction_date_time}', '{self.__description}',
-                        '{self.__transaction_status}', '{self.account_type}', '{self.account_balance}', 'debit')
+                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
                          """
                 self.database.query(query)
 
@@ -104,11 +104,12 @@ class Transaction(Account, ABC):
                                 (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                                 receiver_account_number, receiver_name, transaction_date_time, description, status,
                                 account_type, account_balance, transaction_mode)
-                                VALUES('{self.__transaction_id}', '{self.transaction_type}', '{self.__amount}',
+                                VALUES('NULL', '{self.transaction_type}', {self.__amount},
                                 '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
                                 '{self.__receiver_name}', '{self.__transaction_date_time}', '{receiver_description}',
                                 '{self.__transaction_status}', '{_receiver_obj.account_type}', 
-                                '{_receiver_obj.account_balance}', 'credit')
+                                {_receiver_obj.account_balance}, 'credit')
+                      
                                 """
                 self.database.query(receiver_query)
             except Exception:
@@ -127,10 +128,10 @@ class Transaction(Account, ABC):
                         (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                         receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                         account_balance, transaction_mode)
-                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', '{self.__amount}',
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
                         '{self.account_number}', '{self.account_holder}', 'NULL',
                         'NULL', '{self.__transaction_date_time}', '{self.__description}',
-                        '{self.__transaction_status}', '{self.account_type}', '{self.account_balance}', 'debit')
+                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
                         """
                 self.database.query(query)
             except Exception:
@@ -147,10 +148,10 @@ class Transaction(Account, ABC):
                         (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                         receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                         account_balance, transaction_mode)
-                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', '{self.__amount}',
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
                         '{self.account_number}', '{self.account_holder}', 'NULL',
                         'NULL', '{self.__transaction_date_time}', '{self.__description}',
-                        '{self.__transaction_status}', '{self.account_type}', '{self.account_balance}', 'debit')
+                        '{self.__transaction_status}', '{self.account_type}', {self.account_balance}, 'debit')
                         
                 """
                 self.database.query(query)
@@ -169,10 +170,10 @@ class Transaction(Account, ABC):
                         (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                         receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                         account_balance, transaction_mode)
-                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', '{self.__amount}',
+                        VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
                         'NULL', 'NULL', '{self.account_number}', '{self.account_holder}', 
                         '{self.__transaction_date_time}', '{self.__description}', '{self.__transaction_status}', 
-                        '{self.account_type}', '{self.account_balance}', 'credit')
+                        '{self.account_type}', {self.account_balance}, 'credit')
 
                 """
                 self.database.query(query)
@@ -191,10 +192,10 @@ class Transaction(Account, ABC):
                                     (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                                     receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
                                     account_balance, transaction_mode)
-                                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', '{self.__amount}',
+                                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
                                     'NULL', 'NULL', '1000000009', 'CENTRAL BANK', '{self.__transaction_date_time}', 
                                     '{self.__description}', '{self.__transaction_status}', 
-                                    '{self.account_type}', '{self.central_bank}', 'credit')
+                                    '{self.account_type}', {self.central_bank}, 'credit')
 
                             """
                 self.database.query(query)
@@ -335,7 +336,7 @@ class Transaction(Account, ABC):
             query = f"""
             UPDATE {self.database.db_tables[3]}
             SET account_status = 'blocked'
-            WHERE account_number = {self.receiver_acct_num}
+            WHERE account_number = '{self.receiver_acct_num}'
             """
             # Execute the query
             self.database.query(query)
@@ -374,9 +375,9 @@ class Transaction(Account, ABC):
                 sender_updated_balance = self.account_balance - debited_amount
                 sender_query = f"""
                 UPDATE {self.database.db_tables[3]}
-                SET account_balance = '{sender_updated_balance}', transaction_limit = {updated_transaction_limit},
-                transfer_limit = '{updated_transfer_limit}'
-                WHERE account_number = {self.account_number}  
+                SET account_balance = {sender_updated_balance}, transaction_limit = {updated_transaction_limit},
+                transfer_limit = {updated_transfer_limit}
+                WHERE account_number = '{self.account_number}'
                 """
                 self.database.query(sender_query)
 
@@ -385,8 +386,8 @@ class Transaction(Account, ABC):
                 receiver_updated_balance = _receiver_object.account_balance + self.amount
                 receiver_query = f"""
                 UPDATE {self.database.db_tables[3]}
-                SET account_balance = '{receiver_updated_balance}'
-                WHERE account_number = {self.receiver_acct_num}
+                SET account_balance = {receiver_updated_balance}
+                WHERE account_number = '{self.receiver_acct_num}'
                 """
                 self.database.query(receiver_query)
             except Exception:
@@ -398,9 +399,9 @@ class Transaction(Account, ABC):
             sender_updated_balance = self.account_balance - self.amount
             query = f"""
             UPDATE {self.database.db_tables[3]}
-            SET account_balance = '{sender_updated_balance}', transaction_limit = {updated_transaction_limit},
-            transfer_limit = '{updated_transfer_limit}'
-            WHERE account_number = {self.account_number}  
+            SET account_balance = {sender_updated_balance}, transaction_limit = {updated_transaction_limit},
+            transfer_limit = {updated_transfer_limit}
+            WHERE account_number = '{self.account_number}'  
             """
             self.database.query(query)
 
@@ -408,9 +409,9 @@ class Transaction(Account, ABC):
             withdrawer_updated_balance = self.account_balance - self.amount
             query = f"""
             UPDATE {self.database.db_tables[3]}
-            SET account_balance = '{withdrawer_updated_balance}', transaction_limit = {updated_transaction_limit},
-            transfer_limit = '{updated_transfer_limit}'
-            WHERE account_number = {self.account_number}  
+            SET account_balance = {withdrawer_updated_balance}, transaction_limit = {updated_transaction_limit},
+            transfer_limit = {updated_transfer_limit}
+            WHERE account_number = '{self.account_number}' 
             """
             self.database.query(query)
 
@@ -418,8 +419,8 @@ class Transaction(Account, ABC):
             depositor_updated_balance = self.account_balance + self.amount
             query = f"""
             UPDATE {self.database.db_tables[3]}
-            SET account_balance = '{depositor_updated_balance}'
-            WHERE account_number = {self.account_number}  
+            SET account_balance = {depositor_updated_balance}
+            WHERE account_number = '{self.account_number}' 
             """
             self.database.query(query)
 
@@ -427,7 +428,7 @@ class Transaction(Account, ABC):
             updated_balance = self.central_bank + self.amount
             query = f"""
                     UPDATE {self.database.db_tables[3]}
-                    SET account_balance = '{updated_balance}'
+                    SET account_balance = {updated_balance}
                     WHERE account_number = '1000000009'
                     """
             self.database.query(query)
@@ -447,7 +448,8 @@ class Transaction(Account, ABC):
         entity initiating the transaction."""
         pass
 
-    def transaction_statement(self, start_date: datetime = None, end_date: datetime = None, time_period: bool = False):
+    def transaction_statement(self, start_date: datetime = None, end_date: datetime = None, time_period: bool = False,
+                              month: str = None, is_month: bool = False, year: int = None):
         """Method to generate a statement of account providing a summary of all transactions within a particular
         period of time by a user.
         Parameters
@@ -458,6 +460,12 @@ class Transaction(Account, ABC):
             The end date for the transaction statement query.
         time_period : bool, optional
             Flag to indicate if a specific time period (start_date to end_date) should be used.
+        year : int, optional
+            The year for the transaction history query (used with the month).
+        month : str, optional
+            The month for the transaction history query (used with the year).
+        is_month : bool, optional
+            Flag to indicate if the query should be for a specific month.
         """
 
         # Store the original cursor and switch to a dictionary cursor for this query
@@ -520,6 +528,130 @@ class Transaction(Account, ABC):
                      transaction['description'], transaction['transaction_id'],
                      transaction['debit_transaction_amount'],
                      transaction['credit_transaction_amount'], transaction['account_balance']])
+
+        elif is_month:
+            (end_day, month_value) = get_month_values(month, year)
+            start_date = datetime(year, month_value, 1)
+            end_date = datetime(year, month_value, end_day)
+
+            # Query to get transactions where the user is the sender within the specified month
+            user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
+                                account_balance
+                                FROM {self.database.db_tables[2]} WHERE sender_account_number = '{self.account_number}'
+                                AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                                """
+            sender_data = list(self.database.fetch_data(user_sender_query))
+            # creating an  empty list
+            user_data_debit = []
+            for data in sender_data:
+                # create two keys for debit amount and credit amount to replace transaction_amount key
+                # add the rest too
+                new_sender_data = {'transaction_date_time': data['transaction_date_time'],
+                                   'description': data['description'], 'transaction_id': data['transaction_id'],
+                                   'debit_transaction_amount': data['transaction_amount'],
+                                   'credit_transaction_amount': ' ', 'account_balance': data['account_balance']}
+                # appending each dictionary to the list created earlier
+                user_data_debit.append(new_sender_data)
+
+            # Query to get transaction details where the user is the receiver within the specified month
+            user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
+                                account_balance
+                                FROM {self.database.db_tables[2]} WHERE receiver_account_number = '{self.account_number}'
+                                AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                                """
+            receiver_data = list(self.database.fetch_data(user_receiver_query))
+            # creating an  empty list
+            user_data_credit = []
+            for data2 in receiver_data:
+                # create two keys for debit amount and credit amount to replace transaction_amount key
+                # add the rest too
+                new_receiver_data = {'transaction_date_time': data2['transaction_date_time'],
+                                     'description': data2['description'], 'transaction_id': data2['transaction_id'],
+                                     'credit_transaction_amount': data2['transaction_amount'],
+                                     'debit_transaction_amount': ' ', 'account_balance': data2['account_balance']}
+                # appending each dictionary to the list created earlier
+                user_data_credit.append(new_receiver_data)
+
+            # combining both lists appended
+            all_user_transactions = user_data_debit + user_data_credit
+            # sort the combined list by time
+            sorted_transaction_statement = sorted(all_user_transactions,
+                                                  key=lambda criteria: criteria['transaction_date_time'])
+
+            # Prepare the table to display the transaction statement
+            transaction_statement = PrettyTable()
+            transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
+                                                 'Balance']
+
+            # Add rows to the table
+            for transaction in sorted_transaction_statement:
+                transaction_statement.add_row(
+                    [transaction['transaction_date_time'], transaction['transaction_date_time'],
+                     transaction['description'], transaction['transaction_id'],
+                     transaction['debit_transaction_amount'],
+                     transaction['credit_transaction_amount'], transaction['account_balance']])
+
+        else:
+            # Query to get all transactions where the user is the sender
+            user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
+                                account_balance
+                                FROM {self.database.db_tables[2]} WHERE sender_account_number = '{self.account_number}'
+                                """
+            sender_data = list(self.database.fetch_data(user_sender_query))
+            # creating an  empty list
+            user_data_debit = []
+            for data in sender_data:
+                # create two keys for debit amount and credit amount to replace transaction_amount key
+                # add the rest too
+                new_sender_data = {'transaction_date_time': data['transaction_date_time'],
+                                   'description': data['description'], 'transaction_id': data['transaction_id'],
+                                   'debit_transaction_amount': data['transaction_amount'],
+                                   'credit_transaction_amount': ' ', 'account_balance': data['account_balance']}
+                # appending each dictionary to the list created earlier
+                user_data_debit.append(new_sender_data)
+
+            # Query to get all transaction details where the user is the receiver
+            user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
+                                account_balance
+                                FROM {self.database.db_tables[2]} WHERE receiver_account_number = '{self.account_number}'
+                                """
+            receiver_data = list(self.database.fetch_data(user_receiver_query))
+            # creating an  empty list
+            user_data_credit = []
+            for data2 in receiver_data:
+                # create two keys for debit amount and credit amount to replace transaction_amount key
+                # add the rest too
+                new_receiver_data = {'transaction_date_time': data2['transaction_date_time'],
+                                     'description': data2['description'], 'transaction_id': data2['transaction_id'],
+                                     'credit_transaction_amount': data2['transaction_amount'],
+                                     'debit_transaction_amount': ' ', 'account_balance': data2['account_balance']}
+                # appending each dictionary to the list created earlier
+                user_data_credit.append(new_receiver_data)
+
+            # combining both lists appended
+            all_user_transactions = user_data_debit + user_data_credit
+            # sort the combined list by time
+            sorted_transaction_statement = sorted(all_user_transactions,
+                                                  key=lambda criteria: criteria['transaction_date_time'])
+
+            # Prepare the table to display the transaction statement
+            transaction_statement = PrettyTable()
+            transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
+                                                 'Balance']
+
+            # Add rows to the table
+            for transaction in sorted_transaction_statement:
+                transaction_statement.add_row(
+                    [transaction['transaction_date_time'], transaction['transaction_date_time'],
+                     transaction['description'], transaction['transaction_id'],
+                     transaction['debit_transaction_amount'],
+                     transaction['credit_transaction_amount'], transaction['account_balance']])
+
+        # print(transaction_statement)
+
+        # Restore the original database cursor
+        self.database.db_cursor = original
+        del original
 
     def transaction_history(self, start_date: datetime = None, end_date: datetime = None, year: int = None,
                             month: str = None, time_period: bool = False, is_month: bool = False):

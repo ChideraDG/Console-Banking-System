@@ -113,7 +113,7 @@ def recipient_account_number(auth: Authentication):
     try:
         while True:
             header()
-            print(end='\n')
+
             print("\nENTER YOUR RECIPIENT ACCOUNT NUMBER:")
             print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").strip()
@@ -194,7 +194,7 @@ def amount_to_be_transferred(auth: Authentication):
     try:
         while True:
             header()
-            print(end='\n')
+
             print("\nENTER AMOUNT:")
             print("~~~~~~~~~~~~~")
             _input = input(">>> ").strip()
@@ -271,7 +271,7 @@ def description(auth):
     """
     try:
         header()
-        print(end='\n')
+
         print("\nENTER NARRATION:")
         print("~~~~~~~~~~~~~~~~~~")
         _input = input(">>> ").strip()
@@ -312,6 +312,7 @@ def transaction_pin(auth: Authentication):
     try:
         while auth.login_attempts < 3:
             header()
+
             print("\nENTER TRANSACTION PIN:")
             print("~~~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").strip()
@@ -373,6 +374,7 @@ def session_token(auth: Authentication):
     try:
         while auth.login_attempts < 3:
             header()
+
             print("\nENTER SESSION TOKEN:")
             print("~~~~~~~~~~~~~~~~~~~~")
             _input = input(">>> ").strip()

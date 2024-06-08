@@ -360,4 +360,4 @@ def update_bvn():
         go_back('script')
 
 
-update_bvn()
+# update_bvn()

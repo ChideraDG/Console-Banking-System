@@ -83,8 +83,7 @@ queries = [
     `status` enum('successful','failed') NOT NULL,
     `account_type` varchar(15) NOT NULL,
     `account_balance` decimal(30,3) NOT NULL,
-    `transaction_mode` varchar(10) NOT NULL,
-    PRIMARY KEY (`transaction_id`)
+    `transaction_mode` varchar(10) NOT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT=2;
     """,
     """

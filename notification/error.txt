@@ -1,4 +1,4 @@
 <class 'pymysql.err.IntegrityError'>, 
 transfer_money.py, 
 543, 
-Error: IntegrityError(1062, "Duplicate entry 'cbb56235501254147142154072713' for key 'PRIMARY'")
+Error: IntegrityError(1062, "Duplicate entry 'NULL' for key 'PRIMARY'")

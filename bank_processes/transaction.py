@@ -104,7 +104,7 @@ class Transaction(Account, ABC):
                                 (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
                                 receiver_account_number, receiver_name, transaction_date_time, description, status,
                                 account_type, account_balance, transaction_mode)
-                                VALUES('NULL', '{self.transaction_type}', {self.__amount},
+                                VALUES('{self.__transaction_id}', '{self.transaction_type}', {self.__amount},
                                 '{self.account_number}', '{self.account_holder}', '{self.receiver_acct_num}',
                                 '{self.__receiver_name}', '{self.__transaction_date_time}', '{receiver_description}',
                                 '{self.__transaction_status}', '{_receiver_obj.account_type}', 

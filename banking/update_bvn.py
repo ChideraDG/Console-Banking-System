@@ -155,7 +155,7 @@ def first_name() -> str:
 
         else:
             if re.fullmatch(r'[A-Za-z]+', name):
-                countdown_timer('3')
+                countdown_timer('New First name', 'in')
                 print('First name successfully change')
                 time.sleep(2)
                 break
@@ -178,7 +178,7 @@ def second_name() -> str:
 
         else:
             if re.fullmatch(r'[A-Za-z]+', name):
-                countdown_timer('3')
+                countdown_timer('New Second name', 'in')
                 print('Second name successfully change')
                 time.sleep(2)
                 break
@@ -202,7 +202,7 @@ def last_name() -> str:
 
         else:
             if re.fullmatch(r'[A-Za-z]+', name):
-                countdown_timer('3')
+                countdown_timer('New Last name', 'in')
                 print('Last name successfully change')
                 time.sleep(2)
                 break
@@ -226,7 +226,7 @@ def phone_number() -> str:
 
         else:
             if re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', number) and 11 <= len(number) <= 15:
-                countdown_timer('3')
+                countdown_timer('New Phone number', 'in')
                 print('Phone number successfully change')
                 time.sleep(2)
                 break
@@ -249,7 +249,7 @@ def nationality() -> str:
 
         else:
             if re.fullmatch(r'[A-Za-z]+', nation):
-                countdown_timer('3')
+                countdown_timer('New Nationality', 'in')
                 print('Nationality successfully change')
                 time.sleep(2)
                 break
@@ -272,7 +272,7 @@ def email() -> str:
 
         else:
             if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _email, re.IGNORECASE):
-                countdown_timer('3')
+                countdown_timer('New Email', 'in')
                 print('Email successfully change')
                 time.sleep(2)
                 break
@@ -326,7 +326,7 @@ def update_bvn():
 
             elif user_input == '5':
                 dob = date_of_birth()
-                countdown_timer('3')
+                countdown_timer('New DOB', 'in')
                 print('Date of birth successfully changed')
                 time.sleep(2)
                 if dob == 'break':
@@ -334,7 +334,7 @@ def update_bvn():
 
             elif user_input == '6':
                 _address = address()
-                countdown_timer('3')
+                countdown_timer('New Address', 'in')
                 print('Address successfully change')
                 time.sleep(2)
                 if _address == 'break':

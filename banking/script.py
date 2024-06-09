@@ -268,7 +268,7 @@ def signed_in(auth: Authentication):
                     preview()
                     continue
                 elif re.search('^6$', user_input):
-                    update_bvn()
+                    update_bvn(auth)
                     continue
                 elif re.search('^7$', user_input):
                     continue

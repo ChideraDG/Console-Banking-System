@@ -3,18 +3,10 @@ import re
 import sys
 import time
 from animation.colors import *
-from banking.script import go_back, header
+from bank_processes.authentication import Authentication
+from banking.script import go_back, header, log_error
 from banking.register_panel import countdown_timer
-
-
-def log_error(error: Exception):
-    """Logs errors to a file."""
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    with open('notification/error.txt', 'w') as file:
-        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
-                   f'\nError: {repr(error)}')
-    print(f'\nError: {repr(error)}')
-    time.sleep(3)
+from bank_processes.bvn import BVN
 
 
 def date_of_birth() -> str:
@@ -263,6 +255,7 @@ def nationality() -> str:
 
 def email() -> str:
     while True:
+        header()
         print("\nInput your E-mail:")
         print("~~~~~~~~~~~~~~~~~~")
         _email = input(">>> ").strip()
@@ -273,7 +266,8 @@ def email() -> str:
         else:
             if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _email, re.IGNORECASE):
                 countdown_timer('New Email', 'in')
-                print('Email successfully change')
+                header()
+                print('\nEmail successfully changed')
                 time.sleep(2)
                 break
 
@@ -284,9 +278,11 @@ def email() -> str:
     return _email.lower()
 
 
-def update_bvn():
+def update_bvn(auth: Authentication):
     try:
         while True:
+            bvn = BVN()
+
             header()
 
             print('\nEnter what to update ')
@@ -308,6 +304,10 @@ def update_bvn():
                 name = first_name()
                 if name == 'break':
                     continue
+                else:
+                    bvn.update_bvn(_column_name='first_name', _data=name, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
 
             elif user_input == '2':
                 name = second_name()

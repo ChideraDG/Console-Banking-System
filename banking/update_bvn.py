@@ -153,7 +153,7 @@ def first_name() -> str:
             if re.fullmatch(r'[A-Za-z]+', name):
                 countdown_timer('New First name', 'in')
                 header()
-                print('First name successfully changed')
+                print('\nFirst name successfully changed')
                 time.sleep(2)
                 break
 
@@ -164,7 +164,7 @@ def first_name() -> str:
     return name.title()
 
 
-def second_name() -> str:
+def middle_name() -> str:
     while True:
         header()
         print('\nEnter new second name')
@@ -176,9 +176,9 @@ def second_name() -> str:
 
         else:
             if re.fullmatch(r'[A-Za-z]+', name):
-                countdown_timer('New Second name', 'in')
+                countdown_timer('New Middle name', 'in')
                 header()
-                print('Second name successfully changed')
+                print('\nMiddle name successfully changed')
                 time.sleep(2)
                 break
 
@@ -204,7 +204,7 @@ def last_name() -> str:
             if re.fullmatch(r'[A-Za-z]+', name):
                 countdown_timer('New Last name', 'in')
                 header()
-                print('Last name successfully changed')
+                print('\nLast name successfully changed')
                 time.sleep(2)
                 break
 
@@ -229,7 +229,7 @@ def phone_number() -> str:
             if re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', number) and 11 <= len(number) <= 15:
                 countdown_timer('New Phone number', 'in')
                 header()
-                print('Phone number successfully changed')
+                print('\nPhone number successfully changed')
                 time.sleep(2)
                 break
 
@@ -254,7 +254,7 @@ def nationality() -> str:
             if re.fullmatch(r'[A-Za-z]+', nation):
                 countdown_timer('New Nationality', 'in')
                 header()
-                print('Nationality successfully changed')
+                print('\nNationality successfully changed')
                 time.sleep(2)
                 break
 
@@ -279,7 +279,7 @@ def email() -> str:
             if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _email, re.IGNORECASE):
                 countdown_timer('New Email', 'in')
                 header()
-                print('\nemail successfully changed')
+                print('\nEmail successfully changed')
                 time.sleep(2)
                 break
 
@@ -297,10 +297,12 @@ def update_bvn(auth: Authentication):
 
             header()
 
-            print('\nEnter what to update ')
+            print('\nEnter do you what to Update?')
+            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
             print(end='\n')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
-            print('|   1. FIRST NAME   |   2. SECOND NAME   |   3. LAST NAME   |')
+            print('|   1. FIRST NAME   |   2. MIDDLE NAME   |   3. LAST NAME   |')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
             print('|  4. PHONE NUMBER  |  5. DATE OF BIRTH  |   6. ADDRESS     |')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
@@ -322,7 +324,7 @@ def update_bvn(auth: Authentication):
                     break
 
             elif user_input == '2':
-                name = second_name()
+                name = middle_name()
                 if name == 'break':
                     continue
 
@@ -355,7 +357,7 @@ def update_bvn(auth: Authentication):
                 dob = date_of_birth()
                 countdown_timer('New DOB', 'in')
                 header()
-                print('Date of birth successfully changed')
+                print('\nDate of birth successfully changed')
                 time.sleep(2)
                 if dob == 'break':
                     continue
@@ -369,7 +371,7 @@ def update_bvn(auth: Authentication):
                 _address = address()
                 countdown_timer('New Address', 'in')
                 header()
-                print('Address successfully change')
+                print('\nAddress successfully change')
                 time.sleep(2)
                 if _address == 'break':
                     continue

@@ -1,4 +1,4 @@
 <class 'pymysql.err.IntegrityError'>, 
-transfer_money.py, 
-543, 
-Error: IntegrityError(1062, "Duplicate entry 'NULL' for key 'PRIMARY'")
+collect_loan.py, 
+274, 
+Error: IntegrityError(1452, 'Cannot add or update a child row: a foreign key constraint fails (`bankapp_db`.`loans`, CONSTRAINT `loans_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `LoanStatus` (`status_id`))')

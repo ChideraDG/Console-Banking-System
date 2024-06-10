@@ -1,0 +1,46 @@
+Example Filled Template
+XYZ Bank Loan Confirmation Statement
+
+Date: June 3, 2024
+
+Dear John Doe,
+
+We are pleased to inform you that your loan application has been approved and the funds have been successfully disbursed to your account. Below are the details of your loan:
+
+Loan Details:
+
+Loan ID: 12345
+Loan Type: Personal Loan
+Loan Amount: $10,000
+Interest Rate: 5% per annum
+Start Date: June 3, 2024
+End Date: June 3, 2025
+Repayment Period: 12 months
+Monthly Payment: $858.33
+Disbursement Details:
+
+Disbursement Date: June 3, 2024
+Disbursed Amount: $10,000
+Disbursement Account: 9876543210
+Repayment Schedule:
+
+Your monthly repayment amount is $858.33. The first payment is due on July 3, 2024, and subsequent payments will be due on the 3rd of each month.
+
+Important Information:
+
+Late Payment Fee: 2% of the overdue amount.
+Early Repayment: You may repay the loan early without any penalties.
+Contact Information:
+
+If you have any questions or need further assistance, please do not hesitate to contact us at:
+
+Phone: (123) 456-7890
+Email: loans@xyzbank.com
+Address: 123 Bank Street, Finance City, 12345
+Thank you for choosing XYZ Bank for your financial needs. We look forward to serving you.
+
+Sincerely,
+
+Jane Smith
+Loan Officer
+XYZ Bank

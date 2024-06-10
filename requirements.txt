@@ -372,3 +372,4 @@ zstandard @ file:///Users/ec2-user/ci_py311_2/zstandard_1679338593428/work
 
 PyMySQL~=1.1.0
 prettytable~=3.10.0
+python-dateutil~=2.9.0.post0

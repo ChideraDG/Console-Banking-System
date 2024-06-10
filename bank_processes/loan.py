@@ -1,78 +1,68 @@
-import datetime
+from bank_processes.database import DataBase
 
-class Loan:
-    def __init__(self, loan_id, user_id, loan_type, amount, interest_rate, start_date, end_date, status, database):
-        self.loan_id = loan_id
-        self.user_id = user_id
-        self.loan_type = loan_type
-        self.amount = amount
-        self.interest_rate = interest_rate
-        self.start_date = start_date
-        self.end_date = end_date
-        self.status = status
-        self.database = database
 
-    def add_loan(self):
-        new_loan = {
-            "loan_id": self.loan_id,
-            "user_id": self.user_id,
-            "loan_type": self.loan_type,
-            "amount": self.amount,
-            "interest_rate": self.interest_rate,
-            "start_date": self.start_date,
-            "end_date": self.end_date,
-            "status": self.status,
-            "created_at": datetime.datetime.now(),
-            "updated_at": datetime.datetime.now()
-        }
-        self.database.append(new_loan)
-        print("Loan added successfully!")
+class Loan(DataBase):
+    def __init__(self, user_id=None, first_name=None, last_name=None, email=None, phone_number=None, address=None,
+                 date_of_birth: str = None):
+        self.__user_id = user_id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.phone_number = phone_number
+        self.address = address
+        self.date_of_birth = date_of_birth
 
-    def update_loan(self, loan_id, **kwargs):
-        for loan in self.database:
-            if loan["loan_id"] == loan_id:
-                for key, value in kwargs.items():
-                    if key in loan:
-                        loan[key] = value
-                        loan["updated_at"] = datetime.datetime.now()
-                print("Loan updated successfully!")
-                return
-        print("Loan not found!")
+    def add_users(self):
+        query = f"""
+        INSERT INTO {self.db_tables[6]}
+        (first_name, last_name, email, phone_number, address, date_of_birth)
+        VALUES('{self.first_name}', '{self.last_name}', '{self.email}', '{self.phone_number}', '{self.address}', 
+        '{self.date_of_birth}')
+        """
 
-    def display_loan_details(self, loan_id):
-        for loan in self.database:
-            if loan["loan_id"] == loan_id:
-                for key, value in loan.items():
-                    print(f"{key}: {value}")
-                return
-        print("Loan not found!")
+        self.query(query)
 
-# Example usage
-if __name__ == "__main__":
-    # In-memory loan database
-    loan_database = []
+    def checking_user(self):
+        query = f"""
+        SELECT * 
+        FROM {self.db_tables[6]}
+        WHERE email = '{self.email}'
+        """
 
-    # Creating a loan object
-    loan1 = Loan(
-        loan_id=1,
-        user_id=101,
-        loan_type="Personal Loan",
-        amount=5000.00,
-        interest_rate=5.0,
-        start_date="2024-01-01",
-        end_date="2025-01-01",
-        status="Approved",
-        database=loan_database
-    )
+        datas = self.fetch_data(query)
 
-    # Adding the loan to the database
-    loan1.add_loan()
+        if datas:
+            return False
+        else:
+            return True
 
-    # Display loan details
-    loan1.display_loan_details(1)
+    def add_loan(self, *, loan_type: int, loan_status: int, amount: float, interest_rate: float, start_date, end_date):
+        query = f"""
+                INSERT INTO {self.db_tables[7]}
+                (user_id, loan_type_id, amount, interest_rate, start_date, end_date, status_id)
+                VALUES({self.user_id}, {loan_type}, '{amount}', '{interest_rate}', '{start_date}', '{end_date}', 
+                {loan_status})
+            """
 
-    # Update loan details
-    loan1.update_loan(1, amount=6000.00, status="Pending")
+        self.query(query)
 
-    # Display updated loan details
-    loan1.display_loan_details(1)
+    @property
+    def user_id(self):
+        if self.email is not None:
+            query = (f"""
+            SELECT user_id 
+            FROM {self.db_tables[6]} 
+            WHERE email = '{self.email}'
+            """)
+
+            datas: tuple = self.fetch_data(query)
+
+            for data in datas:
+                for user_id in data:
+                    self.__user_id = user_id
+
+        return self.__user_id
+
+    @user_id.setter
+    def user_id(self, _user_id):
+        self.__user_id = _user_id

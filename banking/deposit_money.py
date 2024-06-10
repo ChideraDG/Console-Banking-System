@@ -4,18 +4,8 @@ import sys
 import time
 from bank_processes.authentication import Authentication
 from banking.register_panel import countdown_timer
-from banking.script import go_back, header
+from banking.script import go_back, header, log_error
 from banking.transfer_money import session_token, transaction_pin
-
-
-def log_error(error: Exception):
-    """Logs errors to a file."""
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    with open('notification/error.txt', 'w') as file:
-        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
-                   f'\nError: {repr(error)}')
-    print(f'\nError: {repr(error)}')
-    time.sleep(3)
 
 
 def deposit(auth: Authentication):
@@ -91,3 +81,16 @@ def deposit(auth: Authentication):
         # Log the error to a file and notify the user
         log_error(e)
         go_back('script')
+
+
+def deposit_default(auth: Authentication, _amount: float, _description: str):
+    auth.receiver_acct_num = auth.account_number
+
+    # Set the amount and narration for the deposit
+    auth.amount = _amount
+    auth.description = _description
+
+    # Process and record transaction
+    auth.process_transaction(deposit=True)
+    auth.transaction_record(deposit=True)
+

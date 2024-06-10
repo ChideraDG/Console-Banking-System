@@ -4,22 +4,7 @@ connection = sql.connect(
     host='localhost',
     user='root',
     password='',
-    database=''
-)
-
-_cursor = connection.cursor()
-
-query0 = """
-CREATE DATABASE IF NOT EXISTS loan_db
-"""
-
-_cursor.execute(query0)
-
-connection = sql.connect(
-    host='localhost',
-    user='root',
-    password='',
-    database='loan_db'
+    database='bankApp_db'
 )
 
 my_cursor = connection.cursor()

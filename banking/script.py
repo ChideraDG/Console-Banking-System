@@ -4,6 +4,7 @@ import os
 import re
 import sys
 import time
+from dateutil.relativedelta import relativedelta
 from bank_processes.authentication import Authentication
 from animation.colors import *
 
@@ -265,7 +266,7 @@ def signed_in(auth: Authentication):
                     deposit(auth)
                     continue
                 elif re.search('^5$', user_input):
-                    preview()
+                    preview(auth)
                     continue
                 elif re.search('^6$', user_input):
                     update_bvn(auth)
@@ -320,3 +321,35 @@ def signed_in(auth: Authentication):
     except Exception as e:
         log_error(e)
         go_back('script')
+
+
+def calculate_end_date(start_date_str, months) -> str:
+    """
+    Calculate the end date after adding a specified number of months to a start date.
+
+    Parameters
+    ----------
+    start_date_str : str
+        The start date in 'YYYY-MM-DD' format.
+    months : int
+        The number of months to add to the start date.
+
+    Returns
+    -------
+    str
+        The end date in 'YYYY-MM-DD' format.
+
+    Examples
+    --------
+    >>> calculate_end_date('2024-01-15', 6)
+    '2024-07-15'
+    """
+
+    # Convert the start date string to a datetime object
+    start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')
+
+    # Add the number of months to the start date
+    end_date = start_date + relativedelta(months=months)
+
+    # Return the end date in the same format as the input
+    return end_date.strftime('%Y-%m-%d')

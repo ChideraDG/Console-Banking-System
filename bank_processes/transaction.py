@@ -475,7 +475,8 @@ class Transaction(Account, ABC):
             # Query to get transaction details where the user is the sender within the specified date range
             user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
                                 account_balance
-                                FROM {self.database.db_tables[2]} WHERE sender_account_number = '{self.account_number}'
+                                FROM {self.database.db_tables[2]}
+                                WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                                 AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                 """
             sender_data = list(self.database.fetch_data(user_sender_query))
@@ -494,7 +495,8 @@ class Transaction(Account, ABC):
             # Query to get transaction details where the user is the receiver within the specified date range
             user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
                                 account_balance
-                            FROM {self.database.db_tables[2]} WHERE receiver_account_number = '{self.account_number}'
+                            FROM {self.database.db_tables[2]}
+                            WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                             AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                             """
             receiver_data = list(self.database.fetch_data(user_receiver_query))
@@ -537,7 +539,8 @@ class Transaction(Account, ABC):
             # Query to get transactions where the user is the sender within the specified month
             user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
                                 account_balance
-                                FROM {self.database.db_tables[2]} WHERE sender_account_number = '{self.account_number}'
+                                FROM {self.database.db_tables[2]}
+                                WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                                 AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                 """
             sender_data = list(self.database.fetch_data(user_sender_query))
@@ -556,7 +559,8 @@ class Transaction(Account, ABC):
             # Query to get transaction details where the user is the receiver within the specified month
             user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
                                 account_balance
-                                FROM {self.database.db_tables[2]} WHERE receiver_account_number = '{self.account_number}'
+                                FROM {self.database.db_tables[2]}
+                                WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                                 AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                 """
             receiver_data = list(self.database.fetch_data(user_receiver_query))
@@ -595,7 +599,8 @@ class Transaction(Account, ABC):
             # Query to get all transactions where the user is the sender
             user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
                                 account_balance
-                                FROM {self.database.db_tables[2]} WHERE sender_account_number = '{self.account_number}'
+                                FROM {self.database.db_tables[2]}
+                                 WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                                 """
             sender_data = list(self.database.fetch_data(user_sender_query))
             # creating an  empty list
@@ -613,7 +618,8 @@ class Transaction(Account, ABC):
             # Query to get all transaction details where the user is the receiver
             user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
                                 account_balance
-                                FROM {self.database.db_tables[2]} WHERE receiver_account_number = '{self.account_number}'
+                                FROM {self.database.db_tables[2]}
+                                WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                                 """
             receiver_data = list(self.database.fetch_data(user_receiver_query))
             # creating an  empty list
@@ -647,11 +653,14 @@ class Transaction(Account, ABC):
                      transaction['debit_transaction_amount'],
                      transaction['credit_transaction_amount'], transaction['account_balance']])
 
-        # print(transaction_statement)
+        # store the pretty table in a string
+        user_transaction_statement = str(transaction_statement)
 
         # Restore the original database cursor
         self.database.db_cursor = original
         del original
+        # return the transaction_statement
+        return user_transaction_statement
 
     def transaction_history(self, start_date: datetime = None, end_date: datetime = None, year: int = None,
                             month: str = None, time_period: bool = False, is_month: bool = False):
@@ -684,7 +693,7 @@ class Transaction(Account, ABC):
                    sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
                    transaction_date_time
                    FROM {self.database.db_tables[2]}
-                   WHERE sender_account_number = '{self.account_number}'
+                   WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                    """
             sender_data = list(self.database.fetch_data(user_sender_transaction_query))
@@ -694,7 +703,7 @@ class Transaction(Account, ABC):
                    sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
                    transaction_date_time
                    FROM {self.database.db_tables[2]}
-                   WHERE receiver_account_number = '{self.account_number}'
+                   WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                    """
             receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
@@ -731,7 +740,7 @@ class Transaction(Account, ABC):
                                sender_account_number, sender_name, receiver_account_number, receiver_name, description,
                                status, transaction_date_time
                                FROM {self.database.db_tables[2]}
-                               WHERE sender_account_number = '{self.account_number}'
+                               WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                                AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                """
             sender_data = list(self.database.fetch_data(user_sender_transaction_query))
@@ -741,7 +750,7 @@ class Transaction(Account, ABC):
                                sender_account_number, sender_name, receiver_account_number, receiver_name, description, 
                                status, transaction_date_time
                                FROM {self.database.db_tables[2]}
-                               WHERE receiver_account_number = '{self.account_number}' 
+                               WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit' 
                                AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                """
             receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
@@ -774,7 +783,7 @@ class Transaction(Account, ABC):
             sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
             transaction_date_time
             FROM {self.database.db_tables[2]}
-            WHERE sender_account_number = '{self.account_number}'
+            WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
             """
             sender_data = list(self.database.fetch_data(user_sender_transaction_query))
 
@@ -783,7 +792,7 @@ class Transaction(Account, ABC):
             sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
             transaction_date_time
             FROM {self.database.db_tables[2]}
-            WHERE receiver_account_number = '{self.account_number}'
+            WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
             """
             receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
 

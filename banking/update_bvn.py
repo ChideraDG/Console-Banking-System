@@ -17,6 +17,7 @@ def date_of_birth() -> str:
     days = 21
 
     while True:
+        header()
         print("\nEnter Your New Year of Birth:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~")
         year_of_birth = input(">>> ").strip()
@@ -102,6 +103,7 @@ def date_of_birth() -> str:
     time.sleep(1)
 
     while True:
+
         print("\nEnter your New Day of Birth:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~")
         day_of_birth = input(">>> ").strip()
@@ -125,6 +127,7 @@ def date_of_birth() -> str:
 
 def address() -> str:
     while True:
+        header()
         """Gets the address of the User."""
         print("\nEnter New Address:")
         print("~~~~~~~~~~~~~~~~~~~")
@@ -138,6 +141,7 @@ def address() -> str:
 
 def first_name() -> str:
     while True:
+        header()
         print('\nEnter new first name')
         print("~~~~~~~~~~~~~~~~~~~~~~")
         name = input('>>> ').strip().title()
@@ -148,7 +152,8 @@ def first_name() -> str:
         else:
             if re.fullmatch(r'[A-Za-z]+', name):
                 countdown_timer('New First name', 'in')
-                print('First name successfully change')
+                header()
+                print('First name successfully changed')
                 time.sleep(2)
                 break
 
@@ -161,6 +166,7 @@ def first_name() -> str:
 
 def second_name() -> str:
     while True:
+        header()
         print('\nEnter new second name')
         print("~~~~~~~~~~~~~~~~~~~~~~")
         name = input('>>>').strip().title()
@@ -171,7 +177,8 @@ def second_name() -> str:
         else:
             if re.fullmatch(r'[A-Za-z]+', name):
                 countdown_timer('New Second name', 'in')
-                print('Second name successfully change')
+                header()
+                print('Second name successfully changed')
                 time.sleep(2)
                 break
 
@@ -185,6 +192,7 @@ def second_name() -> str:
 
 def last_name() -> str:
     while True:
+        header()
         print('\nEnter new Last name')
         print("~~~~~~~~~~~~~~~~~~~~~~")
         name = input('>>>').strip().title()
@@ -195,7 +203,8 @@ def last_name() -> str:
         else:
             if re.fullmatch(r'[A-Za-z]+', name):
                 countdown_timer('New Last name', 'in')
-                print('Last name successfully change')
+                header()
+                print('Last name successfully changed')
                 time.sleep(2)
                 break
 
@@ -208,9 +217,9 @@ def last_name() -> str:
 
 def phone_number() -> str:
     while True:
+        header()
         print('\nEnter new phone number')
         print("~~~~~~~~~~~~~~~~~~~~~~")
-        print()
         number = input('>>>').strip()
 
         if re.search('^.*(back|return).*$', number, re.IGNORECASE):
@@ -219,7 +228,8 @@ def phone_number() -> str:
         else:
             if re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', number) and 11 <= len(number) <= 15:
                 countdown_timer('New Phone number', 'in')
-                print('Phone number successfully change')
+                header()
+                print('Phone number successfully changed')
                 time.sleep(2)
                 break
 
@@ -232,6 +242,7 @@ def phone_number() -> str:
 
 def nationality() -> str:
     while True:
+        header()
         print("\nEnter your nationality:")
         print("~~~~~~~~~~~~~~~~~~~~~~~~~")
         nation = input(">>> ").strip().title()
@@ -242,7 +253,8 @@ def nationality() -> str:
         else:
             if re.fullmatch(r'[A-Za-z]+', nation):
                 countdown_timer('New Nationality', 'in')
-                print('Nationality successfully change')
+                header()
+                print('Nationality successfully changed')
                 time.sleep(2)
                 break
 
@@ -267,7 +279,7 @@ def email() -> str:
             if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _email, re.IGNORECASE):
                 countdown_timer('New Email', 'in')
                 header()
-                print('\nEmail successfully changed')
+                print('\nemail successfully changed')
                 time.sleep(2)
                 break
 
@@ -314,41 +326,78 @@ def update_bvn(auth: Authentication):
                 if name == 'break':
                     continue
 
+                else:
+                    bvn.update_bvn(_column_name='middle_name', _data=name, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
+
             elif user_input == '3':
                 name = last_name()
                 if name == 'break':
                     continue
+
+                else:
+                    bvn.update_bvn(_column_name='last_name', _data=name, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
 
             elif user_input == '4':
                 number = phone_number()
                 if number == 'break':
                     continue
 
+                else:
+                    bvn.update_bvn(_column_name='phone_number', _data=number, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
+
             elif user_input == '5':
                 dob = date_of_birth()
                 countdown_timer('New DOB', 'in')
+                header()
                 print('Date of birth successfully changed')
                 time.sleep(2)
                 if dob == 'break':
                     continue
 
+                else:
+                    bvn.update_bvn(_column_name='date_of_birth', _data=dob, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
+
             elif user_input == '6':
                 _address = address()
                 countdown_timer('New Address', 'in')
+                header()
                 print('Address successfully change')
                 time.sleep(2)
                 if _address == 'break':
                     continue
+
+                else:
+                    bvn.update_bvn(_column_name='address', _data=_address, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
 
             elif user_input == '7':
                 nation = nationality()
                 if nation == 'break':
                     continue
 
+                else:
+                    bvn.update_bvn(_column_name='nationality', _data=nation, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
+
             elif user_input == '8':
                 mail = email()
                 if mail == 'break':
                     continue
+
+                else:
+                    bvn.update_bvn(_column_name='email', _data=mail, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
 
             else:
                 print('invalid input. Try again\n')

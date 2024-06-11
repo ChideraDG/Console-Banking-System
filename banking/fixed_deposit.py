@@ -32,6 +32,9 @@ def get_month(month: int) -> tuple[str, int]:
         tuple[str, int]: The name of the month and the number of days in that month.
     """
 
+    while month > 12:
+        month -= 12
+
     year = 2006
 
     month_names = {

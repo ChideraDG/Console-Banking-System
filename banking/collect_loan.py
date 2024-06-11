@@ -388,6 +388,12 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
                 break
             elif re.search('^1$', _input, re.IGNORECASE):
                 loan.email = auth.email
+                due_month = int(f'{datetime.datetime.today().month + 1}')
+                due_year = int(f'{datetime.datetime.today().year}')
+
+                while due_month > 12:
+                    due_month -= 12
+                    due_year += 1
 
                 if loan.checking_user():
                     loan.first_name = auth.first_name
@@ -404,6 +410,7 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
                     interest_rate=interest,
                     start_date=f'{datetime.datetime.today().year}-{datetime.datetime.today().month}-'
                                f'{datetime.datetime.today().day}',
+                    due_date=f'{due_year}-{due_month}-{datetime.datetime.today().day}',
                     end_date=f'{end_date[:4]}-{end_date[5:7]}-{end_date[8:]}'
                 )
                 countdown_timer(_register='Loan', _duty='Payment', countdown=5)

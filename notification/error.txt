@@ -1,4 +1,4 @@
 <class 'pymysql.err.IntegrityError'>, 
 collect_loan.py, 
-274, 
-Error: IntegrityError(1452, 'Cannot add or update a child row: a foreign key constraint fails (`bankapp_db`.`loans`, CONSTRAINT `loans_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `LoanStatus` (`status_id`))')
+406, 
+Error: IntegrityError(1452, 'Cannot add or update a child row: a foreign key constraint fails (`bankapp_db`.`loans`, CONSTRAINT `loans_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`))')

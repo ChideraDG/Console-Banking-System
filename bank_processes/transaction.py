@@ -183,21 +183,22 @@ class Transaction(Account, ABC):
                 self.database.rollback()
 
         elif central_bank:
-            self.__transaction_type = 'deposit'
+            self.__transaction_type = 'transfer'
             self.__transaction_status = 'successful'
 
             try:
                 query = f"""
-                                    INSERT INTO {self.database.db_tables[2]}
-                                    (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
-                                    receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
-                                    account_balance, transaction_mode)
-                                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
-                                    'NULL', 'NULL', '1000000009', 'CENTRAL BANK', '{self.__transaction_date_time}', 
-                                    '{self.__description}', '{self.__transaction_status}', 
-                                    '{self.account_type}', {self.central_bank}, 'credit')
+                    INSERT INTO {self.database.db_tables[2]}
+                    (transaction_id, transaction_type, transaction_amount, sender_account_number, sender_name,
+                    receiver_account_number, receiver_name, transaction_date_time, description, status, account_type,
+                    account_balance, transaction_mode)
+                    VALUES('{self.__transaction_id}', '{self.__transaction_type}', {self.__amount},
+                    '{self.account_number}', '{self.account_holder}', '1000000009', 'CENTRAL BANK', 
+                    '{self.__transaction_date_time}', 
+                    '{self.__description}', '{self.__transaction_status}', 
+                    '{self.account_type}', {self.central_bank}, 'credit')
 
-                            """
+                    """
                 self.database.query(query)
 
             except Exception:

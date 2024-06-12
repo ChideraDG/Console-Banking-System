@@ -1,10 +1,12 @@
 from abc import ABC
-from datetime import datetime
+from datetime import datetime, date, time
 import random
 from typing import Any
 from bank_processes.account import FixedDeposit
 from bank_processes.database import DataBase
 from plyer import notification as note
+
+from bank_processes.loan import Loan
 from bank_processes.transaction import Transaction
 from bank_processes.notification import Notification
 
@@ -126,6 +128,7 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         self.__login_time_stamp = login_time_stamp  # Records timestamp of every activity.
         self.__auth_outcome = auth_outcome  # Records authentication outcomes.
         self.__session_token = session_token  # Tokens generated upon successful user authentication, used for session management and maintaining user sessions.
+        self.loan = Loan()
 
     def user_login(self):
         """Method to authenticate and log in an existing user, verifying their credentials (e.g., username and
@@ -314,6 +317,68 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
                 except Exception:
                     # Rollback changes if an error occurs
                     self.database.rollback()
+
+    def check_loan_payments(self):
+        self.loan.email = self.email
+
+        query = f"""
+                SELECT * 
+                FROM {self.database.db_tables[7]}
+                WHERE user_id = {self.user_id}
+                AND status_id = 1
+                """
+
+        datas = self.database.fetch_data(query)
+
+        for data in datas:
+            self.loan.due_date = data[6]
+            self.loan.end_date = data[7]
+
+            # for loop for each user_id loan status_id
+            if datetime.today().date() > date(
+                    self.loan.due_date[:4], int(self.loan.due_date[5:7]), int(self.loan.due_date[8:])) <= date(
+                    self.loan.end_date[:4], int(self.loan.end_date[5:7]), int(self.loan.end_date[8:])):
+
+                query = f"""
+                        SELECT monthly_payment 
+                        FROM {self.database.db_tables[7]}
+                        WHERE user_id = {self.loan.user_id}
+                        AND status_id = 1
+                        """
+
+                datass = self.database.fetch_data(query)
+
+                for dat in datass:
+                    for amount in dat:
+                        self.amount = float(amount)
+
+                self.loan.make_loan_payments(
+                    loan_id=data[0],
+                    amount=self.amount,
+                    payment_date=str(datetime.today().date())
+                )
+
+                self.description = f'LOAN_REPAYMENT/CBB/TRANSFER TO CONSOLE BETA BANK'
+                self.receiver_acct_num = '1000000009'
+
+                self.process_transaction(central_bank=True)
+                self.transaction_record(central_bank=True)
+
+                self.loan.make_loan_payments(
+                    loan_id=data[0],
+                    amount=self.amount,
+                    payment_date=str(datetime.today().date())
+                )
+
+                if date(self.loan.due_date[:4], int(self.loan.due_date[5:7]), int(self.loan.due_date[8:])) >= date(
+                        self.loan.end_date[:4], int(self.loan.end_date[5:7]), int(self.loan.end_date[8:])):
+                    query = f"""
+                            UPDATE {self.database.db_tables[7]}
+                            SET status_id = 3
+                            WHERE loan_id = {data[0]}
+                            """
+
+                    self.database.query(query)
 
     @property
     def username(self):

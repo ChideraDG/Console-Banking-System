@@ -408,6 +408,7 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
                     loan_status=1,
                     amount=_interest + amount,
                     interest_rate=interest,
+                    monthly_payment=float(payment_period),
                     start_date=f'{datetime.datetime.today().year}-{datetime.datetime.today().month}-'
                                f'{datetime.datetime.today().day}',
                     due_date=f'{due_year}-{due_month}-{datetime.datetime.today().day}',

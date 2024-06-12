@@ -42,35 +42,26 @@ class Loan(DataBase):
             return True
 
     def add_loan(self, *, loan_type: int, loan_status: int, amount: float, interest_rate: float, start_date: str,
-                 due_date: str, end_date: str):
+                 due_date: str, end_date: str, monthly_payment: float):
         query = f"""
                 INSERT INTO {self.db_tables[7]}
-                (user_id, loan_type_id, amount, interest_rate, start_date, due_date, end_date, status_id)
-                VALUES({self.user_id}, {loan_type}, '{amount}', '{interest_rate}', '{start_date}', '{due_date}', 
-                '{end_date}', {loan_status})
+                (user_id, loan_type_id, amount, interest_rate,monthly_payment, start_date, due_date, end_date, 
+                status_id)
+                VALUES({self.user_id}, {loan_type}, '{amount}', '{interest_rate}', '{monthly_payment}', '{start_date}', 
+                '{due_date}', '{end_date}', {loan_status})
             """
 
         self.query(query)
 
-    def check_loan(self):
+    def make_loan_payments(self, *, loan_id: int, amount: float, payment_date: str):
         query = f"""
-                SELECT * 
-                FROM {self.db_tables[7]}
-                WHERE user_id = {self.user_id}
-                AND status_id = 1
-                """
+                 INSERT INTO {self.db_tables[8]}
+                 (loan_id, amount, payment_date)
+                 VALUES
+                 ({loan_id}, '{amount}', '{payment_date}')
+                 """
 
-        datas = self.fetch_data(query)
-
-        for data in datas:
-            self.due_date = data[6]
-            self.end_date = data[7]
-
-            # for loop for each user_id loan status_id
-            if datetime.datetime.today().date() > datetime.date(
-                    self.due_date[:4], int(self.due_date[5:7]), int(self.due_date[8:])) <= datetime.date(
-                    self.end_date[:4], int(self.end_date[5:7]), int(self.end_date[8:])):
-                pass
+        self.query(query)
 
     @property
     def user_id(self):

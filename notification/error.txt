@@ -1,4 +1,4 @@
-<class 'pymysql.err.IntegrityError'>, 
+<class 'ValueError'>, 
 collect_loan.py, 
-406, 
-Error: IntegrityError(1452, 'Cannot add or update a child row: a foreign key constraint fails (`bankapp_db`.`loans`, CONSTRAINT `loans_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`))')
+411, 
+Error: ValueError("could not convert string to float: '9,665.75'")

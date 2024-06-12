@@ -5,17 +5,7 @@ import time
 from typing import Any
 from bank_processes.authentication import Authentication, verify_data
 from banking.register_panel import countdown_timer
-from banking.script import header, go_back
-
-
-def log_error(error: Exception):
-    """Logs errors to a file."""
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    with open('notification/error.txt', 'w') as file:
-        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
-                   f'\nError: {repr(error)}')
-    print(f'\nError: {repr(error)}')
-    time.sleep(3)
+from banking.script import header, go_back, log_error
     
     
 def beneficiaries(auth: Authentication, checking_beneficiary: bool = False) -> Any | None:

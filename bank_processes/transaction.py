@@ -196,7 +196,7 @@ class Transaction(Account, ABC):
                     '{self.account_number}', '{self.account_holder}', '1000000009', 'CENTRAL BANK', 
                     '{self.__transaction_date_time}', 
                     '{self.__description}', '{self.__transaction_status}', 
-                    '{self.account_type}', {self.central_bank}, 'credit')
+                    'central bank', {self.central_bank}, 'credit')
 
                     """
                 self.database.query(query)

@@ -195,6 +195,8 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         # Check Fixed Deposits if the PayBack date is due or not
         self.fixed_deposit_due_date_validation()
 
+        self.check_loan_payments()
+
     def user_logout(self):
         """Method to log out the currently logged-in user from the bank app, terminating their session and clearing
         any authentication tokens."""
@@ -319,8 +321,25 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
                     self.database.rollback()
 
     def check_loan_payments(self):
-        self.loan.email = self.email
+        """
+        Check and process the user's loan payments.
 
+        This method performs the following steps:
+        1. Sets the loan email to the user's email.
+        2. Queries the database for active loans (status_id = 1) associated with the user.
+        3. Iterates through the retrieved loans and checks if any payments are due.
+        4. If a payment is due, fetches the monthly payment amount.
+        5. Makes the loan payment and processes the transaction.
+        6. Records the transaction.
+        7. Updates the loan status to complete (status_id = 3) if the loan end date is reached.
+
+        Returns
+        -------
+        None
+        """
+        self.loan.email = self.email  # Set the loan email to the user's email
+
+        # Query to fetch active loans for the user
         query = f"""
                 SELECT * 
                 FROM {self.database.db_tables[7]}
@@ -328,17 +347,18 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
                 AND status_id = 1
                 """
 
-        datas = self.database.fetch_data(query)
+        datas = self.database.fetch_data(query)  # Fetch the active loans
 
-        for data in datas:
-            self.loan.due_date = data[6]
-            self.loan.end_date = data[7]
+        for data in datas:  # Iterate through the fetched loans
+            self.loan.due_date = data[6]  # Set the loan due date
+            self.loan.end_date = data[7]  # Set the loan end date
 
-            # for loop for each user_id loan status_id
-            if datetime.today().date() > date(
+            # Check if the current date is within the loan period
+            if datetime.today().date() >= date(
                     self.loan.due_date[:4], int(self.loan.due_date[5:7]), int(self.loan.due_date[8:])) <= date(
                     self.loan.end_date[:4], int(self.loan.end_date[5:7]), int(self.loan.end_date[8:])):
 
+                # Query to fetch the monthly payment amount for the loan
                 query = f"""
                         SELECT monthly_payment 
                         FROM {self.database.db_tables[7]}
@@ -346,39 +366,37 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
                         AND status_id = 1
                         """
 
-                datass = self.database.fetch_data(query)
+                datass = self.database.fetch_data(query)  # Fetch the monthly payment amount
 
-                for dat in datass:
-                    for amount in dat:
-                        self.amount = float(amount)
+                for dat in datass:  # Iterate through the fetched monthly payments
+                    for amount in dat:  # Iterate through the amounts
+                        self.amount = float(amount)  # Set the payment amount
 
+                # Make the loan payment
                 self.loan.make_loan_payments(
                     loan_id=data[0],
                     amount=self.amount,
                     payment_date=str(datetime.today().date())
                 )
 
+                # Set the transaction details
                 self.description = f'LOAN_REPAYMENT/CBB/TRANSFER TO CONSOLE BETA BANK'
                 self.receiver_acct_num = '1000000009'
 
-                self.process_transaction(central_bank=True)
-                self.transaction_record(central_bank=True)
+                self.process_transaction(central_bank=True)  # Process the transaction
+                self.transaction_record(central_bank=True)  # Record the transaction
 
-                self.loan.make_loan_payments(
-                    loan_id=data[0],
-                    amount=self.amount,
-                    payment_date=str(datetime.today().date())
-                )
-
+                # Check if the loan end date is reached
                 if date(self.loan.due_date[:4], int(self.loan.due_date[5:7]), int(self.loan.due_date[8:])) >= date(
                         self.loan.end_date[:4], int(self.loan.end_date[5:7]), int(self.loan.end_date[8:])):
+                    # Update the loan status to complete (status_id = 3)
                     query = f"""
                             UPDATE {self.database.db_tables[7]}
                             SET status_id = 3
                             WHERE loan_id = {data[0]}
                             """
 
-                    self.database.query(query)
+                    self.database.query(query)  # Execute the update query
 
     @property
     def username(self):

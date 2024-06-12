@@ -43,6 +43,32 @@ class Loan(DataBase):
 
     def add_loan(self, *, loan_type: int, loan_status: int, amount: float, interest_rate: float, start_date: str,
                  due_date: str, end_date: str, monthly_payment: float):
+        """
+        Add a new loan record to the loans table in the database.
+
+        Parameters
+        ----------
+        loan_type : int
+            The type of loan (e.g., personal, mortgage, etc.).
+        loan_status : int
+            The status of the loan (e.g., active, completed, etc.).
+        amount : float
+            The total amount of the loan.
+        interest_rate : float
+            The annual interest rate for the loan.
+        start_date : str
+            The start date of the loan.
+        due_date : str
+            The due date for the first payment.
+        end_date : str
+            The end date of the loan.
+        monthly_payment : float
+            The monthly payment amount.
+
+        Returns
+        -------
+        None
+        """
         query = f"""
                 INSERT INTO {self.db_tables[7]}
                 (user_id, loan_type_id, amount, interest_rate,monthly_payment, start_date, due_date, end_date, 
@@ -54,6 +80,22 @@ class Loan(DataBase):
         self.query(query)
 
     def make_loan_payments(self, *, loan_id: int, amount: float, payment_date: str):
+        """
+        Record a loan payment in the loan payments table in the database.
+
+        Parameters
+        ----------
+        loan_id : int
+            The ID of the loan for which the payment is being made.
+        amount : float
+            The amount of the payment.
+        payment_date : str
+            The date of the payment.
+
+        Returns
+        -------
+        None
+        """
         query = f"""
                  INSERT INTO {self.db_tables[8]}
                  (loan_id, amount, payment_date)
@@ -86,19 +128,6 @@ class Loan(DataBase):
 
     @property
     def due_date(self):
-        # if self.user_id is not None:
-        #     query = (f"""
-        #     SELECT due_date
-        #     FROM {self.db_tables[6]}
-        #     WHERE user_id = '{self.user_id}'
-        #     """)
-        #
-        #     datas: tuple = self.fetch_data(query)
-        #
-        #     for data in datas:
-        #         for due_date in data:
-        #             self.due_date = due_date
-
         return self.__user_id
 
     @due_date.setter
@@ -107,19 +136,6 @@ class Loan(DataBase):
 
     @property
     def end_date(self):
-        # if self.user_id is not None:
-        #     query = (f"""
-        #     SELECT end_date
-        #     FROM {self.db_tables[6]}
-        #     WHERE user_id = '{self.user_id}'
-        #     """)
-        #
-        #     datas: tuple = self.fetch_data(query)
-        #
-        #     for data in datas:
-        #         for end_date in data:
-        #             self.end_date = end_date
-
         return self.__user_id
 
     @end_date.setter

@@ -8,7 +8,8 @@ from plyer import notification as note
 from banking.script import (header,
                             go_back,
                             signed_in,
-                            findDate)
+                            findDate,
+                            log_error)
 from bank_processes.authentication import (Authentication,
                                            verify_data,
                                            check_account_status,
@@ -18,16 +19,6 @@ from bank_processes.notification import Notification
 
 auth = Authentication()
 notify = Notification()
-
-
-def log_error(error: Exception):
-    """Logs errors to a file."""
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    with open('notification/error.txt', 'w') as file:
-        file.write(f'{exc_type}, \n{os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]}, \n{exc_tb.tb_lineno}, '
-                   f'\nError: {repr(error)}')
-    print(f'\nError: {repr(error)}')
-    time.sleep(3)
     
     
 def username():

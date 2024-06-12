@@ -409,6 +409,3 @@ def update_bvn(auth: Authentication):
     except Exception as e:
         log_error(e)
         go_back('script')
-
-
-# update_bvn()

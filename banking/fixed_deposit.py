@@ -179,28 +179,30 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
                 if i % 3 == 2:
                     print()
 
-            _input = input("\n>>> ")  # Get user input.
+            while True:
+                _input = input("\n>>> ")  # Get user input.
 
-            # Check if the user wants to go back.
-            if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
-                del _input
-                time.sleep(1.5)
-                go_back('signed_in', auth=auth)
-                break
-            else:
-                # Validate the user input.
-                if not _input.isdigit():
-                    print("\n:: Numbers Only")
+                # Check if the user wants to go back.
+                if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                     del _input
-                    time.sleep(3)
-                    continue
-                elif start_day <= int(_input) <= end_day:
-                    return dates[_input], f'{int(_input)} days', 'Beta Account Balance'
+                    time.sleep(1.5)
+                    go_back('signed_in', auth=auth)
+                    break
                 else:
-                    print("\n:: Wrong Input")
-                    del _input
-                    time.sleep(3)
-                    continue
+                    # Validate the user input.
+                    if not _input.isdigit():
+                        print("\n:: Numbers Only")
+                        del _input
+                        time.sleep(3)
+                        continue
+                    elif start_day <= int(_input) <= end_day:
+                        return dates[_input], f'{int(_input)} days', 'Beta Account Balance'
+                    else:
+                        print("\n:: Wrong Input")
+                        del _input
+                        time.sleep(3)
+                        continue
+            break
     except Exception as e:
         log_error(error=e)
         go_back('script')
@@ -413,7 +415,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                             auth.amount = float(amount_to_lock)
 
                             auth.process_transaction(central_bank=True)
-                            auth.transaction_record(deposit=True)
+                            auth.transaction_record(central_bank=True)
 
                             # Open the fixed deposit account
                             auth.open_fixed_deposit_account()

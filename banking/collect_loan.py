@@ -333,6 +333,8 @@ Console Beta Bank
     with open('notification/loan_receipt.txt', 'w') as file:
         file.write(receipt)
 
+    go_back('signed_in', auth)
+
 
 def loan_processing(*, auth: Authentication, amount: float, _repayment_period: int, interest: float, _type: tuple):
     """
@@ -350,35 +352,50 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
         The annual interest rate.
     _type : tuple
         A tuple containing the loan type description and code.
+
+    Returns
+    -------
+    None
+
+    Raises
+    ------
+    Exception
+        If any error occurs during the loan processing.
     """
     try:
+        # Calculate the total interest and rate of interest
         _interest, rate_of_interest = calculate_interest(
             principal=amount,
             rate_per_year=interest,
             days=_repayment_period * 30
         )
 
+        # Calculate the monthly payment and total payment
         payment_period = f'{((_interest + amount) / _repayment_period):,.2f}'
         total_payment = f'{(_interest + amount):,.2f}'
 
+        # Calculate the end date of the loan
         end_date = calculate_end_date(
             f'{datetime.datetime.today().year}-{datetime.datetime.today().month}-{datetime.datetime.today().day}',
             _repayment_period
         )
 
+        # Get the month name
         month = get_month(int(end_date[5:7]))[0]
 
         while True:
             header()
 
+            # Display loan terms
             print(f'\n{_type[0]} Loan Term')
-            print(f'{'~' * len(_type[0])}~~~~~~~~~~\n')
+            print(f'{"~" * len(_type[0])}~~~~~~~~~~\n')
             print(f'Total Interest :: N{_interest:,.2f}\n')
             print(f'Interest Rate :: {interest}% per annum\n')
             print(f'Total Payment :: N{total_payment}\n')
             print(f'Monthly Payment :: N{payment_period}\n')
             print(f'End Date :: {month} {datetime.datetime.today().day}, {end_date[:4]}')
 
+            # Ask the user to accept the terms
             print('\nDo you accept these Terms?')
             print('1. Yes  |  2. No')
             print('~~~~~~     ~~~~~')
@@ -387,14 +404,17 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 break
             elif re.search('^1$', _input, re.IGNORECASE):
+                # Process the loan if the terms are accepted
                 loan.email = auth.email
                 due_month = int(f'{datetime.datetime.today().month + 1}')
                 due_year = int(f'{datetime.datetime.today().year}')
 
+                # Adjust the due month and year if the month exceeds 12
                 while due_month > 12:
                     due_month -= 12
                     due_year += 1
 
+                # Add user information to the database if not already present
                 if loan.checking_user():
                     loan.first_name = auth.first_name
                     loan.last_name = auth.last_name
@@ -403,21 +423,29 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
                     loan.address = auth.address
                     loan.date_of_birth = auth.date_of_birth
                     loan.add_users()
+
+                # Add the loan to the database
                 loan.add_loan(
                     loan_type=_type[1],
                     loan_status=1,
                     amount=_interest + amount,
                     interest_rate=interest,
-                    monthly_payment=float(payment_period),
+                    monthly_payment=(_interest + amount) / _repayment_period,
                     start_date=f'{datetime.datetime.today().year}-{datetime.datetime.today().month}-'
                                f'{datetime.datetime.today().day}',
                     due_date=f'{due_year}-{due_month}-{datetime.datetime.today().day}',
                     end_date=f'{end_date[:4]}-{end_date[5:7]}-{end_date[8:]}'
                 )
+
+                # Simulate a countdown timer
                 countdown_timer(_register='Loan', _duty='Payment', countdown=5)
+
+                # Process the deposit
                 deposit_default(auth,
                                 _amount=_interest + amount,
                                 _description=f'LOAN/CBB/DEPOSIT TO {auth.account_holder}')
+
+                # Generate a loan receipt
                 loan_receipt(auth, f'{month} {datetime.datetime.today().day}, {end_date[:4]}',
                              _type[0], total_payment, interest, _repayment_period, payment_period)
                 break
@@ -435,6 +463,23 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
 
 
 def types_of_loans(auth: Authentication):
+    """
+    Display and process different types of loans available for the user.
+
+    Parameters
+    ----------
+    auth : Authentication
+        An instance of the Authentication class containing user details.
+
+    Returns
+    -------
+    None
+
+    Raises
+    ------
+    Exception
+        If any error occurs during the loan processing.
+    """
     try:
         while True:
             header()
@@ -456,8 +501,9 @@ def types_of_loans(auth: Authentication):
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                 break
             else:
-                amount, _repayment_period = loan_questions()
+                amount, _repayment_period = loan_questions()  # Get the loan amount and repayment period from the user
                 if re.search('^1$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Personal Loan
                     if _repayment_period < 12:
                         interest = 18.0
                     else:
@@ -470,6 +516,7 @@ def types_of_loans(auth: Authentication):
 
                     continue
                 elif re.search('^2$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Mortgage Loan
                     if _repayment_period < 24:
                         interest = 3.0
                     else:
@@ -482,6 +529,7 @@ def types_of_loans(auth: Authentication):
 
                     continue
                 elif re.search('^3$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Auto Loan
                     if _repayment_period < 24:
                         interest = 5.0
                     else:
@@ -493,6 +541,7 @@ def types_of_loans(auth: Authentication):
                     )
                     continue
                 elif re.search('4$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Student Loan
                     if _repayment_period < 24:
                         interest = 4.0
                     else:
@@ -504,6 +553,7 @@ def types_of_loans(auth: Authentication):
                     )
                     continue
                 elif re.search('^5$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Small Business Loan
                     if _repayment_period < 24:
                         interest = 10.0
                     else:
@@ -515,6 +565,7 @@ def types_of_loans(auth: Authentication):
                     )
                     continue
                 elif re.search('^6$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Payday Loan
                     if _repayment_period < 5:
                         interest = 200.0
                     elif _repayment_period < 3:
@@ -528,6 +579,7 @@ def types_of_loans(auth: Authentication):
                     )
                     continue
                 elif re.search('^7$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Home Equity Loan
                     if _repayment_period < 24:
                         interest = 5.0
                     else:
@@ -539,6 +591,7 @@ def types_of_loans(auth: Authentication):
                     )
                     continue
                 elif re.search('^8$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Debt Consolidation Loan
                     if _repayment_period < 24:
                         interest = 15.0
                     else:
@@ -550,6 +603,7 @@ def types_of_loans(auth: Authentication):
                     )
                     continue
                 elif re.search('^9$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Credit Builder Loan
                     if _repayment_period < 24:
                         interest = 10.0
                     else:
@@ -561,6 +615,7 @@ def types_of_loans(auth: Authentication):
                     )
                     continue
                 elif re.search('^10$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Peer to Peer Loan
                     if _repayment_period < 24:
                         interest = 20.0
                     else:
@@ -572,6 +627,7 @@ def types_of_loans(auth: Authentication):
                     )
                     continue
                 elif re.search('^11$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Title Loan
                     if _repayment_period < 24:
                         interest = 25.0
                     else:
@@ -583,6 +639,7 @@ def types_of_loans(auth: Authentication):
                     )
                     continue
                 elif re.search('^12$', user_input, re.IGNORECASE):
+                    # Set the interest rate based on the repayment period for Bridge Loan
                     if _repayment_period < 24:
                         interest = 12.0
                     else:

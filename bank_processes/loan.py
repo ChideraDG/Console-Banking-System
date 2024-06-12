@@ -53,11 +53,24 @@ class Loan(DataBase):
         self.query(query)
 
     def check_loan(self):
-        # for loop for each user_id loan status_id
-        if datetime.datetime.today().date() > datetime.date(
-                self.due_date[:4], int(self.due_date[5:7]), int(self.due_date[8:])) < datetime.date(
-                self.end_date[:4], int(self.end_date[5:7]), int(self.end_date[8:])):
-            pass
+        query = f"""
+                SELECT * 
+                FROM {self.db_tables[7]}
+                WHERE user_id = {self.user_id}
+                AND status_id = 1
+                """
+
+        datas = self.fetch_data(query)
+
+        for data in datas:
+            self.due_date = data[6]
+            self.end_date = data[7]
+
+            # for loop for each user_id loan status_id
+            if datetime.datetime.today().date() > datetime.date(
+                    self.due_date[:4], int(self.due_date[5:7]), int(self.due_date[8:])) <= datetime.date(
+                    self.end_date[:4], int(self.end_date[5:7]), int(self.end_date[8:])):
+                pass
 
     @property
     def user_id(self):
@@ -82,18 +95,18 @@ class Loan(DataBase):
 
     @property
     def due_date(self):
-        if self.user_id is not None:
-            query = (f"""
-            SELECT due_date 
-            FROM {self.db_tables[6]} 
-            WHERE user_id = '{self.user_id}'
-            """)
-
-            datas: tuple = self.fetch_data(query)
-
-            for data in datas:
-                for due_date in data:
-                    self.due_date = due_date
+        # if self.user_id is not None:
+        #     query = (f"""
+        #     SELECT due_date
+        #     FROM {self.db_tables[6]}
+        #     WHERE user_id = '{self.user_id}'
+        #     """)
+        #
+        #     datas: tuple = self.fetch_data(query)
+        #
+        #     for data in datas:
+        #         for due_date in data:
+        #             self.due_date = due_date
 
         return self.__user_id
 
@@ -103,18 +116,18 @@ class Loan(DataBase):
 
     @property
     def end_date(self):
-        if self.user_id is not None:
-            query = (f"""
-            SELECT end_date 
-            FROM {self.db_tables[6]} 
-            WHERE user_id = '{self.user_id}'
-            """)
-
-            datas: tuple = self.fetch_data(query)
-
-            for data in datas:
-                for end_date in data:
-                    self.end_date = end_date
+        # if self.user_id is not None:
+        #     query = (f"""
+        #     SELECT end_date
+        #     FROM {self.db_tables[6]}
+        #     WHERE user_id = '{self.user_id}'
+        #     """)
+        #
+        #     datas: tuple = self.fetch_data(query)
+        #
+        #     for data in datas:
+        #         for end_date in data:
+        #             self.end_date = end_date
 
         return self.__user_id
 

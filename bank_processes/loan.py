@@ -125,19 +125,3 @@ class Loan(DataBase):
     @user_id.setter
     def user_id(self, _user_id):
         self.__user_id = _user_id
-
-    @property
-    def due_date(self):
-        return self.__user_id
-
-    @due_date.setter
-    def due_date(self, _due_date):
-        self.__due_date = _due_date
-
-    @property
-    def end_date(self):
-        return self.__user_id
-
-    @end_date.setter
-    def end_date(self, _end_date):
-        self.__end_date = _end_date

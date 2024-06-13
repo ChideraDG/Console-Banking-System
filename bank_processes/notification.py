@@ -21,18 +21,70 @@ class Notification:
         self.sender = sender  # The entity or system responsible for sending the notification
         self.attachments = attachments  # Any additional files or media included with the notification
 
-    def send_notification(self, path: str):
-        """Method to send notifications to users via their preferred channels,
-         such as email, SMS, push notifications, or in-app messages."""
+    @classmethod
+    def send_notification(cls, title: str, message: str, channel: str):
+        """
+        Sends a notification to users via their preferred channels and logs the message to a text file.
+
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location (used for logging).
+
+        Notes
+        -----
+        This method is responsible for sending notifications and appending the message to a log file.
+        """
+        # Send notification using the appropriate method (e.g., email, SMS, push notification)
         notification.notify(
-            title=self.status,
-            message=self.message,
-            timeout=30
+            title=title,
+            message=message,
+            timeout=30  # Example: Notification timeout
         )
 
-        with open(f'notification/{path}.txt', 'a') as file:
-            file.write(self.message)
+        # Log the notification message to a text file
+        with open(f'notification/{channel}.txt', 'a') as file:
+            file.write(message)
             file.write('\n')
+
+    def schedule_notification(self):
+        """
+        Method to schedule notifications for future delivery.
+
+        Notes
+        -----
+        This method can be implemented to schedule notifications at specific times or dates.
+        """
+        pass  # Placeholder for future implementation
+
+    def trigger_notification(self, title: str, message: str, channel: str):
+        """
+        Helper method to set notification details and trigger sending.
+
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
+
+        Notes
+        -----
+        This method sets the notification details and then calls `send_notification` to send the notification.
+        """
+        # Set notification details
+        self.status = title
+        self.message = message
+        self.deliver_channel = channel
+
+        # Send notification using the configured details
+        self.send_notification(title, message, channel)
 
     def forgot_username_notification(self, *, title: str, message: str, channel: str):
         """
@@ -43,106 +95,193 @@ class Notification:
         title : str
             The title of the notification.
         message : str
-            The message content of the notification.
+            The content of the notification message.
         channel : str
-            The Location of the notification
+            The delivery channel or location.
 
         Notes
         -----
-        This function sets the notification title and message, then triggers the sending of the notification.
+        This method triggers the notification sending process for forgotten username scenarios.
         """
-        # Set the status of the notification with the provided title.
-        self.status = title
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
 
-        # Set the message of the notification with the provided message.
-        self.message = message
+    def account_creation_notification(self, *, title: str, message: str, channel: str):
+        """
+        Manages notification for account creation.
 
-        # Set the location of the notification with the provided path
-        self.deliver_channel = channel
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
 
-        # Call the method to send the notification.
-        self.send_notification(path=self.deliver_channel)
+        Notes
+        -----
+        This method triggers the notification sending process for account creation events.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
 
-    def schedule_notification(self):
-        """Method to schedule notifications for future delivery,
-        allowing users to set reminders or receive alerts at specific times or dates."""
-        pass
+    def sign_in_notification(self, *, title: str, message: str, channel: str):
+        """
+        Notifies a sign-in event.
 
-    def bvn_creation(self, *, title: str, message: str, channel: str):
-        """Method to trigger notifications in response to each BVN creation."""
-        self.status = title
-        self.message = message
-        self.deliver_channel = channel
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
 
-        self.send_notification(self.deliver_channel)
+        Notes
+        -----
+        This method triggers the notification sending process for user sign-in events.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
 
-    def account_creation(self, *, title: str, message: str, channel: str):
-        """Method to manage notification account creation."""
-        self.status = title
-        self.message = message
-        self.deliver_channel = channel
+    def forgot_password_notification(self, *, title: str, message: str, channel: str):
+        """
+        Handles notification for user forgetting their password.
 
-        self.send_notification(self.deliver_channel)
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
 
-    def sign_in(self, *, title: str, message: str, channel: str):
-        """Method to notify a sign in has been made."""
-        self.status = title
-        self.message = message
-        self.deliver_channel = channel
+        Notes
+        -----
+        This method triggers the notification sending process for forgotten password scenarios.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
 
-        self.send_notification(self.deliver_channel)
+    def sign_out_notification(self, *, title: str, message: str, channel: str):
+        """
+        Maintains a user signing out notification.
 
-    def forgot_password(self, *, title: str, message:str, channel: str):
-        """Method to handle user forgetting their password, a notification."""
-        self.status = title
-        self.message = message
-        self.deliver_channel = channel
-        self.send_notification(self.deliver_channel)
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
 
-    def sign_out(self, *, title: str, message: str, channel: str):
-        """Method to maintain a user signing out notification."""
-        self.status = title
-        self.message = message
-        self.deliver_channel = channel
-
-        self.send_notification(self.deliver_channel)
+        Notes
+        -----
+        This method triggers the notification sending process for user sign-out events.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
 
     def transfer_notification(self, *, title: str, message: str, channel: str):
-        """Method to trigger a transfer notification."""
-        self.status = title
-        self.message = message
-        self.deliver_channel = channel
+        """
+        Triggers a transfer notification.
 
-        self.send_notification(self.deliver_channel)
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
+
+        Notes
+        -----
+        This method triggers the notification sending process for transfer transactions.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
 
     def withdraw_notification(self, *, title: str, message: str, channel: str):
-        """Method to trigger a withdrawal notification."""
-        self.status = title
-        self.message = message
-        self.deliver_channel = channel
+        """
+        Triggers a withdrawal notification.
 
-        self.send_notification(self.deliver_channel)
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
+
+        Notes
+        -----
+        This method triggers the notification sending process for withdrawal transactions.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
 
     def deposit_notification(self, *, title: str, message: str, channel: str):
-        """Method to trigger a deposit notification."""
-        self.status = title
-        self.message = message
-        self.deliver_channel = channel
+        """
+        Triggers a deposit notification.
 
-        self.send_notification(self.deliver_channel)
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
+
+        Notes
+        -----
+        This method triggers the notification sending process for deposit transactions.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
 
     def fixed_deposit_creation_notification(self, *, title: str, message: str, channel: str):
-        """Method to trigger a fixed deposit creation notification."""
-        self.status = title
-        self.message = message
-        self.deliver_channel = channel
+        """
+        Triggers a fixed deposit creation notification.
 
-        self.send_notification(self.deliver_channel)
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
+
+        Notes
+        -----
+        This method triggers the notification sending process for fixed deposit creation events.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
 
     def fixed_deposit_top_up_notification(self, *, title: str, message: str, channel: str):
-        """Method to trigger a fixed deposit top up notification."""
-        self.status = title
-        self.message = message
-        self.deliver_channel = channel
-        
-        self.send_notification(self.deliver_channel)
+        """
+        Triggers a fixed deposit top-up notification.
+
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
+
+        Notes
+        -----
+        This method triggers the notification sending process for fixed deposit top-up events.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)

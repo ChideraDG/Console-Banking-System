@@ -1,4 +1,4 @@
-<class 'ValueError'>, 
-collect_loan.py, 
-411, 
-Error: ValueError("could not convert string to float: '9,665.75'")
+<class 'pymysql.err.ProgrammingError'>, 
+authentication.py, 
+412, 
+Error: ProgrammingError(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''2024-6-13'\n                            WHERE loan_id = 1' at line 2")

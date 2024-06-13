@@ -1,6 +1,4 @@
-import os
 import re
-import sys
 import time
 from animation.colors import *
 from bank_processes.authentication import Authentication

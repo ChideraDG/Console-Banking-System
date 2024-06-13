@@ -1,6 +1,4 @@
-import os
 import re
-import sys
 import time
 from bank_processes.authentication import Authentication
 from banking.register_panel import countdown_timer

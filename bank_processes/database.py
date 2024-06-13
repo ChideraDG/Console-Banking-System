@@ -1,5 +1,4 @@
-from typing import Tuple, Any
-
+from typing import Any
 import pymysql as sql
 
 

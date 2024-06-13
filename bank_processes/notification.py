@@ -1,5 +1,4 @@
 from plyer import notification
-# import time, datetime
 
 
 class Notification:

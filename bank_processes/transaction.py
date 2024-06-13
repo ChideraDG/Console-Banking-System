@@ -1,8 +1,7 @@
-import time
 from datetime import datetime
 import random
 from abc import ABC
-from typing import Tuple, Any
+from typing import Any
 from prettytable import PrettyTable
 from animation.colors import *
 from pymysql.cursors import DictCursor

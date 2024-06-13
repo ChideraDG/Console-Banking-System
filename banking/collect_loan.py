@@ -1,7 +1,5 @@
 import datetime
-import os
 import re
-import sys
 from time import sleep
 from bank_processes.authentication import Authentication
 from bank_processes.loan import Loan
@@ -159,39 +157,46 @@ def payment_info(*, _loan_amount, _annual_rate, _repayment_period, _payment_peri
 
 def loan_calculator():
     """
-        Perform loan calculations by obtaining loan information from the user,
-        calculating the interest, and displaying payment information.
+    Perform loan calculations by obtaining loan information from the user,
+    calculating the interest, and displaying payment information.
     """
     try:
         while True:
-            header()
+            header()  # Display header for the loan calculator interface
             print('\nEnter Loan Information:')
             print('~~~~~~~~~~~~~~~~~~~~~~~')
 
+            # Obtain loan amount from the user
             loan_amount = amount_of_the_loan()
             if loan_amount == 'preview':
                 break
 
+            # Obtain annual percentage rate from the user
             annual_rate = annual_percentage_rate()
             if annual_rate == 'preview':
                 break
 
+            # Obtain repayment period from the user
             period = repayment_period()
             if period == 'preview':
                 break
 
+            # Calculate interest and rate of interest based on user input
             interest, rate_of_interest = calculate_interest(
                 principal=loan_amount,
                 rate_per_year=annual_rate,
-                days=period * 30
+                days=period * 30  # Convert period from months to days
             )
 
+            # Display a countdown timer while computing payment information
             countdown_timer(_register='\rComputing Payment Information', _duty='', countdown=5)
 
+            # Calculate payment period, total payment, and interest
             payment_period = f'{((interest + loan_amount) / period):,.2f}'
             total_payment = f'{(interest + loan_amount):,.2f}'
             _interest = f'{interest:,.2f}'
 
+            # Display payment information and wait for user input
             _payment_info = payment_info(
                 _loan_amount=loan_amount,
                 _annual_rate=annual_rate,
@@ -201,52 +206,73 @@ def loan_calculator():
                 _interest=_interest
             )
 
+            # Handle user input from payment information display
             if re.search('^back$', _payment_info, re.IGNORECASE):
-                del _payment_info
-                break
+                del _payment_info  # Clear _payment_info variable
+                break  # Exit the loop
             elif re.search('^break$', _payment_info, re.IGNORECASE):
-                sleep(0.5)
-                break
+                sleep(0.5)  # Pause execution for 0.5 seconds
+                break  # Exit the loop
             elif re.search('^continue$', _payment_info, re.IGNORECASE):
-                sleep(0.5)
-                continue
+                sleep(0.5)  # Pause execution for 0.5 seconds
+                continue  # Continue to the next iteration of the loop
 
     except Exception as e:
-        log_error(e)
-        go_back('script')
+        log_error(e)  # Log any exceptions raised during execution
+        go_back('script')  # Navigate back to the previous script or step
 
 
 def loan_questions() -> tuple[float, str | int]:
+    """
+    Interactively prompts the user for loan details.
+
+    Returns
+    -------
+    tuple[float, str | int]
+        A tuple containing the validated loan amount and repayment period.
+
+    Notes
+    -----
+    This function continuously prompts the user to enter the amount of money they need to borrow.
+    It validates the input to ensure it is a numeric value greater than 10000.0 naira.
+    If the user enters 'back' or 'return', the function breaks the loop and exits.
+    Once a valid loan amount is entered, it prompts for the repayment period.
+    The repayment period can't be entered in months or as a string ('preview' to go back).
+    If both the loan amount and repayment period are valid, they are returned as a tuple.
+    """
     while True:
-        header()
+        header()  # Display header for the loan questions interface
 
         print('\nHow much money do you need to borrow? (greater than 10000)')
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        amount = input(">>> ")
+        amount = input(">>> ")  # Prompt user to enter the loan amount
 
         if re.search('^.*(back|return).*$', amount, re.IGNORECASE):
-            break
+            break  # Exit loop if user wants to go back
 
         # Ensure the input is a valid number
         elif re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", amount, re.IGNORECASE) is None:
-            print('\n:: Digits Only')
+            print('\n:: Digits Only')  # Notify user if input contains non-digits
             sleep(2)
-            continue
+            continue  # Continue looping to prompt for correct input
 
-        # Check if the amount is greater than 10.0 naira
+        # Check if the amount is greater than 10000.0 naira
         elif float(amount) < 10000.0:
-            print('\n:: Amount must be more than 10000.0 naira.')
+            print('\n:: Amount must be more than 10000.0 naira.')  # Notify user if amount is too low
             sleep(2)
-            continue
+            continue  # Continue looping to prompt for correct input
 
         else:
-            amount = float(amount)
+            amount = float(amount)  # Convert valid input to float
 
-            _repayment_period = repayment_period()
+            _repayment_period = repayment_period()  # Prompt user for repayment period
+
             if _repayment_period == 'preview':
-                break
+                break  # Exit loop if user wants to go back from repayment period selection
             else:
-                return amount, _repayment_period
+                return amount, _repayment_period  # Return validated amount and repayment period
+
+    # The Function ends here if user chooses to go back or preview from any step
 
 
 def loan_receipt(auth: Authentication, end_date, _type: str, _amount: str, interest: float, _repayment_period: int,
@@ -415,14 +441,14 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
                     due_year += 1
 
                 # Add user information to the database if not already present
-                if loan.checking_user():
+                if loan.check_user_existence():
                     loan.first_name = auth.first_name
                     loan.last_name = auth.last_name
                     loan.email = auth.email
                     loan.phone_number = auth.phone_number
                     loan.address = auth.address
                     loan.date_of_birth = auth.date_of_birth
-                    loan.add_users()
+                    loan.add_user()
 
                 # Add the loan to the database
                 loan.add_loan(

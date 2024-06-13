@@ -1,6 +1,3 @@
-import datetime
-import time
-
 from bank_processes.database import DataBase
 
 
@@ -17,29 +14,45 @@ class Loan(DataBase):
         self.__due_date = due_date
         self.__end_date = end_date
 
-    def add_users(self):
+    def add_user(self):
+        """
+        Adds a new user to the database.
+
+        Notes
+        -----
+        This method constructs and executes an SQL query to insert user information into the database table.
+        """
         query = f"""
         INSERT INTO {self.db_tables[6]}
         (first_name, last_name, email, phone_number, address, date_of_birth)
         VALUES('{self.first_name}', '{self.last_name}', '{self.email}', '{self.phone_number}', '{self.address}', 
         '{self.date_of_birth}')
         """
+        self.query(query)  # Assuming self.query is a method to execute the query
 
-        self.query(query)
+    def check_user_existence(self):
+        """
+        Checks if a user already exists in the database based on their email.
 
-    def checking_user(self):
+        Returns
+        -------
+        bool
+            True if the user does not exist (can be added), False if the user already exists.
+
+        Notes
+        -----
+        This method constructs and executes an SQL query to select user data based on email.
+        It returns True if no data is found (user does not exist), otherwise False.
+        """
         query = f"""
         SELECT * 
         FROM {self.db_tables[6]}
         WHERE email = '{self.email}'
         """
 
-        datas = self.fetch_data(query)
+        data = self.fetch_data(query)  # Assuming self.fetch_data retrieves data from the database
 
-        if datas:
-            return False
-        else:
-            return True
+        return not bool(data)  # Return True if data is empty (user does not exist), False otherwise
 
     def add_loan(self, *, loan_type: int, loan_status: int, amount: float, interest_rate: float, start_date: str,
                  due_date: str, end_date: str, monthly_payment: float):

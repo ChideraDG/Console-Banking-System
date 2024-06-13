@@ -1,6 +1,4 @@
-import os
 import re
-import sys
 import time
 from typing import Any
 from bank_processes.authentication import Authentication, verify_data

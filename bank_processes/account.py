@@ -1,9 +1,7 @@
 import datetime
 import json
-import time
 from abc import abstractmethod, ABC
-from typing import Tuple, List, Any
-from bank_processes.notification import Notification
+from typing import Any
 from bank_processes.user import User
 
 

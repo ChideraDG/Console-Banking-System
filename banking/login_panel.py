@@ -1,6 +1,4 @@
-import os
 import re
-import sys
 import time
 from datetime import datetime
 from banking.register_panel import countdown_timer

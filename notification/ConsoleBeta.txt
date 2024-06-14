@@ -1,0 +1,8 @@
+
+Debit
+Amount :: NGN100.0
+Acc :: 477******548
+Desc :: TRF/CBB/FROM OHANENYE-OHIAEKPETE CHIDERA DIVINE-GIFT TO OBOH VICTORY AKHERE
+Time :: 20:07:30.547538
+Balance :: 216261.237
+                        

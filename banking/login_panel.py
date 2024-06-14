@@ -2,7 +2,6 @@ import re
 import time
 from datetime import datetime
 from banking.register_panel import countdown_timer
-from plyer import notification as note
 from banking.script import (header,
                             go_back,
                             signed_in,
@@ -204,9 +203,9 @@ def forgot_username():
                             if elapsed_time < 300.0:
                                 if _token == _tokenNumber:
                                     notify.forgot_username_notification(
-                                        title='Username Notification',
+                                        title='Console Beta Banking',
                                         message=f"Your Username: {_username}. \nDon't Share it.",
-                                        channel='Console Beta F_Username'
+                                        channel='Forgot_Username'
                                     )
                                     print("\nUsername Successfully Recovered. \nUsername sent to your notification")
                                     break
@@ -263,6 +262,12 @@ def forgot_password():
                     time.sleep(2)
                     auth.reset_password()
                     auth.change_password()
+                    notify.forgot_password_notification(
+                        title='Console Beta Banking',
+                        message=f"Your Password has been successfully changed.\nIf you didn't initiate this process."
+                                f"\nBlock your Account or Visit your Nearest Branch to you. \nThank You",
+                        channel='Forgot_Password'
+                    )
                     break
                 else:
                     print("\n:: Username doesn't exist.")
@@ -355,12 +360,11 @@ def login():
             auth.user_login()
 
             # Send a login notification to the user.
-            note.notify(
-                title='Login Notification',
+            notify.sign_in_notification(
+                title='Console Beta Banking',
                 message=f"You logged into your Account on {day_in_words}, {day} {month} {year}.",
-                timeout=30
+                channel='Log_In'
             )
-
             # Navigate to the signed-in section.
             signed_in(auth=auth)
             break

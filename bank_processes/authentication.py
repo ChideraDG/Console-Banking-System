@@ -4,7 +4,6 @@ import random
 from typing import Any
 from bank_processes.account import FixedDeposit
 from bank_processes.database import DataBase
-from plyer import notification as note
 from bank_processes.loan import Loan
 from bank_processes.transaction import Transaction
 from bank_processes.notification import Notification
@@ -161,18 +160,16 @@ def token_auth() -> str:
     This method generates a random token, sends a notification to the user,
     and writes the token to a file for recovery purposes.
     """
+    from banking.login_panel import notify
+
     token = str(random.randint(100000, 999999))
 
     # Send a notification to the user with the generated token
-    note.notify(
-        title='Username Notification',
+    notify.token_notification(
+        title='Console Beta Banking',
         message=f"Your Token Number: {token}. Don't Share it.\nExpires after 30 minutes.",
-        timeout=30
+        channel='Token_Number'
     )
-
-    # Write the token to a file
-    with open('notification/token_notification.txt', 'w') as file:
-        file.write(f"Your Token Number: {token}. Don't Share it.\nExpires after 30 minutes.")
 
     return token
 
@@ -187,7 +184,8 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         self.__failed_login_attempts = failed_login_attempts  # Count of failed login attempts for each user.
         self.__login_time_stamp = login_time_stamp  # Records timestamp of every activity.
         self.__auth_outcome = auth_outcome  # Records authentication outcomes.
-        self.__session_token = session_token  # Tokens generated upon successful user authentication, used for session management and maintaining user sessions.
+        self.__session_token = session_token  # Tokens generated upon successful user authentication, used for
+        # session management and maintaining user sessions.
         self.loan = Loan()
 
     def user_login(self):
@@ -290,7 +288,14 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         1. Deletes all user-related attributes to terminate the session.
         2. Clears any authentication tokens.
         """
+        from banking.login_panel import notify
 
+        notify.sign_out_notification(
+            title='Console Beta Banking',
+            message=f"{self.account_holder}, You logged out of your Account",
+            channel='Log_Out'
+        )
+        
         # Delete user-related attributes to log out the user
         del self.username
         del self.password
@@ -494,6 +499,7 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         -------
         None
         """
+        from banking.login_panel import notify
         from banking.script import log_error, go_back
         try:
             self.loan.email = self.email  # Set the loan email to the user's email
@@ -550,6 +556,22 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
 
                     self.process_transaction(loan=True)  # Process the transaction
                     self.transaction_record(loan=True)  # Record the transaction
+
+                    note = f"""
+                    Debit
+                    Amount :: NGN{self.amount}
+                    Acc :: {self.account_number[:3]}******{self.account_number[-3:]}
+                    Desc :: {self.description}
+                    Time :: {datetime.today().now().time()}
+                    Balance :: {self.account_balance}
+                    """
+                    
+                    # Send a notification to the user with the generated token
+                    notify.loan_notification(
+                        title='Console Beta Banking',
+                        message=note,
+                        channel='Loan_Repayment'
+                    )
 
                     due_month = int(due_date[5:7]) + 1
                     due_year = int(due_date[:4])

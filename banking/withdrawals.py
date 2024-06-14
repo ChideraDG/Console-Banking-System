@@ -1,9 +1,14 @@
 import re
 import time
+from datetime import datetime
 from bank_processes.authentication import Authentication
+from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
 from banking.script import go_back, header, log_error
-from banking.transfer_money import session_token, transaction_pin
+from banking.transfer_money import session_token, transaction_pin, receipt
+
+
+notify = Notification()
 
 
 def withdraw(auth: Authentication):
@@ -72,12 +77,31 @@ def withdraw(auth: Authentication):
                         # Record the transaction
                         auth.transaction_record(withdrawal=True)
 
+                        note = f"""
+Debit
+Amount :: NGN{auth.amount:,2f}
+Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
+Desc :: {auth.description}
+Time :: {datetime.today().now().time()}
+Balance :: {auth.account_balance}
+                        """
+
+                        # Trigger a withdraw notification with the formatted note
+                        notify.withdraw_notification(
+                            title='Console Beta Banking',
+                            message=note,
+                            channel='ConsoleBeta'
+                        )
                         # TODO: Add receipt generation and notification sending
 
                         header()
                         print("\n:: Withdraw Successfully")
                         print(f":: You withdrew N{auth.amount}")
-                        time.sleep(3)
+                        time.sleep(1.5)
+
+                        receipt(auth)
+
+                        time.sleep(1.5)
                         break
                     else:
                         print(f"\n:: {auth.transaction_validation(amount=True)[1]}")

@@ -1,9 +1,13 @@
 import re
 import time
+from datetime import datetime
 from bank_processes.authentication import Authentication
+from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
 from banking.script import go_back, header, log_error
-from banking.transfer_money import session_token, transaction_pin
+from banking.transfer_money import session_token, transaction_pin, receipt
+
+notify = Notification()
 
 
 def deposit(auth: Authentication):
@@ -66,13 +70,31 @@ def deposit(auth: Authentication):
                 auth.transaction_record(deposit=True)
                 auth.receiver_transaction_validation()
 
-                # TODO: Implement the actual transaction processing and recording
-                # TODO: Add receipt generation and notification sending
+                # Create a formatted note for the deposit notification
+                note = f"""
+Credit
+Amount :: NGN{auth.amount}
+Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
+Desc :: {auth.description}
+Time :: {datetime.today().now().time()}
+Balance :: {auth.account_balance}
+                """
+
+                # Trigger a deposit notification with the formatted note
+                notify.deposit_notification(
+                    title='Console Beta Banking',
+                    message=note,
+                    channel='ConsoleBeta'
+                )
 
                 header()
                 print("\n:: Deposit Successfully")
                 print(f":: You deposited N{auth.amount} into your Beta Account")
-                time.sleep(3)
+                time.sleep(1.5)
+
+                receipt(auth)
+
+                time.sleep(1.5)
                 break
 
     except Exception as e:
@@ -82,13 +104,43 @@ def deposit(auth: Authentication):
 
 
 def deposit_default(auth: Authentication, _amount: float, _description: str):
+    """
+    Handles the default deposit process for a given authentication object.
+
+    Parameters
+    ----------
+    auth : Authentication
+        The authentication object representing the user's account.
+    _amount : float
+        The amount to be deposited into the account.
+    _description : str
+        The description or narration for the deposit transaction.
+
+    Notes
+    -----
+    This function sets the deposit amount and description, processes and records the transaction,
+    and triggers a notification with the details of the deposit.
+    """
+
+    # Set the receiver's account number to the current user's account number
     auth.receiver_acct_num = auth.account_number
 
     # Set the amount and narration for the deposit
-    auth.amount = _amount
-    auth.description = _description
+    auth.amount = _amount  # Assign the deposit amount to the authentication object
+    auth.description = _description  # Assign the deposit description to the authentication object
 
-    # Process and record transaction
-    auth.process_transaction(deposit=True)
-    auth.transaction_record(deposit=True)
+    # Process and record the transaction
+    auth.process_transaction(deposit=True)  # Process the transaction as a deposit
+    auth.transaction_record(deposit=True)  # Record the transaction in the transaction history
 
+    # Create a formatted note for the deposit notification
+    note = (f"Credit\nAmount :: NGN{auth.amount:,.2f}\n"
+            f"Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]})\n"
+            f"Desc :: {auth.description}\nTime :: {datetime.today().now().time()}\nBalance :: {auth.account_balance}")
+
+    # Trigger a deposit notification with the formatted note
+    notify.deposit_notification(
+        title='Console Beta Banking',  # Set the title of the notification
+        message=note,  # Set the message content of the notification
+        channel='ConsoleBeta'  # Specify the channel for delivering the notification
+    )

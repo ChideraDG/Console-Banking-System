@@ -284,3 +284,59 @@ class Notification:
         """
         # Trigger the notification with provided details
         self.trigger_notification(title=title, message=message, channel=channel)
+
+    def token_notification(self, *, title: str, message: str, channel: str):
+        """
+        Triggers a token received notification.
+
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
+
+    def bvn_creation_notification(self, *, title: str, message: str, channel: str):
+        """
+        Manages notification for bvn creation.
+
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
+
+        Notes
+        -----
+        This method triggers the notification sending process for bvn creation events.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)
+
+    def loan_notification(self, *, title: str, message: str, channel: str):
+        """
+        Triggers a fixed deposit loan notification.
+
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
+
+        Notes
+        -----
+        This method triggers the notification sending process for loan top-up events.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)

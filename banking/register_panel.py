@@ -3,6 +3,7 @@ import re
 import time
 import random
 from bank_processes.bvn import BVN
+from bank_processes.notification import Notification
 from bank_processes.user import User
 from bank_processes.account import Account
 from bank_processes.authentication import verify_data
@@ -11,6 +12,7 @@ from banking.script import header, go_back, log_error
 user = User()
 bvn = BVN()
 account = Account()
+notify = Notification()
     
     
 def countdown_timer(_register, _duty: str = 'creation', countdown: int = 3):
@@ -505,6 +507,12 @@ def register_bvn_account():
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print(f"\nUser: {bvn.last_name} {bvn.first_name} {bvn.middle_name}")
         print(f"BVN NUMBER: {bvn.bvn_number}")
+
+        notify.bvn_creation_notification(
+            title='Console Beta Banking',
+            message=f"{bvn.last_name} {bvn.first_name} {bvn.middle_name} \nBVN NUMBER: {bvn.bvn_number}",
+            channel='Console_Beta_BVN'
+        )
     except Exception as e:
         log_error(e)
 
@@ -601,6 +609,12 @@ def register_bvn_account():
         print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print(f"\nUSERNAME: {user.username}")
         print(f"ACCOUNT NUMBER: {account.account_number}")
+
+        notify.account_creation_notification(
+            title='Console Beta Banking',
+            message=f"USERNAME: {user.username} \nACCOUNT NUMBER: {account.account_number}",
+            channel='Account_Creation'
+        )
     except Exception as e:
         log_error(e)
         go_back('script')

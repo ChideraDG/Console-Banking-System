@@ -1,9 +1,14 @@
+import datetime
 import re
 import time
 from typing import Any
 from bank_processes.authentication import Authentication, verify_data
+from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
 from banking.script import header, go_back, log_error
+
+
+notify = Notification()
     
     
 def beneficiaries(auth: Authentication, checking_beneficiary: bool = False) -> Any | None:
@@ -479,9 +484,20 @@ def process_transfer(auth: Authentication):
                     countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
                     auth.transaction_record(transfer=True)
                     auth.receiver_transaction_validation()
-                    # TODO:
-                    #  notification missing
-                    #  receipt
+
+                    note = f"""
+Debit
+Amount :: NGN{auth.amount:,.2f}
+Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
+Desc :: {auth.description}
+Time :: {datetime.datetime.today().now().time()}
+Balance :: {auth.account_balance}
+                    """
+                    notify.transfer_notification(
+                        title='Console Beta Banking',
+                        message=note,
+                        channel='ConsoleBeta'
+                    )
 
                     header()
                     print("\n:: Money Sent Successfully")
@@ -498,6 +514,7 @@ def process_transfer(auth: Authentication):
                                                    _account_number=auth.receiver_acct_num)
 
                             print("\n:: Beneficiary Added Successfully")
+                            time.sleep(1.5)
                         elif re.search('^.*(back|return).*$', checking_input.lower(), re.IGNORECASE):
                             del checking_input
                             time.sleep(1.5)
@@ -532,13 +549,25 @@ def process_transfer(auth: Authentication):
                         countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
                         auth.transaction_record(transfer=True)
                         auth.receiver_transaction_validation()
-                        # TODO:
-                        #  notification missing
-                        #  receipt
+
+                        note = f"""
+Debit
+Amount :: NGN{auth.amount}
+Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
+Desc :: {auth.description}
+Time :: {datetime.datetime.today().now().time()}
+Balance :: {auth.account_balance}
+                        """
+                        notify.transfer_notification(
+                            title='Console Beta Banking',
+                            message=note,
+                            channel='ConsoleBeta'
+                        )
 
                         header()
                         print("\n:: Money Sent Successfully")
                         print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
+                        time.sleep(1.5)
 
                         receipt(auth)
 

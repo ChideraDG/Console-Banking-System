@@ -75,66 +75,101 @@ class User:
         raise NotImplementedError('This Method not in Use.')
 
     def change_password(self):
-        """Method to allow users to change their password, providing a mechanism for updating login credentials
-        securely."""
+        """
+        Updates the password for the current user in the database.
 
+        Notes
+        -----
+        This method updates the user's password in the database. If an error occurs during the
+        database update, the transaction is rolled back.
+
+        Raises
+        ------
+        Exception
+            If there is an error during the database update.
+        """
         try:
+            # Define the SQL query to update the user's password
             query = (f"""
             UPDATE {self.database.db_tables[1]} 
             SET password = '{self.password}' 
             WHERE username = '{self.username}'
             """)
 
+            # Execute the query to update the password
             self.database.query(query)
         except Exception as e:
-            # Rollback changes if an error occurs
+            # If an error occurs, roll back the transaction to maintain data integrity
             self.database.rollback()
 
     def reset_password(self):
-        """Method to initiate the password reset process, sending a temporary password or password reset link to the
-        user's registered email or phone number."""
+        """
+        Resets the user's password using either their phone number or email.
+
+        Notes
+        -----
+        This method guides the user through the process of resetting their password by verifying their identity
+        using a phone number or email, and a token authentication process. If the verification is successful,
+        the user is prompted to enter a new password.
+
+        The user can choose to reset their password using either their phone number or email.
+        For phone number verification, the user must enter the last four digits of their phone number.
+        For email verification, the user must enter their complete email address.
+
+        Raises
+        ------
+        Exception
+            If there is an error during the password reset process.
+        """
         from bank_processes.authentication import token_auth
         from banking.register_panel import account_password
         from banking.script import header, go_back
 
         try:
             while True:
+                # Display the header for the password reset process
                 header()
+
+                # Prompt the user to choose the method for resetting the password
                 print("\nReset your password with your Phone Number? Press 1")
                 print("---------------------------------------------------")
                 print("Reset your password with your Email? Press 2")
                 print("--------------------------------------------")
-                _input = input(">>> ")
+                _input = input(">>> ")  # Get user input for the reset method
 
-                time.sleep(1)
+                time.sleep(1)  # Pause for a moment
 
-                if re.search('^1$', _input):
-                    four_digit = self.phone_number[-4:]
-                    incomplete_number = self.phone_number[:-4] + '****'
+                if re.search('^1$', _input):  # If the user chooses to reset by phone number
+                    four_digit = self.phone_number[-4:]  # Get the last four digits of the phone number
+                    incomplete_number = self.phone_number[:-4] + '****'  # Mask the phone number for privacy
                     while True:
+                        # Display the header and prompt the user to enter the last four digits of their phone number
                         header()
                         print(f"\nENTER THE LAST FOUR DIGITS OF YOUR PHONE NUMBER ({incomplete_number}):")
-                        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+"~"*len(incomplete_number))
-                        _input = input(">>> ")
+                        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" + "~" * len(incomplete_number))
+                        _input = input(">>> ")  # Get user input
 
-                        if four_digit == _input:
-                            start_time = time.time()
-                            _token = token_auth()
+                        if four_digit == _input:  # If the input matches the last four digits of the phone number
+                            start_time = time.time()  # Record the start time for token expiration
+                            _token = token_auth()  # Generate a token for authentication
                             while True:
+                                # Prompt the user to enter the token number
                                 print("\nENTER YOUR TOKEN NUMBER:")
                                 print("~~~~~~~~~~~~~~~~~~~~~~~~")
-                                _tokenNumber = input(">>> ")
+                                _tokenNumber = input(">>> ")  # Get user input
 
-                                elapsed_time = time.time() - start_time
-                                if elapsed_time < 30.0:
-                                    if _token == _tokenNumber:
-                                        self.password = account_password()
+                                elapsed_time = time.time() - start_time  # Calculate the elapsed time
+                                if elapsed_time < 30.0:  # If the token is still valid (within 30 seconds)
+                                    if _token == _tokenNumber:  # If the token matches
+                                        self.password = account_password()  # Prompt the user to set a new password
                                         break
                                     else:
+                                        # If the token does not match, display an error message and prompt again
                                         print("\n*ERROR*\nWrong Token Number.\n\nTry Again")
                                         time.sleep(3)
                                         continue
                                 else:
+                                    # If the token has expired, generate a new token and prompt again
                                     print("\n*ERROR*\nTime is already over 30 minutes.\n\nRe-Sending Token Number")
                                     start_time = time.time()
                                     _token = token_auth()
@@ -142,37 +177,43 @@ class User:
                                     continue
                             break
                         else:
+                            # If the input does not match, display an error message and prompt again
                             print("\n*ERROR*\nWrong Four Digit Input.")
                             time.sleep(3)
                             continue
                     break
-                elif re.search('^2$', _input):
-                    at_index = self.email.index('@')
-                    incomplete_email = self.email[:1-len(self.email)]+'*'*len(self.email[1:at_index])+self.email[at_index:]
+                elif re.search('^2$', _input):  # If the user chooses to reset by email
+                    at_index = self.email.index('@')  # Find the index of '@' in the email
+                    incomplete_email = self.email[:1 - len(self.email)] + '*' * len(
+                        self.email[1:at_index]) + self.email[at_index:]  # Mask the email for privacy
                     while True:
+                        # Display the header and prompt the user to enter their email
                         header()
                         print(f"\nENTER YOUR EMAIL ({incomplete_email}):")
                         print("~~~~~~~~~~~~~~~~~~~~" + "~" * len(incomplete_email))
-                        _input = input(">>> ")
+                        _input = input(">>> ")  # Get user input
 
-                        if self.email == _input.lower():
-                            start_time = time.time()
-                            _token = token_auth()
+                        if self.email == _input.lower():  # If the input matches the email
+                            start_time = time.time()  # Record the start time for token expiration
+                            _token = token_auth()  # Generate a token for authentication
                             while True:
+                                # Prompt the user to enter the token number
                                 print("\nENTER YOUR TOKEN NUMBER:")
                                 print("~~~~~~~~~~~~~~~~~~~~~~~~")
-                                _tokenNumber = input(">>> ")
+                                _tokenNumber = input(">>> ")  # Get user input
 
-                                elapsed_time = time.time() - start_time
-                                if elapsed_time < 30.0:
-                                    if _token == _tokenNumber:
-                                        self.password = account_password()
+                                elapsed_time = time.time() - start_time  # Calculate the elapsed time
+                                if elapsed_time < 30.0:  # If the token is still valid (within 30 seconds)
+                                    if _token == _tokenNumber:  # If the token matches
+                                        self.password = account_password()  # Prompt the user to set a new password
                                         break
                                     else:
+                                        # If the token does not match, display an error message and prompt again
                                         print("\n*ERROR*\nWrong Token Number.\n\nTry Again")
                                         time.sleep(3)
                                         continue
                                 else:
+                                    # If the token has expired, generate a new token and prompt again
                                     print("\n*ERROR*\nTime is already over 30 minutes.\n\nRe-Sending Token Number")
                                     start_time = time.time()
                                     _token = token_auth()
@@ -180,15 +221,18 @@ class User:
                                     continue
                             break
                         else:
+                            # If the input does not match, display an error message and prompt again
                             print("\n*ERROR*\nWrong Corresponding Email.")
                             time.sleep(3)
                             continue
                     break
                 else:
+                    # If the input is invalid, display an error message and prompt again
                     print("\n*ERROR*\nWrong Input.")
                     time.sleep(3)
                     continue
         except Exception as e:
+            # If an error occurs, log the error and display an error message
             with open('notification/error.txt', 'w') as file:
                 file.write(f'Error: {repr(e)}')
             print(f'\nError: {repr(e)}')

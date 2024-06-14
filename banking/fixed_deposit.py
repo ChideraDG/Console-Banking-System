@@ -4,10 +4,13 @@ import time
 import random
 from animation.colors import *
 from bank_processes.authentication import Authentication, verify_data
+from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
 from banking.script import go_back, header, log_error
 from banking.transfer_money import session_token, transaction_pin
 
+
+notify = Notification()
 
 def get_month(month: int) -> tuple[str, int]:
     """
@@ -388,6 +391,21 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                             auth.process_transaction(fixed_deposit=True)  # Process the transaction
                             auth.transaction_record(fixed_deposit=True)  # Record the transaction
 
+                            note = f"""
+Debit
+Amount :: NGN{auth.amount}
+Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
+Desc :: {auth.description}
+Time :: {datetime.datetime.today().now().time()}
+Balance :: {auth.account_balance}
+                            """
+
+                            notify.transfer_notification(
+                                title='Console Beta Banking',
+                                message=note,
+                                channel='ConsoleBeta'
+                            )
+
                             # Process the transaction whereby Fixed Interest is deposited into the account immediately
                             auth.description = f'FIXED_DEPOSIT/CBB/INTEREST DEPOSIT TO {auth.account_holder}'
                             auth.receiver_acct_num = auth.account_number
@@ -396,6 +414,22 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                             auth.process_transaction(deposit=True)
                             auth.transaction_record(deposit=True)
                             auth.receiver_transaction_validation()
+
+                            note = f"""
+Credit
+Amount :: NGN{auth.amount}
+Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
+Desc :: {auth.description}
+Time :: {datetime.datetime.today().now().time()}
+Balance :: {auth.account_balance}
+                            """
+
+                            # Trigger a deposit notification with the formatted note
+                            notify.deposit_notification(
+                                title='Console Beta Banking',
+                                message=note,
+                                channel='ConsoleBeta'
+                            )
 
                             # Process the transaction whereby the Locked Amount is deposited into the Central Bank.
                             auth.description = f'FIXED_DEPOSIT/CBB/DEPOSIT TO CENTRAL BANK'
@@ -411,7 +445,17 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                             header()
 
                             print(f'\n:: Congrats. \n:: Fixed Deposit Successfully Created.')
-                            time.sleep(5)
+
+                            notify.fixed_deposit_creation_notification(
+                                title='Console Beta Banking',
+                                message=f'Fixed Deposit Successfully Created.\nDeposit ID :: {auth.deposit_id}\n'
+                                        f'Deposit Title :: {auth.deposit_title}'
+                                        f'Deposit Amount :: {auth.initial_deposit:,.2f}',
+                                channel='ConsoleBeta'
+                            )
+
+                            time.sleep(3)
+
                             break
                         elif re.search('^(2|no)$', _input, re.IGNORECASE):
                             del _input
@@ -619,10 +663,66 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
                         auth.process_transaction(fixed_deposit=True)
                         auth.transaction_record(fixed_deposit=True)
 
+                        note = f"""
+Debit
+Amount :: NGN{auth.amount}
+Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
+Desc :: {auth.description}
+Time :: {datetime.datetime.today().now().time()}
+Balance :: {auth.account_balance}
+                        """
+
+                        notify.transfer_notification(
+                            title='Console Beta Banking',
+                            message=note,
+                            channel='ConsoleBeta'
+                        )
+
+                        # Process the transaction whereby Fixed Interest is deposited into the account immediately
+                        auth.description = f'FIXED_DEPOSIT/CBB/INTEREST DEPOSIT TO {auth.account_holder}'
+                        auth.receiver_acct_num = auth.account_number
+                        auth.amount = float(interest)
+
+                        auth.process_transaction(deposit=True)
+                        auth.transaction_record(deposit=True)
+                        auth.receiver_transaction_validation()
+
+                        note = f"""
+Credit
+Amount :: NGN{auth.amount}
+Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
+Desc :: {auth.description}
+Time :: {datetime.datetime.today().now().time()}
+Balance :: {auth.account_balance}
+                        """
+
+                        # Trigger a deposit notification with the formatted note
+                        notify.deposit_notification(
+                            title='Console Beta Banking',
+                            message=note,
+                            channel='ConsoleBeta'
+                        )
+
+                        # Process the transaction whereby the Locked Amount is deposited into the Central Bank.
+                        auth.description = f'FIXED_DEPOSIT/CBB/DEPOSIT TO CENTRAL BANK'
+                        auth.receiver_acct_num = '1000000009'
+                        auth.amount = float(auth.initial_deposit)
+
+                        auth.process_transaction(central_bank=True)
+                        auth.transaction_record(central_bank=True)
+
                         auth.update_deposit(deposit_id)
 
                         countdown_timer(_register='Top Up deposit', _duty='', countdown=5)
                         print("\n:: Deposit Successfully Topped Up.")
+
+                        notify.fixed_deposit_top_up_notification(
+                            title='Console Beta Banking',
+                            message=f'Deposit Successfully Topped Up.\nDeposit ID :: {auth.deposit_id}\n'
+                                    f'Deposit Amount :: {auth.initial_deposit:,.2f}',
+                            channel='ConsoleBeta'
+                        )
+
                         time.sleep(2)
                         break
                     elif re.search('^(2|no)$', _input, re.IGNORECASE):

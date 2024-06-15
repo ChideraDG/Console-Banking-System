@@ -70,6 +70,12 @@ queries = [
         FOREIGN KEY (loan_id) REFERENCES Loans(loan_id)
     );
     """,
+]
+
+# for query in queries:
+#     my_cursor.execute(query)
+
+insert_queries = [
     """
     INSERT INTO `LoanStatus` (`status_id`, `status_name`, `description`, `created_at`, `updated_at`) VALUES
     (1, 'approved', 'The loan has been approved.', '2024-06-10 21:11:31', '2024-06-10 21:11:31'),
@@ -92,8 +98,7 @@ queries = [
     (12, 'Bridge Loan', 'Bridge loans provide short-term financing to bridge the gap between the sale of an existing property and the purchase of a new one.', '2024-06-10 21:30:25', '2024-06-10 21:30:25');
     """,
 ]
-
-for query in queries:
+for query in insert_queries:
     my_cursor.execute(query)
     connection.commit()
 

@@ -745,11 +745,19 @@ class Transaction(Account, ABC):
         from banking.script import log_error, go_back
 
         acc_num = self.account_number
+        # This if printed here. It will work well and acc_num will be the account number of the user
 
         try:
             # Store the original cursor and switch to a dictionary cursor for this query
             original = self.database.db_cursor
+
+            acc_num = self.account_number
+            # This if printed here. It will work well and acc_num will be the account number of the user
+
             self.database.db_cursor = self.database.db_connection.cursor(DictCursor)
+            
+            acc_num = self.account_number
+            # This if printed here. It will not work again
 
             if time_period:
                 # Query to get transactions where the user is the sender within the specified date range

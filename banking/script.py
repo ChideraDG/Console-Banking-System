@@ -223,6 +223,7 @@ def signed_in(auth: Authentication):
     from banking.withdrawals import withdraw
     from banking.collect_loan import preview
     from banking.update_bvn import update_bvn
+    from banking.history import generate_statement, transaction_history
 
     try:
         account_balance_display = None
@@ -272,8 +273,10 @@ def signed_in(auth: Authentication):
                     update_bvn(auth)
                     continue
                 elif re.search('^7$', user_input):
+                    transaction_history(auth)
                     continue
                 elif re.search('^8$', user_input):
+                    generate_statement()
                     continue
                 elif re.search('^9$', user_input):
                     continue

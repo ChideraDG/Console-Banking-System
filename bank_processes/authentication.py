@@ -292,7 +292,7 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
 
         notify.sign_out_notification(
             title='Console Beta Banking',
-            message=f"{self.account_holder}, You logged out of your Account",
+            message=f"You just logged out of your Account",
             channel='Log_Out'
         )
         

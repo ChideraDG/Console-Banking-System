@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 import random
 from abc import ABC
@@ -517,204 +518,209 @@ class Transaction(Account, ABC):
         is_month : bool, optional
             Flag to indicate if the query should be for a specific month.
         """
+        from banking.script import log_error, go_back
 
-        # Store the original cursor and switch to a dictionary cursor for this query
-        original = self.database.db_cursor
-        self.database.db_cursor = self.database.db_connection.cursor(DictCursor)
-        if time_period:
-            # Query to get transaction details where the user is the sender within the specified date range
-            user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
-                                account_balance
-                                FROM {self.database.db_tables[2]}
-                                WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
-                                AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
-                                """
-            sender_data = list(self.database.fetch_data(user_sender_query))
-            # creating an  empty list
-            user_data_debit = []
-            for data in sender_data:
-                # create two keys for debit amount and credit amount to replace transaction_amount key
-                # add the rest too
-                new_sender_data = {'transaction_date_time': data['transaction_date_time'],
-                                   'description': data['description'], 'transaction_id': data['transaction_id'],
-                                   'debit_transaction_amount': data['transaction_amount'],
-                                   'credit_transaction_amount': ' ', 'account_balance': data['account_balance']}
-                # appending each dictionary to the list created earlier
-                user_data_debit.append(new_sender_data)
+        try:
+            # Store the original cursor and switch to a dictionary cursor for this query
+            original = self.database.db_cursor
+            self.database.db_cursor = self.database.db_connection.cursor(DictCursor)
+            if time_period:
+                # Query to get transaction details where the user is the sender within the specified date range
+                user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
+                                    account_balance
+                                    FROM {self.database.db_tables[2]}
+                                    WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
+                                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                                    """
+                sender_data = list(self.database.fetch_data(user_sender_query))
+                # creating an  empty list
+                user_data_debit = []
+                for data in sender_data:
+                    # create two keys for debit amount and credit amount to replace transaction_amount key
+                    # add the rest too
+                    new_sender_data = {'transaction_date_time': data['transaction_date_time'],
+                                       'description': data['description'], 'transaction_id': data['transaction_id'],
+                                       'debit_transaction_amount': data['transaction_amount'],
+                                       'credit_transaction_amount': ' ', 'account_balance': data['account_balance']}
+                    # appending each dictionary to the list created earlier
+                    user_data_debit.append(new_sender_data)
 
-            # Query to get transaction details where the user is the receiver within the specified date range
-            user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
-                                account_balance
-                            FROM {self.database.db_tables[2]}
-                            WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
-                            AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
-                            """
-            receiver_data = list(self.database.fetch_data(user_receiver_query))
-            # creating an  empty list
-            user_data_credit = []
-            for data2 in receiver_data:
-                # create two keys for debit amount and credit amount to replace transaction_amount key
-                # add the rest too
-                new_receiver_data = {'transaction_date_time': data2['transaction_date_time'],
-                                     'description': data2['description'], 'transaction_id': data2['transaction_id'],
-                                     'credit_transaction_amount': data2['transaction_amount'],
-                                     'debit_transaction_amount': ' ', 'account_balance': data2['account_balance']}
-                # appending each dictionary to the list created earlier
-                user_data_credit.append(new_receiver_data)
-
-            # combining both lists appended
-            all_user_transactions = user_data_debit + user_data_credit
-            # sort the combined list by time
-            sorted_transaction_statement = sorted(all_user_transactions,
-                                                  key=lambda criteria: criteria['transaction_date_time'])
-
-            # Prepare the table to display the transaction statement
-            transaction_statement = PrettyTable()
-            transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
-                                                 'Balance']
-
-            # Add rows to the table
-            for transaction in sorted_transaction_statement:
-                transaction_statement.add_row(
-                    [transaction['transaction_date_time'], transaction['transaction_date_time'],
-                     transaction['description'], transaction['transaction_id'],
-                     transaction['debit_transaction_amount'],
-                     transaction['credit_transaction_amount'], transaction['account_balance']])
-
-        elif is_month:
-            (end_day, month_value) = get_month_values(month, year)
-            start_date = datetime(year, month_value, 1)
-            end_date = datetime(year, month_value, end_day)
-
-            # Query to get transactions where the user is the sender within the specified month
-            user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
-                                account_balance
-                                FROM {self.database.db_tables[2]}
-                                WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
-                                AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
-                                """
-            sender_data = list(self.database.fetch_data(user_sender_query))
-            # creating an  empty list
-            user_data_debit = []
-            for data in sender_data:
-                # create two keys for debit amount and credit amount to replace transaction_amount key
-                # add the rest too
-                new_sender_data = {'transaction_date_time': data['transaction_date_time'],
-                                   'description': data['description'], 'transaction_id': data['transaction_id'],
-                                   'debit_transaction_amount': data['transaction_amount'],
-                                   'credit_transaction_amount': ' ', 'account_balance': data['account_balance']}
-                # appending each dictionary to the list created earlier
-                user_data_debit.append(new_sender_data)
-
-            # Query to get transaction details where the user is the receiver within the specified month
-            user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
-                                account_balance
+                # Query to get transaction details where the user is the receiver within the specified date range
+                user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
+                                    account_balance
                                 FROM {self.database.db_tables[2]}
                                 WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                                 AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                 """
-            receiver_data = list(self.database.fetch_data(user_receiver_query))
-            # creating an  empty list
-            user_data_credit = []
-            for data2 in receiver_data:
-                # create two keys for debit amount and credit amount to replace transaction_amount key
-                # add the rest too
-                new_receiver_data = {'transaction_date_time': data2['transaction_date_time'],
-                                     'description': data2['description'], 'transaction_id': data2['transaction_id'],
-                                     'credit_transaction_amount': data2['transaction_amount'],
-                                     'debit_transaction_amount': ' ', 'account_balance': data2['account_balance']}
-                # appending each dictionary to the list created earlier
-                user_data_credit.append(new_receiver_data)
+                receiver_data = list(self.database.fetch_data(user_receiver_query))
+                # creating an  empty list
+                user_data_credit = []
+                for data2 in receiver_data:
+                    # create two keys for debit amount and credit amount to replace transaction_amount key
+                    # add the rest too
+                    new_receiver_data = {'transaction_date_time': data2['transaction_date_time'],
+                                         'description': data2['description'], 'transaction_id': data2['transaction_id'],
+                                         'credit_transaction_amount': data2['transaction_amount'],
+                                         'debit_transaction_amount': ' ', 'account_balance': data2['account_balance']}
+                    # appending each dictionary to the list created earlier
+                    user_data_credit.append(new_receiver_data)
 
-            # combining both lists appended
-            all_user_transactions = user_data_debit + user_data_credit
-            # sort the combined list by time
-            sorted_transaction_statement = sorted(all_user_transactions,
-                                                  key=lambda criteria: criteria['transaction_date_time'])
+                # combining both lists appended
+                all_user_transactions = user_data_debit + user_data_credit
+                # sort the combined list by time
+                sorted_transaction_statement = sorted(all_user_transactions,
+                                                      key=lambda criteria: criteria['transaction_date_time'])
 
-            # Prepare the table to display the transaction statement
-            transaction_statement = PrettyTable()
-            transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
-                                                 'Balance']
+                # Prepare the table to display the transaction statement
+                transaction_statement = PrettyTable()
+                transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
+                                                     'Balance']
 
-            # Add rows to the table
-            for transaction in sorted_transaction_statement:
-                transaction_statement.add_row(
-                    [transaction['transaction_date_time'], transaction['transaction_date_time'],
-                     transaction['description'], transaction['transaction_id'],
-                     transaction['debit_transaction_amount'],
-                     transaction['credit_transaction_amount'], transaction['account_balance']])
+                # Add rows to the table
+                for transaction in sorted_transaction_statement:
+                    transaction_statement.add_row(
+                        [transaction['transaction_date_time'], transaction['transaction_date_time'],
+                         transaction['description'], transaction['transaction_id'],
+                         transaction['debit_transaction_amount'],
+                         transaction['credit_transaction_amount'], transaction['account_balance']])
 
-        else:
-            # Query to get all transactions where the user is the sender
-            user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
-                                account_balance
-                                FROM {self.database.db_tables[2]}
-                                 WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
-                                """
-            sender_data = list(self.database.fetch_data(user_sender_query))
-            # creating an  empty list
-            user_data_debit = []
-            for data in sender_data:
-                # create two keys for debit amount and credit amount to replace transaction_amount key
-                # add the rest too
-                new_sender_data = {'transaction_date_time': data['transaction_date_time'],
-                                   'description': data['description'], 'transaction_id': data['transaction_id'],
-                                   'debit_transaction_amount': data['transaction_amount'],
-                                   'credit_transaction_amount': ' ', 'account_balance': data['account_balance']}
-                # appending each dictionary to the list created earlier
-                user_data_debit.append(new_sender_data)
+            elif is_month:
+                (end_day, month_value) = get_month_values(month, year)
+                start_date = datetime(year, month_value, 1)
+                end_date = datetime(year, month_value, end_day)
 
-            # Query to get all transaction details where the user is the receiver
-            user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
-                                account_balance
-                                FROM {self.database.db_tables[2]}
-                                WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
-                                """
-            receiver_data = list(self.database.fetch_data(user_receiver_query))
-            # creating an  empty list
-            user_data_credit = []
-            for data2 in receiver_data:
-                # create two keys for debit amount and credit amount to replace transaction_amount key
-                # add the rest too
-                new_receiver_data = {'transaction_date_time': data2['transaction_date_time'],
-                                     'description': data2['description'], 'transaction_id': data2['transaction_id'],
-                                     'credit_transaction_amount': data2['transaction_amount'],
-                                     'debit_transaction_amount': ' ', 'account_balance': data2['account_balance']}
-                # appending each dictionary to the list created earlier
-                user_data_credit.append(new_receiver_data)
+                # Query to get transactions where the user is the sender within the specified month
+                user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
+                                    account_balance
+                                    FROM {self.database.db_tables[2]}
+                                    WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
+                                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                                    """
+                sender_data = list(self.database.fetch_data(user_sender_query))
+                # creating an  empty list
+                user_data_debit = []
+                for data in sender_data:
+                    # create two keys for debit amount and credit amount to replace transaction_amount key
+                    # add the rest too
+                    new_sender_data = {'transaction_date_time': data['transaction_date_time'],
+                                       'description': data['description'], 'transaction_id': data['transaction_id'],
+                                       'debit_transaction_amount': data['transaction_amount'],
+                                       'credit_transaction_amount': ' ', 'account_balance': data['account_balance']}
+                    # appending each dictionary to the list created earlier
+                    user_data_debit.append(new_sender_data)
 
-            # combining both lists appended
-            all_user_transactions = user_data_debit + user_data_credit
-            # sort the combined list by time
-            sorted_transaction_statement = sorted(all_user_transactions,
-                                                  key=lambda criteria: criteria['transaction_date_time'])
+                # Query to get transaction details where the user is the receiver within the specified month
+                user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
+                                    account_balance
+                                    FROM {self.database.db_tables[2]}
+                                    WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
+                                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                                    """
+                receiver_data = list(self.database.fetch_data(user_receiver_query))
+                # creating an  empty list
+                user_data_credit = []
+                for data2 in receiver_data:
+                    # create two keys for debit amount and credit amount to replace transaction_amount key
+                    # add the rest too
+                    new_receiver_data = {'transaction_date_time': data2['transaction_date_time'],
+                                         'description': data2['description'], 'transaction_id': data2['transaction_id'],
+                                         'credit_transaction_amount': data2['transaction_amount'],
+                                         'debit_transaction_amount': ' ', 'account_balance': data2['account_balance']}
+                    # appending each dictionary to the list created earlier
+                    user_data_credit.append(new_receiver_data)
 
-            # Prepare the table to display the transaction statement
-            transaction_statement = PrettyTable()
-            transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
-                                                 'Balance']
+                # combining both lists appended
+                all_user_transactions = user_data_debit + user_data_credit
+                # sort the combined list by time
+                sorted_transaction_statement = sorted(all_user_transactions,
+                                                      key=lambda criteria: criteria['transaction_date_time'])
 
-            # Add rows to the table
-            for transaction in sorted_transaction_statement:
-                transaction_statement.add_row(
-                    [transaction['transaction_date_time'], transaction['transaction_date_time'],
-                     transaction['description'], transaction['transaction_id'],
-                     transaction['debit_transaction_amount'],
-                     transaction['credit_transaction_amount'], transaction['account_balance']])
+                # Prepare the table to display the transaction statement
+                transaction_statement = PrettyTable()
+                transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
+                                                     'Balance']
 
-        # store the pretty table in a string
-        user_transaction_statement = str(transaction_statement)
+                # Add rows to the table
+                for transaction in sorted_transaction_statement:
+                    transaction_statement.add_row(
+                        [transaction['transaction_date_time'], transaction['transaction_date_time'],
+                         transaction['description'], transaction['transaction_id'],
+                         transaction['debit_transaction_amount'],
+                         transaction['credit_transaction_amount'], transaction['account_balance']])
 
-        # Restore the original database cursor
-        self.database.db_cursor = original
-        del original
-        if sorted_transaction_statement:
-            pass
-        else:
-            return not bool(sorted_transaction_statement)
-        # return the transaction_statement
-        return user_transaction_statement
+            else:
+                # Query to get all transactions where the user is the sender
+                user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
+                                    account_balance
+                                    FROM {self.database.db_tables[2]}
+                                     WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
+                                    """
+                sender_data = list(self.database.fetch_data(user_sender_query))
+                # creating an  empty list
+                user_data_debit = []
+                for data in sender_data:
+                    # create two keys for debit amount and credit amount to replace transaction_amount key
+                    # add the rest too
+                    new_sender_data = {'transaction_date_time': data['transaction_date_time'],
+                                       'description': data['description'], 'transaction_id': data['transaction_id'],
+                                       'debit_transaction_amount': data['transaction_amount'],
+                                       'credit_transaction_amount': ' ', 'account_balance': data['account_balance']}
+                    # appending each dictionary to the list created earlier
+                    user_data_debit.append(new_sender_data)
+
+                # Query to get all transaction details where the user is the receiver
+                user_receiver_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
+                                    account_balance
+                                    FROM {self.database.db_tables[2]}
+                                    WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
+                                    """
+                receiver_data = list(self.database.fetch_data(user_receiver_query))
+                # creating an  empty list
+                user_data_credit = []
+                for data2 in receiver_data:
+                    # create two keys for debit amount and credit amount to replace transaction_amount key
+                    # add the rest too
+                    new_receiver_data = {'transaction_date_time': data2['transaction_date_time'],
+                                         'description': data2['description'], 'transaction_id': data2['transaction_id'],
+                                         'credit_transaction_amount': data2['transaction_amount'],
+                                         'debit_transaction_amount': ' ', 'account_balance': data2['account_balance']}
+                    # appending each dictionary to the list created earlier
+                    user_data_credit.append(new_receiver_data)
+
+                # combining both lists appended
+                all_user_transactions = user_data_debit + user_data_credit
+                # sort the combined list by time
+                sorted_transaction_statement = sorted(all_user_transactions,
+                                                      key=lambda criteria: criteria['transaction_date_time'])
+
+                # Prepare the table to display the transaction statement
+                transaction_statement = PrettyTable()
+                transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
+                                                     'Balance']
+
+                # Add rows to the table
+                for transaction in sorted_transaction_statement:
+                    transaction_statement.add_row(
+                        [transaction['transaction_date_time'], transaction['transaction_date_time'],
+                         transaction['description'], transaction['transaction_id'],
+                         transaction['debit_transaction_amount'],
+                         transaction['credit_transaction_amount'], transaction['account_balance']])
+
+            # store the pretty table in a string
+            user_transaction_statement = str(transaction_statement)
+
+            # Restore the original database cursor
+            self.database.db_cursor = original
+            del original
+            if sorted_transaction_statement:
+                pass
+            else:
+                return not bool(sorted_transaction_statement)
+            # return the transaction_statement
+            return user_transaction_statement
+        except Exception as e:
+            log_error(e)
+            go_back('script')
 
     def transaction_history(self, start_date: datetime = None, end_date: datetime = None, year: int = None,
                             month: str = None, time_period: bool = False, is_month: bool = False):
@@ -736,152 +742,161 @@ class Transaction(Account, ABC):
         is_month : bool, optional
             Flag to indicate if the query should be for a specific month.
         """
+        from banking.script import log_error, go_back
 
-        # Store the original cursor and switch to a dictionary cursor for this query
-        original = self.database.db_cursor
-        self.database.db_cursor = self.database.db_connection.cursor(DictCursor)
+        acc_num = self.account_number
 
-        if time_period:
-            # Query to get transactions where the user is the sender within the specified date range
-            user_sender_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
-                   sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                   transaction_date_time
-                   FROM {self.database.db_tables[2]}
-                   WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
-                   AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
-                   """
-            sender_data = list(self.database.fetch_data(user_sender_transaction_query))
+        try:
+            # Store the original cursor and switch to a dictionary cursor for this query
+            original = self.database.db_cursor
+            self.database.db_cursor = self.database.db_connection.cursor(DictCursor)
 
-            # Query to get transactions where the user is the receiver within the specified date range
-            user_receiver_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
-                   sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                   transaction_date_time
-                   FROM {self.database.db_tables[2]}
-                   WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
-                   AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
-                   """
-            receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
+            if time_period:
+                # Query to get transactions where the user is the sender within the specified date range
+                user_sender_transaction_query = f"""
+                    SELECT transaction_id, transaction_type, transaction_amount,
+                    sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
+                    transaction_date_time
+                    FROM {self.database.db_tables[2]}
+                    WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
+                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                    """
+                sender_data = list(self.database.fetch_data(user_sender_transaction_query))
 
-            # Combine and sort the transactions
-            all_user_transactions = sender_data + receiver_data
-            sorted_transaction_history = sorted(all_user_transactions,
-                                                key=lambda criteria: criteria['transaction_date_time'])
+                # Query to get transactions where the user is the receiver within the specified date range
+                user_receiver_transaction_query = f"""
+                    SELECT transaction_id, transaction_type, transaction_amount,
+                    sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
+                    transaction_date_time
+                    FROM {self.database.db_tables[2]}
+                    WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
+                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                    """
+                receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
 
-            # Prepare the table to display the transaction history
-            transaction_history_table = PrettyTable()
-            transaction_history_table.field_names = ['Transaction ID', 'Transaction Type', 'Transaction Amount',
-                                                     'Sender Account Number', 'Sender Name',
-                                                     'Receiver Account Number',
-                                                     'Receiver Name', 'Description', 'Status', 'Transaction Date']
+                # Combine and sort the transactions
+                all_user_transactions = sender_data + receiver_data
+                sorted_transaction_history = sorted(all_user_transactions,
+                                                    key=lambda criteria: criteria['transaction_date_time'])
 
-            # Add rows to the table
-            for transaction in sorted_transaction_history:
-                transaction_history_table.add_row([transaction['transaction_id'], transaction['transaction_type'],
-                                                   transaction['transaction_amount'],
-                                                   transaction['sender_account_number'],
-                                                   transaction['sender_name'],
-                                                   transaction['receiver_account_number'],
-                                                   transaction['receiver_name'], transaction['description'],
-                                                   transaction['status'], transaction['transaction_date_time']])
+                # Prepare the table to display the transaction history
+                transaction_history_table = PrettyTable()
+                transaction_history_table.field_names = ['Transaction ID', 'Transaction Type', 'Transaction Amount',
+                                                         'Sender Account Number', 'Sender Name',
+                                                         'Receiver Account Number',
+                                                         'Receiver Name', 'Description', 'Status', 'Transaction Date']
 
-        elif is_month:
-            (end_day, month_value) = get_month_values(month, year)
-            start_date = datetime(year, month_value, 1)
-            end_date = datetime(year, month_value, end_day)
+                # Add rows to the table
+                for transaction in sorted_transaction_history:
+                    transaction_history_table.add_row([transaction['transaction_id'], transaction['transaction_type'],
+                                                       transaction['transaction_amount'],
+                                                       transaction['sender_account_number'],
+                                                       transaction['sender_name'],
+                                                       transaction['receiver_account_number'],
+                                                       transaction['receiver_name'], transaction['description'],
+                                                       transaction['status'], transaction['transaction_date_time']])
 
-            # Query to get transactions where the user is the sender within the specified month
-            user_sender_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
-                               sender_account_number, sender_name, receiver_account_number, receiver_name, description,
-                               status, transaction_date_time
-                               FROM {self.database.db_tables[2]}
-                               WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
-                               AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
-                               """
-            sender_data = list(self.database.fetch_data(user_sender_transaction_query))
+            elif is_month:
+                (end_day, month_value) = get_month_values(month, year)
+                start_date = datetime(year, month_value, 1)
+                end_date = datetime(year, month_value, end_day)
 
-            # Query to get transactions where the user is the receiver within the specified month
-            user_receiver_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
-                               sender_account_number, sender_name, receiver_account_number, receiver_name, description, 
-                               status, transaction_date_time
-                               FROM {self.database.db_tables[2]}
-                               WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit' 
-                               AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
-                               """
-            receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
+                # Query to get transactions where the user is the sender within the specified month
+                user_sender_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
+                                   sender_account_number, sender_name, receiver_account_number, receiver_name, description,
+                                   status, transaction_date_time
+                                   FROM {self.database.db_tables[2]}
+                                   WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
+                                   AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                                   """
+                sender_data = list(self.database.fetch_data(user_sender_transaction_query))
 
-            # Combine and sort the transactions
-            all_user_transactions = sender_data + receiver_data
-            sorted_transaction_history = sorted(all_user_transactions,
-                                                key=lambda criteria: criteria['transaction_date_time'])
+                # Query to get transactions where the user is the receiver within the specified month
+                user_receiver_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
+                                   sender_account_number, sender_name, receiver_account_number, receiver_name, description, 
+                                   status, transaction_date_time
+                                   FROM {self.database.db_tables[2]}
+                                   WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit' 
+                                   AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
+                                   """
+                receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
 
-            # Prepare the table to display the transaction history
-            transaction_history_table = PrettyTable()
-            transaction_history_table.field_names = ['Transaction ID', 'Transaction Type', 'Transaction Amount',
-                                                     'Sender Account Number', 'Sender Name',
-                                                     'Receiver Account Number',
-                                                     'Receiver Name', 'Description', 'Status', 'Transaction Date']
+                # Combine and sort the transactions
+                all_user_transactions = sender_data + receiver_data
+                sorted_transaction_history = sorted(all_user_transactions,
+                                                    key=lambda criteria: criteria['transaction_date_time'])
 
-            # Add rows to the table
-            for transaction in sorted_transaction_history:
-                transaction_history_table.add_row([transaction['transaction_id'], transaction['transaction_type'],
-                                                   transaction['transaction_amount'],
-                                                   transaction['sender_account_number'],
-                                                   transaction['sender_name'],
-                                                   transaction['receiver_account_number'],
-                                                   transaction['receiver_name'], transaction['description'],
-                                                   transaction['status'], transaction['transaction_date_time']])
+                # Prepare the table to display the transaction history
+                transaction_history_table = PrettyTable()
+                transaction_history_table.field_names = ['Transaction ID', 'Transaction Type', 'Transaction Amount',
+                                                         'Sender Account Number', 'Sender Name',
+                                                         'Receiver Account Number',
+                                                         'Receiver Name', 'Description', 'Status', 'Transaction Date']
 
-        else:
-            # Query to get all transactions where the user is the sender
-            user_sender_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
-            sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-            transaction_date_time
-            FROM {self.database.db_tables[2]}
-            WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
-            """
-            sender_data = list(self.database.fetch_data(user_sender_transaction_query))
+                # Add rows to the table
+                for transaction in sorted_transaction_history:
+                    transaction_history_table.add_row([transaction['transaction_id'], transaction['transaction_type'],
+                                                       transaction['transaction_amount'],
+                                                       transaction['sender_account_number'],
+                                                       transaction['sender_name'],
+                                                       transaction['receiver_account_number'],
+                                                       transaction['receiver_name'], transaction['description'],
+                                                       transaction['status'], transaction['transaction_date_time']])
 
-            # Query to get all transactions where the user is the receiver
-            user_receiver_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
-            sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-            transaction_date_time
-            FROM {self.database.db_tables[2]}
-            WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
-            """
-            receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
+            else:
+                # Query to get all transactions where the user is the sender
+                user_sender_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
+                sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
+                transaction_date_time
+                FROM {self.database.db_tables[2]}
+                WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
+                """
+                sender_data = list(self.database.fetch_data(user_sender_transaction_query))
 
-            # Combine and sort the transactions
-            all_user_transactions = sender_data + receiver_data
-            sorted_transaction_history = sorted(all_user_transactions,
-                                                key=lambda criteria: criteria['transaction_date_time'])
+                # Query to get all transactions where the user is the receiver
+                user_receiver_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
+                sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
+                transaction_date_time
+                FROM {self.database.db_tables[2]}
+                WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
+                """
+                receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
 
-            # Prepare the table to display the transaction history
-            transaction_history_table = PrettyTable()
-            transaction_history_table.field_names = ['Transaction ID', 'Transaction Type', 'Transaction Amount',
-                                                     'Sender Account Number', 'Sender Name',
-                                                     'Receiver Account Number',
-                                                     'Receiver Name', 'Description', 'Status', 'Transaction Date']
+                # Combine and sort the transactions
+                all_user_transactions = sender_data + receiver_data
+                sorted_transaction_history = sorted(all_user_transactions,
+                                                    key=lambda criteria: criteria['transaction_date_time'])
 
-            # Add rows to the table
-            for transaction in sorted_transaction_history:
-                transaction_history_table.add_row([transaction['transaction_id'], transaction['transaction_type'],
-                                                   transaction['transaction_amount'],
-                                                   transaction['sender_account_number'],
-                                                   transaction['sender_name'],
-                                                   transaction['receiver_account_number'],
-                                                   transaction['receiver_name'], transaction['description'],
-                                                   transaction['status'], transaction['transaction_date_time']])
+                # Prepare the table to display the transaction history
+                transaction_history_table = PrettyTable()
+                transaction_history_table.field_names = ['Transaction ID', 'Transaction Type', 'Transaction Amount',
+                                                         'Sender Account Number', 'Sender Name',
+                                                         'Receiver Account Number',
+                                                         'Receiver Name', 'Description', 'Status', 'Transaction Date']
 
-        # Restore the original database cursor
-        self.database.db_cursor = original
-        del original
+                # Add rows to the table
+                for transaction in sorted_transaction_history:
+                    transaction_history_table.add_row([transaction['transaction_id'], transaction['transaction_type'],
+                                                       transaction['transaction_amount'],
+                                                       transaction['sender_account_number'],
+                                                       transaction['sender_name'],
+                                                       transaction['receiver_account_number'],
+                                                       transaction['receiver_name'], transaction['description'],
+                                                       transaction['status'], transaction['transaction_date_time']])
 
-        if sorted_transaction_history:
-            pass
-        else:
-            return not bool(sorted_transaction_history)
+            # Restore the original database cursor
+            self.database.db_cursor = original
+            del original
 
-        return transaction_history_table
+            if sorted_transaction_history:
+                pass
+            else:
+                return not bool(sorted_transaction_history)
+
+            return transaction_history_table
+        except Exception as e:
+            log_error(e)
+            go_back('script')
 
     @property
     def receiver_acct_num(self):

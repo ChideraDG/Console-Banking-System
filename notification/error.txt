@@ -1,0 +1,4 @@
+<class 'pymysql.err.OperationalError'>, 
+transaction.py, 
+753, 
+Error: OperationalError(1054, "Unknown column 'id' in 'where clause'")

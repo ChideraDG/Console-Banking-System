@@ -1,0 +1,8 @@
+
+Debit
+Amount :: NGN12.0
+Acc :: 477******548
+Desc :: TRF/CBB/FROM OHANENYE-OHIAEKPETE CHIDERA DIVINE-GIFT TO EZENWA CHIEDOZIE EMMANUEL
+Time :: 19:18:29.962748
+Balance :: 225430.926
+                        

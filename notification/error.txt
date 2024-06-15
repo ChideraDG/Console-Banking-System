@@ -1,4 +1,4 @@
-<class 'pymysql.err.IntegrityError'>, 
+<class 'TypeError'>, 
 collect_loan.py, 
-454, 
-Error: IntegrityError(1452, 'Cannot add or update a child row: a foreign key constraint fails (`bankapp_db`.`loans`, CONSTRAINT `loans_ibfk_2` FOREIGN KEY (`loan_type_id`) REFERENCES `loantypes` (`loan_type_id`))')
+530, 
+Error: TypeError('cannot unpack non-iterable NoneType object')

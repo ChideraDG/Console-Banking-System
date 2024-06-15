@@ -709,6 +709,10 @@ class Transaction(Account, ABC):
         # Restore the original database cursor
         self.database.db_cursor = original
         del original
+        if sorted_transaction_statement:
+            pass
+        else:
+            return not bool(sorted_transaction_statement)
         # return the transaction_statement
         return user_transaction_statement
 

@@ -129,7 +129,7 @@ def signing_in():
         print(f"|  {brt_black_bg}{brt_yellow}1. NEW USER{end}  {magenta}|  "
               f"{brt_black_bg}{brt_yellow}2. EXISTING USER{end}  {magenta}|")
         print(f"+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+")
-        print(f"|         {brt_black_bg}{brt_yellow}3. UNBLOCK ACCOUNT{end}         {magenta}|")
+        print(f"|        {brt_black_bg}{brt_yellow}3. CUSTOMER SERVICE{end}         {magenta}|")
         print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
         print(magenta, bold, end='')

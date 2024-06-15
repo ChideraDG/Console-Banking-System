@@ -709,6 +709,10 @@ class Transaction(Account, ABC):
         # Restore the original database cursor
         self.database.db_cursor = original
         del original
+        if sorted_transaction_statement:
+            pass
+        else:
+            return not bool(sorted_transaction_statement)
         # return the transaction_statement
         return user_transaction_statement
 
@@ -868,12 +872,16 @@ class Transaction(Account, ABC):
                                                    transaction['receiver_name'], transaction['description'],
                                                    transaction['status'], transaction['transaction_date_time']])
 
-        # Print the transaction history table
-        print(transaction_history_table)
-
         # Restore the original database cursor
         self.database.db_cursor = original
         del original
+
+        if sorted_transaction_history:
+            pass
+        else:
+            return not bool(sorted_transaction_history)
+
+        return transaction_history_table
 
     @property
     def receiver_acct_num(self):

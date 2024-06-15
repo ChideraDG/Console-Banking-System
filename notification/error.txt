@@ -1,4 +1,0 @@
-<class 'TypeError'>, 
-fixed_deposit.py, 
-653, 
-Error: TypeError("unsupported operand type(s) for +=: 'float' and 'decimal.Decimal'")

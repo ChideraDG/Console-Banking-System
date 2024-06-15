@@ -1,3 +1,4 @@
+import time
 from abc import ABC
 from datetime import datetime, date
 import random
@@ -504,103 +505,104 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         try:
             self.loan.email = self.email  # Set the loan email to the user's email
 
-            # Query to fetch active loans for the user
-            query = f"""
-                    SELECT * 
-                    FROM {self.database.db_tables[7]}
-                    WHERE user_id = {self.loan.user_id}
-                    AND status_id = 1
-                    """
+            if self.loan.user_id is not None:
+                # Query to fetch active loans for the user
+                query = f"""
+                        SELECT * 
+                        FROM {self.database.db_tables[7]}
+                        WHERE user_id = {self.loan.user_id}
+                        AND status_id = 1
+                        """
 
-            datas = self.database.fetch_data(query)  # Fetch the active loans
+                datas = self.database.fetch_data(query)  # Fetch the active loans
 
-            for data in datas:  # Iterate through the fetched loans
-                due_date = str(data[7])  # Set the loan due date
-                end_date = str(data[8])  # Set the loan end date
+                for data in datas:  # Iterate through the fetched loans
+                    due_date = str(data[7])  # Set the loan due date
+                    end_date = str(data[8])  # Set the loan end date
 
-                # Check if the current date is within the loan period
-                if datetime.today().date() >= date(
-                        int(due_date[:4]), int(due_date[5:7]), int(due_date[8:])) <= date(
-                        int(end_date[:4]), int(end_date[5:7]), int(end_date[8:])):
-
-                    # Query to fetch the monthly payment amount for the loan
-                    query = f"""
-                            SELECT monthly_payment 
-                            FROM {self.database.db_tables[7]}
-                            WHERE user_id = {self.loan.user_id}
-                            AND status_id = 1
-                            """
-
-                    datass = self.database.fetch_data(query)  # Fetch the monthly payment amount
-
-                    for dat in datass:  # Iterate through the fetched monthly payments
-                        for amount in dat:  # Iterate through the amounts
-                            self.amount = float(amount)  # Set the payment amount
-
-                    # Make the loan payment
-                    self.loan.make_loan_payments(
-                        loan_id=data[0],
-                        amount=self.amount,
-                        payment_date=str(datetime.today().date())
-                    )
-
-                    # Set the transaction details
-                    self.description = f'LOAN_REPAYMENT/CBB/TRANSFER TO CONSOLE BETA BANK'
-                    self.receiver_acct_num = '1000000009'
-
-                    self.process_transaction(central_bank=True)  # Process the transaction
-                    self.transaction_record(central_bank=True)  # Record the transaction
-
-                    # Set the transaction details and Process the transaction for the User
-                    self.description = f'LOAN_REPAYMENT/CBB/FROM {self.account_holder} TO CONSOLE BETA BANK'
-
-                    self.process_transaction(loan=True)  # Process the transaction
-                    self.transaction_record(loan=True)  # Record the transaction
-
-                    note = f"""
-                    Debit
-                    Amount :: NGN{self.amount}
-                    Acc :: {self.account_number[:3]}******{self.account_number[-3:]}
-                    Desc :: {self.description}
-                    Time :: {datetime.today().now().time()}
-                    Balance :: {self.account_balance}
-                    """
-                    
-                    # Send a notification to the user with the generated token
-                    notify.loan_notification(
-                        title='Console Beta Banking',
-                        message=note,
-                        channel='Loan_Repayment'
-                    )
-
-                    due_month = int(due_date[5:7]) + 1
-                    due_year = int(due_date[:4])
-
-                    # Adjust the due month and year if the month exceeds 12
-                    while due_month > 12:
-                        due_month -= 12
-                        due_year += 1
-
-                    # Update the due date
-                    query = f"""
-                            UPDATE {self.database.db_tables[7]}
-                            SET due_date = '{due_year}-{due_month}-{int(due_date[8:])}'
-                            WHERE loan_id = {data[0]}
-                            """
-
-                    self.database.query(query)
-
-                    # Check if the loan end date is reached
-                    if date(int(due_date[:4]), int(due_date[5:7]), int(due_date[8:])) >= date(
+                    # Check if the current date is within the loan period
+                    if datetime.today().date() >= date(
+                            int(due_date[:4]), int(due_date[5:7]), int(due_date[8:])) <= date(
                             int(end_date[:4]), int(end_date[5:7]), int(end_date[8:])):
-                        # Update the loan status to complete (status_id = 3)
+
+                        # Query to fetch the monthly payment amount for the loan
+                        query = f"""
+                                SELECT monthly_payment 
+                                FROM {self.database.db_tables[7]}
+                                WHERE user_id = {self.loan.user_id}
+                                AND status_id = 1
+                                """
+
+                        datass = self.database.fetch_data(query)  # Fetch the monthly payment amount
+
+                        for dat in datass:  # Iterate through the fetched monthly payments
+                            for amount in dat:  # Iterate through the amounts
+                                self.amount = float(amount)  # Set the payment amount
+
+                        # Make the loan payment
+                        self.loan.make_loan_payments(
+                            loan_id=data[0],
+                            amount=self.amount,
+                            payment_date=str(datetime.today().date())
+                        )
+
+                        # Set the transaction details
+                        self.description = f'LOAN_REPAYMENT/CBB/TRANSFER TO CONSOLE BETA BANK'
+                        self.receiver_acct_num = '1000000009'
+
+                        self.process_transaction(central_bank=True)  # Process the transaction
+                        self.transaction_record(central_bank=True)  # Record the transaction
+
+                        # Set the transaction details and Process the transaction for the User
+                        self.description = f'LOAN_REPAYMENT/CBB/FROM {self.account_holder} TO CONSOLE BETA BANK'
+
+                        self.process_transaction(loan=True)  # Process the transaction
+                        self.transaction_record(loan=True)  # Record the transaction
+
+                        note = f"""
+                        Debit
+                        Amount :: NGN{self.amount}
+                        Acc :: {self.account_number[:3]}******{self.account_number[-3:]}
+                        Desc :: {self.description}
+                        Time :: {datetime.today().now().time()}
+                        Balance :: {self.account_balance}
+                        """
+
+                        # Send a notification to the user with the generated token
+                        notify.loan_notification(
+                            title='Console Beta Banking',
+                            message=note,
+                            channel='Loan_Repayment'
+                        )
+
+                        due_month = int(due_date[5:7]) + 1
+                        due_year = int(due_date[:4])
+
+                        # Adjust the due month and year if the month exceeds 12
+                        while due_month > 12:
+                            due_month -= 12
+                            due_year += 1
+
+                        # Update the due date
                         query = f"""
                                 UPDATE {self.database.db_tables[7]}
-                                SET status_id = 3
+                                SET due_date = '{due_year}-{due_month}-{int(due_date[8:])}'
                                 WHERE loan_id = {data[0]}
                                 """
 
-                        self.database.query(query)  # Execute the update query
+                        self.database.query(query)
+
+                        # Check if the loan end date is reached
+                        if date(int(due_date[:4]), int(due_date[5:7]), int(due_date[8:])) >= date(
+                                int(end_date[:4]), int(end_date[5:7]), int(end_date[8:])):
+                            # Update the loan status to complete (status_id = 3)
+                            query = f"""
+                                    UPDATE {self.database.db_tables[7]}
+                                    SET status_id = 3
+                                    WHERE loan_id = {data[0]}
+                                    """
+
+                            self.database.query(query)  # Execute the update query
         except Exception as e:
             log_error(e)
             go_back('script')

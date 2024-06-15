@@ -1,6 +1,8 @@
 import datetime
 import re
 from time import sleep
+from typing import Tuple
+
 from bank_processes.authentication import Authentication
 from bank_processes.loan import Loan
 from banking.fixed_deposit import calculate_interest, get_month
@@ -222,13 +224,13 @@ def loan_calculator():
         go_back('script')  # Navigate back to the previous script or step
 
 
-def loan_questions() -> tuple[float, str | int]:
+def loan_questions() -> tuple[str, str] | tuple[float, str | int]:
     """
     Interactively prompts the user for loan details.
 
     Returns
     -------
-    tuple[float, str | int]
+    tuple[str, str] | tuple[float, str | int]
         A tuple containing the validated loan amount and repayment period.
 
     Notes
@@ -248,7 +250,7 @@ def loan_questions() -> tuple[float, str | int]:
         amount = input(">>> ")  # Prompt user to enter the loan amount
 
         if re.search('^.*(back|return).*$', amount, re.IGNORECASE):
-            break  # Exit loop if user wants to go back
+            return 'break', 'break'  # Exit loop if user wants to go back
 
         # Ensure the input is a valid number
         elif re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", amount, re.IGNORECASE) is None:
@@ -268,7 +270,7 @@ def loan_questions() -> tuple[float, str | int]:
             _repayment_period = repayment_period()  # Prompt user for repayment period
 
             if _repayment_period == 'preview':
-                break  # Exit loop if user wants to go back from repayment period selection
+                return 'break', 'break'  # Exit loop if user wants to go back from repayment period selection
             else:
                 return amount, _repayment_period  # Return validated amount and repayment period
 
@@ -528,6 +530,9 @@ def types_of_loans(auth: Authentication):
                 break
             else:
                 amount, _repayment_period = loan_questions()  # Get the loan amount and repayment period from the user
+                if amount == 'break' and _repayment_period == 'break':
+                    continue
+
                 if re.search('^1$', user_input, re.IGNORECASE):
                     # Set the interest rate based on the repayment period for Personal Loan
                     if _repayment_period < 12:

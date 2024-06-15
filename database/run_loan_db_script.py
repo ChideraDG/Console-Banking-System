@@ -95,5 +95,6 @@ queries = [
 
 for query in queries:
     my_cursor.execute(query)
+    connection.commit()
 
 my_cursor.close()

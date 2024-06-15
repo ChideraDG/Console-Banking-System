@@ -6,3 +6,15 @@ Desc :: TRF/CBB/FROM OHANENYE-OHIAEKPETE CHIDERA DIVINE-GIFT TO OBOH VICTORY AKH
 Time :: 20:07:30.547538
 Balance :: 216261.237
                         
+Credit
+Amount :: NGN10,164.38
+Acc :: 477******548)
+Desc :: LOAN/CBB/DEPOSIT TO Ohanenye-Ohiaekpete Chidera Divine-Gift
+Time :: 12:30:18.204731
+Balance :: 238425.621
+Credit
+Amount :: NGN12,098.63
+Acc :: 540******424)
+Desc :: LOAN/CBB/DEPOSIT TO Ezenwa Chiedozie Emmanuel
+Time :: 13:47:40.319749
+Balance :: 17662.1

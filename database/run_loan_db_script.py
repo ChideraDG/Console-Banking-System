@@ -72,8 +72,8 @@ queries = [
     """,
 ]
 
-# for query in queries:
-#     my_cursor.execute(query)
+for query in queries:
+    my_cursor.execute(query)
 
 insert_queries = [
     """

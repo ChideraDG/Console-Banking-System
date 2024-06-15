@@ -1,4 +1,0 @@
-# fixed interest deposited into balance - done
-# safelock amount deposited to a central bank
-narration is missing
-return receipt

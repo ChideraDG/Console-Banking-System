@@ -650,8 +650,8 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
                         break
                     elif re.search('^(1|yes)$', _input, re.IGNORECASE):
                         # Update deposit details and process transaction
-                        auth.initial_deposit += deposit
-                        auth.total_interest_earned = interest_earned + interest
+                        auth.initial_deposit += float(deposit)
+                        auth.total_interest_earned = float(interest_earned) + interest
 
                         _id = 'cbb' + str(random.randint(100000000, 999999999))
                         auth.deposit_id = _id

@@ -1,4 +1,0 @@
-<class 'TypeError'>, 
-script.py, 
-277, 
-Error: TypeError('time.sleep() takes exactly one argument (0 given)')

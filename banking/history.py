@@ -13,9 +13,10 @@ def transaction_history(auth: Authentication):
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
             table = auth.transaction_history(start_date=datetime(2024, 6, 1, 0, 0, 0),
-                                             end_date=datetime(2024, 6, 15, 23, 0, 0), time_period=True)
+                                             end_date=datetime(2024, 6, 16, 23, 0, 0), time_period=True)
 
             print(table)
+            time.sleep(10)
 
     except Exception as e:
         log_error(e)

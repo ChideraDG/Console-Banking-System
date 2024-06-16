@@ -73,7 +73,7 @@ def deposit(auth: Authentication):
                 # Create a formatted note for the deposit notification
                 note = f"""
 Credit
-Amount :: NGN{auth.amount}
+Amount :: NGN{auth.amount:,.2f}
 Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
 Desc :: {auth.description}
 Time :: {datetime.today().now().time()}

@@ -552,7 +552,7 @@ Balance :: {auth.account_balance}
 
                         note = f"""
 Debit
-Amount :: NGN{auth.amount}
+Amount :: NGN{auth.amount:,.2f}
 Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
 Desc :: {auth.description}
 Time :: {datetime.datetime.today().now().time()}

@@ -393,7 +393,7 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
 
                             note = f"""
 Debit
-Amount :: NGN{auth.amount}
+Amount :: NGN{auth.amount:,.2f}
 Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
 Desc :: {auth.description}
 Time :: {datetime.datetime.today().now().time()}
@@ -417,7 +417,7 @@ Balance :: {auth.account_balance}
 
                             note = f"""
 Credit
-Amount :: NGN{auth.amount}
+Amount :: NGN{auth.amount:,.2f}
 Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
 Desc :: {auth.description}
 Time :: {datetime.datetime.today().now().time()}
@@ -665,7 +665,7 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
 
                         note = f"""
 Debit
-Amount :: NGN{auth.amount}
+Amount :: NGN{auth.amount:,.2f}
 Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
 Desc :: {auth.description}
 Time :: {datetime.datetime.today().now().time()}
@@ -689,7 +689,7 @@ Balance :: {auth.account_balance}
 
                         note = f"""
 Credit
-Amount :: NGN{auth.amount}
+Amount :: NGN{auth.amount:,.2f}
 Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
 Desc :: {auth.description}
 Time :: {datetime.datetime.today().now().time()}
@@ -714,6 +714,8 @@ Balance :: {auth.account_balance}
                         auth.update_deposit(deposit_id)
 
                         countdown_timer(_register='Top Up deposit', _duty='', countdown=5)
+
+                        header()
                         print("\n:: Deposit Successfully Topped Up.")
 
                         notify.fixed_deposit_top_up_notification(

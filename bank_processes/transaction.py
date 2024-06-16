@@ -4,8 +4,6 @@ import random
 from abc import ABC
 from typing import Any
 from prettytable import PrettyTable
-from animation.colors import *
-from pymysql.cursors import DictCursor
 from bank_processes.account import Account
 from functools import reduce
 
@@ -521,9 +519,7 @@ class Transaction(Account, ABC):
         from banking.script import log_error, go_back
 
         try:
-            # Store the original cursor and switch to a dictionary cursor for this query
-            original = self.database.db_cursor
-            self.database.db_cursor = self.database.db_connection.cursor(DictCursor)
+            column = ('transaction_date_time', 'description', 'transaction_id', 'transaction_amount', 'account_balance')
             if time_period:
                 # Query to get transaction details where the user is the sender within the specified date range
                 user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
@@ -532,7 +528,13 @@ class Transaction(Account, ABC):
                                     WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                                     AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                     """
-                sender_data = list(self.database.fetch_data(user_sender_query))
+                # Fetch the data in a tuple
+                sender_datas = self.database.fetch_data(user_sender_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
+                sender_data = [dict(zip(column, data)) for data in sender_datas]
+
                 # creating an  empty list
                 user_data_debit = []
                 for data in sender_data:
@@ -552,7 +554,13 @@ class Transaction(Account, ABC):
                                 WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                                 AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                 """
-                receiver_data = list(self.database.fetch_data(user_receiver_query))
+                # Fetch the data in a tuple
+                receiver_datas = self.database.fetch_data(user_receiver_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
+                receiver_data = [dict(zip(column, data)) for data in receiver_datas]
+
                 # creating an  empty list
                 user_data_credit = []
                 for data2 in receiver_data:
@@ -597,7 +605,13 @@ class Transaction(Account, ABC):
                                     WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                                     AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                     """
-                sender_data = list(self.database.fetch_data(user_sender_query))
+                # Fetch the data in a tuple
+                sender_datas = self.database.fetch_data(user_sender_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
+                sender_data = [dict(zip(column, data)) for data in sender_datas]
+
                 # creating an  empty list
                 user_data_debit = []
                 for data in sender_data:
@@ -617,7 +631,13 @@ class Transaction(Account, ABC):
                                     WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                                     AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                     """
-                receiver_data = list(self.database.fetch_data(user_receiver_query))
+                # Fetch the data in a tuple
+                receiver_datas = self.database.fetch_data(user_receiver_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
+                receiver_data = [dict(zip(column, data)) for data in receiver_datas]
+
                 # creating an  empty list
                 user_data_credit = []
                 for data2 in receiver_data:
@@ -655,9 +675,15 @@ class Transaction(Account, ABC):
                 user_sender_query = f"""select transaction_date_time, description, transaction_id, transaction_amount,
                                     account_balance
                                     FROM {self.database.db_tables[2]}
-                                     WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
+                                    WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                                     """
-                sender_data = list(self.database.fetch_data(user_sender_query))
+                # Fetch the Data in a tuple
+                sender_datas = self.database.fetch_data(user_sender_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
+                sender_data = [dict(zip(column, data)) for data in sender_datas]
+
                 # creating an  empty list
                 user_data_debit = []
                 for data in sender_data:
@@ -676,7 +702,13 @@ class Transaction(Account, ABC):
                                     FROM {self.database.db_tables[2]}
                                     WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                                     """
-                receiver_data = list(self.database.fetch_data(user_receiver_query))
+                # Fetch the data in a tuple
+                receiver_datas = self.database.fetch_data(user_receiver_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
+                receiver_data = [dict(zip(column, data)) for data in receiver_datas]
+
                 # creating an  empty list
                 user_data_credit = []
                 for data2 in receiver_data:
@@ -709,12 +741,12 @@ class Transaction(Account, ABC):
                          transaction['debit_transaction_amount'],
                          transaction['credit_transaction_amount'], transaction['account_balance']])
 
+            # Set a maximum width for each column
+            transaction_statement.max_width = 60
             # store the pretty table in a string
             user_transaction_statement = str(transaction_statement)
 
-            # Restore the original database cursor
-            self.database.db_cursor = original
-            del original
+            # Check if the user transaction statement is empty or not
             if sorted_transaction_statement:
                 pass
             else:
@@ -747,8 +779,6 @@ class Transaction(Account, ABC):
         """
         from banking.script import log_error, go_back
 
-        acc_num = self.account_number
-
         try:
             # Store the original cursor and switch to a dictionary cursor for this query
             column = ('transaction_id', 'transaction_type', 'transaction_amount',
@@ -764,7 +794,11 @@ class Transaction(Account, ABC):
                     WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                     AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                     """
+                # Fetch the data in a tuple
                 sender_datas = self.database.fetch_data(user_sender_transaction_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
                 sender_data = [dict(zip(column, data)) for data in sender_datas]
 
                 # Query to get transactions where the user is the receiver within the specified date range
@@ -776,7 +810,11 @@ class Transaction(Account, ABC):
                     WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                     AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                     """
+                # Fetch the data
                 receiver_datas = self.database.fetch_data(user_receiver_transaction_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
                 receiver_data = [dict(zip(column, data)) for data in receiver_datas]
 
                 # Combine and sort the transactions
@@ -814,7 +852,11 @@ class Transaction(Account, ABC):
                                    WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                    """
+                # Fetch the date
                 sender_datas = self.database.fetch_data(user_sender_transaction_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
                 sender_data = [dict(zip(column, data)) for data in sender_datas]
 
                 # Query to get transactions where the user is the receiver within the specified month
@@ -825,7 +867,11 @@ class Transaction(Account, ABC):
                                    WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit' 
                                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                    """
+                # Fetch the data
                 receiver_datas = self.database.fetch_data(user_receiver_transaction_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
                 receiver_data = [dict(zip(column, data)) for data in receiver_datas]
 
                 # Combine and sort the transactions
@@ -858,7 +904,11 @@ class Transaction(Account, ABC):
                 FROM {self.database.db_tables[2]}
                 WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                 """
+                # Fetch the data
                 sender_datas = self.database.fetch_data(user_sender_transaction_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
                 sender_data = [dict(zip(column, data)) for data in sender_datas]
 
                 # Query to get all transactions where the user is the receiver
@@ -868,7 +918,11 @@ class Transaction(Account, ABC):
                 FROM {self.database.db_tables[2]}
                 WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                 """
+                # Fetch the data
                 receiver_datas = self.database.fetch_data(user_receiver_transaction_query)
+
+                # For each values in a corresponding tuple of a row, a key is assigned to it and it is added to the
+                # dictionary which is inside a list
                 receiver_data = [dict(zip(column, data)) for data in receiver_datas]
 
                 # Combine and sort the transactions
@@ -893,12 +947,14 @@ class Transaction(Account, ABC):
                                                        transaction['receiver_name'], transaction['description'],
                                                        transaction['status'], transaction['transaction_date_time']])
 
+            # Check if the user transaction history is empty or not
             if sorted_transaction_history:
                 pass
             else:
                 return not bool(sorted_transaction_history)
             transaction_history_table.max_width = 15
             return transaction_history_table
+
         except Exception as e:
             log_error(e)
             go_back('script')

@@ -780,7 +780,7 @@ class Transaction(Account, ABC):
         from banking.script import log_error, go_back
 
         try:
-            # Store the original cursor and switch to a dictionary cursor for this query
+            # Store the columns of the transaction history in a tuple
             column = ('transaction_id', 'transaction_type', 'transaction_amount',
                       'sender_account_number', 'sender_name', 'receiver_account_number', 'receiver_name',
                       'description', 'status', 'transaction_date_time')

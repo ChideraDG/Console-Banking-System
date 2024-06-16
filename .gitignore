@@ -1,2 +1,3 @@
 *.pyc
-#/notification
+/notification
+notification/Account_Creation.txt

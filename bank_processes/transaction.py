@@ -573,8 +573,7 @@ class Transaction(Account, ABC):
 
                 # Prepare the table to display the transaction statement
                 transaction_statement = PrettyTable()
-                transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits',
-                                                     'Credits',
+                transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
                                                      'Balance']
 
                 # Add rows to the table
@@ -638,8 +637,7 @@ class Transaction(Account, ABC):
 
                 # Prepare the table to display the transaction statement
                 transaction_statement = PrettyTable()
-                transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits',
-                                                     'Credits',
+                transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
                                                      'Balance']
 
                 # Add rows to the table
@@ -697,8 +695,7 @@ class Transaction(Account, ABC):
 
                 # Prepare the table to display the transaction statement
                 transaction_statement = PrettyTable()
-                transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits',
-                                                     'Credits',
+                transaction_statement.field_names = ['Post Date', 'Value Date', 'Narration', 'Ref No.', 'Debits', 'Credits',
                                                      'Balance']
 
                 # Add rows to the table
@@ -748,12 +745,20 @@ class Transaction(Account, ABC):
         from banking.script import log_error, go_back
 
         acc_num = self.account_number
+        # This if printed here. It will work well and acc_num will be the account number of the user
 
         try:
             # Store the original cursor and switch to a dictionary cursor for this query
-            column = ('transaction_id', 'transaction_type', 'transaction_amount',
-                      'sender_account_number', 'sender_name', 'receiver_account_number', 'receiver_name',
-                      'description', 'status', 'transaction_date_time')
+            original = self.database.db_cursor
+
+            acc_num = self.account_number
+            # This if printed here. It will work well and acc_num will be the account number of the user
+
+            self.database.db_cursor = self.database.db_connection.cursor(DictCursor)
+            
+            acc_num = self.account_number
+            # This if printed here. It will not work again
+
             if time_period:
                 # Query to get transactions where the user is the sender within the specified date range
                 user_sender_transaction_query = f"""
@@ -764,8 +769,7 @@ class Transaction(Account, ABC):
                     WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                     AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                     """
-                sender_datas = self.database.fetch_data(user_sender_transaction_query)
-                sender_data = [dict(zip(column, data)) for data in sender_datas]
+                sender_data = list(self.database.fetch_data(user_sender_transaction_query))
 
                 # Query to get transactions where the user is the receiver within the specified date range
                 user_receiver_transaction_query = f"""
@@ -776,8 +780,7 @@ class Transaction(Account, ABC):
                     WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                     AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                     """
-                receiver_datas = self.database.fetch_data(user_receiver_transaction_query)
-                receiver_data = [dict(zip(column, data)) for data in receiver_datas]
+                receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
 
                 # Combine and sort the transactions
                 all_user_transactions = sender_data + receiver_data
@@ -814,8 +817,7 @@ class Transaction(Account, ABC):
                                    WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                    """
-                sender_datas = self.database.fetch_data(user_sender_transaction_query)
-                sender_data = [dict(zip(column, data)) for data in sender_datas]
+                sender_data = list(self.database.fetch_data(user_sender_transaction_query))
 
                 # Query to get transactions where the user is the receiver within the specified month
                 user_receiver_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
@@ -825,8 +827,7 @@ class Transaction(Account, ABC):
                                    WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit' 
                                    AND transaction_date_time BETWEEN '{start_date}' AND '{end_date}'
                                    """
-                receiver_datas = self.database.fetch_data(user_receiver_transaction_query)
-                receiver_data = [dict(zip(column, data)) for data in receiver_datas]
+                receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
 
                 # Combine and sort the transactions
                 all_user_transactions = sender_data + receiver_data
@@ -858,8 +859,7 @@ class Transaction(Account, ABC):
                 FROM {self.database.db_tables[2]}
                 WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                 """
-                sender_datas = self.database.fetch_data(user_sender_transaction_query)
-                sender_data = [dict(zip(column, data)) for data in sender_datas]
+                sender_data = list(self.database.fetch_data(user_sender_transaction_query))
 
                 # Query to get all transactions where the user is the receiver
                 user_receiver_transaction_query = f"""SELECT transaction_id, transaction_type, transaction_amount,
@@ -868,8 +868,7 @@ class Transaction(Account, ABC):
                 FROM {self.database.db_tables[2]}
                 WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                 """
-                receiver_datas = self.database.fetch_data(user_receiver_transaction_query)
-                receiver_data = [dict(zip(column, data)) for data in receiver_datas]
+                receiver_data = list(self.database.fetch_data(user_receiver_transaction_query))
 
                 # Combine and sort the transactions
                 all_user_transactions = sender_data + receiver_data
@@ -893,11 +892,15 @@ class Transaction(Account, ABC):
                                                        transaction['receiver_name'], transaction['description'],
                                                        transaction['status'], transaction['transaction_date_time']])
 
+            # Restore the original database cursor
+            self.database.db_cursor = original
+            del original
+
             if sorted_transaction_history:
                 pass
             else:
                 return not bool(sorted_transaction_history)
-            transaction_history_table.max_width = 15
+
             return transaction_history_table
         except Exception as e:
             log_error(e)

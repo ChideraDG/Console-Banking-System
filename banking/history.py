@@ -1,11 +1,11 @@
 import re
 import time
-from datetime import datetime
+from datetime import datetime, date
 from bank_processes.authentication import Authentication
 from banking.script import log_error, go_back, header
 
 
-def get_month_details(month_of_birth: int, max_year: int):
+def get_month_details(month_of_birth: int):
     """
     Returns the month name and the number of days in that month for a given year.
 
@@ -42,26 +42,21 @@ def get_month_details(month_of_birth: int, max_year: int):
     return months[month_of_birth]
 
 
-def by_date(*, current_year, current_day):
+def by_date(*, current_year):
     try:
-        start_date = ''
-        end_date = ''
-
         def get_dates(title: str):
             header()
 
             print(f"\n{title.upper()} DATE:")
-            print(f"~~~~~~{'*' * len(title)}\n")
+            print(f"~~~~~~{'~' * len(title)}")
 
             while True:
-                print("Input the Year:")
-                print("~~~~~~~~~~~~~~~~")
+                print("\nInput the Year:")
+                print("~~~~~~~~~~~~~~~")
                 year = input(">>> ").strip()
 
                 if re.search('^.*(back|return).*$', year, re.IGNORECASE):
-                    return 'break', 'break'
-                    # TODO: breaking
-                    #   Fix this line
+                    return 'break'
                 else:
                     if year.isdigit():
                         if 1900 < int(year) <= current_year:
@@ -76,18 +71,16 @@ def by_date(*, current_year, current_day):
                     continue
 
             while True:
-                print("Input the Month:")
+                print("\nInput the Month:")
                 print("~~~~~~~~~~~~~~~~")
                 month = input(">>> ").strip()
 
                 if re.search('^.*(back|return).*$', month, re.IGNORECASE):
-                    return 'break', 'break'
-                    # TODO: breaking
-                    #   Fix this line
+                    return 'break'
                 else:
                     if month.isdigit():
                         if year == str(current_year):
-                            current_month = datetime.month
+                            current_month = datetime.today().month
                         else:
                             current_month = 12
 
@@ -101,9 +94,69 @@ def by_date(*, current_year, current_day):
                         print(f"\n:: {title.title()} Month should be in digits.\nExample: 1, 4, etc.")
                     time.sleep(2)
                     continue
+
+            while True:
+                print("\nInput the Day:")
+                print("~~~~~~~~~~~~~~")
+                day = input(">>> ").strip()
+
+                if re.search('^.*(back|return).*$', day, re.IGNORECASE):
+                    return 'break'
+                else:
+                    if day.isdigit():
+                        if year == str(current_year):
+                            current_day = datetime.today().day
+                        else:
+                            current_day = get_month_details(int(month))[1]
+
+                        if 0 < int(day) <= current_day:
+                            break
+                        else:
+                            print(f"\n:: Day of Birth should be within the number of days in "
+                                  f"{get_month_details(int(month))[0]} in {year}.")
+                    else:
+                        print(f"\n:: {title.title()} Day should be in digits.\nExample: 1, 4, etc.")
+                    time.sleep(2)
+                    continue
+
+            return f'{year}-{month}-{day}'
+
+        start_date = get_dates('start')
+        if start_date == 'break':
+            return 'break'
+
+        end_date = get_dates('end')
+        if end_date == 'break':
+            return 'break'
+
+        if (date(
+                year=int(start_date.split('-')[0]), month=int(start_date.split('-')[1]),
+                day=int(start_date.split('-')[2]))
+                > date(
+                    year=int(end_date.split('-')[0]), month=int(end_date.split('-')[1]),
+                    day=int(end_date.split('-')[2]))):
+            print("\n:: Start Date cannot be greater than End Date")
+            time.sleep(2)
+
+            by_date(current_year=datetime.today().year)
+
+        return start_date, end_date
     except Exception as e:
         log_error(e)
         go_back('script')
+
+
+def process_transaction_history(*, auth: Authentication, criteria: str = 'all', start_date: str = None,
+                                end_date: str = None, start_month: str = None, end_month: str = None):
+    header()
+
+    if criteria == 'date':
+        print(auth.transaction_history(start_date=datetime(int(start_date.split('-')[0]), int(start_date.split('-')[1]),
+                                                           int(start_date.split('-')[2]), 0, 0, 0),
+                                       end_date=datetime(int(end_date.split('-')[0]), int(end_date.split('-')[1]),
+                                                         int(end_date.split('-')[2]), 23, 59, 59), time_period=True))
+    elif criteria == 'all':
+        auth.transaction_history()
 
 
 def transaction_history(auth: Authentication):
@@ -125,10 +178,20 @@ def transaction_history(auth: Authentication):
                 time.sleep(1)
                 break
             elif re.search('^1$', user_input):
-                by_date(
-                    current_year=datetime.year,
-                    current_day=datetime.day
+                dates = by_date(
+                    current_year=datetime.today().year,
                 )
+                if dates == 'break':
+                    continue
+                else:
+                    process_transaction_history(
+                        auth=auth,
+                        criteria='date',
+                        start_date=dates[0],
+                        end_date=dates[1]
+                    )
+                    break
+            elif re.search('^2$', user_input):
                 continue
             else:
                 print("\n:: Invalid input, please try again.")

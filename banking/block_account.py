@@ -125,9 +125,9 @@ def block_account(auth: Authentication):
                 question = input(
                     f'\nDear {auth.first_name}, please share with us why you want to block your account \n>>> ')
 
-                print(f'{auth.account_holder}, '
+                print(f'\n{auth.account_holder}, '
                       f'Console Banking wishes you all the best and we hope you patronize us again')
-                time.sleep(2)
+                time.sleep(5)
 
                 header()
 

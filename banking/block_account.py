@@ -113,7 +113,7 @@ def block_account(auth: Authentication):
             print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
 
             # Prompting user to confirm account blocking
-            block = input(f'{" " * int((70 - 18) / 2)}{red}BLOCK ACCOUNT? y/n \n>>> {end}').lower()
+            block = input(f'{red}BLOCK ACCOUNT? y/n \n>>> {end}').lower()
 
             # Handling user input for cancelling the process
             if re.search('^.*(back|return|n).*$', block.strip(), re.IGNORECASE):

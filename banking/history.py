@@ -10,7 +10,11 @@ def transaction_history(auth: Authentication):
             header()
 
             print('\nChoose a Criteria:\n~~~~~~~~~~~~~~~~~~\n')
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+            print("+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
+            print("|     1. BY DATE     |     2. BY MONTH     |")
+            print("+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
+            print("|         3. ALL TRANSACTION HISTORY       |")
+            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
             table = auth.transaction_history(start_date=datetime(2024, 6, 1, 0, 0, 0),
                                              end_date=datetime(2024, 6, 16, 23, 0, 0), time_period=True)

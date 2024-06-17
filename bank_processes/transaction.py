@@ -647,7 +647,7 @@ class Transaction(Account, ABC):
             # Store the columns of the transaction history in a tuple
             column = ('transaction_id', 'transaction_type', 'transaction_amount',
                       'sender_account_number', 'sender_name', 'receiver_account_number', 'receiver_name',
-                      'description', 'status', 'transaction_date_time')
+                      'description', 'status', 'transaction_date_time', 'account_balance')
 
             def fetch_and_process_transactions(query):
                 """Helper function to fetch and process transactions."""
@@ -661,7 +661,7 @@ class Transaction(Account, ABC):
                 sender_query = f"""
                     SELECT transaction_id, transaction_type, transaction_amount,
                     sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                    transaction_date_time
+                    transaction_date_time, account_balance
                     FROM {self.database.db_tables[2]}
                     WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                     AND transaction_date_time BETWEEN '{start_date_str}' AND '{end_date_str}'
@@ -669,7 +669,7 @@ class Transaction(Account, ABC):
                 receiver_query = f"""
                     SELECT transaction_id, transaction_type, transaction_amount,
                     sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                    transaction_date_time
+                    transaction_date_time, account_balance
                     FROM {self.database.db_tables[2]}
                     WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                     AND transaction_date_time BETWEEN '{start_date_str}' AND '{end_date_str}'
@@ -686,7 +686,7 @@ class Transaction(Account, ABC):
                 sender_query = f"""
                     SELECT transaction_id, transaction_type, transaction_amount,
                     sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                    transaction_date_time
+                    transaction_date_time, account_balance
                     FROM {self.database.db_tables[2]}
                     WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                     AND transaction_date_time BETWEEN '{start_date_str}' AND '{end_date_str}'
@@ -694,7 +694,7 @@ class Transaction(Account, ABC):
                 receiver_query = f"""
                     SELECT transaction_id, transaction_type, transaction_amount,
                     sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                    transaction_date_time
+                    transaction_date_time, account_balance
                     FROM {self.database.db_tables[2]}
                     WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                     AND transaction_date_time BETWEEN '{start_date_str}' AND '{end_date_str}'
@@ -707,7 +707,7 @@ class Transaction(Account, ABC):
                 sender_query = f"""
                     SELECT transaction_id, transaction_type, transaction_amount,
                     sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                    transaction_date_time
+                    transaction_date_time, account_balance
                     FROM {self.database.db_tables[2]}
                     WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
                 """
@@ -715,7 +715,7 @@ class Transaction(Account, ABC):
                 receiver_query = f"""
                     SELECT transaction_id, transaction_type, transaction_amount,
                     sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                    transaction_date_time
+                    transaction_date_time, account_balance
                     FROM {self.database.db_tables[2]}
                     WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
                 """
@@ -732,7 +732,7 @@ class Transaction(Account, ABC):
             transaction_history_table.field_names = ['Transaction ID', 'Transaction Type', 'Transaction Amount',
                                                      'Sender Account Number', 'Sender Name',
                                                      'Receiver Account Number', 'Receiver Name', 'Description',
-                                                     'Status', 'Transaction Date']
+                                                     'Status', 'Transaction Date', 'Account Balance']
 
             # Add rows to the table
             for transaction in sorted_transaction_history:
@@ -742,7 +742,8 @@ class Transaction(Account, ABC):
                                                    transaction['sender_name'],
                                                    transaction['receiver_account_number'],
                                                    transaction['receiver_name'], transaction['description'],
-                                                   transaction['status'], transaction['transaction_date_time']])
+                                                   transaction['status'], transaction['transaction_date_time'],
+                                                   transaction['account_balance']])
 
             # Check if the user transaction history is empty or not
             if sorted_transaction_history:
@@ -750,7 +751,7 @@ class Transaction(Account, ABC):
             else:
                 return not bool(sorted_transaction_history)
 
-            transaction_history_table.max_width = 15
+            transaction_history_table.max_width = 12
             return transaction_history_table
 
         except Exception as e:

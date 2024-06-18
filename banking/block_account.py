@@ -60,6 +60,7 @@ def block_account(auth: Authentication):
 
             else:
                 pass
+
             print(f' {bold}{auth.first_name}')
             print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
             print(f'| {red}This will block your account                                       {end}|')

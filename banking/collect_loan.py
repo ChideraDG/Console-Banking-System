@@ -1,8 +1,6 @@
 import datetime
 import re
 from time import sleep
-from typing import Tuple
-
 from bank_processes.authentication import Authentication
 from bank_processes.loan import Loan
 from banking.fixed_deposit import calculate_interest, get_month

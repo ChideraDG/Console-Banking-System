@@ -8,6 +8,7 @@ from bank_processes.user import User
 from bank_processes.account import Account
 from bank_processes.authentication import verify_data
 from banking.script import header, go_back, log_error
+from animation.colors import *
 
 user = User()
 bvn = BVN()
@@ -32,7 +33,10 @@ def countdown_timer(_register, _duty: str = 'creation', countdown: int = 3):
 
     print()
     while countdown != 0:
+        print(bold, brt_black_bg, brt_blue, end='')  # coloring
         print(f"processing {_register} {_duty}... {countdown}", end='')
+        print(end, end='')  # coloring
+
         countdown -= 1
         time.sleep(1)
 
@@ -440,20 +444,20 @@ def register_bvn_account():
     """
 
     header()
-    print('\nMessage from the CUSTOMER SERVICE OFFICER:::')
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print("'You will need to Create your BVN first, then Create your Bank Account'. ")
+    print(f'{brt_blue}\nMessage from the CUSTOMER SERVICE OFFICER:::{end}')
+    print(f'{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}')
+    print(f"{brt_blue}'You will need to Create your BVN first, then Create your Bank Account'.{end}")
     time.sleep(3)
 
     # BVN Form
     try:
         header()
 
-        print("\nBank Verification Number Creation".upper())
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, f"\nBank Verification Number Creation".upper(), end, sep='')
+        print(f"{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
 
-        print("\nInstruction: Carefully fill in your details")
-        print("==========================================")
+        print(f"{bold}{red}\nInstruction: Carefully fill in your details{end}")
+        print(f"{bold}{magenta}==========================================={end}")
 
         time.sleep(1)
 
@@ -503,10 +507,10 @@ def register_bvn_account():
         time.sleep(1)
         header()
 
-        print("\nBank Verification Number Successfully Created.")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(f"\nUser: {bvn.last_name} {bvn.first_name} {bvn.middle_name}")
-        print(f"BVN NUMBER: {bvn.bvn_number}")
+        print(bold, brt_yellow, f"\nBank Verification Number Successfully Created.", end, sep='')
+        print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
+        print(f"{bold}{brt_black_bg}{brt_yellow}\nUser: {bvn.last_name} {bvn.first_name} {bvn.middle_name}{end}")
+        print(f"{bold}{brt_black_bg}{brt_yellow}BVN NUMBER: {bvn.bvn_number}{end}")
 
         notify.bvn_creation_notification(
             title='Console Beta Banking',
@@ -522,11 +526,11 @@ def register_bvn_account():
     try:
         header()
 
-        print("\nBank Account Details Creation".upper())
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, f"\nBank Account Details Creation".upper(), end, sep='')
+        print(f"{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
 
-        print("\nInstruction: Carefully fill in your details")
-        print("==========================================")
+        print(f"{bold}{red}\nInstruction: Carefully fill in your details{end}")
+        print(f"{bold}{magenta}=========================================={end}")
 
         time.sleep(1)
 
@@ -605,10 +609,10 @@ def register_bvn_account():
         time.sleep(1)
         header()
 
-        print("\nBank Account Successfully Created.")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(f"\nUSERNAME: {user.username}")
-        print(f"ACCOUNT NUMBER: {account.account_number}")
+        print(f"{bold}{brt_yellow}\nBank Account Successfully Created.{end}")
+        print(f"{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
+        print(f"{bold}{brt_black_bg}{brt_yellow}\nUSERNAME: {user.username}{end}")
+        print(f"{bold}{brt_black_bg}{brt_yellow}ACCOUNT NUMBER: {account.account_number}{end}")
 
         notify.account_creation_notification(
             title='Console Beta Banking',

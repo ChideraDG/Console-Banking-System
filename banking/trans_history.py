@@ -263,6 +263,7 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
         header()  # Call the header function to display the header.
         print()  # Print a blank line for spacing.
 
+        trans = None
         if criteria == 'date':
             trans = auth.transaction_history(
                 start_date=datetime(int(start_date.split('-')[0]), int(start_date.split('-')[1]),
@@ -274,9 +275,6 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
                 print(":: You don't have any transaction within this time frame.")
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
-            else:
-                print(trans)  # Print the transaction history.
-                time.sleep(3)  # Wait for 3 seconds before continuing.
 
         elif criteria == 'month':
             trans = auth.transaction_history(month=month, year=year, is_month=True)
@@ -285,9 +283,6 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
                 print(f":: You don't have any transaction in the month of {month.title()}, {year}")
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
-            else:
-                print(trans)  # Print the transaction history.
-                time.sleep(3)  # Wait for 3 seconds before continuing.
 
         elif criteria == 'all':
             trans = auth.transaction_history()
@@ -295,9 +290,9 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
                 print(":: You don't have any transaction on your account.")
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
-            else:
-                print(trans)  # Print the transaction history.
-                time.sleep(3)  # Wait for 3 seconds before continuing.
+
+        print(trans)  # Print the transaction history.
+        time.sleep(3)  # Wait for 3 seconds before continuing.
 
         input("\nTO RETURN -+- PRESS ENTER  ")  # Prompt the user to press Enter to return.
         break

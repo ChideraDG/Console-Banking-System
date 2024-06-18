@@ -151,11 +151,11 @@ def signing_in():
         print(end='\n')
 
         print(f'{bold}{brt_black_bg}{brt_yellow}' + 'Welcome, what can we do for you today?' + f'{end}\n')
-        print(f'{magenta}+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-        print(f"|  {brt_black_bg}{brt_yellow}1. NEW USER{end}  {magenta}|  "
-              f"{brt_black_bg}{brt_yellow}2. EXISTING USER{end}  {magenta}|")
+        print(f'{bold}{magenta}+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
+        print(f"|  {bold}{brt_black_bg}{brt_yellow}1. NEW USER{end}  {bold}{magenta}|  "
+              f"{bold}{brt_black_bg}{brt_yellow}2. EXISTING USER{end}  {bold}{magenta}|")
         print(f"+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+")
-        print(f"|        {brt_black_bg}{brt_yellow}3. CUSTOMER SERVICE{end}         {magenta}|")
+        print(f"|        {bold}{brt_black_bg}{brt_yellow}3. CUSTOMER SERVICE{end}         {bold}{magenta}|")
         print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
         print(magenta, bold, end='')
@@ -332,15 +332,10 @@ def signed_in(auth: Authentication):
                     elif auth.fixed_account == 'no':
                         create_safelock(auth)
                         continue
-                elif re.search('^19$', user_input):
+                elif re.search('^(19|.*(back|return).*)$', user_input):
                     auth.user_logout()
                     del user_input
                     login()
-                    break
-                elif re.search('^.*(back|return).*$', user_input.strip().lower()):
-                    auth.user_logout()
-                    del user_input
-                    go_back('script')
                     break
                 else:
                     del user_input

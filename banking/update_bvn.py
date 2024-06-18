@@ -369,7 +369,7 @@ def update_bvn(auth: Authentication):
                 _address = address()
                 countdown_timer('New Address', 'in')
                 header()
-                print('\nAddress successfully change')
+                print('\nAddress successfully changed')
                 time.sleep(2)
                 if _address == 'break':
                     continue

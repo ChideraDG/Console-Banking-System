@@ -544,6 +544,7 @@ class Transaction(Account, ABC):
                 """Helper function to get SQL queries based on the date range."""
                 date_filter = f"AND transaction_date_time BETWEEN '{_start_date}' AND '{_end_date}'" \
                     if time_period or is_month else ''
+                
                 # Queries for transactions where the user is the sender (debit transactions)
                 _user_sender_query = f"""
                     SELECT transaction_date_time, description, transaction_id, transaction_amount, account_balance
@@ -561,10 +562,12 @@ class Transaction(Account, ABC):
                 return _user_sender_query, _user_receiver_query
 
             if time_period:
+                # Query to get transactions within a specified date range
                 start_date_str = start_date.strftime('%Y-%m-%d %H:%M:%S')
                 end_date_str = end_date.strftime('%Y-%m-%d %H:%M:%S')
                 user_sender_query, user_receiver_query = get_queries(start_date_str, end_date_str)
             elif is_month:
+                # Query to get transactions within a month
                 end_day, month_value = get_month_values(month, year)
                 start_date = datetime(year, month_value, 1)
                 end_date = datetime(year, month_value, end_day)
@@ -651,6 +654,7 @@ class Transaction(Account, ABC):
                 """Helper function to get SQL queries based on the date range."""
                 date_filter = f"AND transaction_date_time BETWEEN '{_start_date}' AND '{_end_date}'" \
                     if time_period or is_month else ''
+
                 # Queries for transactions where the user is the sender (debit transactions)
                 _user_sender_query = f"""
                     SELECT transaction_id, transaction_type, transaction_amount,
@@ -677,6 +681,7 @@ class Transaction(Account, ABC):
                 sender_query, receiver_query = get_queries(start_date_str, end_date_str)
 
             elif is_month:
+                # Query to get transactions within a specified month
                 (end_day, month_value) = get_month_values(month, year)
                 start_date = datetime(year, month_value, 1)
                 end_date = datetime(year, month_value, end_day)

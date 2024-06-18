@@ -540,9 +540,10 @@ class Transaction(Account, ABC):
                 ]
                 return processed_data
 
-            def get_queries(_start_date, _end_date):
+            def get_queries(_start_date=None, _end_date=None):
                 """Helper function to get SQL queries based on the date range."""
-                date_filter = f"AND transaction_date_time BETWEEN '{_start_date}' AND '{_end_date}'"
+                date_filter = f"AND transaction_date_time BETWEEN '{_start_date}' AND '{_end_date}'" \
+                    if time_period or is_month else ''
                 # Queries for transactions where the user is the sender (debit transactions)
                 _user_sender_query = f"""
                     SELECT transaction_date_time, description, transaction_id, transaction_amount, account_balance
@@ -571,16 +572,8 @@ class Transaction(Account, ABC):
                 end_date_str = end_date.strftime('%Y-%m-%d %H:%M:%S')
                 user_sender_query, user_receiver_query = get_queries(start_date_str, end_date_str)
             else:
-                user_sender_query = f"""
-                    SELECT transaction_date_time, description, transaction_id, transaction_amount, account_balance
-                    FROM {self.database.db_tables[2]}
-                    WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
-                """
-                user_receiver_query = f"""
-                    SELECT transaction_date_time, description, transaction_id, transaction_amount, account_balance
-                    FROM {self.database.db_tables[2]}
-                    WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
-                """
+                # Query to get all user transactions
+                user_sender_query, user_receiver_query = get_queries()
 
             # Fetch and process both debit and credit transactions
             user_data_debit = fetch_and_process_data(user_sender_query, 'debit')
@@ -654,28 +647,34 @@ class Transaction(Account, ABC):
                 datas = self.database.fetch_data(query)
                 return [dict(zip(column, data)) for data in datas]
 
-            if time_period:
-                # Query to get transactions within the specified date range
-                start_date_str = start_date.strftime('%Y-%m-%d %H:%M:%S')
-                end_date_str = end_date.strftime('%Y-%m-%d %H:%M:%S')
-                sender_query = f"""
+            def get_queries(_start_date=None, _end_date=None):
+                """Helper function to get SQL queries based on the date range."""
+                date_filter = f"AND transaction_date_time BETWEEN '{_start_date}' AND '{_end_date}'" \
+                    if time_period or is_month else ''
+                # Queries for transactions where the user is the sender (debit transactions)
+                _user_sender_query = f"""
                     SELECT transaction_id, transaction_type, transaction_amount,
                     sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
                     transaction_date_time, account_balance
                     FROM {self.database.db_tables[2]}
                     WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
-                    AND transaction_date_time BETWEEN '{start_date_str}' AND '{end_date_str}'
-                """
-                receiver_query = f"""
+                    {date_filter}
+                    """
+                # Queries for transactions where the user is the receiver (credit transactions)
+                _user_receiver_query = f"""
                     SELECT transaction_id, transaction_type, transaction_amount,
                     sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
                     transaction_date_time, account_balance
                     FROM {self.database.db_tables[2]}
-                    WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
-                    AND transaction_date_time BETWEEN '{start_date_str}' AND '{end_date_str}'
-                """
-                sender_data = fetch_and_process_transactions(sender_query)
-                receiver_data = fetch_and_process_transactions(receiver_query)
+                    WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'{date_filter}
+                    """
+                return _user_sender_query, _user_receiver_query
+
+            if time_period:
+                # Query to get transactions within the specified date range
+                start_date_str = start_date.strftime('%Y-%m-%d %H:%M:%S')
+                end_date_str = end_date.strftime('%Y-%m-%d %H:%M:%S')
+                sender_query, receiver_query = get_queries(start_date_str, end_date_str)
 
             elif is_month:
                 (end_day, month_value) = get_month_values(month, year)
@@ -683,44 +682,15 @@ class Transaction(Account, ABC):
                 end_date = datetime(year, month_value, end_day)
                 start_date_str = start_date.strftime('%Y-%m-%d %H:%M:%S')
                 end_date_str = end_date.strftime('%Y-%m-%d %H:%M:%S')
-                sender_query = f"""
-                    SELECT transaction_id, transaction_type, transaction_amount,
-                    sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                    transaction_date_time, account_balance
-                    FROM {self.database.db_tables[2]}
-                    WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
-                    AND transaction_date_time BETWEEN '{start_date_str}' AND '{end_date_str}'
-                """
-                receiver_query = f"""
-                    SELECT transaction_id, transaction_type, transaction_amount,
-                    sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                    transaction_date_time, account_balance
-                    FROM {self.database.db_tables[2]}
-                    WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
-                    AND transaction_date_time BETWEEN '{start_date_str}' AND '{end_date_str}'
-                """
-                sender_data = fetch_and_process_transactions(sender_query)
-                receiver_data = fetch_and_process_transactions(receiver_query)
+                sender_query, receiver_query = get_queries(start_date_str, end_date_str)
 
             else:
-                # Query to get all transactions where the user is the sender
-                sender_query = f"""
-                    SELECT transaction_id, transaction_type, transaction_amount,
-                    sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                    transaction_date_time, account_balance
-                    FROM {self.database.db_tables[2]}
-                    WHERE sender_account_number = '{self.account_number}' AND transaction_mode = 'debit'
-                """
-                # Query to get all transactions where the user is the receiver
-                receiver_query = f"""
-                    SELECT transaction_id, transaction_type, transaction_amount,
-                    sender_account_number, sender_name, receiver_account_number, receiver_name, description, status,
-                    transaction_date_time, account_balance
-                    FROM {self.database.db_tables[2]}
-                    WHERE receiver_account_number = '{self.account_number}' AND transaction_mode = 'credit'
-                """
-                sender_data = fetch_and_process_transactions(sender_query)
-                receiver_data = fetch_and_process_transactions(receiver_query)
+                # Query to get all user transactions
+                sender_query, receiver_query = get_queries()
+
+            # Fetch and process both debit and credit transactions
+            sender_data = fetch_and_process_transactions(sender_query)
+            receiver_data = fetch_and_process_transactions(receiver_query)
 
             # Combine and sort the transactions
             all_user_transactions = sender_data + receiver_data

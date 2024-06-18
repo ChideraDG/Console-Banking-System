@@ -250,6 +250,7 @@ def signed_in(auth: Authentication):
     from banking.collect_loan import preview
     from banking.update_bvn import update_bvn
     from banking.history import generate_statement, transaction_history
+    from banking.block_account import block_account
 
     try:
         account_balance_display = None
@@ -313,6 +314,7 @@ def signed_in(auth: Authentication):
                 elif re.search('^12$', user_input):
                     continue
                 elif re.search('^13$', user_input):
+                    block_account(auth)
                     continue
                 elif re.search('^14$', user_input):
                     continue

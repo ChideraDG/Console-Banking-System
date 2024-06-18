@@ -65,7 +65,7 @@ def update_acct_info():
                 if _address == 'break':
                     continue
 
-            elif user_input == '8':
+            elif user_input == '7':
                 mail = email()
                 if mail == 'break':
                     continue
@@ -75,4 +75,4 @@ def update_acct_info():
         go_back('script')
 
 
-update_acct_info()
+# update_acct_info()

@@ -13,6 +13,7 @@ notify = Notification()
 def fetch_user_loan_data(auth: Authentication):
     """
     Handles the process of fetching the loan data of a user
+
     Parameters
     ----------
     auth : Authentication
@@ -45,6 +46,7 @@ def fetch_user_loan_data(auth: Authentication):
 def block_user(auth: Authentication):
     """
     Handles the operation of blocking a user account
+
     Parameters
     ----------
     auth : Authentication

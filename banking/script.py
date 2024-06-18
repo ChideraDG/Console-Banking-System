@@ -242,17 +242,18 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
 
 def signed_in(auth: Authentication):
     """Function to sign in Users with a Savings or Current account"""
-    from banking.transfer_money import process_transfer
-    from banking.fixed_deposit import create_safelock, access_safelock
-    from banking.deposit_money import deposit
-    from banking.login_panel import login
-    from banking.withdrawals import withdraw
-    from banking.collect_loan import preview
-    from banking.update_bvn import update_bvn
-    from banking.history import generate_statement, transaction_history
-    from banking.block_account import block_account
-
     try:
+        from banking.transfer_money import process_transfer
+        from banking.fixed_deposit import create_safelock, access_safelock
+        from banking.deposit_money import deposit
+        from banking.login_panel import login
+        from banking.withdrawals import withdraw
+        from banking.collect_loan import preview
+        from banking.update_bvn import update_bvn
+        from banking.trans_history import transaction_history
+        from banking.block_account import block_account
+        from banking.generate_statement import generate_statement
+
         account_balance_display = None
         while True:
             if auth.account_status == 'active':

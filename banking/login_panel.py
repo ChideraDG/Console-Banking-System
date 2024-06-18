@@ -172,46 +172,46 @@ def forgot_username():
             print(f"{bold}{brt_yellow}\nENTER YOUR REGISTERED PHONE NUMBER/E-MAIL:{end}")
             print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
 
-            print(brt_yellow, bold, end='')  # coloring
-            _input = input(">>> ").strip().lower()
-            print(end, end='')  # coloring
+            print(brt_yellow, bold, end='')
+            _input = input(">>> ").strip().lower()  # Get user input and convert it to lowercase.
+            print(end, end='')
 
-            if re.search('^.*(back|return).*$', _input.lower()):
-                del _input
+            if re.search('^.*(back|return).*$', _input.lower()):  # Check if the user wants to go back.
+                del _input  # Delete the input to free memory.
                 go_back('script')
                 break
             else:
-                if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _input, re.IGNORECASE):
-                    _username: str = get_username_from_database(_input, email=True)
+                if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _input, re.IGNORECASE):  # Validate email format.
+                    _username: str = get_username_from_database(_input, email=True)  # Retrieve username by email.
                     column = 'email'
-                elif re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', _input) and 11 <= len(_input) <= 15:
-                    _username: str = get_username_from_database(_input, phone_number=True)
+                elif re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', _input) and 11 <= len(_input) <= 15:  # Validate phone number format.
+                    _username: str = get_username_from_database(_input, phone_number=True)  # Retrieve username by phone number.
                     column = 'phone_number'
                 else:
-                    print(f"{brt_red}\nWrong Input{end}")
+                    print(f"{brt_red}\nWrong Input{end}")  # Notify user of incorrect input format.
                     time.sleep(3)
                     continue
 
-                if verify_data(column, 1, _input):
+                if verify_data(column, 1, _input):  # Verify if the input exists in the database.
                     auth.username = _username
                     time.sleep(1)
-                    _password = password()
+                    _password = password()  # Prompt for password.
                     time.sleep(1)
 
-                    start_time = time.time()
-                    _token = token_auth()
+                    start_time = time.time()  # Start timing for token verification.
+                    _token = token_auth()  # Send a token for verification.
                     while True:
                         print(f"{bold}{brt_yellow}\nENTER YOUR TOKEN NUMBER:{end}")
                         print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~~~~~{end}")
-                        _tokenNumber = input(">>> ").strip()
+                        _tokenNumber = input(">>> ").strip()  # Get the token number input from the user.
 
-                        if re.search('^.*(back|return).*$', _tokenNumber, re.IGNORECASE):
-                            del _tokenNumber
+                        if re.search('^.*(back|return).*$', _tokenNumber, re.IGNORECASE):  # Check if the user wants to go back.
+                            del _tokenNumber  # Delete the token number to free memory.
                             go_back('script')
                         else:
-                            elapsed_time = time.time() - start_time
-                            if elapsed_time < 300.0:
-                                if _token == _tokenNumber:
+                            elapsed_time = time.time() - start_time  # Calculate elapsed time.
+                            if elapsed_time < 300.0:  # Check if the token is entered within 5 minutes.
+                                if _token == _tokenNumber:  # Verify if the token matches.
                                     notify.forgot_username_notification(
                                         title='Console Beta Banking',
                                         message=f"Your Username: {_username}. \nDon't Share it.",
@@ -224,25 +224,25 @@ def forgot_username():
 
                                     break
                                 else:
-                                    print(f"{red}\n:: Wrong Token Number.\n:: Try Again{end}")
+                                    print(f"{red}\n:: Wrong Token Number.\n:: Try Again{end}")  # Notify user of wrong token.
                                     time.sleep(3)
                                     continue
                             else:
-                                print(f"{red}\n:: Time is already over 5 minutes.{end}")
+                                print(f"{red}\n:: Time is already over 5 minutes.{end}")  # Notify user of timeout.
                                 time.sleep(1)
                                 print(f"{brt_yellow}\n:: Re-Sending Token Number{end}")
-                                start_time = time.time()
-                                _token = token_auth()
+                                start_time = time.time()  # Reset start time for new token.
+                                _token = token_auth()  # Resend token.
                                 time.sleep(3)
                                 continue
                     break
                 else:
-                    print(f"{red}\n:: Phone Number doesn't exist.{end}")
+                    print(f"{red}\n:: Phone Number doesn't exist.{end}")  # Notify user if phone number/email doesn't exist.
                     time.sleep(3)
                     continue
     except Exception as e:
-        log_error(e)
-        go_back('script')
+        log_error(e)  # Log the error if an exception occurs.
+        go_back('script')  # Navigate back to the main script.
 
 
 def forgot_password():

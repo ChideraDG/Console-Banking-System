@@ -6,6 +6,7 @@ from bank_processes.authentication import Authentication, verify_data
 from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
 from banking.script import header, go_back, log_error
+from animation.colors import *
 
 
 notify = Notification()
@@ -107,16 +108,19 @@ def recipient_account_number(auth: Authentication):
         while True:
             header()
 
-            print("\nENTER YOUR RECIPIENT ACCOUNT NUMBER:")
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            print(bold, brt_yellow, "\nENTER YOUR RECIPIENT ACCOUNT NUMBER:", end, sep='')
+            print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+            print(bold, magenta, end='')
             _input = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
             elif re.search("^\\D$", _input):
-                print("\n:: Digits Only")
+                print(red, "\n:: Digits Only", end, sep='')
                 del _input
                 time.sleep(2)
                 continue
@@ -125,11 +129,14 @@ def recipient_account_number(auth: Authentication):
                     checking = Authentication()  # New Instance to get the name of the Recipient
                     checking.account_number = _input
                     recipient_name = checking.account_holder
-                    print(f'  ::: {recipient_name.upper()} ')
-                    print('\nis this the correct RECIPIENT NAME you want to send money to?')
-                    print('1. Yes  |  2. No')
-                    print('~~~~~~     ~~~~~')
+                    print(bold, red, f'  :: {recipient_name.upper()} ::', end, sep='')
+                    print(bold, brt_yellow, '\nis this the correct RECIPIENT NAME you want to send money to?', end, sep='')
+                    print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')
+                    print(f'{bold}{magenta}~~~~~~     ~~~~~{end}')
+
+                    print(bold, magenta, end='')
                     checking_input = input(">>> ").strip()
+                    print(end, end='')
 
                     if checking_input == '1' or checking_input.lower() == 'yes':
                         del checking_input
@@ -148,12 +155,12 @@ def recipient_account_number(auth: Authentication):
                         time.sleep(2)
                         continue
                 else:
-                    print("\n:: Account Number cannot be your own Account Number")
+                    print(red, "\n:: Account Number cannot be your own Account Number", end, sep='')
                     del _input
                     time.sleep(3)
                     continue
             else:
-                print("\n:: Account Number not Found")
+                print(red, "\n:: Account Number not Found", end, sep='')
                 del _input
                 time.sleep(2)
                 continue
@@ -465,10 +472,13 @@ def process_transfer(auth: Authentication):
                 header()
 
                 print(end='\n')
-                print("+~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
-                print("|  1. to BANK  |  2. to BENEFICIARY  |")
-                print("+~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
+                print(bold, magenta, "+~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+", sep='')
+                print(f"|{end}  {bold}{brt_black_bg}{brt_yellow}1. to BANK{end}  {bold}{magenta}|  {bold}{brt_black_bg}{brt_yellow}2. to BENEFICIARY{end}  {bold}{magenta}|")
+                print("+~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+", end)
+
+                print(bold, magenta, end='')
                 user_input = input(">>> ").strip()
+                print(end, end='')
 
                 if re.search('^1$', user_input):
                     recipient_account_number(auth)
@@ -500,87 +510,87 @@ Balance :: {auth.account_balance}
                     )
 
                     header()
-                    print("\n:: Money Sent Successfully")
-                    print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
+                    print(bold, brt_yellow, italic, "\n:: Money Sent Successfully")
+                    print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}", end)
 
                     if beneficiaries(auth, checking_beneficiary=True) is False:
-                        print(f'\nAdd {auth.receiver_name.upper()} to beneficiaries')
-                        print('1. Yes  |  2. No')
-                        print('~~~~~~     ~~~~~')
+                        print(bold, brt_yellow, f'\nAdd {auth.receiver_name.upper()} to beneficiaries')
+                        print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')
+                        print(f'{bold}{magenta}~~~~~~     ~~~~~{end}')
+
+                        print(bold, magenta, end='')
                         checking_input = input(">>> ").strip()
+                        print(end, end='')
 
                         if checking_input == '1' or checking_input.lower() == 'yes':
                             auth.add_beneficiaries(_account_holder=auth.receiver_name,
                                                    _account_number=auth.receiver_acct_num)
 
-                            print("\n:: Beneficiary Added Successfully")
+                            print(bold, brt_yellow, italic, "\n:: Beneficiary Added Successfully", end)
                             time.sleep(1.5)
                         elif re.search('^.*(back|return).*$', checking_input.lower(), re.IGNORECASE):
                             del checking_input
                             time.sleep(1.5)
-                            go_back('signed_in', auth=auth)
+                            break
                         else:
                             del checking_input
                             time.sleep(1)
                             continue
 
-                    receipt(auth)
-
-                    time.sleep(1.5)
-                    break
                 elif re.search('^2$', user_input):
                     bene = beneficiaries(auth)
                     if bene is None:
-                        print('\n' + ':: You have NO Beneficiaries')
+                        print(red, '\n' + ':: You have NO Beneficiaries', end)
                         time.sleep(3)
                         continue
-                    else:
-                        auth.receiver_acct_num = bene[0]
-                        auth.receiver_name = bene[1]
-                        amount_to_be_transferred(auth)
-                        description(auth)
-                        auth.transaction_type = 'transfer'
-                        auth.description = f'TRF/CBB/FROM {auth.account_holder.upper()} TO {auth.receiver_name.upper()}'
-                        transaction_pin(auth)
-                        session_token(auth)
-                        auth.process_transaction(transfer=True)
 
-                        header()
-                        countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
-                        auth.transaction_record(transfer=True)
-                        auth.receiver_transaction_validation()
+                    auth.receiver_acct_num = bene[0]
+                    auth.receiver_name = bene[1]
+                    amount_to_be_transferred(auth)
+                    description(auth)
+                    auth.transaction_type = 'transfer'
+                    auth.description = f'TRF/CBB/FROM {auth.account_holder.upper()} TO {auth.receiver_name.upper()}'
+                    transaction_pin(auth)
+                    session_token(auth)
+                    auth.process_transaction(transfer=True)
 
-                        note = f"""
+                    header()
+                    countdown_timer(_register='\rProcessing Transaction', _duty='', countdown=5)
+                    auth.transaction_record(transfer=True)
+                    auth.receiver_transaction_validation()
+
+                    note = f"""
 Debit
 Amount :: NGN{auth.amount:,.2f}
 Acc :: {auth.account_number[:3]}******{auth.account_number[-3:]}
 Desc :: {auth.description}
 Time :: {datetime.datetime.today().now().time()}
 Balance :: {auth.account_balance}
-                        """
-                        notify.transfer_notification(
-                            title='Console Beta Banking',
-                            message=note,
-                            channel='ConsoleBeta'
-                        )
+                    """
+                    notify.transfer_notification(
+                        title='Console Beta Banking',
+                        message=note,
+                        channel='ConsoleBeta'
+                    )
 
-                        header()
-                        print("\n:: Money Sent Successfully")
-                        print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}")
-                        time.sleep(1.5)
+                    header()
+                    print(bold, brt_yellow, italic,"\n:: Money Sent Successfully")
+                    print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}", end)
+                    time.sleep(1.5)
 
-                        receipt(auth)
-
-                        time.sleep(1.5)
-                        break
                 elif re.search('^.*(back|return).*$', user_input.lower(), re.IGNORECASE):
                     del user_input
                     time.sleep(1.5)
                     go_back('signed_in', auth=auth)
                 else:
                     continue
+
+                receipt(auth)
+
+                time.sleep(1.5)
+                break
         else:
-            print("\n:: Daily Transaction Limit Exceeded")
+            print(red, "\n:: Daily Transaction Limit Exceeded", end)
             time.sleep(3)
             go_back('signed_in', auth=auth)
     except Exception as e:

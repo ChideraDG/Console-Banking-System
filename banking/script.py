@@ -263,7 +263,7 @@ def signed_in(auth: Authentication):
                 print(bold, magenta, "+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~"
                                      "+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+", sep='')
                 print(f"|{end}  {bold}{brt_black_bg}{brt_yellow}1. {display_name} ACCOUNT BALANCE{end}  {bold}{magenta}"
-                      f"|     {bold}{brt_black_bg}{brt_yellow}2. TRANSFER MONEY{end}    {bold}{magenta}|   {bold}"
+                      f"|    {bold}{brt_black_bg}{brt_yellow}2. TRANSFER MONEY{end}    {bold}{magenta}|    {bold}"
                       f"{brt_black_bg}{brt_yellow}3. CARD-LESS WITHDRAWAL{end}   {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
                 print(f"|{end}      {bold}{brt_black_bg}{brt_yellow}4. DEPOSIT MONEY{end}     {bold}{magenta}|     "

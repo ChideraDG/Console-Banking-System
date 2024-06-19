@@ -559,13 +559,13 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
                         self.transaction_record(loan=True)  # Record the transaction
 
                         note = f"""
-                        Debit
-                        Amount :: NGN{self.amount}
-                        Acc :: {self.account_number[:3]}******{self.account_number[-3:]}
-                        Desc :: {self.description}
-                        Time :: {datetime.today().now().time()}
-                        Balance :: {self.account_balance}
-                        """
+Debit
+Amount :: NGN{self.amount:,.2f}
+Acc :: {self.account_number[:3]}******{self.account_number[-3:]}
+Desc :: {self.description}
+Time :: {datetime.today().now().time()}
+Balance :: {self.account_balance}
+"""
 
                         # Send a notification to the user with the generated token
                         notify.loan_notification(

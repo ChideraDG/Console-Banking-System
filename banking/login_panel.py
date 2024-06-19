@@ -237,7 +237,8 @@ def forgot_username():
                                 continue
                     break
                 else:
-                    print(f"{red}\n:: Phone Number doesn't exist.{end}")  # Notify user if phone number/email doesn't exist.
+                    # Notify user if phone number/email doesn't exist.
+                    print(f"{red}\n:: Phone Number doesn't exist.{end}")
                     time.sleep(3)
                     continue
     except Exception as e:

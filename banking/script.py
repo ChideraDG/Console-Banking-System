@@ -209,29 +209,29 @@ def signed_in_header(auth: Authentication, account_balance_display: bool = True)
             display_name = 'HIDE'
             print(end='\n')
             # Print personalized greeting with account balance
-            print(f"Good {time_of_the_day}, {auth.first_name}"
+            print(bold, brt_yellow, italic, f"Good {time_of_the_day}, {auth.first_name}"
                   f"{' ' * (28 - len(auth.first_name + time_of_the_day))}"
                   f"{auth.account_balance} Naira"
                   f"{' ' * (24 - len(str(auth.account_balance)))}"
-                  f"Session Token: {auth.session_token}")
+                  f"Session Token: {auth.session_token}", end, sep='')
 
             # Print separator line with dynamic length
-            print(f"~" * 7, "~" * len(time_of_the_day), "~" * len(auth.first_name),
+            print(bold, magenta, f"~" * 7, "~" * len(time_of_the_day), "~" * len(auth.first_name),
                   " " * (28 - len(auth.first_name + time_of_the_day)), "~" * 6,
                   "~" * len(str(auth.account_balance)), " " * (24 - len(str(auth.account_balance))), "~~~~~~~~~~~~~~~",
-                  "~" * len(auth.session_token), sep='')
+                  "~" * len(auth.session_token), end, sep='')
         else:
             display_name = 'SHOW'
             print(end='\n')
-            # Print personalized greeting without account balance
-            print(f"Good {time_of_the_day}, {auth.first_name}"
+            # Print personalized greeting without an account balance
+            print(bold, brt_yellow, italic, f"Good {time_of_the_day}, {auth.first_name}"
                   f"{' ' * (58 - len(auth.first_name + time_of_the_day))}"
-                  f"Session Token: {auth.session_token}")
+                  f"Session Token: {auth.session_token}", end, sep='')
 
             # Print separator line with dynamic length
-            print(f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name),
+            print(bold, magenta, f"~~~~~~~", "~" * len(time_of_the_day), "~" * len(auth.first_name),
                   ' ' * (58 - len(auth.first_name + time_of_the_day)),
-                  "~~~~~~~~~~~~~~~", "~" * len(auth.session_token), sep='')
+                  "~~~~~~~~~~~~~~~", "~" * len(auth.session_token), end, sep='')
 
         return display_name
     except Exception as e:
@@ -260,21 +260,36 @@ def signed_in(auth: Authentication):
                 display_name = signed_in_header(auth, account_balance_display)
 
                 print(end='\n')
+                print(bold, magenta, "+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~"
+                                     "+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+", sep='')
+                print(f"|{end}  {bold}{brt_black_bg}{brt_yellow}1. {display_name} ACCOUNT BALANCE{end}  {bold}{magenta}"
+                      f"|     {bold}{brt_black_bg}{brt_yellow}2. TRANSFER MONEY{end}    {bold}{magenta}|   {bold}"
+                      f"{brt_black_bg}{brt_yellow}3. CARD-LESS WITHDRAWAL{end}   {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print(f"|  1. {display_name} ACCOUNT BALANCE  |    2. TRANSFER MONEY    |   3. CARD-LESS WITHDRAWAL    |")
+                print(f"|{end}      {bold}{brt_black_bg}{brt_yellow}4. DEPOSIT MONEY{end}     {bold}{magenta}|     "
+                      f"{bold}{brt_black_bg}{brt_yellow}5. COLLECT LOAN{end}     {bold}{magenta}|        {bold}"
+                      f"{brt_black_bg}{brt_yellow}6. UPDATE BVN{end}         {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print("|      4. DEPOSIT MONEY     |     5. COLLECT LOAN     |        6. UPDATE BVN         |")
+                print(f"|{end}  {bold}{brt_black_bg}{brt_yellow}7. TRANSACTION HISTORY{end}   {bold}{magenta}|  "
+                      f"{bold}{brt_black_bg}{brt_yellow}8. GENERATE STATEMENT{end}  {bold}{magenta}|       {bold}"
+                      f"{brt_black_bg}{brt_yellow}9. BENEFICIARIES{end}       {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print("|  7. TRANSACTION HISTORY   |  8. GENERATE STATEMENT  |       9. BENEFICIARIES       |")
+                print(f"|{end}    {bold}{brt_black_bg}{brt_yellow}10. UPGRADE ACCOUNT{end}    {bold}{magenta}|    "
+                      f"{bold}{brt_black_bg}{brt_yellow}11. OPEN ACCOUNT{end}     {bold}{magenta}|       {bold}"
+                      f"{brt_black_bg}{brt_yellow}12. CLOSE ACCOUNT{end}      {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print("|    10. UPGRADE ACCOUNT    |    11. OPEN ACCOUNT     |       12. CLOSE ACCOUNT      |")
+                print(f"|{end}     {bold}{brt_black_bg}{brt_yellow}13. BLOCK ACCOUNT{end}     {bold}{magenta}|  "
+                      f"{bold}{brt_black_bg}{brt_yellow}14. VIEW CONTACT INFO{end}  {bold}{magenta}|  {bold}"
+                      f"{brt_black_bg}{brt_yellow}15. CHANGE TRANSACTION PIN{end}  {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print("|     13. BLOCK ACCOUNT     |  14. VIEW CONTACT INFO  |  15. CHANGE TRANSACTION PIN  |")
+                print(f"|{end}  {bold}{brt_black_bg}{brt_yellow}16. UPDATE ACCOUNT INFO{end}  {bold}{magenta}|  "
+                      f"{bold}{brt_black_bg}{brt_yellow}17. BANK INFORMATION{end}   {bold}{magenta}|      {bold}"
+                      f"{brt_black_bg}{brt_yellow}18. FIXED DEPOSIT{end}       {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print("|  16. UPDATE ACCOUNT INFO  |  17. BANK INFORMATION   |      18. FIXED DEPOSIT       |")
-                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print("|                                     19. LOGOUT                                     |")
-                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                print(f"|{end}                                     {bold}{brt_black_bg}{brt_yellow}19. LOGOUT{end}    "
+                      f"                                 {bold}{magenta}|")
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+",
+                      end, sep='')
 
                 user_input = input(">>> ").strip()
 

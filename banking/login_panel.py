@@ -344,7 +344,7 @@ def login():
             print(f"{bold}{magenta}----------------{end}")
             print(f"{bold}{red}Forgot Password? Press 2{end}")
             print(f"{bold}{magenta}------------------------{end}")
-            print(f"{bold}{brt_yellow}\nWelcome Back, {auth.first_name}{end}")
+            print(f"{bold}{brt_yellow}{italic}\nWelcome Back, {auth.first_name}{end}")
             print(f"{bold}{magenta}~~~~~~~~~~~~~~" + '~' * len(auth.first_name) + f'{end}')
 
             # Prompt the user to enter their password.

@@ -255,7 +255,7 @@ def signed_in(auth: Authentication):
         from banking.generate_statement import generate_statement
         from banking.beneficiary import beneficiaries
         from banking.upgrade_account import upgrade
-
+        from banking.close_account import close_account
         account_balance_display = None
         while True:
             if auth.account_status == 'active':
@@ -334,6 +334,7 @@ def signed_in(auth: Authentication):
                     time.sleep(3)
                     continue
                 elif re.search('^12$', user_input):
+                    close_account(auth)
                     continue
                 elif re.search('^13$', user_input):
                     block_account(auth)

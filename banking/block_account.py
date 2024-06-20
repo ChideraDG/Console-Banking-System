@@ -135,7 +135,7 @@ def block_account(auth: Authentication):
 
                 countdown_timer(_register='\rBlocking Account', _duty='')
 
-                block_user(auth)
+                auth.block_account()
 
                 # Sending notification that the user account has been blocked
                 notify.send_notification(

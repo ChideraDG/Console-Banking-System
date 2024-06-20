@@ -4,7 +4,7 @@ from datetime import datetime, date
 from typing import Tuple, Any
 
 from bank_processes.authentication import Authentication
-from banking.script import log_error, go_back, header
+from banking.main_menu import log_error, go_back, header
 
 
 def get_month_details(month_of_birth: int):

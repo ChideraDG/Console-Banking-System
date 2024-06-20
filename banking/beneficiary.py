@@ -1,7 +1,7 @@
 import time
 from animation.colors import *
 from bank_processes.authentication import Authentication
-from banking.script import log_error, go_back, header
+from banking.main_menu import log_error, go_back, header
 
 
 def beneficiaries(auth: Authentication):

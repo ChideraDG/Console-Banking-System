@@ -5,7 +5,7 @@ from typing import Any
 from bank_processes.authentication import Authentication, verify_data
 from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
-from banking.script import header, go_back, log_error
+from banking.main_menu import header, go_back, log_error
 from animation.colors import *
 
 

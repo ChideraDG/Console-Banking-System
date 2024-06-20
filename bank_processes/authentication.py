@@ -204,7 +204,7 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         6. Checks loan payments.
         """
 
-        from banking.script import log_error, go_back  # Import necessary functions for error logging and navigation
+        from banking.main_menu import log_error, go_back  # Import necessary functions for error logging and navigation
 
         try:
             # Set user attributes
@@ -431,7 +431,7 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
            e. Validates the receiver's transaction.
         4. Handles any exceptions that occur during the process and rolls back the transaction if necessary.
         """
-        from banking.script import log_error, go_back  # Import necessary functions for error logging and navigation
+        from banking.main_menu import log_error, go_back  # Import necessary functions for error logging and navigation
 
         try:
             # Query to fetch all active fixed deposits ordered by start date
@@ -502,7 +502,7 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         None
         """
         from banking.login_panel import notify
-        from banking.script import log_error, go_back
+        from banking.main_menu import log_error, go_back
         try:
             self.loan.email = self.email  # Set the loan email to the user's email
 

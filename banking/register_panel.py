@@ -7,7 +7,7 @@ from bank_processes.notification import Notification
 from bank_processes.user import User
 from bank_processes.account import Account
 from bank_processes.authentication import verify_data
-from banking.script import header, go_back, log_error
+from banking.main_menu import header, go_back, log_error
 from animation.colors import *
 
 user = User()

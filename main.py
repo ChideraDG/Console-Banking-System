@@ -1,4 +1,4 @@
-from banking.script import signing_in
+from banking.main_menu import signing_in
 
 
 def main():

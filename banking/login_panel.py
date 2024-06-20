@@ -2,11 +2,11 @@ import re
 import time
 from datetime import datetime
 from banking.register_panel import countdown_timer
-from banking.script import (header,
-                            go_back,
-                            signed_in,
-                            findDate,
-                            log_error)
+from banking.main_menu import (header,
+                               go_back,
+                               signed_in,
+                               findDate,
+                               log_error)
 from bank_processes.authentication import (Authentication,
                                            verify_data,
                                            check_account_status,

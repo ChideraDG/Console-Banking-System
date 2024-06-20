@@ -6,7 +6,7 @@ from animation.colors import *
 from bank_processes.authentication import Authentication, verify_data
 from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
-from banking.script import go_back, header, log_error
+from banking.main_menu import go_back, header, log_error
 from banking.transfer_money import session_token, transaction_pin
 
 

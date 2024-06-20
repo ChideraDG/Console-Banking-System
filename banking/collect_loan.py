@@ -5,7 +5,7 @@ from bank_processes.authentication import Authentication
 from bank_processes.loan import Loan
 from banking.fixed_deposit import calculate_interest, get_month
 from banking.register_panel import countdown_timer
-from banking.script import go_back, header, calculate_end_date, log_error
+from banking.main_menu import go_back, header, calculate_end_date, log_error
 from banking.deposit_money import deposit_default
 
 loan = Loan()

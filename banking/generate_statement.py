@@ -5,7 +5,7 @@ from typing import Any
 from bank_processes.authentication import Authentication
 from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
-from banking.script import header, log_error, go_back, findDate
+from banking.main_menu import header, log_error, go_back, findDate
 
 
 notify = Notification()

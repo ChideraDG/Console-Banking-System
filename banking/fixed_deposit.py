@@ -197,7 +197,7 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
             break
     except Exception as e:
         log_error(error=e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def safelock(auth: Authentication) -> tuple[float, str]:
@@ -283,7 +283,7 @@ def safelock(auth: Authentication) -> tuple[float, str]:
     except Exception as e:
         # Log any exceptions to a file and navigate back to the main script.
         log_error(error=e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, interest_to_earn: float,
@@ -479,7 +479,7 @@ Balance :: {auth.account_balance}
     except Exception as e:
         # Log any exceptions to a file and navigate back to the main script
         log_error(error=e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def create_safelock(auth: Authentication):
@@ -553,7 +553,7 @@ def create_safelock(auth: Authentication):
                 time.sleep(2)
     except Exception as e:
         log_error(error=e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 days_left: int = 0
@@ -738,7 +738,7 @@ Balance :: {auth.account_balance}
                         continue
     except Exception as e:
         log_error(error=e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def ongoing_display_deposits(auth: Authentication, data: list, _details: list, _key: int):
@@ -809,7 +809,7 @@ def ongoing_display_deposits(auth: Authentication, data: list, _details: list, _
 
     except Exception as e:
         log_error(error=e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def paid_display_deposits(data: list, _details: list, _key: int):
@@ -951,7 +951,7 @@ def ongoing_deposits(auth: Authentication):
                 break
     except Exception as e:
         log_error(error=e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def paid_back_deposits(auth: Authentication):
@@ -1009,7 +1009,7 @@ def paid_back_deposits(auth: Authentication):
                 break
     except Exception as e:
         log_error(error=e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def access_safelock(auth: Authentication):
@@ -1074,4 +1074,4 @@ def access_safelock(auth: Authentication):
             break  # Exit loop after handling the input
     except Exception as e:
         log_error(error=e)
-        go_back('script')
+        go_back('signed_in', auth=auth)

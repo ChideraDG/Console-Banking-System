@@ -40,7 +40,7 @@ def fetch_user_loan_data(auth: Authentication):
     except Exception as e:
         # Log the error to a file and notify the user
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def block_user(auth: Authentication):
@@ -69,7 +69,7 @@ def block_user(auth: Authentication):
     except Exception as e:
         # Log the error to a file and notify the user
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def block_account(auth: Authentication):
@@ -150,7 +150,7 @@ def block_account(auth: Authentication):
                 time.sleep(2)
 
                 # Go back to the signup/login page
-                go_back('script')
+                go_back('signed_in', auth=auth)
 
             else:
                 print(f"\n:: Wrong Input")
@@ -160,4 +160,4 @@ def block_account(auth: Authentication):
         except Exception as e:
             # Log the error to a file and notify the user
             log_error(e)
-            go_back('script')
+            go_back('signed_in', auth=auth)

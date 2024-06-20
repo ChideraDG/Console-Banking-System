@@ -406,4 +406,4 @@ def update_bvn(auth: Authentication):
 
     except Exception as e:
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)

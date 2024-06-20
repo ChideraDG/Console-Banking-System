@@ -254,6 +254,7 @@ def signed_in(auth: Authentication):
         from banking.block_account import block_account
         from banking.generate_statement import generate_statement
         from banking.beneficiary import beneficiaries
+        from banking.upgrade_account import upgrade
 
         account_balance_display = None
         while True:
@@ -326,9 +327,11 @@ def signed_in(auth: Authentication):
                     beneficiaries(auth)
                     continue
                 elif re.search('^10$', user_input):
+                    upgrade(auth)
                     continue
                 elif re.search('^11$', user_input):
-                    print("This option is UNAVAILABLE")
+                    print(green, "\n:: OPEN ACCOUNT option is UNAVAILABLE right now.", end)
+                    time.sleep(3)
                     continue
                 elif re.search('^12$', user_input):
                     continue
@@ -353,7 +356,7 @@ def signed_in(auth: Authentication):
                 elif re.search('^(19|.*(back|return).*)$', user_input):
                     auth.user_logout()
                     del user_input
-                    signing_in()
+                    login()
                     break
                 else:
                     del user_input

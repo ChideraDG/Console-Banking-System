@@ -165,7 +165,7 @@ def by_date(*, current_year) -> str | tuple[str, str]:
         return start_date, end_date  # Return the start and end dates.
     except Exception as e:
         log_error(e)  # Log any exceptions.
-        go_back('script')  # Return to the previous menu.
+        go_back('signed_in', auth=auth)  # Return to the previous menu.
 
 
 def by_month(*, current_year: int) -> str | tuple[int, Any]:
@@ -360,5 +360,5 @@ def transaction_history(auth: Authentication):
 
     except Exception as e:
         log_error(e)  # Log any exceptions.
-        go_back('script')  # Return to the previous menu.
+        go_back('signed_in', auth=auth)  # Return to the previous menu.
 

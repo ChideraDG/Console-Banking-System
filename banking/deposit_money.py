@@ -101,7 +101,7 @@ Balance :: {auth.account_balance}
     except Exception as e:
         # Log the error to a file and notify the user
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def deposit_default(auth: Authentication, _amount: float, _description: str):

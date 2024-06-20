@@ -325,14 +325,6 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         del self.overdraft_protection
         del self.account_tier
         del self.transaction_limit
-        del self.start_date
-        del self.status
-        del self.payback_time
-        del self.payback_date
-        del self.interest_rate
-        del self.initial_deposit
-        del self.deposit_title
-        del self.deposit_id
 
     def password_validation(self) -> bool:
         """

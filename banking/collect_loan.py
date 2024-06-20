@@ -485,7 +485,7 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
                 continue
     except Exception as e:
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def types_of_loans(auth: Authentication):
@@ -685,7 +685,7 @@ def types_of_loans(auth: Authentication):
                     continue
     except Exception as e:
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def preview(auth: Authentication):
@@ -713,4 +713,4 @@ def preview(auth: Authentication):
                 continue
     except Exception as e:
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)

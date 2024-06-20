@@ -696,7 +696,6 @@ class FixedDeposit(Account, ABC):
 
     @property
     def deposit_id(self):
-
         return self.__deposit_id
 
     @deposit_id.setter

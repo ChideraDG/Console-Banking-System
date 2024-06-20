@@ -1,6 +1,5 @@
 import re
 import time
-
 from banking.main_menu import go_back, log_error, header
 from bank_processes.notification import Notification
 from bank_processes.authentication import Authentication

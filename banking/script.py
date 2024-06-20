@@ -82,7 +82,7 @@ def findDate(date):
     # Get the current month number (1=January, 12=December)
     monthNumber = datetime.datetime.now().month
 
-    # List of days of the week where index 0 is Monday and index 6 is Sunday
+    # List of days of the week when index 0 is Monday and index 6 is Sunday
     days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
     # List of month names where index 0 is January and index 11 is December
@@ -253,6 +253,7 @@ def signed_in(auth: Authentication):
         from banking.trans_history import transaction_history
         from banking.block_account import block_account
         from banking.generate_statement import generate_statement
+        from banking.beneficiary import beneficiaries
 
         account_balance_display = None
         while True:
@@ -288,10 +289,10 @@ def signed_in(auth: Authentication):
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
                 print(f"|{end}                                     {bold}{brt_black_bg}{brt_yellow}19. LOGOUT{end}    "
                       f"                                 {bold}{magenta}|")
-                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+",
-                      end, sep='')
+                print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+", sep='')
 
                 user_input = input(">>> ").strip()
+                print(end, end='')
 
                 if re.search('^1$', user_input):
                     if display_name == 'SHOW':
@@ -319,9 +320,10 @@ def signed_in(auth: Authentication):
                     transaction_history(auth)
                     continue
                 elif re.search('^8$', user_input):
-                    generate_statement()
+                    generate_statement(auth)
                     continue
                 elif re.search('^9$', user_input):
+                    beneficiaries(auth)
                     continue
                 elif re.search('^10$', user_input):
                     continue

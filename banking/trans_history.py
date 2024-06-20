@@ -291,6 +291,8 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
 
+        print("Transaction History")
+        print("~~~~~~~~~~~~~~~~~~~\n")
         print(trans)  # Print the transaction history.
         time.sleep(3)  # Wait for 3 seconds before continuing.
 

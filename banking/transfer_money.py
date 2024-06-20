@@ -130,7 +130,7 @@ def recipient_account_number(auth: Authentication):
                     checking.account_number = _input
                     recipient_name = checking.account_holder
                     print(bold, red, f'  :: {recipient_name.upper()} ::', end, sep='')
-                    print(bold, brt_yellow, '\nis this the correct RECIPIENT NAME you want to send money to?', end, sep='')
+                    print(bold, brt_yellow, '\nis this the correct RECIPIENT NAME you want to send money to?', sep='')
                     print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')
                     print(f'{bold}{magenta}~~~~~~     ~~~~~{end}')
 
@@ -584,6 +584,8 @@ Balance :: {auth.account_balance}
                     go_back('signed_in', auth=auth)
                 else:
                     continue
+
+                time.sleep(1.5)
 
                 receipt(auth)
 

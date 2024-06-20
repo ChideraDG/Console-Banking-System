@@ -12,6 +12,7 @@ from banking.transfer_money import session_token, transaction_pin
 
 notify = Notification()
 
+
 def get_month(month: int) -> tuple[str, int]:
     """
     Generates the month name and days within that month according to the month number received.

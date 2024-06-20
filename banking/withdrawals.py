@@ -97,6 +97,7 @@ Balance :: {auth.account_balance}
                         header()
                         print("\n:: Withdraw Successfully")
                         print(f":: You withdrew N{auth.amount}")
+
                         time.sleep(1.5)
 
                         receipt(auth)

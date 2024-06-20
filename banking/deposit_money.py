@@ -90,6 +90,7 @@ Balance :: {auth.account_balance}
                 header()
                 print("\n:: Deposit Successfully")
                 print(f":: You deposited N{auth.amount} into your Beta Account")
+
                 time.sleep(1.5)
 
                 receipt(auth)

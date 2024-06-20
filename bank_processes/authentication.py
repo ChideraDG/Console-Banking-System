@@ -234,6 +234,8 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
             self.account_tier = self.account_tier
             self.transaction_limit = self.transaction_limit
             self.fixed_account = self.fixed_account
+            self.loan.user_id = None
+            self.login_attempts = 0
 
             # Update transaction and transfer limits for savings Tier 1 accounts
             if self.account_type == 'savings' and self.account_tier == 'Tier 1':
@@ -323,6 +325,14 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         del self.overdraft_protection
         del self.account_tier
         del self.transaction_limit
+        del self.start_date
+        del self.status
+        del self.payback_time
+        del self.payback_date
+        del self.interest_rate
+        del self.initial_deposit
+        del self.deposit_title
+        del self.deposit_id
 
     def password_validation(self) -> bool:
         """
@@ -635,7 +645,7 @@ Balance :: {self.account_balance}
         return self.__failed_login_attempts
 
     @login_attempts.setter
-    def login_attempts(self, login_attempt: str):
+    def login_attempts(self, login_attempt: int):
         self.__failed_login_attempts = login_attempt
 
     @login_attempts.deleter

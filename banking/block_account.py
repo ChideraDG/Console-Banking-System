@@ -25,6 +25,7 @@ def fetch_user_loan_data(auth: Authentication):
     """
     try:
         auth.loan.email = auth.email
+
         if auth.loan.user_id is not None:
             query = f"""
             SELECT status_id 

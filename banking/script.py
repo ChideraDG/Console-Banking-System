@@ -328,6 +328,7 @@ def signed_in(auth: Authentication):
                 elif re.search('^10$', user_input):
                     continue
                 elif re.search('^11$', user_input):
+                    print("This option is UNAVAILABLE")
                     continue
                 elif re.search('^12$', user_input):
                     continue
@@ -352,7 +353,7 @@ def signed_in(auth: Authentication):
                 elif re.search('^(19|.*(back|return).*)$', user_input):
                     auth.user_logout()
                     del user_input
-                    login()
+                    signing_in()
                     break
                 else:
                     del user_input

@@ -14,18 +14,22 @@ def beneficiaries(auth: Authentication):
             print(end='\n')
             if beneficiary:
                 header()
-                print('\n')
+                print(bold, brt_yellow, '\nBENEFICIARIES', end, sep='')
+                print(bold, magenta, '~~~~~~~~~~~~~', end, sep='', end='\n\n')
 
                 # Display the list of beneficiaries
-                for account_number, account_name in beneficiary.items():
-                    print(f'{account_number} - {account_name[0]} : {account_name[1].upper()}')
-                    print('    ~~~', "~" * (len(account_name[0]) + len(account_name[1])), sep='')
+                for number, name in beneficiary.items():
+                    print(bold, red, f'{number} - {name[0]} : {name[1].upper()}', end, sep='')
+                    print(bold, magenta, '    ~~~', "~" * (len(name[0]) + len(name[1])), sep='')
 
-                input("\nTO RETURN -+- PRESS ENTER  ")  # Prompt the user to press Enter to return.
+                input("\nTO RETURN -+- PRESS ENTER  ",)  # Prompt the user to press Enter to return.
+                print(end)
+
                 break
             else:
                 print(red, '\n' + ':: You have NO Beneficiaries', end)
                 time.sleep(3)
+
                 break
     except Exception as e:
         log_error(e)

@@ -468,7 +468,7 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
 
                 # Process the deposit
                 deposit_default(auth,
-                                _amount=_interest + amount,
+                                _amount=amount,
                                 _description=f'LOAN/CBB/DEPOSIT TO {auth.account_holder}')
 
                 # Generate a loan receipt

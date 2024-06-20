@@ -134,12 +134,14 @@ def password():
                         print(f"{red}\n:: Wrong Password.{end}")
                         print(f"{red}Account has being Suspended. Reset your password.{end}")
                         time.sleep(3)
+                        del _password
                         break
                     else:
                         print(f"{red}\n:: Wrong Password.{end}")
                         print(red, 3 - auth.login_attempts,
                               ' attempts remaining.\nAccount will be suspended after exhausting attempts', end, sep='')
                         time.sleep(3)
+                        del _password
                         continue
 
         auth.account_lockout()

@@ -138,3 +138,7 @@ class Loan(DataBase):
     @user_id.setter
     def user_id(self, _user_id):
         self.__user_id = _user_id
+
+    @user_id.deleter
+    def user_id(self):
+        del self.__user_id

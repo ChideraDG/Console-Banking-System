@@ -13,6 +13,7 @@ notify = Notification()
 def fetch_user_loan_data(auth: Authentication):
     """
     Handles the process of fetching the loan data of a user
+
     Parameters
     ----------
     auth : Authentication
@@ -45,6 +46,7 @@ def fetch_user_loan_data(auth: Authentication):
 def block_user(auth: Authentication):
     """
     Handles the operation of blocking a user account
+
     Parameters
     ----------
     auth : Authentication
@@ -87,57 +89,73 @@ def block_account(auth: Authentication):
     while True:
         try:
             header()
+
             # Checking if the user has collected a loan before
             if fetch_user_loan_data(auth):
                 # Checking if user has any outstanding loan or not. If any, user is prompted to pay before proceeding
                 if fetch_user_loan_data(auth) == 1:
-                    print('You have an outstanding loan!!! Pay back before attempting to block your account!!!')
+                    print('\n:: You have an outstanding loan!!! \n'
+                          ':: Pay back before attempting to block your account!!!')
                     time.sleep(3)
                     break
 
                 elif fetch_user_loan_data(auth) == 3:
                     pass
 
-            else:
-                pass
             # Printing blocking confirmation and instructions
-            print(f' {bold}{auth.first_name}')
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            print(f'\n {bold}{auth.account_holder}')
+            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
             print(f'| {red}This will block your account                                       {end}|')
             print("| You're about to start the process of blocking your bank account.   |")
             print('| You will no longer be able to make transactions.                   |')
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
             print(f'| {red}What else should you know                                          {end}|')
-            print(f'| You can restore your account if it was accidentally or wrongfully  |')
+            print('| You can restore your account if it was accidentally or wrongfully  |')
             print('| blocked.                                                           |')
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+
             # Prompting user to confirm account blocking
-            block = input(f'{" " * int((70 - 18) / 2)}{red}BLOCK ACCOUNT? y/n>>> {end}').lower()
+            block = input(f'{red}BLOCK ACCOUNT? y/n \n>>> {end}').lower()
 
             # Handling user input for cancelling the process
             if re.search('^.*(back|return|n).*$', block.strip(), re.IGNORECASE):
+                time.sleep(1)
                 break
 
-            elif block == 'y':
+            elif block == 'y' or block == 'yes':
                 # Asking user for reason and proceeding with blocking
                 question = input(
-                    f'Dear {auth.first_name}, please share with us why you want to block your account>>> ')
-                print(f'{auth.first_name}, Console Banking wishes you all the best and we hope you patronize us again')
-                time.sleep(3)
+                    f'\nDear {auth.first_name}, please share with us why you want to block your account \n>>> ')
+
+                print(f'\n{auth.account_holder}, '
+                      f'Console Banking wishes you all the best and we hope you patronize us again')
+                time.sleep(5)
+
                 header()
+
                 countdown_timer(_register='\rBlocking Account', _duty='')
+
                 block_user(auth)
+
                 # Sending notification that the user account has been blocked
                 notify.send_notification(
-                    title='Account Blocked',
-                    message=f'{auth.first_name}, you have successfully blocked your account',
+                    title='Console Beta Banking',
+                    message=f'{auth.account_holder}, you have successfully blocked your account.',
                     channel='block_account'
                 )
+
                 header()
+
                 print("\n:: Account blocked successfully, You will be taken to the signup/login page")
                 time.sleep(2)
+
                 # Go back to the signup/login page
                 go_back('script')
+
+            else:
+                print(f"\n:: Wrong Input")
+                time.sleep(1.5)
+                continue
 
         except Exception as e:
             # Log the error to a file and notify the user

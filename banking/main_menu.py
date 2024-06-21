@@ -364,7 +364,7 @@ def signed_in(auth: Authentication):
                     continue
             else:
                 header()
-                print("\n:: Account is BLOCKED.\n:: Meet the admin to UNBLOCK your account.")
+                print(red, "\n:: Account is BLOCKED.\n:: Meet the admin to UNBLOCK your account.", end)
                 time.sleep(5)
                 break
     except Exception as e:

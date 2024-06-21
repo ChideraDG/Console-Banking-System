@@ -1,7 +1,7 @@
 import re
 import time
 from banking.update_bvn import first_name, last_name, middle_name, address, phone_number, email, date_of_birth
-from banking.script import go_back, header, log_error
+from banking.main_menu import go_back, header, log_error
 from banking.register_panel import countdown_timer
 
 

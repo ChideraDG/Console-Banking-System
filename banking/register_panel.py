@@ -7,7 +7,8 @@ from bank_processes.notification import Notification
 from bank_processes.user import User
 from bank_processes.account import Account
 from bank_processes.authentication import verify_data
-from banking.script import header, go_back, log_error
+from banking.main_menu import header, go_back, log_error
+from animation.colors import *
 
 user = User()
 bvn = BVN()
@@ -32,7 +33,10 @@ def countdown_timer(_register, _duty: str = 'creation', countdown: int = 3):
 
     print()
     while countdown != 0:
+        print(bold, brt_black_bg, brt_blue, end='')  # coloring
         print(f"processing {_register} {_duty}... {countdown}", end='')
+        print(end, end='')  # coloring
+
         countdown -= 1
         time.sleep(1)
 
@@ -51,9 +55,12 @@ def first_name() -> str:
 
     """
     while True:
-        print("\nInput your First Name:")
-        print("~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nInput your First Name:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+        print(bold, brt_yellow, end='')
         name = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', name, re.IGNORECASE):
             del name
@@ -65,7 +72,7 @@ def first_name() -> str:
             if re.search('^[a-z-]+$', name, re.IGNORECASE):
                 break
             else:
-                print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
+                print(red, "\n:: Names should be in letters only.\nExample: James, Mary, etc.", end, sep='')
                 time.sleep(2)
                 continue
 
@@ -82,9 +89,12 @@ def middle_name() -> str:
 
     """
     while True:
-        print("\nInput your Middle Name:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nInput your Middle Name:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+        print(bold, brt_yellow, end='')
         name = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', name, re.IGNORECASE):
             del name
@@ -96,7 +106,7 @@ def middle_name() -> str:
             if re.search('[a-z-]+', name, re.IGNORECASE):
                 break
             else:
-                print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
+                print(red, "\n:: Names should be in letters only.\nExample: James, Mary, etc.", end, sep='')
                 time.sleep(2)
                 continue
 
@@ -106,9 +116,12 @@ def middle_name() -> str:
 def last_name() -> str:
     """Gets the last name of the User."""
     while True:
-        print("\nInput your Last Name:")
-        print("~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nInput your Last Name:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+        print(bold, brt_yellow, end='')
         name = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', name, re.IGNORECASE):
             del name
@@ -120,7 +133,7 @@ def last_name() -> str:
             if re.search('[a-z-]+', name, re.IGNORECASE):
                 break
             else:
-                print("\n:: Names should be in letters only.\nExample: James, Mary, etc.")
+                print(red, "\n:: Names should be in letters only.\nExample: James, Mary, etc.", end, sep='')
                 time.sleep(2)
                 continue
 
@@ -130,16 +143,19 @@ def last_name() -> str:
 def gender() -> str:
     """Gets the gender of the User."""
     while True:
-        print("\nInput your Gender:")
-        print("~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nInput your Gender:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+        print(bold, brt_yellow, end='')
         _gender = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', _gender, re.IGNORECASE):
             del _gender
             go_back('script')
         else:
             if not re.search('^(male|female)$', _gender, re.IGNORECASE):
-                print("\n:: Gender should be either Male or Female only.")
+                print(red, "\n:: Gender should be either Male or Female only.", end, sep='')
                 time.sleep(2)
                 continue
             else:
@@ -150,9 +166,12 @@ def gender() -> str:
 
 def address() -> str:
     """Gets the address of the User."""
-    print("\nInput your Address:")
-    print("~~~~~~~~~~~~~~~~~~~")
+    print(bold, brt_yellow, "\nInput your Address:", end, sep='')
+    print(bold, magenta, "~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+    print(bold, brt_yellow, end='')
     _address = input(">>> ").strip()
+    print(end, end='')
 
     if re.search('^.*(back|return).*$', _address, re.IGNORECASE):
         del _address
@@ -169,9 +188,12 @@ def date_of_birth() -> str:
     days = 21
 
     while True:
-        print("\nInput your Year of Birth:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nInput your Year of Birth:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+        print(bold, brt_yellow, end='')
         year_of_birth = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', year_of_birth, re.IGNORECASE):
             del year_of_birth
@@ -182,20 +204,23 @@ def date_of_birth() -> str:
             else:
                 if year_of_birth.isdigit():
                     if not int(year_of_birth) <= max_year:
-                        print("\n:: Age is less than 18")
+                        print(red, "\n:: Age is less than 18", end, sep='')
                     elif not 1900 < int(year_of_birth):
-                        print("\n:: Year is less than 1900")
+                        print(red, "\n:: Year is less than 1900", end, sep='')
                 else:
-                    print("\n:: Year of Birth should be in digits.\nExample: 2001, 2004, etc.")
+                    print(red, "\n:: Year of Birth should be in digits.\nExample: 2001, 2004, etc.", end, sep='')
                 time.sleep(2)
                 continue
 
     time.sleep(1)
 
     while True:
-        print("\nInput your Month of Birth:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nInput your Month of Birth:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+        print(bold, brt_yellow, end='')
         month_of_birth = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', month_of_birth, re.IGNORECASE):
             del month_of_birth
@@ -206,9 +231,10 @@ def date_of_birth() -> str:
             else:
                 if month_of_birth.isdigit():
                     if not 0 < int(month_of_birth) <= 12:
-                        print("\n:: Month of Birth should be between Zero(0) and Twelve(12)")
+                        print(red, "\n:: Month of Birth should be between Zero(0) and Twelve(12)", end, sep='')
                 else:
-                    print("\n:: Month of Birth should be in digits.\nExample: 2 means February, 4 means April, etc.")
+                    print(red, "\n:: Month of Birth should be in digits.\nExample: 2 means February, "
+                               "4 means April, etc.", end, sep='')
                 time.sleep(2)
                 continue
 
@@ -256,9 +282,12 @@ def date_of_birth() -> str:
     time.sleep(1)
 
     while True:
-        print("\nInput your Day of Birth:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nInput your Day of Birth:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+        print(bold, brt_yellow, end='')
         day_of_birth = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', day_of_birth, re.IGNORECASE):
             del day_of_birth
@@ -269,9 +298,9 @@ def date_of_birth() -> str:
             else:
                 if day_of_birth.isdigit():
                     if not 0 < int(day_of_birth) <= days:
-                        print(f"\n:: Day of Birth should be within the number of days in {month_name}")
+                        print(red, f"\n:: Day of Birth should be within the number of days in {month_name}", end,sep='')
                 else:
-                    print("\n:: Day of Birth should be in digits.\nExample: 2, 4, 10, etc.")
+                    print(red, "\n:: Day of Birth should be in digits.\nExample: 2, 4, 10, etc.", end, sep='')
                 time.sleep(2)
                 continue
 
@@ -281,24 +310,26 @@ def date_of_birth() -> str:
 def e_mail() -> str:
     """Gets the E-mail of the User."""
     while True:
-        print("\nInput your E-mail:")
-        print("~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nInput your E-mail:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~", end, sep='')
+
+        print(bold, brt_yellow, end='')
         email = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', email, re.IGNORECASE):
             del email
             go_back('script')
         else:
             if verify_data('email', 0, email):
-                print('\n*ERROR*')
-                print("-> Email already exist")
+                print(red, "\n:: Email already exist", end, sep='')
                 time.sleep(2)
                 continue
 
             if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", email, re.IGNORECASE):
                 break
             else:
-                print("\n:: Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.")
+                print(red, "\n:: Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.", end, sep='')
                 time.sleep(2)
                 continue
 
@@ -308,23 +339,27 @@ def e_mail() -> str:
 def phone_number() -> str:
     """Gets the phone number of the User."""
     while True:
-        print("\nInput your Phone Number:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nInput your Phone Number:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+        print(bold, brt_yellow, end='')
         phoneNumber = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', phoneNumber, re.IGNORECASE):
             del phoneNumber
             go_back('script')
         else:
             if verify_data('phone_number', 0, phoneNumber):
-                print("\n:: Phone Number already exist")
+                print(red, "\n:: Phone Number already exist", end, sep='')
                 time.sleep(3)
                 continue
 
             if re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', phoneNumber) and 11 <= len(phoneNumber) <= 15:
                 break
             else:
-                print("\n:: Phone Number should be in digits  only.\nExample: 08076542879, +2348033327493 etc.")
+                print(red, "\n:: Phone Number should be in digits  only.\nExample: "
+                           "08076542879, +2348033327493 etc.", end, sep='')
                 time.sleep(2)
                 continue
 
@@ -334,23 +369,26 @@ def phone_number() -> str:
 def account_type() -> str:
     """Gets the account type of the User."""
     while True:
-        print("\nWhat is your desired Account Type:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print('1 -> Saving \n2 -> Current')
+        print(bold, brt_yellow, "\nWhat is your desired Account Type:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+        print(bold, brt_yellow, '1 -> Savings \n2 -> Current', end, sep='')
+
+        print(bold, brt_yellow, end='')
         accountType = input('>>> ')
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', accountType, re.IGNORECASE):
             del accountType
             go_back('script')
         else:
-            if re.search('^(1|Saving)$', accountType, re.IGNORECASE):
+            if re.search('^(1|Savings)$', accountType, re.IGNORECASE):
                 accountType = 'Savings'
                 break
             elif re.search('^(2|Current)$', accountType, re.IGNORECASE):
                 accountType = 'Current'
                 break
             else:
-                print("\n:: Choose between Saving or Current or Fixed Deposit")
+                print(red, "\n:: Choose between Savings or Current", end, sep='')
                 time.sleep(2)
                 continue
 
@@ -360,10 +398,13 @@ def account_type() -> str:
 def account_password() -> str:
     """Gets the account password of the User."""
     while True:
-        print("\nEnter a new Bank Application Password:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print("\nEnter Password:")
+        print(bold, brt_yellow, "\nEnter a new Bank Application Password:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+        print(bold, brt_yellow, "\nEnter Password:", end, sep='')
+
+        print(bold, brt_yellow, end='')
         accountPassword = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', accountPassword, re.IGNORECASE):
             del accountPassword
@@ -371,18 +412,22 @@ def account_password() -> str:
         else:
             if re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$. #!%*?&])[A-Za-z\d@$!#% *?.&]{8,}$", accountPassword):
                 while True:
-                    print("\nRe-enter Password:")
+                    print(bold, brt_yellow, "\nRe-enter Password:", end, sep='')
+
+                    print(bold, brt_yellow, end='')
                     second_input = input(">>> ").strip()
+                    print(end, end='')
+
                     if accountPassword == second_input:
                         break
                     else:
-                        print("\n:: Passwords are not the same")
+                        print(red, "\n:: Passwords are not the same", end, sep='')
                         time.sleep(2)
                         continue
                 break
             else:
-                print("\n:: Password must be more than 8 characters.")
-                print(":: Password should contain a number, a lowercase letter, and uppercase letter and a symbol.")
+                print(red, "\n:: Password must be more than 8 characters.", end, sep='')
+                print(red, ":: Password should contain a number, a lowercase letter, and uppercase letter and a symbol.", end, sep='')
                 time.sleep(2)
                 continue
 
@@ -392,10 +437,13 @@ def account_password() -> str:
 def transaction_pin():
     """Gets the transaction pin of the User."""
     while True:
-        print("\nEnter your new Transaction Pin: (A Four-digit Number)")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "~"*len(' (A Four-digit Number)'), sep="")
-        print("\nEnter Transaction Pin:")
+        print(bold, brt_yellow, "\nEnter your new Transaction Pin: (A Four-digit Number)", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "~"*len(' (A Four-digit Number)'), end, sep="")
+        print(bold, brt_yellow, "\nEnter Transaction Pin:", end, sep='')
+
+        print(bold, brt_yellow, end='')
         transactionPin = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', transactionPin, re.IGNORECASE):
             del transactionPin
@@ -403,17 +451,21 @@ def transaction_pin():
         else:
             if re.search(r"^\d{4}$", transactionPin):
                 while True:
-                    print("\nRe-Enter Transaction Pin:")
+                    print(bold, brt_yellow, "\nRe-Enter Transaction Pin:", end, sep='')
+
+                    print(bold, brt_yellow, end='')
                     second_input = input(">>> ").strip()
+                    print(end, end='')
+
                     if transactionPin == second_input:
                         break
                     else:
-                        print("\n:: Passwords are not the same")
+                        print(red, "\n:: Passwords are not the same", end, sep='')
                         time.sleep(2)
                         continue
                 break
             else:
-                print("\n:: Transaction Pin must be only 4 digits.")
+                print(red, "\n:: Transaction Pin must be only 4 digits.", end, sep='')
                 time.sleep(2)
                 continue
 
@@ -440,20 +492,20 @@ def register_bvn_account():
     """
 
     header()
-    print('\nMessage from the CUSTOMER SERVICE OFFICER:::')
-    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print("'You will need to Create your BVN first, then Create your Bank Account'. ")
+    print(f'{brt_blue}\nMessage from the CUSTOMER SERVICE OFFICER:::{end}')
+    print(f'{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}')
+    print(f"{brt_blue}'You will need to Create your BVN first, then Create your Bank Account'.{end}")
     time.sleep(3)
 
     # BVN Form
     try:
         header()
 
-        print("\nBank Verification Number Creation".upper())
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, f"\nBank Verification Number Creation".upper(), end, sep='')
+        print(f"{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
 
-        print("\nInstruction: Carefully fill in your details")
-        print("==========================================")
+        print(f"{bold}{red}\nInstruction: Carefully fill in your details{end}")
+        print(f"{bold}{magenta}==========================================={end}")
 
         time.sleep(1)
 
@@ -503,10 +555,10 @@ def register_bvn_account():
         time.sleep(1)
         header()
 
-        print("\nBank Verification Number Successfully Created.")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(f"\nUser: {bvn.last_name} {bvn.first_name} {bvn.middle_name}")
-        print(f"BVN NUMBER: {bvn.bvn_number}")
+        print(bold, brt_yellow, f"\nBank Verification Number Successfully Created.", end, sep='')
+        print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
+        print(f"{bold}{brt_black_bg}{brt_yellow}\nUser: {bvn.last_name} {bvn.first_name} {bvn.middle_name}{end}")
+        print(f"{bold}{brt_black_bg}{brt_yellow}BVN NUMBER: {bvn.bvn_number}{end}")
 
         notify.bvn_creation_notification(
             title='Console Beta Banking',
@@ -522,11 +574,11 @@ def register_bvn_account():
     try:
         header()
 
-        print("\nBank Account Details Creation".upper())
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, f"\nBank Account Details Creation".upper(), end, sep='')
+        print(f"{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
 
-        print("\nInstruction: Carefully fill in your details")
-        print("==========================================")
+        print(f"{bold}{red}\nInstruction: Carefully fill in your details{end}")
+        print(f"{bold}{magenta}=========================================={end}")
 
         time.sleep(1)
 
@@ -605,10 +657,10 @@ def register_bvn_account():
         time.sleep(1)
         header()
 
-        print("\nBank Account Successfully Created.")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        print(f"\nUSERNAME: {user.username}")
-        print(f"ACCOUNT NUMBER: {account.account_number}")
+        print(f"{bold}{brt_yellow}\nBank Account Successfully Created.{end}")
+        print(f"{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
+        print(f"{bold}{brt_black_bg}{brt_yellow}\nUSERNAME: {user.username}{end}")
+        print(f"{bold}{brt_black_bg}{brt_yellow}ACCOUNT NUMBER: {account.account_number}{end}")
 
         notify.account_creation_notification(
             title='Console Beta Banking',

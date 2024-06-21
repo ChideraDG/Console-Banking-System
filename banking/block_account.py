@@ -1,7 +1,6 @@
 import re
 import time
-
-from banking.script import go_back, log_error, header
+from banking.main_menu import go_back, log_error, header
 from bank_processes.notification import Notification
 from bank_processes.authentication import Authentication
 from animation.colors import *
@@ -26,6 +25,7 @@ def fetch_user_loan_data(auth: Authentication):
     """
     try:
         auth.loan.email = auth.email
+
         if auth.loan.user_id is not None:
             query = f"""
             SELECT status_id 
@@ -40,7 +40,7 @@ def fetch_user_loan_data(auth: Authentication):
     except Exception as e:
         # Log the error to a file and notify the user
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def block_user(auth: Authentication):
@@ -69,7 +69,7 @@ def block_user(auth: Authentication):
     except Exception as e:
         # Log the error to a file and notify the user
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def block_account(auth: Authentication):
@@ -135,7 +135,7 @@ def block_account(auth: Authentication):
 
                 countdown_timer(_register='\rBlocking Account', _duty='')
 
-                block_user(auth)
+                auth.block_account()
 
                 # Sending notification that the user account has been blocked
                 notify.send_notification(
@@ -150,7 +150,7 @@ def block_account(auth: Authentication):
                 time.sleep(2)
 
                 # Go back to the signup/login page
-                go_back('script')
+                go_back('signed_in', auth=auth)
 
             else:
                 print(f"\n:: Wrong Input")
@@ -160,4 +160,4 @@ def block_account(auth: Authentication):
         except Exception as e:
             # Log the error to a file and notify the user
             log_error(e)
-            go_back('script')
+            go_back('signed_in', auth=auth)

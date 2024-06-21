@@ -517,7 +517,7 @@ class Transaction(Account, ABC):
         is_month : bool, optional
             Flag to indicate if the query should be for a specific month.
         """
-        from banking.script import log_error, go_back
+        from banking.main_menu import log_error, go_back
 
         try:
             column = ('transaction_date_time', 'description', 'transaction_id', 'transaction_amount', 'account_balance')
@@ -637,7 +637,7 @@ class Transaction(Account, ABC):
         is_month : bool, optional
             Flag to indicate if the query should be for a specific month.
         """
-        from banking.script import log_error, go_back
+        from banking.main_menu import log_error, go_back
 
         try:
             # Store the columns of the transaction history in a tuple

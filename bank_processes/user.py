@@ -123,7 +123,7 @@ class User:
         """
         from bank_processes.authentication import token_auth
         from banking.register_panel import account_password
-        from banking.script import header, go_back
+        from banking.main_menu import header, go_back
 
         try:
             while True:

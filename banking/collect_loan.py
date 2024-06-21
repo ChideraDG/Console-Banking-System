@@ -1,13 +1,11 @@
 import datetime
 import re
 from time import sleep
-from typing import Tuple
-
 from bank_processes.authentication import Authentication
 from bank_processes.loan import Loan
 from banking.fixed_deposit import calculate_interest, get_month
 from banking.register_panel import countdown_timer
-from banking.script import go_back, header, calculate_end_date, log_error
+from banking.main_menu import go_back, header, calculate_end_date, log_error
 from banking.deposit_money import deposit_default
 
 loan = Loan()
@@ -470,7 +468,7 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
 
                 # Process the deposit
                 deposit_default(auth,
-                                _amount=_interest + amount,
+                                _amount=amount,
                                 _description=f'LOAN/CBB/DEPOSIT TO {auth.account_holder}')
 
                 # Generate a loan receipt
@@ -487,7 +485,7 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
                 continue
     except Exception as e:
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def types_of_loans(auth: Authentication):
@@ -687,7 +685,7 @@ def types_of_loans(auth: Authentication):
                     continue
     except Exception as e:
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def preview(auth: Authentication):
@@ -715,4 +713,4 @@ def preview(auth: Authentication):
                 continue
     except Exception as e:
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)

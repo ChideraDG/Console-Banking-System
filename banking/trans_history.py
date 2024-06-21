@@ -4,7 +4,7 @@ from datetime import datetime, date
 from typing import Tuple, Any
 
 from bank_processes.authentication import Authentication
-from banking.script import log_error, go_back, header
+from banking.main_menu import log_error, go_back, header
 
 
 def get_month_details(month_of_birth: int):
@@ -165,7 +165,7 @@ def by_date(*, current_year) -> str | tuple[str, str]:
         return start_date, end_date  # Return the start and end dates.
     except Exception as e:
         log_error(e)  # Log any exceptions.
-        go_back('script')  # Return to the previous menu.
+        go_back('signed_in', auth=auth)  # Return to the previous menu.
 
 
 def by_month(*, current_year: int) -> str | tuple[int, Any]:
@@ -263,6 +263,7 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
         header()  # Call the header function to display the header.
         print()  # Print a blank line for spacing.
 
+        trans = None
         if criteria == 'date':
             trans = auth.transaction_history(
                 start_date=datetime(int(start_date.split('-')[0]), int(start_date.split('-')[1]),
@@ -274,9 +275,6 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
                 print(":: You don't have any transaction within this time frame.")
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
-            else:
-                print(trans)  # Print the transaction history.
-                time.sleep(3)  # Wait for 3 seconds before continuing.
 
         elif criteria == 'month':
             trans = auth.transaction_history(month=month, year=year, is_month=True)
@@ -285,9 +283,6 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
                 print(f":: You don't have any transaction in the month of {month.title()}, {year}")
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
-            else:
-                print(trans)  # Print the transaction history.
-                time.sleep(3)  # Wait for 3 seconds before continuing.
 
         elif criteria == 'all':
             trans = auth.transaction_history()
@@ -295,9 +290,11 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
                 print(":: You don't have any transaction on your account.")
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
-            else:
-                print(trans)  # Print the transaction history.
-                time.sleep(3)  # Wait for 3 seconds before continuing.
+
+        print("Transaction History")
+        print("~~~~~~~~~~~~~~~~~~~\n")
+        print(trans)  # Print the transaction history.
+        time.sleep(3)  # Wait for 3 seconds before continuing.
 
         input("\nTO RETURN -+- PRESS ENTER  ")  # Prompt the user to press Enter to return.
         break
@@ -363,5 +360,5 @@ def transaction_history(auth: Authentication):
 
     except Exception as e:
         log_error(e)  # Log any exceptions.
-        go_back('script')  # Return to the previous menu.
+        go_back('signed_in', auth=auth)  # Return to the previous menu.
 

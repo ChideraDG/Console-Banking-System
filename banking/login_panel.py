@@ -2,17 +2,18 @@ import re
 import time
 from datetime import datetime
 from banking.register_panel import countdown_timer
-from banking.script import (header,
-                            go_back,
-                            signed_in,
-                            findDate,
-                            log_error)
+from banking.main_menu import (header,
+                               go_back,
+                               signed_in,
+                               findDate,
+                               log_error)
 from bank_processes.authentication import (Authentication,
                                            verify_data,
                                            check_account_status,
                                            get_username_from_database,
                                            token_auth)
 from bank_processes.notification import Notification
+from animation.colors import *
 
 auth = Authentication()
 notify = Notification()
@@ -43,9 +44,12 @@ def username():
     """
     try:
         while True:
-            print("\nENTER YOUR USERNAME:")
-            print("~~~~~~~~~~~~~~~~~~~~")
+            print(f"{bold}{brt_yellow}\nENTER YOUR USERNAME:{end}")
+            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~{end}")
+
+            print(brt_yellow, bold, end='')  # coloring
             _username = input(">>> ").strip()
+            print(end, end='')  # coloring
 
             if re.search('^1$', _username):
                 return _username
@@ -58,13 +62,13 @@ def username():
 
             if verify_data('username', 1, _username):
                 if check_account_status(_username)[1] == 'suspended':
-                    print("\n:: Account is SUSPENDED.\n:: Reset your Password.")
+                    print(f"{brt_red}\n:: Account is SUSPENDED.\n:: Reset your Password.{end}")
                     del _username
                     time.sleep(3)
                     go_back('script')
                     break
                 elif check_account_status(_username)[1] == 'blocked':
-                    print("\n:: Account is BLOCKED.\n:: Meet the admin to UNBLOCK your account.")
+                    print(f"{brt_red}\n:: Account is BLOCKED.\n:: Meet the admin to UNBLOCK your account.{end}")
                     del _username
                     time.sleep(3)
                     go_back('script')
@@ -73,7 +77,7 @@ def username():
                     auth.username = _username
                     return _username
             else:
-                print("\n:: Wrong Username.")
+                print(f"{brt_red}\n:: Wrong Username.{end}")
                 time.sleep(3)
                 continue
     except Exception as e:
@@ -106,9 +110,12 @@ def password():
     """
     try:
         while auth.login_attempts < 3:
-            print("\nENTER YOUR PASSWORD:")
-            print("~~~~~~~~~~~~~~~~~~~~")
+            print(f"{bold}{brt_yellow}\nENTER YOUR PASSWORD:{end}")
+            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~{end}")
+
+            print(brt_yellow, bold, end='')  # coloring
             _password = input(">>> ").strip()
+            print(end, end='')  # coloring
 
             if re.search('^.*(back|return).*$', _password, re.IGNORECASE):
                 return 'back'
@@ -124,15 +131,17 @@ def password():
                 else:
                     auth.login_attempts = auth.login_attempts + 1
                     if auth.login_attempts == 3:
-                        print("\n:: Wrong Password.")
-                        print("Account has being Suspended. Reset your password.")
+                        print(f"{red}\n:: Wrong Password.{end}")
+                        print(f"{red}Account has being Suspended. Reset your password.{end}")
                         time.sleep(3)
+                        del _password
                         break
                     else:
-                        print("\n:: Wrong Password.")
-                        print(3 - auth.login_attempts,
-                              'attempts remaining.\nAccount will be suspended after exhausting attempts')
+                        print(f"{red}\n:: Wrong Password.{end}")
+                        print(red, 3 - auth.login_attempts,
+                              ' attempts remaining.\nAccount will be suspended after exhausting attempts', end, sep='')
                         time.sleep(3)
+                        del _password
                         continue
 
         auth.account_lockout()
@@ -162,73 +171,81 @@ def forgot_username():
     """
     try:
         while True:
-            print("\nENTER YOUR REGISTERED PHONE NUMBER/E-MAIL:")
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            _input = input(">>> ").strip().lower()
+            print(f"{bold}{brt_yellow}\nENTER YOUR REGISTERED PHONE NUMBER/E-MAIL:{end}")
+            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
 
-            if re.search('^.*(back|return).*$', _input.lower()):
-                del _input
+            print(brt_yellow, bold, end='')
+            _input = input(">>> ").strip().lower()  # Get user input and convert it to lowercase.
+            print(end, end='')
+
+            if re.search('^.*(back|return).*$', _input.lower()):  # Check if the user wants to go back.
+                del _input  # Delete the input to free memory.
                 go_back('script')
                 break
             else:
-                if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _input, re.IGNORECASE):
-                    _username: str = get_username_from_database(_input, email=True)
+                if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _input, re.IGNORECASE):  # Validate email format.
+                    _username: str = get_username_from_database(_input, email=True)  # Retrieve username by email.
                     column = 'email'
-                elif re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', _input) and 11 <= len(_input) <= 15:
-                    _username: str = get_username_from_database(_input, phone_number=True)
+                elif re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', _input) and 11 <= len(_input) <= 15:  # Validate phone number format.
+                    _username: str = get_username_from_database(_input, phone_number=True)  # Retrieve username by phone number.
                     column = 'phone_number'
                 else:
-                    print("\nWrong Input")
+                    print(f"{brt_red}\nWrong Input{end}")  # Notify user of incorrect input format.
                     time.sleep(3)
                     continue
 
-                if verify_data(column, 1, _input):
+                if verify_data(column, 1, _input):  # Verify if the input exists in the database.
                     auth.username = _username
                     time.sleep(1)
-                    _password = password()
+                    _password = password()  # Prompt for password.
                     time.sleep(1)
 
-                    start_time = time.time()
-                    _token = token_auth()
+                    start_time = time.time()  # Start timing for token verification.
+                    _token = token_auth()  # Send a token for verification.
                     while True:
-                        print("\nENTER YOUR TOKEN NUMBER:")
-                        print("~~~~~~~~~~~~~~~~~~~~~~~~")
-                        _tokenNumber = input(">>> ").strip()
+                        print(f"{bold}{brt_yellow}\nENTER YOUR TOKEN NUMBER:{end}")
+                        print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~~~~~{end}")
+                        _tokenNumber = input(">>> ").strip()  # Get the token number input from the user.
 
-                        if re.search('^.*(back|return).*$', _tokenNumber, re.IGNORECASE):
-                            del _tokenNumber
+                        if re.search('^.*(back|return).*$', _tokenNumber, re.IGNORECASE):  # Check if the user wants to go back.
+                            del _tokenNumber  # Delete the token number to free memory.
                             go_back('script')
                         else:
-                            elapsed_time = time.time() - start_time
-                            if elapsed_time < 300.0:
-                                if _token == _tokenNumber:
+                            elapsed_time = time.time() - start_time  # Calculate elapsed time.
+                            if elapsed_time < 300.0:  # Check if the token is entered within 5 minutes.
+                                if _token == _tokenNumber:  # Verify if the token matches.
                                     notify.forgot_username_notification(
                                         title='Console Beta Banking',
                                         message=f"Your Username: {_username}. \nDon't Share it.",
                                         channel='Forgot_Username'
                                     )
-                                    print("\nUsername Successfully Recovered. \nUsername sent to your notification")
+
+                                    print(red, end='')
+                                    print("\n:: Username Successfully Recovered.\n:: Username sent to your notification")
+                                    print(end, end='')
+
                                     break
                                 else:
-                                    print("\n*ERROR*\nWrong Token Number.\n\nTry Again")
+                                    print(f"{red}\n:: Wrong Token Number.\n:: Try Again{end}")  # Notify user of wrong token.
                                     time.sleep(3)
                                     continue
                             else:
-                                print("\n:: Time is already over 5 minutes.")
+                                print(f"{red}\n:: Time is already over 5 minutes.{end}")  # Notify user of timeout.
                                 time.sleep(1)
-                                print("\n:: Re-Sending Token Number")
-                                start_time = time.time()
-                                _token = token_auth()
+                                print(f"{brt_yellow}\n:: Re-Sending Token Number{end}")
+                                start_time = time.time()  # Reset start time for new token.
+                                _token = token_auth()  # Resend token.
                                 time.sleep(3)
                                 continue
                     break
                 else:
-                    print("\n:: Phone Number doesn't exist.")
+                    # Notify user if phone number/email doesn't exist.
+                    print(f"{red}\n:: Phone Number doesn't exist.{end}")
                     time.sleep(3)
                     continue
     except Exception as e:
-        log_error(e)
-        go_back('script')
+        log_error(e)  # Log the error if an exception occurs.
+        go_back('script')  # Navigate back to the main script.
 
 
 def forgot_password():
@@ -249,9 +266,12 @@ def forgot_password():
     """
     try:
         while True:
-            print("\nENTER YOUR USERNAME:")
-            print("~~~~~~~~~~~~~~~~~~~~")
+            print(f"{bold}{brt_yellow}\nENTER YOUR USERNAME:{end}")
+            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~{end}")
+
+            print(brt_yellow, bold, end='')  # coloring
             _input = input(">>> ").strip()
+            print(end, end='')  # coloring
 
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
@@ -270,7 +290,7 @@ def forgot_password():
                     )
                     break
                 else:
-                    print("\n:: Username doesn't exist.")
+                    print(f"{red}\n:: Username doesn't exist.{end}")
                     time.sleep(3)
                     continue
     except Exception as e:
@@ -300,10 +320,10 @@ def login():
             header()
 
             # Provide options for going back or retrieving a forgotten username.
-            print("\nGo Back? Press 1")
-            print("----------------")
-            print("Forgot Username? Press 2")
-            print("------------------------")
+            print(f"{bold}{red}\nGo Back? Press 1{end}")
+            print(f"{bold}{magenta}----------------{end}")
+            print(f"{bold}{red}Forgot Username? Press 2{end}")
+            print(f"{bold}{magenta}------------------------{end}")
 
             # Prompt the user to enter their username.
             _username: str = username()
@@ -323,12 +343,12 @@ def login():
             header()
 
             # Provide options for going back or retrieving a forgotten password.
-            print("\nGo Back? Press 1")
-            print("----------------")
-            print("Forgot Password? Press 2")
-            print("------------------------")
-            print(f"\nWelcome Back, {auth.first_name}")
-            print("~~~~~~~~~~~~~~" + '~' * len(auth.first_name))
+            print(f"{bold}{red}\nGo Back? Press 1{end}")
+            print(f"{bold}{magenta}----------------{end}")
+            print(f"{bold}{red}Forgot Password? Press 2{end}")
+            print(f"{bold}{magenta}------------------------{end}")
+            print(f"{bold}{brt_yellow}{italic}\nWelcome Back, {auth.first_name}{end}")
+            print(f"{bold}{magenta}~~~~~~~~~~~~~~" + '~' * len(auth.first_name) + f'{end}')
 
             # Prompt the user to enter their password.
             _password = password()

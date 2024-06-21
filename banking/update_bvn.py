@@ -2,7 +2,7 @@ import re
 import time
 from animation.colors import *
 from bank_processes.authentication import Authentication
-from banking.script import go_back, header, log_error
+from banking.main_menu import go_back, header, log_error
 from banking.register_panel import countdown_timer
 from bank_processes.bvn import BVN
 
@@ -406,4 +406,4 @@ def update_bvn(auth: Authentication):
 
     except Exception as e:
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)

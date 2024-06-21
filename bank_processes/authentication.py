@@ -204,7 +204,7 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         6. Checks loan payments.
         """
 
-        from banking.script import log_error, go_back  # Import necessary functions for error logging and navigation
+        from banking.main_menu import log_error, go_back  # Import necessary functions for error logging and navigation
 
         try:
             # Set user attributes
@@ -234,6 +234,8 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
             self.account_tier = self.account_tier
             self.transaction_limit = self.transaction_limit
             self.fixed_account = self.fixed_account
+            self.loan.user_id = None
+            self.login_attempts = 0
 
             # Update transaction and transfer limits for savings Tier 1 accounts
             if self.account_type == 'savings' and self.account_tier == 'Tier 1':
@@ -429,7 +431,7 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
            e. Validates the receiver's transaction.
         4. Handles any exceptions that occur during the process and rolls back the transaction if necessary.
         """
-        from banking.script import log_error, go_back  # Import necessary functions for error logging and navigation
+        from banking.main_menu import log_error, go_back  # Import necessary functions for error logging and navigation
 
         try:
             # Query to fetch all active fixed deposits ordered by start date
@@ -500,7 +502,7 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         None
         """
         from banking.login_panel import notify
-        from banking.script import log_error, go_back
+        from banking.main_menu import log_error, go_back
         try:
             self.loan.email = self.email  # Set the loan email to the user's email
 
@@ -559,13 +561,13 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
                         self.transaction_record(loan=True)  # Record the transaction
 
                         note = f"""
-                        Debit
-                        Amount :: NGN{self.amount}
-                        Acc :: {self.account_number[:3]}******{self.account_number[-3:]}
-                        Desc :: {self.description}
-                        Time :: {datetime.today().now().time()}
-                        Balance :: {self.account_balance}
-                        """
+Debit
+Amount :: NGN{self.amount:,.2f}
+Acc :: {self.account_number[:3]}******{self.account_number[-3:]}
+Desc :: {self.description}
+Time :: {datetime.today().now().time()}
+Balance :: {self.account_balance}
+"""
 
                         # Send a notification to the user with the generated token
                         notify.loan_notification(
@@ -635,7 +637,7 @@ class Authentication(Transaction, FixedDeposit, Notification, ABC):
         return self.__failed_login_attempts
 
     @login_attempts.setter
-    def login_attempts(self, login_attempt: str):
+    def login_attempts(self, login_attempt: int):
         self.__failed_login_attempts = login_attempt
 
     @login_attempts.deleter

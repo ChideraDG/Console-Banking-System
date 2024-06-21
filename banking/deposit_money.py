@@ -4,7 +4,7 @@ from datetime import datetime
 from bank_processes.authentication import Authentication
 from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
-from banking.script import go_back, header, log_error
+from banking.main_menu import go_back, header, log_error
 from banking.transfer_money import session_token, transaction_pin, receipt
 
 notify = Notification()
@@ -90,6 +90,7 @@ Balance :: {auth.account_balance}
                 header()
                 print("\n:: Deposit Successfully")
                 print(f":: You deposited N{auth.amount} into your Beta Account")
+
                 time.sleep(1.5)
 
                 receipt(auth)
@@ -100,7 +101,7 @@ Balance :: {auth.account_balance}
     except Exception as e:
         # Log the error to a file and notify the user
         log_error(e)
-        go_back('script')
+        go_back('signed_in', auth=auth)
 
 
 def deposit_default(auth: Authentication, _amount: float, _description: str):

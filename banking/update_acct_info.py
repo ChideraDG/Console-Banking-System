@@ -15,11 +15,11 @@ def update_acct_info():
 
             print(end='\n')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
-            print('|   1. FIRST NAME   |   2. MIDDLE NAME   |   3. LAST NAME   |')
+            print('|   1. FIRST NAME   |  2. MIDDLE NAME    |   3. LAST NAME   |')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
-            print('|  4. PHONE NUMBER  |  5. DATE OF BIRTH  |   6. ADDRESS     |')
+            print('|   4. PHONE NUMBER |  5. DATE OF BIRTH  |   6. ADDRESS     |')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
-            print('|                    7. EMAIL                               |')
+            print('|                      7. EMAIL                             |')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
 
             user_input = input(">>> ").strip()

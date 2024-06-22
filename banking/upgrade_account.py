@@ -11,14 +11,24 @@ def by_tier(auth: Authentication):
         while True:
             header()
 
-            if auth.account_tier == 'Tier 1':
-                print('hi')
-                time.sleep(3)
-                break
-            elif auth.account_tier == 'Tier 2':
-                pass
-            elif auth.account_tier == 'Tier 3':
-                print(green, '\n:: You have the highest banking Tier already.', end)
+            if auth.account_type == 'savings':
+                if auth.account_tier == 'Tier 1':
+                    print('hi')
+                    time.sleep(3)
+                    break
+                elif auth.account_tier == 'Tier 2':
+                    pass
+                elif auth.account_tier == 'Tier 3':
+                    print(green, '\n:: You have the highest Savings Account banking Tier already.', end)
+            elif auth.account_tier == 'current':
+                if auth.account_tier == 'Tier 1':
+                    print('hi')
+                    time.sleep(3)
+                    break
+                elif auth.account_tier == 'Tier 2':
+                    pass
+                elif auth.account_tier == 'Tier 3':
+                    print(green, '\n:: You have the highest Current Account banking Tier already.', end)
             else:
                 print(green, '\n:: Meet your Account Officer for this inquiry.', end)
     except Exception as e:

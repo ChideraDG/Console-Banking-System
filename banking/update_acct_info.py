@@ -47,15 +47,30 @@ def update_acct_info(auth: Authentication):
                 if name == 'break':
                     continue
 
+                else:
+                    user.update_personal_info(_column_name='middle_name', _data=name, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
+
             elif user_input == '3':
                 name = last_name()
                 if name == 'break':
                     continue
 
+                else:
+                    user.update_personal_info(_column_name='last_name', _data=name, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
+
             elif user_input == '4':
                 number = phone_number()
                 if number == 'break':
                     continue
+
+                else:
+                    user.update_personal_info(_column_name='phone_number', _data=number, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
 
             elif user_input == '5':
                 dob = date_of_birth()
@@ -66,6 +81,11 @@ def update_acct_info(auth: Authentication):
                 if dob == 'break':
                     continue
 
+                else:
+                    user.update_personal_info(_column_name='date_of_birth', _data=dob, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
+
             elif user_input == '6':
                 _address = address()
                 countdown_timer('New Address', 'in')
@@ -75,10 +95,20 @@ def update_acct_info(auth: Authentication):
                 if _address == 'break':
                     continue
 
+                else:
+                    user.update_personal_info(_column_name='address', _data=_address, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
+
             elif user_input == '7':
                 mail = email()
                 if mail == 'break':
                     continue
+
+                else:
+                    user.update_personal_info(_column_name='email', _data=mail, _id_number=auth.user_id)
+                    time.sleep(1.5)
+                    break
 
     except Exception as e:
         log_error(e)

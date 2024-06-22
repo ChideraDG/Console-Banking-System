@@ -150,7 +150,7 @@ def block_account(auth: Authentication):
                 time.sleep(2)
 
                 # Go back to the signup/login page
-                go_back('signed_in', auth=auth)
+                go_back('script', auth=auth)
 
             else:
                 print(f"\n:: Wrong Input")

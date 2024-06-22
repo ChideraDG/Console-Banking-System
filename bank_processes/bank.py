@@ -13,20 +13,6 @@ class Bank:
     # interactions with customers and stakeholders.
 
     @classmethod
-    def open_account(cls, account_type, f_name, l_name, address, city, postal_code, region, monthly_sal, phone):
-        """this will enable a user open an account"""
-        print("~~~~~~~~~~~~")
-        print("OPEN ACCOUNT")
-        print("~~~~~~~~~~~~")
-        clear()
-        cls.acc_type = input("What account type: ")
-
-    @classmethod
-    def close_account(cls):
-        """Method to close an existing account"""
-        pass
-
-    @classmethod
     def view_account_details(cls):
         """Method to view account details"""
         pass

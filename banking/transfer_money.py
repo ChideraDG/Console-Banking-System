@@ -58,11 +58,14 @@ def beneficiaries(auth: Authentication, checking_beneficiary: bool = False) -> A
 
                     # Display the list of beneficiaries
                     for account_number, account_name in beneficiary.items():
-                        print(f'{account_number} - {account_name[0]} : {account_name[1].upper()}')
-                        print('    ~~~', "~" * (len(account_name[0]) + len(account_name[1])), sep='')
+                        print(green, f'{account_number} - {account_name[0]} : {account_name[1].upper()}', end, sep='')
+                        print(bold, magenta, '    ~~~', "~" * (len(account_name[0]) + len(account_name[1])), end, sep='')
 
-                    print("\nPick a Beneficiary:")
+                    print(bold, brt_yellow, "\nPick a Beneficiary:", end, sep='')
+
+                    print(bold, magenta, end='')
                     _input = input('>>> ')
+                    print(end, end='')
 
                     if _input.isdigit():
                         if int(_input) <= len(beneficiary):
@@ -195,9 +198,12 @@ def amount_to_be_transferred(auth: Authentication):
         while True:
             header()
 
-            print("\nENTER AMOUNT:")
-            print("~~~~~~~~~~~~~")
+            print(bold, brt_yellow, "\nENTER AMOUNT:", end, sep='')
+            print(bold, magenta, "~~~~~~~~~~~~~", end, sep='')
+
+            print(bold, magenta, end='')
             _input = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
@@ -205,12 +211,12 @@ def amount_to_be_transferred(auth: Authentication):
                 go_back('signed_in', auth=auth)
             else:
                 if re.search("^[0-9]$", _input):
-                    print("\n:: Amount MUST be above N10")
+                    print(red, "\n:: Amount MUST be above N10", end, sep='')
                     del _input
                     time.sleep(3)
                     continue
                 elif re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", _input, re.IGNORECASE) is None:
-                    print("\n:: Digits Only")
+                    print(red, "\n:: Digits Only", end, sep='')
                     del _input
                     time.sleep(2)
                     continue
@@ -218,10 +224,13 @@ def amount_to_be_transferred(auth: Authentication):
                     auth.amount = float(_input)
                     if auth.transaction_validation(transfer_limit=True)[0]:
                         if auth.transaction_validation(amount=True)[0]:
-                            print(f'\nyou will be charged N{auth.charges} for this transfer')
-                            print('1. Yes  |  2. No')
-                            print('~~~~~~     ~~~~~')
+                            print(bold, brt_yellow, f'\nyou will be charged N{auth.charges} for this transfer', sep='')
+                            print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')
+                            print(f'{bold}{magenta}~~~~~~     ~~~~~{end}')
+
+                            print(bold, magenta, end='')
                             checking_input = input(">>> ").strip()
+                            print(end, end='')
 
                             if checking_input == '1' or checking_input.lower() == 'yes':
                                 break
@@ -236,12 +245,12 @@ def amount_to_be_transferred(auth: Authentication):
                                 time.sleep(1)
                                 continue
                         else:
-                            print(f"\n:: {auth.transaction_validation(amount=True)[1]}")
+                            print(red, f"\n:: {auth.transaction_validation(amount=True)[1]}", end, sep='')
                             del _input
                             time.sleep(2)
                             continue
                     else:
-                        print(f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}")
+                        print(red, f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}", end, sep='')
                         del _input
                         time.sleep(2)
                         go_back('signed_in', auth=auth)
@@ -272,9 +281,12 @@ def description(auth):
     try:
         header()
 
-        print("\nENTER NARRATION:")
-        print("~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nENTER NARRATION:", end, sep='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~", end, sep='')
+
+        print(bold, magenta, end='')
         _input = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', _input.lower(), re.IGNORECASE):
             del _input
@@ -313,16 +325,19 @@ def transaction_pin(auth: Authentication):
         while auth.login_attempts < 3:
             header()
 
-            print("\nENTER TRANSACTION PIN:")
-            print("~~~~~~~~~~~~~~~~~~~~~~")
+            print(bold, brt_yellow, "\nENTER TRANSACTION PIN:", end, sep='')
+            print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+            print(bold, magenta, end='')
             _input = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', _input.lower(), re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
             elif re.search("^[a-z]$", _input):
-                print("\n:: No Alphabets")
+                print(red, "\n:: No Alphabets", end, sep='')
                 del _input
                 time.sleep(2)
                 continue
@@ -332,16 +347,16 @@ def transaction_pin(auth: Authentication):
                 else:
                     auth.login_attempts = auth.login_attempts + 1
                     if auth.login_attempts == 3:
-                        print("\n:: incorrect PIN.")
-                        print("Account has being BLOCKED. Reset your pin.")
+                        print(red, "\n:: incorrect PIN.")
+                        print("Account has being BLOCKED. Reset your pin.", end)
                         time.sleep(3)
                         del _input
                         auth.block_account()
                         go_back('script')
                     else:
-                        print("\n:: incorrect PIN.")
+                        print(red, "\n:: incorrect PIN.")
                         print(3 - auth.login_attempts,
-                              'attempts remaining.\nAccount will be BLOCKED after exhausting attempts')
+                              'attempts remaining.\nAccount will be BLOCKED after exhausting attempts', red)
                         time.sleep(3)
                         continue
     except Exception as e:
@@ -375,16 +390,19 @@ def session_token(auth: Authentication):
         while auth.login_attempts < 3:
             header()
 
-            print("\nENTER SESSION TOKEN:")
-            print("~~~~~~~~~~~~~~~~~~~~")
+            print(bold, brt_yellow, "\nENTER SESSION TOKEN:", end, sep='')
+            print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~", end, sep='')
+
+            print(bold, magenta, end='')
             _input = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', _input.lower(), re.IGNORECASE):
                 del _input
                 time.sleep(1.5)
                 go_back('signed_in', auth=auth)
             elif re.search("^[a-z]$", _input):
-                print("\n:: No Alphabets")
+                print(red, "\n:: No Alphabets", end, sep='')
                 del _input
                 time.sleep(2)
                 continue
@@ -396,16 +414,16 @@ def session_token(auth: Authentication):
                 else:
                     auth.login_attempts = auth.login_attempts + 1
                     if auth.login_attempts == 3:
-                        print("\n:: incorrect PIN.")
-                        print("Account has being BLOCKED. Reset your pin.")
+                        print(red, "\n:: incorrect PIN.")
+                        print("Account has being BLOCKED. Reset your pin.", end)
                         time.sleep(3)
                         del _input
                         auth.block_account()
                         go_back('script')
                     else:
-                        print("\n:: incorrect PIN.")
+                        print(red, "\n:: incorrect PIN.")
                         print(3 - auth.login_attempts,
-                              'attempts remaining.\nAccount will be BLOCKED after exhausting attempts')
+                              'attempts remaining.\nAccount will be BLOCKED after exhausting attempts', end)
                         time.sleep(3)
                         continue
     except Exception as e:
@@ -421,10 +439,13 @@ def receipt(auth: Authentication):
 
         auth.transaction_receipts(auth.session_token)
 
-        print('\nDo you want to save the receipt?')
-        print('1. Yes  |  2. No')
-        print('~~~~~~     ~~~~~')
+        print(bold, brt_yellow, '\nDo you want to save the receipt?', sep='')
+        print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')
+        print(f'{bold}{magenta}~~~~~~     ~~~~~{end}')
+
+        print(bold, magenta, end='')
         user_input = input(">>> ").strip()
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', user_input.lower(), re.IGNORECASE):
             break
@@ -432,7 +453,7 @@ def receipt(auth: Authentication):
             with open('notification/receipt', 'w') as file:
                 file.write(auth.transaction_receipts(auth.session_token))
 
-            print('Receipt Saved Successfully')
+            print(green, 'Receipt Saved Successfully', end, sep='')
             time.sleep(2)
             break
         elif re.search('^(2|no)$', user_input.lower()):
@@ -574,7 +595,7 @@ Balance :: {auth.account_balance}
                     )
 
                     header()
-                    print(bold, brt_yellow, italic,"\n:: Money Sent Successfully")
+                    print(bold, brt_yellow, italic, "\n:: Money Sent Successfully")
                     print(f":: You sent N{auth.amount} to {auth.receiver_name.upper()}", end)
                     time.sleep(1.5)
 

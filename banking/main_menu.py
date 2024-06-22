@@ -346,6 +346,8 @@ def signed_in(auth: Authentication):
                 elif re.search('^16$', user_input):
                     continue
                 elif re.search('^17$', user_input):
+                    print(green, "\n:: BANK INFORMATION option is UNAVAILABLE right now.", end)
+                    time.sleep(3)
                     continue
                 elif re.search('^18$', user_input):
                     if auth.fixed_account == 'yes':

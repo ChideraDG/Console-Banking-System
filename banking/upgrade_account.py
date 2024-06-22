@@ -13,8 +13,7 @@ def by_tier(auth: Authentication):
 
             if auth.account_type == 'savings':
                 if auth.account_tier == 'Tier 1':
-                    print('hi')
-                    time.sleep(3)
+                    
                     break
                 elif auth.account_tier == 'Tier 2':
                     pass
@@ -22,8 +21,7 @@ def by_tier(auth: Authentication):
                     print(green, '\n:: You have the highest Savings Account banking Tier already.', end)
             elif auth.account_tier == 'current':
                 if auth.account_tier == 'Tier 1':
-                    print('hi')
-                    time.sleep(3)
+
                     break
                 elif auth.account_tier == 'Tier 2':
                     pass
@@ -42,8 +40,7 @@ def by_account_type(auth: Authentication):
             header()
 
             if auth.account_type == 'savings':
-                print('see')
-                time.sleep(3)
+
                 break
             elif auth.account_tier == 'current':
                 pass

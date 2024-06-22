@@ -1,6 +1,5 @@
 *.pyc
 /notification
-/__pycache__
 /bank_processes/__pycache__
 /animation/__pycache__
 /banking/__pycache__

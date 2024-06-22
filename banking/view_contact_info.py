@@ -29,6 +29,7 @@ def view_info(auth: Authentication):
             print(f'Email                   {email}\n')
             print(f'Phone Number            {phone_number}\n')
             print(f'Address                 {address}')
+            break
 
     except Exception as e:
         log_error(e)

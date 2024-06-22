@@ -239,6 +239,31 @@ class User:
             time.sleep(3)
             go_back('script')
 
+    def update_user_info(self, *, _column_name: str, _data: str, _id_number: int):
+        """
+        Method to update the information associated with a user, such as personal details or biometric data,
+        ensuring the data remains accurate and up to date.
+
+        Parameters
+        ----------
+        _column_name : str
+            The name of the column to update.
+        _data : str
+            The new data to be inserted into the specified column.
+        _id_number : int
+            The ID number identifying the specific user record to be updated.
+        """
+
+        # Construct the SQL query as a formatted string
+        query = f"""
+        UPDATE {self.database.db_tables[1]} 
+        SET {_column_name} = '{_data}', last_updated = '{datetime.datetime.today().now()}'
+        WHERE id = {_id_number}
+        """
+
+        # Execute the query using the database's query method
+        self.database.query(query)
+
     def reset_transaction_pin(self):
         """Method to initiate the transaction pin reset process, sending a temporary password or password reset link
         to the user's registered email or phone number."""

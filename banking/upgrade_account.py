@@ -312,15 +312,9 @@ def by_account_type(auth: Authentication):
         while True:
             header()
 
-            if auth.account_type == 'saving':
-
-                break
-            elif auth.account_tier == 'current':
-                pass
-            else:
-                print(green, '\n:: Meet your Account Officer for this inquiry.', end)
-                time.sleep(3)
-                break
+            print(green, '\n:: Meet your Account Officer for this inquiry.', end)
+            time.sleep(3)
+            break
     except Exception as e:
         log_error(e)
         go_back('signed_in', auth=auth)

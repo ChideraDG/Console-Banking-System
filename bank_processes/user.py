@@ -59,10 +59,6 @@ class User:
         """Method to log out the currently logged-in user from the bank app."""
         raise NotImplementedError('This Method not in Use.')
 
-    def update_personal_info(self):
-        """Method to allow users to update their personal information, such as contact details, address, or password."""
-        pass
-
     @abstractmethod
     def open_account(self):
         """Method to allow users to open a new account, specifying the type of account and initial deposit amount."""
@@ -239,10 +235,9 @@ class User:
             time.sleep(3)
             go_back('script')
 
-    def update_user_info(self, *, _column_name: str, _data: str, _id_number: int):
+    def update_personal_info(self, *, _column_name: str, _data: str, _id_number: int):
         """
-        Method to update the information associated with a user, such as personal details or biometric data,
-        ensuring the data remains accurate and up to date.
+        Method to allow users to update their personal information, such as contact details, address, or password.
 
         Parameters
         ----------

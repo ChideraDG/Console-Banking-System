@@ -78,10 +78,20 @@ class BVN:
         account-related transactions."""
         pass
 
-    def get_bvn_verification(self):
+    def get_bvn_verification(self, column_id: int):
         """Method to retrieve information associated with a BVN, including personal details, linked accounts,
         and verification status."""
-        pass
+        query = (f"""
+                    SELECT account_holder 
+                    FROM {self.database.db_tables[3]} 
+                    WHERE account_number = '{self.account_number}'
+                    """)
+
+        datas: tuple = self.database.fetch_data(query)
+
+        for data in datas:
+            for account_holder in data:
+                self.account_holder = account_holder
 
     def deactivation(self):
         """Method to deactivate or suspend a BVN, typically in cases of fraud, identity theft, or other security

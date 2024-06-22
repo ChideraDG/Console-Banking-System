@@ -209,6 +209,8 @@ def by_tier(auth: Authentication):
                         continue
                 elif auth.account_tier == 'Tier 3':
                     print(green, '\n:: You have the highest Savings Account banking Tier already.', end)
+                    time.sleep(3)
+                    break
             elif auth.account_tier == 'current':
                 if auth.account_tier == 'Tier 1':
                     print('\n+~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+')
@@ -294,6 +296,8 @@ def by_tier(auth: Authentication):
                         continue
                 elif auth.account_tier == 'Tier 3':
                     print(green, '\n:: You have the highest Current Account banking Tier already.', end)
+                    time.sleep(3)
+                    break
             else:
                 print(green, '\n:: Meet your Account Officer for this inquiry.', end)
                 time.sleep(3)

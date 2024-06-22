@@ -36,6 +36,37 @@ def verify_address(auth: Authentication):
         go_back('signed_in', auth=auth)
 
 
+def verify_bvn(auth: Authentication):
+    try:
+        while True:
+            header()
+            print(bold, brt_yellow, '\nVERIFY YOUR BVN', end, sep='')
+            print(bold, magenta, '~~~~~~~~~~~~~~~', end, sep='')
+            print('# must match your BVN detail')
+            time.sleep(2)
+
+            print(bold, brt_yellow, "\nInput your BVN:", end, sep='')
+            print(bold, magenta, "~~~~~~~~~~~~~~~", end, sep='')
+
+            print(bold, brt_yellow, end='')
+            bvn = input(">>> ").strip()
+            print(end, end='')
+
+            if re.search('^.*(back|return).*$', bvn, re.IGNORECASE):
+                return False
+            else:
+                auth.get_bvn_verification(auth.user_id)
+                if auth.bvn_number.lower() == bvn.lower():
+                    return True
+                else:
+                    print(red, "\n:: The BVN doesn't match. Try Again", end)
+                    time.sleep(3)
+                    continue
+    except Exception as e:
+        log_error(e)
+        go_back('signed_in', auth=auth)
+
+
 def by_tier(auth: Authentication):
     try:
         while True:
@@ -47,6 +78,7 @@ def by_tier(auth: Authentication):
                     print('\n+~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+')
                     print('|   1. to TIER 2   |   2. to TIER 3   |')
                     print('+~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+')
+
                     user_input = input('>>> ')
 
                     if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
@@ -69,16 +101,149 @@ def by_tier(auth: Authentication):
                             break
                         else:
                             break
+                    elif re.search('^2$', user_input, re.IGNORECASE):
+                        if verify_address(auth):
+                            if verify_bvn(auth):
+                                auth.upgrade_tier_limits(
+                                    account_tier='Tier 3',
+                                    maximum_balance=25000000,
+                                    transaction_limit=100,
+                                    transfer_limit=5000000,
+                                )
+
+                            countdown_timer(_register='\rUpgrading to', _duty='Tier 3', countdown=5)
+
+                            header()
+
+                            print(green, '\nSuccessfully Upgraded.', end)
+                            time.sleep(2)
+                            break
+                        else:
+                            break
+                    else:
+                        print(red, '\nInvalid input. Try again', end, sep='')
+                        time.sleep(2)
+                        continue
                 elif auth.account_tier == 'Tier 2':
-                    pass
+
+                    print('\n+~~~~~~~~~~~~~~~~~~+')
+                    print('|   1. to TIER 3   |')
+                    print('+~~~~~~~~~~~~~~~~~~+')
+
+                    user_input = input('>>> ')
+
+                    if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
+                        break
+                    elif re.search('^1$', user_input, re.IGNORECASE):
+                        if verify_address(auth):
+                            if verify_bvn(auth):
+                                auth.upgrade_tier_limits(
+                                    account_tier='Tier 3',
+                                    maximum_balance=25000000,
+                                    transaction_limit=100,
+                                    transfer_limit=5000000,
+                                )
+
+                            countdown_timer(_register='\rUpgrading to', _duty='Tier 3', countdown=5)
+
+                            header()
+
+                            print(green, '\nSuccessfully Upgraded.', end)
+                            time.sleep(2)
+                            break
+                        else:
+                            break
+                    else:
+                        print(red, '\nInvalid input. Try again', end, sep='')
+                        time.sleep(2)
+                        continue
                 elif auth.account_tier == 'Tier 3':
                     print(green, '\n:: You have the highest Savings Account banking Tier already.', end)
             elif auth.account_tier == 'current':
                 if auth.account_tier == 'Tier 1':
 
-                    break
+                    print('\n+~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+')
+                    print('|   1. to TIER 2   |   2. to TIER 3   |')
+                    print('+~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+')
+
+                    user_input = input('>>> ')
+
+                    if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
+                        break
+                    elif re.search('^1$', user_input, re.IGNORECASE):
+                        if verify_address(auth):
+                            auth.upgrade_tier_limits(
+                                account_tier='Tier 2',
+                                maximum_balance=30000000,
+                                transaction_limit=80,
+                                transfer_limit=5000000,
+                            )
+
+                            countdown_timer(_register='\rUpgrading to', _duty='Tier 2', countdown=5)
+
+                            header()
+
+                            print(green, '\nSuccessfully Upgraded.', end)
+                            time.sleep(2)
+                            break
+                        else:
+                            break
+                    elif re.search('^2$', user_input, re.IGNORECASE):
+                        if verify_address(auth):
+                            if verify_bvn(auth):
+                                auth.upgrade_tier_limits(
+                                    account_tier='Tier 3',
+                                    maximum_balance=500000000,
+                                    transaction_limit=140,
+                                    transfer_limit=80000000,
+                                )
+
+                            countdown_timer(_register='\rUpgrading to', _duty='Tier 3', countdown=5)
+
+                            header()
+
+                            print(green, '\nSuccessfully Upgraded.', end)
+                            time.sleep(2)
+                            break
+                        else:
+                            break
+                    else:
+                        print(red, '\nInvalid input. Try again', end, sep='')
+                        time.sleep(2)
+                        continue
                 elif auth.account_tier == 'Tier 2':
-                    pass
+
+                    print('\n+~~~~~~~~~~~~~~~~~~+')
+                    print('|   1. to TIER 3   |')
+                    print('+~~~~~~~~~~~~~~~~~~+')
+
+                    user_input = input('>>> ')
+
+                    if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
+                        break
+                    elif re.search('^1$', user_input, re.IGNORECASE):
+                        if verify_address(auth):
+                            if verify_bvn(auth):
+                                auth.upgrade_tier_limits(
+                                    account_tier='Tier 3',
+                                    maximum_balance=500000000,
+                                    transaction_limit=140,
+                                    transfer_limit=80000000,
+                                )
+
+                            countdown_timer(_register='\rUpgrading to', _duty='Tier 3', countdown=5)
+
+                            header()
+
+                            print(green, '\nSuccessfully Upgraded.', end)
+                            time.sleep(2)
+                            break
+                        else:
+                            break
+                    else:
+                        print(red, '\nInvalid input. Try again', end, sep='')
+                        time.sleep(2)
+                        continue
                 elif auth.account_tier == 'Tier 3':
                     print(green, '\n:: You have the highest Current Account banking Tier already.', end)
             else:

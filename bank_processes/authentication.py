@@ -3,6 +3,7 @@ from datetime import datetime, date
 import random
 from typing import Any
 from bank_processes.account import FixedDeposit
+from bank_processes.bvn import BVN
 from bank_processes.database import DataBase
 from bank_processes.loan import Loan
 from bank_processes.transaction import Transaction
@@ -174,7 +175,7 @@ def token_auth() -> str:
     return token
 
 
-class Authentication(Transaction, FixedDeposit, Notification, ABC):
+class Authentication(Transaction, FixedDeposit, Notification, BVN, ABC):
 
     def __init__(self, username: str = None, password: str = None, failed_login_attempts: int = 0,
                  auth_outcome: bool = None, login_time_stamp: datetime = None, session_token: str = None):

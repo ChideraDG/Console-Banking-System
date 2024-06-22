@@ -113,10 +113,52 @@ class Account(User):
         or regulatory authorities."""
         pass
 
-    def transaction_limits(self):
-        """Method to enforce transaction limits, such as daily withdrawal limits or maximum transfer amounts, to
-        prevent fraudulent or unauthorized transactions."""
-        pass
+    def upgrade_tier_limits(self, *, maximum_balance: float, account_tier: str, transaction_limit: int,
+                            transfer_limit: float):
+        """
+        Update tier limits for the current account in the database.
+
+        Parameters
+        ----------
+        maximum_balance : float
+            The new maximum balance allowed for the account.
+        account_tier : str
+            The updated tier of the account.
+        transaction_limit : int
+            The new transaction limit for the account.
+        transfer_limit : float
+            The new transfer limit for the account.
+
+        Raises
+        ------
+        RuntimeError
+            If there is an error updating the tier limits in the database.
+
+        Notes
+        -----
+        This method updates the tier limits in the database table specified by
+        self.database.db_tables[3]. It uses explicit SQL UPDATE query and handles
+        database transactions to ensure data integrity.
+        """
+        try:
+            # Construct SQL UPDATE query
+            query = (
+                f""" 
+                UPDATE {self.database.db_tables[3]}
+                SET maximum_balance = {maximum_balance}, 
+                    account_tier = '{account_tier}', 
+                    transaction_limit = {transaction_limit}, 
+                    transfer_limit = {transfer_limit}
+                WHERE account_number = {self.account_number}
+                """)
+
+            # Execute the query to update tier limits
+            self.database.query(query)
+
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
+            raise RuntimeError(f"Failed to update tier limits: {str(e)}")
 
     def block_account(self):
         """Method to block user accounts after multiple failed pin attempts, preventing brute force

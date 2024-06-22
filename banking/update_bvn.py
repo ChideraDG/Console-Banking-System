@@ -400,7 +400,7 @@ def update_bvn(auth: Authentication):
                     break
 
             else:
-                print('Invalid input. Try again\n')
+                print('\nInvalid input. Try again')
                 time.sleep(2)
                 continue
 

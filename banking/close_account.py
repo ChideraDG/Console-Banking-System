@@ -128,7 +128,7 @@ def close_account(auth: Authentication):
                     pass
 
             # Printing closing account confirmation and instructions
-            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+            print('\n+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
             print(f'| {red}{bold}You are about to close your account permanently                    {end}|')
             print("| You're about to start the process of closing your bank account.    |")
             print('| You will no longer be able to make transactions of any form        |')

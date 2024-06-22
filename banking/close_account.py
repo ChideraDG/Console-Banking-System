@@ -10,10 +10,26 @@ from banking.block_account import fetch_user_loan_data
 notify = Notification()
 
 
-def delete_records(table, criteria, criteria_value, auth: Authentication, data_filter=''):
+def delete_records(table, column, column_value, auth: Authentication, data_filter=''):
+    """ Deletes records from a table based on a criteria and value
+
+     Parameters
+    ----------
+    auth : Authentication
+        An instance of the Authentication class that contains user authentication and transaction details.
+
+    table: The table which one wants to delete a record from
+
+    column:  The column which the user wants the use as a criteria  to delete records
+
+    column_value: The value in a particular column that the user wants to use as a reference point to delete from
+
+    data_filter :  This serves as an optional query in case the user wants to add another condition to the query
+    """
+
     try:
         query = f"""DELETE FROM {auth.database.db_tables[table]}
-                WHERE {criteria} = '{criteria_value}'
+                WHERE {column} = '{column_value}'
                 {data_filter}
         """
         auth.database.query(query)
@@ -25,25 +41,39 @@ def delete_records(table, criteria, criteria_value, auth: Authentication, data_f
 
 
 def delete_beneficiary(auth: Authentication):
+    """ Function to delete users from any beneficiaries they may be in"""
+
     import json
+    # Query to get all the account ids and beneficiaries from the account table
     query = f"""SELECT account_id, beneficiaries from {auth.database.db_tables[3]}"""
+    # Initialize two empty lists
     beneficiary_list = []
     new_beneficiary_list = []
+    # Fetch the query
     total_query = auth.database.fetch_data(query)
+
+    # Store the account id in a separate tuple
     account_id = tuple(val[0] for val in total_query)
+    # Store the beneficiaries in a separate tuple
     beneficiaries_query = tuple(val[1] for val in total_query)
 
     for beneficiary in beneficiaries_query:
+        # Converting the obtained beneficiaries from string type to dictionary type
         bene = json.loads(beneficiary)
+        # Appending the converted beneficiaries to the empty beneficiary list
         beneficiary_list.append(bene)
 
     for beneficiary in beneficiary_list:
+        # A list is used to ensure that the size of the dictionary is maintained to prevent errors due to size change
         for val in list(beneficiary):
+            # Check if a user account number is found within any of the beneficiaries and then deleting it if present
             if beneficiary.get(val)[0] == auth.account_number:
                 del beneficiary[val]
+        # Each beneficiary is then converted back to string type
         beneficiary = str(beneficiary).replace("'", '"')
         new_beneficiary_list.append(beneficiary)
 
+    # Updating the beneficiaries column
     row_no = 0
     while row_no < len(account_id):
         update_query = f"""UPDATE {auth.database.db_tables[3]}
@@ -54,64 +84,61 @@ def delete_beneficiary(auth: Authentication):
         row_no += 1
 
 
-def delete_account_and_fixed_deposit_record(auth: Authentication):
+def delete_all_records(auth: Authentication):
+    """ Function to delete user records from all the tables """
+
+    # Delete user record from the account and fixed deposit table
     tables = [3, 4]
     for value in tables:
         delete_records(table=value,
-                       criteria='account_number',
-                       criteria_value=auth.account_number,
+                       column='account_number',
+                       column_value=auth.account_number,
                        auth=auth
                        )
 
+    # Delete from the beneficiary column in the account table where user is a beneficiary
+    delete_beneficiary(auth)
 
-def delete_bvn_and_user_record(auth: Authentication):
+    # Delete user record from the bvn and user table
     tables = [0, 1]
     for value in tables:
         delete_records(table=value,
-                       criteria='phone_number',
-                       criteria_value=auth.phone_number,
+                       column='phone_number',
+                       column_value=auth.phone_number,
                        auth=auth
                        )
 
+    # Delete user records from the transaction table where user is on the sending end
+    data_filter = f"AND transaction_mode = 'debit'"
+    delete_records(table=2,
+                   column='sender_account_number',
+                   column_value=auth.account_number,
+                   auth=auth,
+                   data_filter=data_filter
+                   )
+    # Delete user records from the transaction table where user is on the receiving end
+    data_filter = f"AND transaction_mode = 'credit' "
+    delete_records(table=2,
+                   column='receiver_account_number',
+                   column_value=auth.account_number,
+                   auth=auth,
+                   data_filter=data_filter
+                   )
 
-def delete_loan_records(auth: Authentication):
+    # Delete user records from the loan tables
     loan_tables = [7, 6]
     auth.loan.email = auth.email
     for loan in loan_tables:
         delete_records(table=loan,
-                       criteria='user_id',
-                       criteria_value=auth.loan.user_id,
+                       column='user_id',
+                       column_value=auth.loan.user_id,
                        auth=auth
                        )
 
 
-def delete_transaction_table(auth: Authentication):
-    data_filter = f"AND transaction_mode = 'debit'"
-    delete_records(table=2,
-                   criteria='sender_account_number',
-                   criteria_value=auth.account_number,
-                   auth=auth,
-                   data_filter=data_filter
-                   )
-
-    data_filter = f"AND transaction_mode = 'credit' "
-    delete_records(table=2,
-                   criteria='receiver_account_number',
-                   criteria_value=auth.account_number,
-                   auth=auth,
-                   data_filter=data_filter
-                   )
-
-
-def delete_all_records(auth: Authentication):
-    delete_account_and_fixed_deposit_record(auth)
-    delete_beneficiary(auth)
-    delete_bvn_and_user_record(auth)
-    delete_loan_records(auth)
-    delete_transaction_table(auth)
-
-
 def close_account(auth: Authentication):
+    """ Function that initiates the process of closing a user account """
+
     while True:
         try:
             header()

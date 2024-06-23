@@ -155,15 +155,16 @@ def close_account(auth: Authentication):
                     pass
 
             # Printing closing account confirmation and instructions
-            print('\n+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print(f'| {red}{bold}You are about to close your account permanently                    {end}|')
-            print("| You're about to start the process of closing your bank account.    |")
-            print('| You will no longer be able to make transactions of any form        |')
-            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print(f'| {red}{bold}What else should you know                                          {end}|')
-            print('| Once your account is closed, you will not be able to access it     |')
-            print('| again, as all your records will be permanently deleted.            |')
-            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+            top_borders = f'{bold}{magenta}+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+{end}'
+            print(f'\n{top_borders}')
+            print(f'{bold}{magenta}| {red}{bold}You are about to close your account permanently{end}                    {bold}{magenta}|')
+            print(f"| {bold}{brt_black_bg}{brt_yellow}You're about to start the process of closing your bank account.{end}    {bold}{magenta}|")
+            print(f'| {bold}{brt_black_bg}{brt_yellow}You will no longer be able to make transactions of any form{end}        {bold}{magenta}|')
+            print(top_borders)
+            print(f'{bold}{magenta}| {red}{bold}What else should you know{end}                                          {bold}{magenta}|')
+            print(f'| {bold}{brt_black_bg}{brt_yellow}Once your account is closed, you will not be able to access it{end}     {bold}{magenta}|')
+            print(f'| {bold}{brt_black_bg}{brt_yellow}again, as all your records will be permanently deleted.{end}            {bold}{magenta}|')
+            print(top_borders)
             close = input(f'{red}{bold}CLOSE ACCOUNT? y/n \n>>> {end}').lower()
 
             # Handling user input for cancelling the process

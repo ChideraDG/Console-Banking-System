@@ -101,18 +101,18 @@ def block_account(auth: Authentication):
 
                 elif fetch_user_loan_data(auth) == 3:
                     pass
-
+            top_borders =  f'{bold}{magenta}+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+{end}'
             # Printing blocking confirmation and instructions
-            print(f'\n {bold}{auth.account_holder}')
-            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print(f'| {red}This will block your account                                       {end}|')
-            print("| You're about to start the process of blocking your bank account.   |")
-            print('| You will no longer be able to make transactions.                   |')
-            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print(f'| {red}What else should you know                                          {end}|')
-            print('| You can restore your account if it was accidentally or wrongfully  |')
-            print('| blocked.                                                           |')
-            print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
+            print(f'\n {bold}{brt_black_bg}{brt_yellow}{auth.account_holder}{end}')
+            print(top_borders)
+            print(f'{bold}{magenta}| {red}This will block your account{end}                                       {bold}{magenta}|')
+            print(f"| {bold}{brt_black_bg}{brt_yellow}You're about to start the process of blocking your bank account.{end}   {bold}{magenta}|")
+            print(f'| {bold}{brt_black_bg}{brt_yellow}You will no longer be able to make transactions.{end}                   {bold}{magenta}|')
+            print(top_borders)
+            print(f'| {bold}{red}What else should you know{end}                                          {bold}{magenta}|')
+            print(f'| {bold}{brt_black_bg}{brt_yellow}You can restore your account if it was accidentally or wrongfully{end}  {bold}{magenta}|')
+            print(f'| {bold}{brt_black_bg}{brt_yellow}blocked.{end}                                                           {bold}{magenta}|')
+            print(top_borders)
 
             # Prompting user to confirm account blocking
             block = input(f'{red}BLOCK ACCOUNT? y/n \n>>> {end}').lower()

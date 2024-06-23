@@ -144,6 +144,7 @@ def go_back(return_place, auth: Authentication = None):
 def signing_in():
     from banking.login_panel import login
     from banking.register_panel import register_bvn_account
+    from banking.customer_service import customer_service
 
     while True:
         header()
@@ -171,6 +172,7 @@ def signing_in():
             login()
             continue
         elif re.search('^3$', user_input):
+            customer_service()
             continue
         else:
             del user_input

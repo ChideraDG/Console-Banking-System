@@ -175,6 +175,21 @@ class Account(User):
             # Rollback changes if an error occurs
             self.database.rollback()
 
+    def unblock_account(self, account_number):
+        """Method to block user accounts after multiple failed pin attempts, preventing brute force
+        attacks and unauthorized access."""
+        try:
+            query = (f""" 
+            UPDATE {self.database.db_tables[3]}
+            SET account_status = 'active'
+            WHERE account_number = {account_number}
+            """)
+
+            self.database.query(query)
+        except Exception as e:
+            # Rollback changes if an error occurs
+            self.database.rollback()
+
     def add_beneficiaries(self, _account_number: str, _account_holder: str):
         """Method to add new beneficiaries to an Account"""
         value = len(self.beneficiaries)

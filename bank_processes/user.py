@@ -252,7 +252,7 @@ class User:
         # Construct the SQL query as a formatted string
         query = f"""
         UPDATE {self.database.db_tables[1]} 
-        SET {_column_name} = '{_data}', last_updated = '{datetime.datetime.today().now()}'
+        SET {_column_name} = '{_data}'
         WHERE id = {_id_number}
         """
 

@@ -257,6 +257,9 @@ def signed_in(auth: Authentication):
         from banking.upgrade_account import upgrade
         from banking.close_account import close_account
         from banking.change_transaction_pin import change_transaction_pin
+        from banking.view_contact_info import view_info
+        from banking.update_acct_info import update_acct_info
+
         account_balance_display = None
         while True:
             if auth.account_status == 'active':
@@ -341,11 +344,13 @@ def signed_in(auth: Authentication):
                     block_account(auth)
                     continue
                 elif re.search('^14$', user_input):
+                    view_info(auth)
                     continue
                 elif re.search('^15$', user_input):
                     change_transaction_pin(auth)
                     continue
                 elif re.search('^16$', user_input):
+                    update_acct_info(auth)
                     continue
                 elif re.search('^17$', user_input):
                     print(green, "\n:: BANK INFORMATION option is UNAVAILABLE right now.", end)

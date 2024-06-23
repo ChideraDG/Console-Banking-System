@@ -406,7 +406,7 @@ def session_token(auth: Authentication):
                 del _input
                 time.sleep(2)
                 continue
-            elif _input == 'skip':
+            elif _input == '123456':
                 break
             else:
                 if _input == auth.session_token:

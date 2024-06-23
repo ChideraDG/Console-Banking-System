@@ -360,3 +360,23 @@ class Notification:
         """
         # Trigger the notification with provided details
         self.trigger_notification(title=title, message=message, channel=channel)
+
+    def update_notification(self, *, title: str, message: str, channel: str):
+        """
+        Triggers an update notification.
+
+        Parameters
+        ----------
+        title : str
+            The title of the notification.
+        message : str
+            The content of the notification message.
+        channel : str
+            The delivery channel or location.
+
+        Notes
+        -----
+        This method triggers the notification sending process for update events.
+        """
+        # Trigger the notification with provided details
+        self.trigger_notification(title=title, message=message, channel=channel)

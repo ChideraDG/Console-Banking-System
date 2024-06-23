@@ -200,9 +200,9 @@ def close_account(auth: Authentication):
                 time.sleep(2)
 
                 # Go back to the signup/login page
-                go_back('script')
+                go_back('script', auth=auth)
 
         except Exception as e:
             # Log the error to a file and notify the user
             log_error(e)
-            go_back('script')
+            go_back('signed_in', auth=auth)

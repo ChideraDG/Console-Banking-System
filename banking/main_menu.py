@@ -39,7 +39,7 @@ def log_error(error: Exception):
         )
 
     # Print the error message to the console
-    print(f'\nError: {repr(error)}')
+    print(red, f'\nError -> {repr(error)}', end, sep='')
 
     # Delay for 3 seconds to allow the user to read the error message
     time.sleep(3)
@@ -151,15 +151,14 @@ def signing_in():
 
         print(end='\n')
 
-        print(f'{bold}{brt_black_bg}{brt_yellow}' + 'Welcome, what can we do for you today?' + f'{end}\n')
+        print(f'{bold}{brt_black_bg}{brt_yellow}Welcome, what can we do for you today?{end}\n')
         print(f'{bold}{magenta}+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+')
-        print(f"|  {bold}{brt_black_bg}{brt_yellow}1. NEW USER{end}  {bold}{magenta}|  "
-              f"{bold}{brt_black_bg}{brt_yellow}2. EXISTING USER{end}  {bold}{magenta}|")
+        print(f"|  {brt_black_bg}{brt_yellow}1. NEW USER{end}  {bold}{magenta}|  "
+              f"{brt_black_bg}{brt_yellow}2. EXISTING USER{end}  {bold}{magenta}|")
         print(f"+~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+")
-        print(f"|        {bold}{brt_black_bg}{brt_yellow}3. CUSTOMER SERVICE{end}         {bold}{magenta}|")
+        print(f"|        {brt_black_bg}{brt_yellow}3. CUSTOMER SERVICE{end}         {bold}{magenta}|")
         print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
-        print(magenta, bold, end='')
         user_input = input(">>> ").strip()
         print(end, end='')
 
@@ -270,31 +269,31 @@ def signed_in(auth: Authentication):
                 print(end='\n')
                 print(bold, magenta, "+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~"
                                      "+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+", sep='')
-                print(f"|{end}  {bold}{brt_black_bg}{brt_yellow}1. {display_name} ACCOUNT BALANCE{end}  {bold}{magenta}"
-                      f"|    {bold}{brt_black_bg}{brt_yellow}2. TRANSFER MONEY{end}    {bold}{magenta}|    {bold}"
+                print(f"|  {brt_black_bg}{brt_yellow}1. {display_name} ACCOUNT BALANCE{end}  {bold}{magenta}"
+                      f"|    {brt_black_bg}{brt_yellow}2. TRANSFER MONEY{end}    {bold}{magenta}|    "
                       f"{brt_black_bg}{brt_yellow}3. CARD-LESS WITHDRAWAL{end}   {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print(f"|{end}      {bold}{brt_black_bg}{brt_yellow}4. DEPOSIT MONEY{end}     {bold}{magenta}|     "
-                      f"{bold}{brt_black_bg}{brt_yellow}5. COLLECT LOAN{end}     {bold}{magenta}|        {bold}"
+                print(f"|      {brt_black_bg}{brt_yellow}4. DEPOSIT MONEY{end}     {bold}{magenta}|     "
+                      f"{brt_black_bg}{brt_yellow}5. COLLECT LOAN{end}     {bold}{magenta}|        "
                       f"{brt_black_bg}{brt_yellow}6. UPDATE BVN{end}         {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print(f"|{end}  {bold}{brt_black_bg}{brt_yellow}7. TRANSACTION HISTORY{end}   {bold}{magenta}|  "
-                      f"{bold}{brt_black_bg}{brt_yellow}8. GENERATE STATEMENT{end}  {bold}{magenta}|       {bold}"
+                print(f"|  {brt_black_bg}{brt_yellow}7. TRANSACTION HISTORY{end}   {bold}{magenta}|  "
+                      f"{brt_black_bg}{brt_yellow}8. GENERATE STATEMENT{end}  {bold}{magenta}|       "
                       f"{brt_black_bg}{brt_yellow}9. BENEFICIARIES{end}       {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print(f"|{end}    {bold}{brt_black_bg}{brt_yellow}10. UPGRADE ACCOUNT{end}    {bold}{magenta}|    "
-                      f"{bold}{brt_black_bg}{brt_yellow}11. OPEN ACCOUNT{end}     {bold}{magenta}|       {bold}"
+                print(f"|    {brt_black_bg}{brt_yellow}10. UPGRADE ACCOUNT{end}    {bold}{magenta}|    "
+                      f"{brt_black_bg}{brt_yellow}11. OPEN ACCOUNT{end}     {bold}{magenta}|       "
                       f"{brt_black_bg}{brt_yellow}12. CLOSE ACCOUNT{end}      {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print(f"|{end}     {bold}{brt_black_bg}{brt_yellow}13. BLOCK ACCOUNT{end}     {bold}{magenta}|  "
-                      f"{bold}{brt_black_bg}{brt_yellow}14. VIEW CONTACT INFO{end}  {bold}{magenta}|  {bold}"
+                print(f"|     {brt_black_bg}{brt_yellow}13. BLOCK ACCOUNT{end}     {bold}{magenta}|  "
+                      f"{brt_black_bg}{brt_yellow}14. VIEW CONTACT INFO{end}  {bold}{magenta}|  "
                       f"{brt_black_bg}{brt_yellow}15. CHANGE TRANSACTION PIN{end}  {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print(f"|{end}  {bold}{brt_black_bg}{brt_yellow}16. UPDATE ACCOUNT INFO{end}  {bold}{magenta}|  "
-                      f"{bold}{brt_black_bg}{brt_yellow}17. BANK INFORMATION{end}   {bold}{magenta}|      {bold}"
+                print(f"|  {brt_black_bg}{brt_yellow}16. UPDATE ACCOUNT INFO{end}  {bold}{magenta}|  "
+                      f"{brt_black_bg}{brt_yellow}17. BANK INFORMATION{end}   {bold}{magenta}|      "
                       f"{brt_black_bg}{brt_yellow}18. FIXED DEPOSIT{end}       {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-                print(f"|{end}                                     {bold}{brt_black_bg}{brt_yellow}19. LOGOUT{end}    "
+                print(f"|                                     {brt_black_bg}{brt_yellow}19. LOGOUT{end}    "
                       f"                                 {bold}{magenta}|")
                 print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+", sep='')
 

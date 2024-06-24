@@ -21,8 +21,9 @@ def date_of_birth() -> str:
 
     while True:
         header()  # Display the header.
-        print("\nEnter Your New Year of Birth:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nEnter your new Year of Birth:",)
+        print(magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
+
         year_of_birth = input(">>> ").strip()  # Get the user's input for the year of birth.
 
         if re.search('^.*(back|return).*$', year_of_birth, re.IGNORECASE):
@@ -36,20 +37,21 @@ def date_of_birth() -> str:
                 if year_of_birth.isdigit():
                     # Provide feedback if the year is out of range.
                     if not int(year_of_birth) <= max_year:
-                        print("\n:: Age is less than 18")
+                        print(red, "\n:: Age is less than 18", end)
                     elif not 1900 < int(year_of_birth):
-                        print("\n:: Year is less than 1900")
+                        print(red, "\n:: Year is less than 1900", end)
                 else:
                     # Provide feedback if the input is not a number.
-                    print("\n:: Year of Birth should be in digits.\nExample: 2001, 2004, etc.")
+                    print(red, "\n:: Year of Birth should be in digits.\nExample: 2001, 2004, etc.", end)
                     time.sleep(2)
                     continue
 
     time.sleep(1)
 
     while True:
-        print("\nEnter your New Month of Birth:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nEnter your new Month of Birth:")
+        print(magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
+
         month_of_birth = input(">>> ").strip()  # Get the user's input for the month of birth.
 
         if re.search('^.*(back|return).*$', month_of_birth, re.IGNORECASE):
@@ -63,10 +65,10 @@ def date_of_birth() -> str:
                 if month_of_birth.isdigit():
                     # Provide feedback if the month is out of range.
                     if not 0 < int(month_of_birth) <= 12:
-                        print("\n:: Month of Birth should be between Zero(0) and Twelve(12)")
+                        print(red, "\n:: Month of Birth should be between Zero(0) and Twelve(12)", end)
                 else:
                     # Provide feedback if the input is not a number.
-                    print("\n:: Month of Birth should be in digits.\nExample: 2 means February, 4 means April, etc.")
+                    print(red, "\n:: Month of Birth should be in digits.\nExample: 2 means February, 4 means April, etc.", end)
                     time.sleep(2)
                     continue
 
@@ -115,9 +117,11 @@ def date_of_birth() -> str:
     time.sleep(1)
 
     while True:
-        print("\nEnter your New Day of Birth:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nEnter your new Day of Birth:")
+        print(magenta, "~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
+
         day_of_birth = input(">>> ").strip()  # Get the user's input for the day of birth.
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', day_of_birth, re.IGNORECASE):
             # If the user types 'back' or 'return', exit the function.
@@ -146,9 +150,11 @@ def address() -> str:
 
     while True:
         header()  # Display the header.
-        print("\nEnter New Address:")
-        print("~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nEnter new Address:")
+        print(magenta, "~~~~~~~~~~~~~~~~~~~", sep='')
+
         _address = input(">>> ").strip()  # Get the user's input for the address.
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', _address, re.IGNORECASE):
             # If the user types 'back' or 'return', exit the function.
@@ -163,9 +169,11 @@ def first_name() -> str:
 
     while True:
         header()  # Display the header.
-        print('\nEnter new first name')
-        print("~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, '\nEnter new First name')
+        print(magenta, "~~~~~~~~~~~~~~~~~~~~~~", sep='')
+
         name = input('>>> ').strip().title()  # Get the user's input for the first name.
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', name, re.IGNORECASE):
             # If the user types 'back' or 'return', exit the function.
@@ -181,12 +189,12 @@ def first_name() -> str:
 
                 header()
 
-                print('\nFirst name successfully changed')
+                print(green, '\n:: First name successfully changed', end)
                 time.sleep(2)
                 break
             else:
                 # Provide feedback if the name contains invalid characters.
-                print('\n:: Name must contain only alphabet.\nExample: James, Mary, etc.\n')
+                print(red, '\n:: Name must contain only alphabet.\nExample: James, Mary, etc.', end)
                 time.sleep(2)
                 continue
     return name.title()  # Return the name in title case.
@@ -197,9 +205,11 @@ def middle_name() -> str:
 
     while True:
         header()  # Display the header.
-        print('\nEnter new second name')
-        print("~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, '\nEnter new Middle name')
+        print(magenta, "~~~~~~~~~~~~~~~~~~~~~~", sep='')
+
         name = input('>>>').strip().title()  # Get the user's input for the middle name.
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', name, re.IGNORECASE):
             # If the user types 'back' or 'return', exit the function.
@@ -215,12 +225,12 @@ def middle_name() -> str:
 
                 header()
 
-                print('\nMiddle name successfully changed')
+                print(green, '\n:: Middle name successfully changed', end)
                 time.sleep(2)
                 break
             else:
                 # Provide feedback if the name contains invalid characters.
-                print('\n:: Name must contain only alphabet.\nExample: James, Mary, etc.\n')
+                print(red, '\n:: Name must contain only alphabet.\nExample: James, Mary, etc.', end)
                 time.sleep(2)
                 continue
     return name.title()  # Return the name in title case.
@@ -231,9 +241,11 @@ def last_name() -> str:
 
     while True:
         header()  # Display the header.
-        print('\nEnter new Last name')
-        print("~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, '\nEnter new Last name')
+        print(magenta, "~~~~~~~~~~~~~~~~~~~~~~", sep='')
+
         name = input('>>>').strip().title()  # Get the user's input for the last name.
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', name, re.IGNORECASE):
             # If the user types 'back' or 'return', exit the function.
@@ -249,12 +261,12 @@ def last_name() -> str:
 
                 header()
 
-                print('\nLast name successfully changed')
+                print(green, '\n:: Last name successfully changed', end)
                 time.sleep(2)
                 break
             else:
                 # Provide feedback if the name contains invalid characters.
-                print('\n:: Name must contain only alphabet.\nExample: James, Mary, etc.\n')
+                print(red, '\n:: Name must contain only alphabet.\nExample: James, Mary, etc.', end)
                 time.sleep(2)
                 continue
     return name.title()  # Return the name in title case.
@@ -265,9 +277,11 @@ def phone_number() -> str:
 
     while True:
         header()  # Display the header.
-        print('\nEnter new phone number')
-        print("~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, '\nEnter new phone number')
+        print(magenta, "~~~~~~~~~~~~~~~~~~~~~~", sep='')
+
         number = input('>>>').strip()  # Get the user's input for the phone number.
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', number, re.IGNORECASE):
             # If the user types 'back' or 'return', exit the function.
@@ -279,13 +293,13 @@ def phone_number() -> str:
 
                 header()
 
-                print('\nPhone number successfully changed')
+                print(green, '\n:: Phone number successfully changed', end)
                 time.sleep(2)
                 break
             else:
                 # Provide feedback if the phone number is invalid.
                 time.sleep(1)
-                print(':: \nPhone Number should be in digits only.\nExample: 08076542879,+2348033327493 etc.\n')
+                print(red, ':: \nPhone Number should be in digits only.\nExample: 08076542879,+2348033327493 etc.', end)
                 continue
     return number
 
@@ -295,9 +309,11 @@ def nationality() -> str:
 
     while True:
         header()  # Display the header.
-        print("\nEnter your nationality:")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nEnter your nationality:")
+        print(magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
+
         nation = input(">>> ").strip().title()  # Get the user's input for nationality.
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', nation, re.IGNORECASE):
             # If the user types 'back' or 'return', exit the function.
@@ -309,12 +325,12 @@ def nationality() -> str:
 
                 header()
 
-                print('\nNationality successfully changed')
+                print(green, '\n:: Nationality successfully changed', end)
                 time.sleep(2)
                 break
             else:
                 # Provide feedback if the nationality contains invalid characters.
-                print('\n:: Nationality must contain only alphabet.\nExample: USA, Korea, etc.\n')
+                print(red, '\n:: Nationality must contain only alphabet.\nExample: USA, Korea, etc.', end)
                 time.sleep(2)
                 continue
     return nation.title()  # Return the nationality in title case.
@@ -325,9 +341,11 @@ def email() -> str:
 
     while True:
         header()  # Display the header.
-        print("\nInput your E-mail:")
-        print("~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nInput your E-mail:")
+        print(magenta, "~~~~~~~~~~~~~~~~~~", sep='')
+
         _email = input(">>> ").strip()  # Get the user's input for the email address.
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', _email, re.IGNORECASE):
             # If the user types 'back' or 'return', exit the function.
@@ -339,12 +357,12 @@ def email() -> str:
 
                 header()
 
-                print('\nEmail successfully changed')
+                print(green, '\n:: Email successfully changed', end)
                 time.sleep(2)
                 break
             else:
                 # Provide feedback if the email is invalid.
-                print("\n:: Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.\n")
+                print(red, "\n:: Invalid Email.\nExample: himates@gamil.com, markjames@yahoo.com etc.", end)
                 time.sleep(2)
                 continue
     return _email.lower()  # Return the email in lowercase.
@@ -368,19 +386,20 @@ def update_bvn(auth: Authentication):
 
             header()  # Display the header.
 
-            print('\nWhat do you want to Update?')
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            print(bold, brt_yellow, '\nWhat do you want to Update?')
+            print(magenta, '~~~~~~~~~~~~~~~~~~~~~~~~~~~', sep='')
 
             print(end='\n')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
-            print('|   1. FIRST NAME   |   2. MIDDLE NAME   |   3. LAST NAME   |')
+            print(f'|   {brt_black_bg}{brt_yellow}1. FIRST NAME{end}   {bold}{magenta}|   {brt_black_bg}{brt_yellow}2. MIDDLE NAME{end}   {bold}{magenta}|   {brt_black_bg}{brt_yellow}3. LAST NAME{end}   {bold}{magenta}|')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
-            print('|  4. PHONE NUMBER  |  5. DATE OF BIRTH  |   6. ADDRESS     |')
+            print(f'|  {brt_black_bg}{brt_yellow}4. PHONE NUMBER{end}  {bold}{magenta}|  {brt_black_bg}{brt_yellow}5. DATE OF BIRTH{end}  {bold}{magenta}|   {brt_black_bg}{brt_yellow}6. ADDRESS{end}     {bold}{magenta}|')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
-            print('|        7. NATIONALITY        |          8. EMAIL          |')
+            print(f'|        {brt_black_bg}{brt_yellow}7. NATIONALITY{end}        {bold}{magenta}|          {brt_black_bg}{brt_yellow}8. EMAIL{end}          {bold}{magenta}|')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
 
             user_input = input(">>> ").strip()  # Get the user's input for the field to update.
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                 # If the user types 'back' or 'return', exit the function.
@@ -428,7 +447,7 @@ def update_bvn(auth: Authentication):
 
                 header()
 
-                print('\nDate of birth successfully changed')
+                print(green, '\n:: Date of birth successfully changed', end)
                 time.sleep(2)
                 if dob == 'break':
                     continue
@@ -443,7 +462,7 @@ def update_bvn(auth: Authentication):
 
                 header()
 
-                print('\nAddress successfully changed')
+                print(green, '\n:: Address successfully changed', end)
                 time.sleep(2)
                 if _address == 'break':
                     continue
@@ -471,7 +490,7 @@ def update_bvn(auth: Authentication):
                     break
             else:
                 # Provide feedback if the input is invalid.
-                print('\nInvalid input. Try again')
+                print(red, '\n:: Invalid input. Try again', end)
                 time.sleep(2)
                 continue
 

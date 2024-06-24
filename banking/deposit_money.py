@@ -6,6 +6,7 @@ from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
 from banking.main_menu import go_back, header, log_error
 from banking.transfer_money import session_token, transaction_pin, receipt
+from animation.colors import *
 
 notify = Notification()
 
@@ -29,10 +30,11 @@ def deposit(auth: Authentication):
             header()
 
             # Prompt the user to enter the amount to be deposited
-            print('\nAMOUNT TO BE DEPOSITED: (more than N10.0)')
-            print('~~~~~~~~~~~~~~~~~~~~~~~')
+            print(bold, brt_yellow, '\nAMOUNT TO BE DEPOSITED: (more than N10.0)', end, sep='')
+            print(bold, magenta, '~~~~~~~~~~~~~~~~~~~~~~~')
 
             amount = input('>>> ').strip()
+            print(end, end='')
 
             # Check if the user wants to go back to the previous menu
             if re.search('^.*(back|return).*$', amount, re.IGNORECASE):
@@ -40,13 +42,13 @@ def deposit(auth: Authentication):
 
             # Ensure the input is a valid number
             elif re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", amount, re.IGNORECASE) is None:
-                print('\n:: Digits Only')
+                print(red, '\n:: Digits Only', end, sep='')
                 time.sleep(3)
                 continue
 
             # Check if the amount is greater than 10.0 naira
             elif float(amount) < 10.0:
-                print('\n:: Amount must be more than 10.0 naira.')
+                print(red, '\n:: Amount must be more than 10.0 naira.', end, sep='')
                 time.sleep(3)
                 continue
 
@@ -88,8 +90,8 @@ Balance :: {auth.account_balance}
                 )
 
                 header()
-                print("\n:: Deposit Successfully")
-                print(f":: You deposited N{auth.amount} into your Beta Account")
+                print(green, "\n:: Deposit Successfully")
+                print(f":: You deposited N{auth.amount} into your Beta Account", end, sep='')
 
                 time.sleep(1.5)
 

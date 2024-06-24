@@ -3,22 +3,26 @@ import re
 from time import sleep
 from bank_processes.authentication import Authentication
 from bank_processes.loan import Loan
+from bank_processes.notification import Notification
 from banking.fixed_deposit import calculate_interest, get_month
 from banking.register_panel import countdown_timer
 from banking.main_menu import go_back, header, calculate_end_date, log_error
 from banking.deposit_money import deposit_default
+from animation.colors import *
 
 loan = Loan()
+notify = Notification()
 
 
 def repayment_period() -> str | int:
     while True:
         sleep(0.5)
 
-        print('\nRepayment period in months: (2 means Two months)')
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        print(bold, brt_yellow, '\nRepayment period in months: (2 means Two months)', end, sep='')
+        print(bold, magenta, '~~~~~~~~~~~~~~~~~~~~~~~~~~~', sep='')
 
         period = input('>>> ')
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', period, re.IGNORECASE):
             return 'preview'
@@ -29,7 +33,7 @@ def repayment_period() -> str | int:
             return int(period)
 
         else:
-            print(f"\n:: Wrong Input")
+            print(red, f"\n:: Wrong Input", end, sep='')
             sleep(1)
             continue
 
@@ -38,10 +42,11 @@ def annual_percentage_rate():
     while True:
         sleep(0.5)
 
-        print('\nAnnual percentage rate of interest: (%)')
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        print(bold, brt_yellow, '\nAnnual percentage rate of interest: (%)', end, sep='')
+        print(bold, magenta, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', sep='')
 
         rate = input('>>> ')
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', rate, re.IGNORECASE):
             return 'preview'
@@ -51,7 +56,7 @@ def annual_percentage_rate():
             return float(rate)
 
         else:
-            print(f"\n:: Wrong Input")
+            print(red, f"\n:: Wrong Input", end, sep='')
             sleep(1)
             continue
 
@@ -60,10 +65,11 @@ def amount_of_the_loan():
     while True:
         sleep(0.5)
 
-        print('\nAmount of the Loan: (Naira)')
-        print('~~~~~~~~~~~~~~~~~~~')
+        print(bold, brt_yellow, '\nAmount of the Loan: (Naira)', end, sep='')
+        print(bold, magenta, '~~~~~~~~~~~~~~~~~~~', sep='')
 
         amount = input('>>> ')
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', amount, re.IGNORECASE):
             return 'preview'
@@ -73,7 +79,7 @@ def amount_of_the_loan():
             return float(amount)
 
         else:
-            print(f"\n:: Wrong Input")
+            print(red, f"\n:: Wrong Input", end, sep='')
             sleep(1)
             continue
 
@@ -106,37 +112,39 @@ def payment_info(*, _loan_amount, _annual_rate, _repayment_period, _payment_peri
         while True:
             header()
 
-            print('\nAmount of the Loan: (Naira)')
-            print('~~~~~~~~~~~~~~~~~~~')
-            print(f':: N{_loan_amount}\n')
+            print(bold, brt_yellow, '\nAmount of the Loan: (Naira)', end, sep='')
+            print(bold, magenta, '~~~~~~~~~~~~~~~~~~~', end, sep='')
+            print(green, f':: N{_loan_amount}\n', end, sep='')
 
-            print('\nAnnual percentage rate of interest: (%)')
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-            print(f':: {_annual_rate}%\n')
+            print(bold, brt_yellow, '\nAnnual percentage rate of interest: (%)', end, sep='')
+            print(bold, magenta, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', end, sep='')
+            print(green, f':: {_annual_rate}%\n', end, sep='')
 
-            print('\nRepayment period in months: (2 means Two months)')
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-            print(f':: {_repayment_period}\n')
+            print(bold, brt_yellow, '\nRepayment period in months: (2 means Two months)', end, sep='')
+            print(bold, magenta, '~~~~~~~~~~~~~~~~~~~~~~~~~~~', end, sep='')
+            print(green, f':: {_repayment_period}\n', end, sep='')
 
-            print('\nPayment Information:')
-            print('~~~~~~~~~~~~~~~~~~~~\n')
+            print(bold, brt_yellow, '\nPayment Information:', end, sep='')
+            print(f'{bold}{magenta}~~~~~~~~~~~~~~~~~~~~\n')
 
-            print(f'+{'~' * (38 + len(_payment_period))}+')
-            print(f'|  Your monthly payment will be  ::  {_payment_period}  |')
+            print(f'+{'~' * (38 + len(_payment_period))}+', sep='')
+            print(f'|{end}  {bold}{brt_black_bg}{brt_yellow}Your monthly payment will be{end}  {bold}{magenta}::{end}  {green}{_payment_period}{end}  {bold}{magenta}|')
             print(f'+{'~' * (38 + len(_payment_period))}+\n')
 
             print(f'+{'~' * (36 + len(_total_payment))}+')
-            print(f'|  Your total payment will be  ::  {_total_payment}  |')
+            print(f'|{end}  {bold}{brt_black_bg}{brt_yellow}Your total payment will be{end}  {bold}{magenta}::{end}  {green}{_total_payment}{end}  {bold}{magenta}|')
             print(f'+{'~' * (36 + len(_total_payment))}+\n')
 
             print(f'+{'~' * (46 + len(_interest))}+')
-            print(f'|  Your total interest payments will be  ::  {_interest}  |')
-            print(f'+{'~' * (46 + len(_interest))}+\n')
+            print(f'|{end}  {bold}{brt_black_bg}{brt_yellow}Your total interest payments will be{end}  {bold}{magenta}::{end}  {green}{_interest}{end}  {bold}{magenta}|')
+            print(f'+{'~' * (46 + len(_interest))}+\n', end)
 
-            print('\nDo you want to Repeat process?')
-            print('1. Yes  |  2. No')
-            print('~~~~~~     ~~~~~')
+            print(bold, brt_yellow, '\nDo you want to Repeat process?', sep='')
+            print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')  # Present Yes/No options
+            print(f'{bold}{magenta}~~~~~~     ~~~~~')
+
             _input = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
@@ -146,7 +154,7 @@ def payment_info(*, _loan_amount, _annual_rate, _repayment_period, _payment_peri
             elif re.search('^2$', _input, re.IGNORECASE):
                 return 'break'
             else:
-                print(f"\n:: Wrong Input")
+                print(red, f"\n:: Wrong Input", end, sep='')
                 sleep(1.5)
                 continue
 
@@ -163,8 +171,8 @@ def loan_calculator():
     try:
         while True:
             header()  # Display header for the loan calculator interface
-            print('\nEnter Loan Information:')
-            print('~~~~~~~~~~~~~~~~~~~~~~~')
+            print(bold, brt_yellow, '\nEnter Loan Information:', end, sep='')
+            print(bold, magenta, '~~~~~~~~~~~~~~~~~~~~~~~', end, sep='')
 
             # Obtain loan amount from the user
             loan_amount = amount_of_the_loan()
@@ -208,14 +216,14 @@ def loan_calculator():
 
             # Handle user input from payment information display
             if re.search('^back$', _payment_info, re.IGNORECASE):
-                del _payment_info  # Clear _payment_info variable
-                break  # Exit the loop
+                del _payment_info
+                break
             elif re.search('^break$', _payment_info, re.IGNORECASE):
-                sleep(0.5)  # Pause execution for 0.5 seconds
-                break  # Exit the loop
+                sleep(0.5)
+                break
             elif re.search('^continue$', _payment_info, re.IGNORECASE):
-                sleep(0.5)  # Pause execution for 0.5 seconds
-                continue  # Continue to the next iteration of the loop
+                sleep(0.5)
+                continue
 
     except Exception as e:
         log_error(e)  # Log any exceptions raised during execution
@@ -243,24 +251,26 @@ def loan_questions() -> tuple[str, str] | tuple[float, str | int]:
     while True:
         header()  # Display header for the loan questions interface
 
-        print('\nHow much money do you need to borrow? (greater than 10000)')
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        print(bold, brt_yellow, '\nHow much money do you need to borrow? (greater than 10000)', end, sep='')
+        print(bold, magenta, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', sep='')
+
         amount = input(">>> ")  # Prompt user to enter the loan amount
+        print(end, end='')
 
         if re.search('^.*(back|return).*$', amount, re.IGNORECASE):
-            return 'break', 'break'  # Exit loop if user wants to go back
+            return 'break', 'break'
 
         # Ensure the input is a valid number
         elif re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", amount, re.IGNORECASE) is None:
-            print('\n:: Digits Only')  # Notify user if input contains non-digits
+            print(red, '\n:: Digits Only', end, sep='')  # Notify user if input contains non-digits
             sleep(2)
-            continue  # Continue looping to prompt for correct input
+            continue
 
         # Check if the amount is greater than 10000.0 naira
         elif float(amount) < 10000.0:
-            print('\n:: Amount must be more than 10000.0 naira.')  # Notify user if amount is too low
+            print(red, '\n:: Amount must be more than 10000.0 naira.', end, sep='')  # Notify user if amount is too low
             sleep(2)
-            continue  # Continue looping to prompt for correct input
+            continue
 
         else:
             amount = float(amount)  # Convert valid input to float
@@ -268,11 +278,9 @@ def loan_questions() -> tuple[str, str] | tuple[float, str | int]:
             _repayment_period = repayment_period()  # Prompt user for repayment period
 
             if _repayment_period == 'preview':
-                return 'break', 'break'  # Exit loop if user wants to go back from repayment period selection
+                return 'break', 'break'
             else:
                 return amount, _repayment_period  # Return validated amount and repayment period
-
-    # The Function ends here if user chooses to go back or preview from any step
 
 
 def loan_receipt(auth: Authentication, end_date, _type: str, _amount: str, interest: float, _repayment_period: int,
@@ -353,11 +361,19 @@ Console Beta Bank
     print(receipt)
 
     # Wait for user input to end the page
+    print(green, end='')
     input('\nType Anything to end this page\n>>> ')
+    print(end, end='')
 
     # Save the receipt to a file
     with open('notification/loan_receipt.txt', 'w') as file:
         file.write(receipt)
+
+    notify.loan_notification(
+        title='Console Beta Banking',
+        message='Your Loan Receipt has been sent to your INBOX. Thanks for banking with us.',
+        channel='loan_receipt'
+    )
 
     go_back('signed_in', auth)
 
@@ -413,19 +429,21 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
             header()
 
             # Display loan terms
-            print(f'\n{_type[0]} Loan Term')
-            print(f'{"~" * len(_type[0])}~~~~~~~~~~\n')
-            print(f'Total Interest :: N{_interest:,.2f}\n')
-            print(f'Interest Rate :: {interest}% per annum\n')
-            print(f'Total Payment :: N{total_payment}\n')
-            print(f'Monthly Payment :: N{payment_period}\n')
-            print(f'End Date :: {month} {datetime.datetime.today().day}, {end_date[:4]}')
+            print(bold, brt_yellow, f'\n{_type[0]} Loan Term', end, sep='')
+            print(bold, magenta, f'{"~" * len(_type[0])}~~~~~~~~~~\n', end, sep='')
+            print(f'{bold}{brt_yellow}Total Interest {magenta}:: {green}N{_interest:,.2f}\n', end)
+            print(f'{bold}{brt_yellow}Interest Rate {magenta}:: {green}{interest}% per annum\n', end)
+            print(f'{bold}{brt_yellow}Total Payment {magenta}:: {green}N{total_payment}\n', end)
+            print(f'{bold}{brt_yellow}Monthly Payment {magenta}:: {green}N{payment_period}\n', end)
+            print(f'{bold}{brt_yellow}End Date {magenta}:: {green}{month} {datetime.datetime.today().day}, {end_date[:4]}', end)
 
             # Ask the user to accept the terms
-            print('\nDo you accept these Terms?')
-            print('1. Yes  |  2. No')
-            print('~~~~~~     ~~~~~')
+            print(f'{bold}{brt_yellow}\nDo you accept these Terms?')
+            print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')  # Present Yes/No options
+            print(f'{bold}{magenta}~~~~~~     ~~~~~')
+
             _input = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 break
@@ -476,11 +494,11 @@ def loan_processing(*, auth: Authentication, amount: float, _repayment_period: i
                              _type[0], total_payment, interest, _repayment_period, payment_period)
                 break
             elif re.search('^2$', _input, re.IGNORECASE):
-                print('\n:: Loan Terms Rejected')
+                print(red, '\n:: Loan Terms Rejected', end, sep='')
                 sleep(2.5)
                 break
             else:
-                print(f"\n:: Wrong Input")
+                print(red, f"\n:: Wrong Input", end, sep='')
                 sleep(1.5)
                 continue
     except Exception as e:
@@ -509,20 +527,21 @@ def types_of_loans(auth: Authentication):
     try:
         while True:
             header()
-            print('\nWhat Type of Loan do you want?')
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            print(bold, brt_yellow, '\nWhat Type of Loan do you want?', end, sep='')
+            print(bold, magenta, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', sep='')
 
             print('\n+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print('|      1. Personal Loan     |        2. Mortgage Loan        |        3. Auto Loan        |')
+            print(f'|      {brt_black_bg}{brt_yellow}1. Personal Loan{end}     {bold}{magenta}|        {brt_black_bg}{brt_yellow}2. Mortgage Loan{end}        {bold}{magenta}|        {brt_black_bg}{brt_yellow}3. Auto Loan{end}        {bold}{magenta}|')
             print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print('|      4. Student Loan      |     5. Small Business Loan     |       6. Payday Loan       |')
+            print(f'|      {brt_black_bg}{brt_yellow}4. Student Loan{end}      {bold}{magenta}|     {brt_black_bg}{brt_yellow}5. Small Business Loan{end}     {bold}{magenta}|       {brt_black_bg}{brt_yellow}6. Payday Loan{end}       {bold}{magenta}|')
             print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print('|    7. Home Equity Loan    |   8. Debt Consolidation Loan   |   9. Credit Builder Loan   |')
+            print(f'|    {brt_black_bg}{brt_yellow}7. Home Equity Loan{end}    {bold}{magenta}|   {brt_black_bg}{brt_yellow}8. Debt Consolidation Loan{end}   {bold}{magenta}|   {brt_black_bg}{brt_yellow}9. Credit Builder Loan{end}   {bold}{magenta}|')
             print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print('|   10. Peer to Peer Loan   |         11. Title Loan         |       12. Bridge Loan      |')
+            print(f'|   {brt_black_bg}{brt_yellow}10. Peer to Peer Loan{end}   {bold}{magenta}|         {brt_black_bg}{brt_yellow}11. Title Loan{end}         {bold}{magenta}|       {brt_black_bg}{brt_yellow}12. Bridge Loan{end}      {bold}{magenta}|')
             print('+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
 
             user_input = input('>>> ')
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                 break
@@ -680,7 +699,7 @@ def types_of_loans(auth: Authentication):
                     )
                     continue
                 else:
-                    print(f"\n:: Wrong Input")
+                    print(red, f"\n:: Wrong Input", end, sep='')
                     sleep(1.5)
                     continue
     except Exception as e:
@@ -693,11 +712,12 @@ def preview(auth: Authentication):
         while True:
             header()
 
-            print('\n+~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print('|   1. COLLECT LOAN   |   2. LOAN CALCULATOR   |')
+            print(bold, magenta, '\n+~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~+')
+            print(f'|   {brt_black_bg}{brt_yellow}1. COLLECT LOAN{end}   {bold}{magenta}|   {brt_black_bg}{brt_yellow}2. LOAN CALCULATOR{end}   {bold}{magenta}|')
             print('+~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~+')
 
             user_input = input('>>> ')
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                 break
@@ -708,7 +728,7 @@ def preview(auth: Authentication):
                 loan_calculator()
                 continue
             else:
-                print(f"\n:: Wrong Input")
+                print(red, f"\n:: Wrong Input", end, sep='')
                 sleep(1.5)
                 continue
     except Exception as e:

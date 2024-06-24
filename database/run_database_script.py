@@ -158,7 +158,7 @@ queries2 = [
     """,
     """
     INSERT INTO `User` (`id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `gender`, `email`, `phone_number`, `address`, `date_of_birth`, `linked_accounts`, `last_login_timestamp`, `account_open_date`, `account_close_date`) VALUES
-    (1, 'c', 'c', 'Chidera', 'Divine-Gift', 'Ohanenye-Ohiaekpete', 'Male', 'chrischidera6@gmail.com', '07033327493', 'Lagos', '2001-09-27', '[]', '2024-06-05 09:12:36', '2024-05-04 19:58:00', NULL);
+    (1, 'TEST', 'test', 'Chidera', 'Divine-Gift', 'Ohanenye-Ohiaekpete', 'Male', 'chrischidera6@gmail.com', '07033327493', 'Lagos', '2001-09-27', '[]', '2024-06-05 09:12:36', '2024-05-04 19:58:00', NULL);
     """
 ]
 

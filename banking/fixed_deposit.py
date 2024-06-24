@@ -732,7 +732,7 @@ Balance :: {auth.account_balance}
 
                         auth.update_deposit(deposit_id)
 
-                        countdown_timer(_register='Top Up deposit', _duty='', countdown=5)
+                        countdown_timer(_register='Top Up', _duty='deposit', countdown=5)
 
                         header()
                         print(green, "\n:: Deposit Successfully Topped Up.", end)
@@ -992,41 +992,43 @@ def paid_back_deposits(auth: Authentication):
         while True:
             header()
 
-            print("\nPAID BACK DEPOSITS")
-            print("~~~~~~~~~~~~~~~~~~\n")
+            print(bold, brt_yellow, "\nPAID BACK DEPOSITS")
+            print(f"{magenta}~~~~~~~~~~~~~~~~~~{end}\n")
 
             if data:
                 for key, value in enumerate(data):
                     # Format each deposit detail for display
-                    detail = (f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"
+                    detail = (f"{bold}{magenta}+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"
                               f"|                                                         |\n"
-                              f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    |\n"
-                              f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} |\n"
-                              f"|      Unlocked{' ' * (50 - len('Unlocked'))} |\n"
+                              f"|   {brt_yellow}{key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}    {magenta}|\n"
+                              f"|      {brt_yellow}N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))} {magenta}|\n"
+                              f"|      {brt_yellow}Unlocked{' ' * (50 - len('Unlocked'))} {magenta}|\n"
                               f"|                                                         |\n"
-                              f"| {brt_blue_bg}{' ' * 48} {end}  Paid |\n"
-                              f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                              f"| {brt_blue_bg}{' ' * 48} {end}  Paid {magenta}|\n"
+                              f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+{end}")
 
                     details.append(detail)
                     print(detail, '\n')
 
                 # Get user input
+                print(bold, magenta, end='')
                 user_input = input(">>> ").strip()
+                print(end, end='')
 
                 if re.search('^.*(back|return).*$', user_input.strip().lower()):
                     break  # Go back to the previous menu
                 elif user_input.isdigit():
                     user_selection = int(user_input)
                     if user_selection > len(data):
-                        print("\n:: Digits within the list only")
+                        print(red, "\n:: Digits within the list only", end)
                         time.sleep(2)
                     else:
                         paid_display_deposits(data, details, user_selection - 1)
                 else:
-                    print("\n:: Digits only.")
+                    print(red, "\n:: Digits only.", end)
                     time.sleep(2)
             else:
-                print("You don't have any Paid Back Deposit")
+                print(red, "\n:: You don't have any Paid Back Deposit", end)
                 time.sleep(3.5)
                 break
     except Exception as e:
@@ -1055,19 +1057,20 @@ def access_safelock(auth: Authentication):
             print(f"{bold}{brt_black_bg}{brt_red}\n8% - 15% per annum{end}")
 
             print(f"{bold}{brt_black_bg}{brt_yellow}")
-            print("Fixed Deposit Balance" + f"{end}")
+            print(f"Fixed Deposit Balance{end}")
 
-            print(f'{bold}{sl_balance}{end}\n')
-            print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print(f"|                   1. {eye} BALANCE                       |")
+            print(f'{bold}{green}{sl_balance}\n')
+            print(f"{magenta}+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+            print(f"|                   {brt_black_bg}{brt_yellow}1. {eye} BALANCE{end}                       {bold}{magenta}|")
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print("|    2. ONGOING DEPOSITS    |    3. PAID BACK DEPOSITS    |")
+            print(f"|    {brt_black_bg}{brt_yellow}2. ONGOING DEPOSITS{end}    {bold}{magenta}|    {brt_black_bg}{brt_yellow}3. PAID BACK DEPOSITS{end}    {bold}{magenta}|")
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print("|              4. CREATE A NEW FIXED DEPOSIT              |")
+            print(f"|              {brt_black_bg}{brt_yellow}4. CREATE A NEW FIXED DEPOSIT{end}              {bold}{magenta}|")
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
 
             # Get user input
             user_input = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^1$', user_input):
                 # Toggle balance visibility
@@ -1090,7 +1093,7 @@ def access_safelock(auth: Authentication):
             elif re.search('^.*(back|return).*$', user_input.strip().lower()):
                 pass  # Go back to the signed-in menu
             else:
-                print("\n:: Invalid input, please try again.")
+                print(red, "\n:: Invalid input, please try again.", end)
                 time.sleep(2)
                 continue
             break  # Exit loop after handling the input

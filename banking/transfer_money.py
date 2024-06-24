@@ -135,9 +135,8 @@ def recipient_account_number(auth: Authentication):
                     print(bold, red, f'  :: {recipient_name.upper()} ::', end, sep='')
                     print(bold, brt_yellow, '\nis this the correct RECIPIENT NAME you want to send money to?', sep='')
                     print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')
-                    print(f'{bold}{magenta}~~~~~~     ~~~~~{end}')
+                    print(f'{bold}{magenta}~~~~~~     ~~~~~')
 
-                    print(bold, magenta, end='')
                     checking_input = input(">>> ").strip()
                     print(end, end='')
 
@@ -147,14 +146,18 @@ def recipient_account_number(auth: Authentication):
                         auth.receiver_name = recipient_name
 
                         break
-                    elif re.search('^.*(back|return).*$', _input, re.IGNORECASE):
-                        del _input
+                    elif re.search('^.*(back|return).*$', checking_input, re.IGNORECASE):
+                        del checking_input
                         time.sleep(1.5)
                         go_back('signed_in', auth=auth)
-                    else:
+                    elif checking_input == '2' or checking_input.lower() == 'no':
                         del checking
                         del _input
                         del checking_input
+                        time.sleep(2)
+                        continue
+                    else:
+                        print(red, "\n:: Invalid response. Try Again.", end, sep='')
                         time.sleep(2)
                         continue
                 else:

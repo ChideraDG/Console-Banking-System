@@ -182,7 +182,7 @@ class Account(User):
             query = (f""" 
             UPDATE {self.database.db_tables[3]}
             SET account_status = 'active'
-            WHERE account_number = {account_number}
+            WHERE account_number = '{account_number}'
             """)
 
             self.database.query(query)

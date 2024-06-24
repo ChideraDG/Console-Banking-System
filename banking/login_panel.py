@@ -17,8 +17,8 @@ from animation.colors import *
 
 auth = Authentication()
 notify = Notification()
-    
-    
+
+
 def username():
     """
     Validates the username of the user.
@@ -45,11 +45,10 @@ def username():
     try:
         while True:
             print(f"{bold}{brt_yellow}\nENTER YOUR USERNAME:{end}")
-            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~{end}")
+            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~")
 
-            print(brt_yellow, bold, end='')  # coloring
             _username = input(">>> ").strip()
-            print(end, end='')  # coloring
+            print(end, end='')
 
             if re.search('^1$', _username):
                 return _username
@@ -68,7 +67,7 @@ def username():
                     go_back('script')
                     break
                 elif check_account_status(_username)[1] == 'blocked':
-                    print(f"{brt_red}\n:: Account is BLOCKED.\n:: Meet the admin to UNBLOCK your account.{end}")
+                    print(f"{red}\n:: Account is BLOCKED.\n:: Meet the admin to UNBLOCK your account.{end}")
                     del _username
                     time.sleep(3)
                     go_back('script')
@@ -77,7 +76,7 @@ def username():
                     auth.username = _username
                     return _username
             else:
-                print(f"{brt_red}\n:: Wrong Username.{end}")
+                print(f"{red}\n:: Wrong Username.{end}")
                 time.sleep(3)
                 continue
     except Exception as e:
@@ -111,11 +110,10 @@ def password():
     try:
         while auth.login_attempts < 3:
             print(f"{bold}{brt_yellow}\nENTER YOUR PASSWORD:{end}")
-            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~{end}")
+            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~")
 
-            print(brt_yellow, bold, end='')  # coloring
             _password = input(">>> ").strip()
-            print(end, end='')  # coloring
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', _password, re.IGNORECASE):
                 return 'back'
@@ -172,9 +170,8 @@ def forgot_username():
     try:
         while True:
             print(f"{bold}{brt_yellow}\nENTER YOUR REGISTERED PHONE NUMBER/E-MAIL:{end}")
-            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}")
+            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
-            print(brt_yellow, bold, end='')
             _input = input(">>> ").strip().lower()  # Get user input and convert it to lowercase.
             print(end, end='')
 
@@ -183,11 +180,14 @@ def forgot_username():
                 go_back('script')
                 break
             else:
-                if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _input, re.IGNORECASE):  # Validate email format.
+                if re.search(r"^\w+@(\w+\.)?\w+\.(edu|com|gov|ng|org)$", _input,
+                             re.IGNORECASE):  # Validate email format.
                     _username: str = get_username_from_database(_input, email=True)  # Retrieve username by email.
                     column = 'email'
-                elif re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', _input) and 11 <= len(_input) <= 15:  # Validate phone number format.
-                    _username: str = get_username_from_database(_input, phone_number=True)  # Retrieve username by phone number.
+                elif re.search(r'^\+?[0-9]{3} ?[0-9-]{8,11}$', _input) and 11 <= len(
+                        _input) <= 15:  # Validate phone number format.
+                    _username: str = get_username_from_database(_input,
+                                                                phone_number=True)  # Retrieve username by phone number.
                     column = 'phone_number'
                 else:
                     print(f"{brt_red}\nWrong Input{end}")  # Notify user of incorrect input format.
@@ -204,10 +204,13 @@ def forgot_username():
                     _token = token_auth()  # Send a token for verification.
                     while True:
                         print(f"{bold}{brt_yellow}\nENTER YOUR TOKEN NUMBER:{end}")
-                        print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~~~~~{end}")
-                        _tokenNumber = input(">>> ").strip()  # Get the token number input from the user.
+                        print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~~~~~")
 
-                        if re.search('^.*(back|return).*$', _tokenNumber, re.IGNORECASE):  # Check if the user wants to go back.
+                        _tokenNumber = input(">>> ").strip()  # Get the token number input from the user.
+                        print(end, end='')
+
+                        if re.search('^.*(back|return).*$', _tokenNumber,
+                                     re.IGNORECASE):  # Check if the user wants to go back.
                             del _tokenNumber  # Delete the token number to free memory.
                             go_back('script')
                         else:
@@ -221,12 +224,14 @@ def forgot_username():
                                     )
 
                                     print(red, end='')
-                                    print("\n:: Username Successfully Recovered.\n:: Username sent to your notification")
+                                    print(
+                                        "\n:: Username Successfully Recovered.\n:: Username sent to your notification")
                                     print(end, end='')
 
                                     break
                                 else:
-                                    print(f"{red}\n:: Wrong Token Number.\n:: Try Again{end}")  # Notify user of wrong token.
+                                    print(
+                                        f"{red}\n:: Wrong Token Number.\n:: Try Again{end}")  # Notify user of wrong token.
                                     time.sleep(3)
                                     continue
                             else:
@@ -267,11 +272,10 @@ def forgot_password():
     try:
         while True:
             print(f"{bold}{brt_yellow}\nENTER YOUR USERNAME:{end}")
-            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~{end}")
+            print(f"{bold}{magenta}~~~~~~~~~~~~~~~~~~~~")
 
-            print(brt_yellow, bold, end='')  # coloring
             _input = input(">>> ").strip()
-            print(end, end='')  # coloring
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
@@ -392,4 +396,3 @@ def login():
         # Handle any exceptions by logging the error and navigating back to the main script.
         log_error(e)
         go_back('script')
-

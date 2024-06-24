@@ -56,9 +56,8 @@ def first_name() -> str:
     """
     while True:
         print(bold, brt_yellow, "\nInput your First Name:", end, sep='')
-        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
-
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~", sep='')
+        
         name = input(">>> ").strip()
         print(end, end='')
 
@@ -90,9 +89,7 @@ def middle_name() -> str:
     """
     while True:
         print(bold, brt_yellow, "\nInput your Middle Name:", end, sep='')
-        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
-
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~", sep='')
         name = input(">>> ").strip()
         print(end, end='')
 
@@ -117,9 +114,8 @@ def last_name() -> str:
     """Gets the last name of the User."""
     while True:
         print(bold, brt_yellow, "\nInput your Last Name:", end, sep='')
-        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~", end, sep='')
-
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~", sep='')
+        
         name = input(">>> ").strip()
         print(end, end='')
 
@@ -144,9 +140,8 @@ def gender() -> str:
     """Gets the gender of the User."""
     while True:
         print(bold, brt_yellow, "\nInput your Gender:", end, sep='')
-        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~", end, sep='')
-
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~", sep='')
+        
         _gender = input(">>> ").strip()
         print(end, end='')
 
@@ -167,9 +162,8 @@ def gender() -> str:
 def address() -> str:
     """Gets the address of the User."""
     print(bold, brt_yellow, "\nInput your Address:", end, sep='')
-    print(bold, magenta, "~~~~~~~~~~~~~~~~~~~", end, sep='')
-
-    print(bold, brt_yellow, end='')
+    print(bold, magenta, "~~~~~~~~~~~~~~~~~~~", sep='')
+    
     _address = input(">>> ").strip()
     print(end, end='')
 
@@ -189,9 +183,8 @@ def date_of_birth() -> str:
 
     while True:
         print(bold, brt_yellow, "\nInput your Year of Birth:", end, sep='')
-        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
-
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
+        
         year_of_birth = input(">>> ").strip()
         print(end, end='')
 
@@ -216,9 +209,8 @@ def date_of_birth() -> str:
 
     while True:
         print(bold, brt_yellow, "\nInput your Month of Birth:", end, sep='')
-        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
-
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
+        
         month_of_birth = input(">>> ").strip()
         print(end, end='')
 
@@ -283,9 +275,8 @@ def date_of_birth() -> str:
 
     while True:
         print(bold, brt_yellow, "\nInput your Day of Birth:", end, sep='')
-        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
-
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
+        
         day_of_birth = input(">>> ").strip()
         print(end, end='')
 
@@ -311,9 +302,8 @@ def e_mail() -> str:
     """Gets the E-mail of the User."""
     while True:
         print(bold, brt_yellow, "\nInput your E-mail:", end, sep='')
-        print(bold, magenta, "~~~~~~~~~~~~~~~~~~", end, sep='')
-
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~", sep='')
+        
         email = input(">>> ").strip()
         print(end, end='')
 
@@ -340,9 +330,8 @@ def phone_number() -> str:
     """Gets the phone number of the User."""
     while True:
         print(bold, brt_yellow, "\nInput your Phone Number:", end, sep='')
-        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
-
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
+        
         phoneNumber = input(">>> ").strip()
         print(end, end='')
 
@@ -373,7 +362,7 @@ def account_type() -> str:
         print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
         print(bold, brt_yellow, '1 -> Savings \n2 -> Current', end, sep='')
 
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, end='')
         accountType = input('>>> ')
         print(end, end='')
 
@@ -402,7 +391,7 @@ def account_password() -> str:
         print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
         print(bold, brt_yellow, "\nEnter Password:", end, sep='')
 
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, end='')
         accountPassword = input(">>> ").strip()
         print(end, end='')
 
@@ -414,7 +403,7 @@ def account_password() -> str:
                 while True:
                     print(bold, brt_yellow, "\nRe-enter Password:", end, sep='')
 
-                    print(bold, brt_yellow, end='')
+                    print(bold, magenta, end='')
                     second_input = input(">>> ").strip()
                     print(end, end='')
 
@@ -441,7 +430,7 @@ def transaction_pin():
         print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "~"*len(' (A Four-digit Number)'), end, sep="")
         print(bold, brt_yellow, "\nEnter Transaction Pin:", end, sep='')
 
-        print(bold, brt_yellow, end='')
+        print(bold, magenta, end='')
         transactionPin = input(">>> ").strip()
         print(end, end='')
 
@@ -453,7 +442,7 @@ def transaction_pin():
                 while True:
                     print(bold, brt_yellow, "\nRe-Enter Transaction Pin:", end, sep='')
 
-                    print(bold, brt_yellow, end='')
+                    print(bold, magenta, end='')
                     second_input = input(">>> ").strip()
                     print(end, end='')
 

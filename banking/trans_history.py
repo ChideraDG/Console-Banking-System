@@ -2,9 +2,10 @@ import re
 import time
 from datetime import datetime, date
 from typing import Tuple, Any
-
 from bank_processes.authentication import Authentication
 from banking.main_menu import log_error, go_back, header
+from animation.colors import *
+from banking.register_panel import countdown_timer
 
 
 def get_month_details(month_of_birth: int):
@@ -75,33 +76,37 @@ def by_date(*, current_year) -> str | tuple[str, str]:
             """
             header()  # Call the header function to display the header.
 
-            print(f"\n{title.upper()} DATE:")  # Print the title in uppercase.
-            print(f"~~~~~~{'~' * len(title)}")  # Print a decorative line.
+            print(bold, brt_yellow, f"\n{title.upper()} DATE:")
+            print(magenta, f"~~~~~~{'~' * len(title)}", end, sep='')
 
             while True:
                 # Get the year from the user.
-                print("\nInput the Year:")
-                print("~~~~~~~~~~~~~~~")
-                year = input(">>> ").strip()  # Prompt user input and strip whitespace.
+                print(bold, brt_yellow, "\nInput the Year:")
+                print(magenta, "~~~~~~~~~~~~~~~", sep='')
+
+                year = input(">>> ").strip()
+                print(end, end='')
 
                 if re.search('^.*(back|return).*$', year, re.IGNORECASE):
                     return 'break'  # If the user types 'back' or 'return', break the loop.
                 if year.isdigit() and 1900 < int(year) <= current_year:
-                    break  # If the year is valid, break the loop.
+                    break
                 else:
                     if not year.isdigit():
-                        print(f"\n:: {title.title()} Year should be in digits.\nExample: 2001, 2004, etc.")
+                        print(red, f"\n:: {title.title()} Year should be in digits.\nExample: 2001, 2004, etc.", end)
                     elif int(year) <= 1900:
-                        print("\n:: Invalid input\n:: Year is less than 1900")
+                        print(red, "\n:: Invalid input\n:: Year is less than 1900", end)
                     elif int(year) > current_year:
-                        print(f"\n:: Invalid input\n:: Year is greater than {current_year}")
-                    time.sleep(2)  # Wait for 2 seconds before retrying.
+                        print(red, f"\n:: Invalid input\n:: Year is greater than {current_year}", end)
+                    time.sleep(2)
 
             while True:
                 # Get the month from the user.
-                print("\nInput the Month:")
-                print("~~~~~~~~~~~~~~~~")
-                month = input(">>> ").strip()  # Prompt user input and strip whitespace.
+                print(bold, brt_yellow, "\nInput the Month:")
+                print(magenta, "~~~~~~~~~~~~~~~~", sep='')
+
+                month = input(">>> ").strip()
+                print(end, end='')
 
                 if re.search('^.*(back|return).*$', month, re.IGNORECASE):
                     return 'break'  # If the user types 'back' or 'return', break the loop.
@@ -111,21 +116,23 @@ def by_date(*, current_year) -> str | tuple[str, str]:
                     else:
                         current_month = 12  # Set to December for past years.
                     if 0 < int(month) <= current_month:
-                        break  # If the month is valid, break the loop.
+                        break
                     else:
                         if not 0 < int(month):
-                            print("\n:: Invalid input\n:: Month is less than 1")
+                            print(red, "\n:: Invalid input\n:: Month is less than 1", end)
                         elif int(month) > current_month:
-                            print(f"\n:: Invalid input\n:: Month is greater than {current_month}")
+                            print(red, f"\n:: Invalid input\n:: Month is greater than {current_month}", end)
                 else:
-                    print(f"\n:: {title.title()} Month should be in digits.\nExample: 1, 4, etc.")
-                time.sleep(2)  # Wait for 2 seconds before retrying.
+                    print(red, f"\n:: {title.title()} Month should be in digits.\nExample: 1, 4, etc.", end)
+                time.sleep(2)
 
             while True:
                 # Get the day from the user.
-                print("\nInput the Day:")
-                print("~~~~~~~~~~~~~~")
-                day = input(">>> ").strip()  # Prompt user input and strip whitespace.
+                print(bold, brt_yellow, "\nInput the Day:")
+                print(magenta, "~~~~~~~~~~~~~~", sep='')
+
+                day = input(">>> ").strip()
+                print(end, end='')
 
                 if re.search('^.*(back|return).*$', day, re.IGNORECASE):
                     return 'break'  # If the user types 'back' or 'return', break the loop.
@@ -135,13 +142,13 @@ def by_date(*, current_year) -> str | tuple[str, str]:
                     else:
                         current_day = get_month_details(int(month))[1]  # Get the number of days in the month.
                     if 0 < int(day) <= current_day:
-                        break  # If the day is valid, break the loop.
+                        break
                     else:
-                        print(f"\n:: Day of Birth should be within the number of days in "
-                              f"{get_month_details(int(month))[0]} in {year}.")
+                        print(red, f"\n:: Day of Birth should be within the number of days in "
+                              f"{get_month_details(int(month))[0]} in {year}.", end)
                 else:
-                    print(f"\n:: {title.title()} Day should be in digits.\nExample: 1, 4, etc.")
-                time.sleep(2)  # Wait for 2 seconds before retrying.
+                    print(red, f"\n:: {title.title()} Day should be in digits.\nExample: 1, 4, etc.", end)
+                time.sleep(2)
 
             return f'{year}-{month}-{day}'  # Return the date in 'YYYY-MM-DD' format.
 
@@ -157,15 +164,15 @@ def by_date(*, current_year) -> str | tuple[str, str]:
                  day=int(start_date.split('-')[2])) >
                 date(year=int(end_date.split('-')[0]), month=int(end_date.split('-')[1]),
                      day=int(end_date.split('-')[2]))):
-            print("\n:: Start Date cannot be greater than End Date")
-            time.sleep(2)  # Wait for 2 seconds before retrying.
+            print(red, "\n:: Start Date cannot be greater than End Date", end)
+            time.sleep(2)
 
             by_date(current_year=datetime.today().year)  # Retry getting dates.
 
         return start_date, end_date  # Return the start and end dates.
     except Exception as e:
         log_error(e)  # Log any exceptions.
-        go_back('signed_in', auth=auth)  # Return to the previous menu.
+        go_back('script')  # Return to the main menu.
 
 
 def by_month(*, current_year: int) -> str | tuple[int, Any]:
@@ -187,14 +194,16 @@ def by_month(*, current_year: int) -> str | tuple[int, Any]:
     try:
         header()  # Call the header function to display the header.
 
-        print("\nYEAR AND MONTH TIME FRAME")
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(bold, brt_yellow, "\nYEAR AND MONTH TIME FRAME")
+        print(magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
 
         while True:
             # Get the year from the user.
-            print("\nInput the Year of the Month:")
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            year = input(">>> ").strip()  # Prompt user input and strip whitespace.
+            print(bold, brt_yellow, "\nInput the Year of the Month:")
+            print(magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
+
+            year = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', year, re.IGNORECASE):
                 return 'break'  # If the user types 'back' or 'return', break the loop.
@@ -202,18 +211,18 @@ def by_month(*, current_year: int) -> str | tuple[int, Any]:
                 break  # If the year is valid, break the loop.
             else:
                 if not year.isdigit():
-                    print(f"\n:: Year should be in digits.\nExample: 2001, 2004, etc.")
+                    print(red, f"\n:: Year should be in digits.\nExample: 2001, 2004, etc.", end)
                 elif int(year) <= 1900:
-                    print("\n:: Invalid input\n:: Year is less than 1900")
+                    print(red, "\n:: Invalid input\n:: Year is less than 1900", end)
                 elif int(year) > current_year:
-                    print(f"\n:: Invalid input\n:: Year is greater than {current_year}")
-                time.sleep(2)  # Wait for 2 seconds before retrying.
+                    print(red, f"\n:: Invalid input\n:: Year is greater than {current_year}", end)
+                time.sleep(2)
 
         while True:
             # Get the month from the user.
             print("\nInput the Month:")
             print("~~~~~~~~~~~~~~~~")
-            month = input(">>> ").strip()  # Prompt user input and strip whitespace.
+            month = input(">>> ").strip()
 
             if re.search('^.*(back|return).*$', month, re.IGNORECASE):
                 return 'break'  # If the user types 'back' or 'return', break the loop.
@@ -226,12 +235,12 @@ def by_month(*, current_year: int) -> str | tuple[int, Any]:
                     break  # If the month is valid, break the loop.
                 else:
                     if not 0 < int(month):
-                        print("\n:: Invalid input\n:: Month is less than 1")
+                        print(red, "\n:: Invalid input\n:: Month is less than 1", end)
                     elif int(month) > current_month:
-                        print(f"\n:: Invalid input\n:: Month is greater than {current_month}")
+                        print(red, f"\n:: Invalid input\n:: Month is greater than {current_month}", end)
             else:
-                print(f"\n:: Month should be in digits.\nExample: 1, 4, etc.")
-            time.sleep(2)  # Wait for 2 seconds before retrying.
+                print(red, f"\n:: Month should be in digits.\nExample: 1, 4, etc.", end)
+            time.sleep(2)
 
         return int(year), get_month_details(int(month))[0]  # Return the year and month name.
     except Exception as e:
@@ -272,7 +281,7 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
                                   int(end_date.split('-')[2]), 23, 59, 59), time_period=True)
 
             if trans is True:
-                print(":: You don't have any transaction within this time frame.")
+                print(green, ":: You don't have any transaction within this time frame.", end, sep='')
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
 
@@ -280,23 +289,29 @@ def process_transaction_history(*, auth: Authentication, criteria: str = 'all', 
             trans = auth.transaction_history(month=month, year=year, is_month=True)
 
             if trans is True:
-                print(f":: You don't have any transaction in the month of {month.title()}, {year}")
+                print(green, f":: You don't have any transaction in the month of {month.title()}, {year}", end, sep='')
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
 
         elif criteria == 'all':
             trans = auth.transaction_history()
             if trans is True:
-                print(":: You don't have any transaction on your account.")
+                print(green, ":: You don't have any transaction on your account.", end, sep='')
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
 
-        print("Transaction History")
-        print("~~~~~~~~~~~~~~~~~~~\n")
+        countdown_timer(_register='\rGetting your', _duty='Transaction History', countdown=5)
+        header()
+
+        print(bold, brt_yellow, "\nTransaction History")
+        print(f"{magenta}~~~~~~~~~~~~~~~~~~~{end}\n")
+
         print(trans)  # Print the transaction history.
         time.sleep(3)  # Wait for 3 seconds before continuing.
 
+        print(green, end='')
         input("\nTO RETURN -+- PRESS ENTER  ")  # Prompt the user to press Enter to return.
+        print(end, end='')
         break
 
 
@@ -313,13 +328,16 @@ def transaction_history(auth: Authentication):
         while True:
             header()  # Call the header function to display the header.
 
-            print('\nChoose a Criteria:\n~~~~~~~~~~~~~~~~~~\n')
+            print(bold, brt_yellow, '\nChoose a Criteria:')
+            print(magenta, '~~~~~~~~~~~~~~~~~~', sep='')
+            print("\n+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
+            print(f"|     {brt_black_bg}{brt_yellow}1. BY DATE{end}     {bold}{magenta}|     {brt_black_bg}{brt_yellow}2. BY MONTH{end}     {bold}{magenta}|")
             print("+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
-            print("|     1. BY DATE     |     2. BY MONTH     |")
-            print("+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
-            print("|         3. ALL TRANSACTION HISTORY       |")
+            print(f"|         {brt_black_bg}{brt_yellow}3. ALL TRANSACTION HISTORY{end}       {bold}{magenta}|")
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+
             user_input = input(">>> ").strip()  # Prompt user input and strip whitespace.
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                 time.sleep(1)  # Wait for 1 second before breaking.
@@ -355,7 +373,7 @@ def transaction_history(auth: Authentication):
                 break
 
             else:
-                print("\n:: Invalid input, please try again.")
+                print(red, "\n:: Invalid input, please try again.", end)
                 time.sleep(2)  # Wait for 2 seconds before retrying.
 
     except Exception as e:

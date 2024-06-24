@@ -33,9 +33,8 @@ def verify_address(auth: Authentication):
             time.sleep(2)
 
             print(bold, brt_yellow, "\nInput your Address:", end, sep='')
-            print(bold, magenta, "~~~~~~~~~~~~~~~~~~~", end, sep='')
+            print(bold, magenta, "~~~~~~~~~~~~~~~~~~~", sep='')
 
-            print(bold, brt_yellow, end='')
             _address = input(">>> ").strip()  # Get the user's address input.
             print(end, end='')
 
@@ -83,9 +82,8 @@ def verify_bvn(auth: Authentication):
             time.sleep(2)
 
             print(bold, brt_yellow, "\nInput your BVN:", end, sep='')
-            print(bold, magenta, "~~~~~~~~~~~~~~~", end, sep='')
+            print(bold, magenta, "~~~~~~~~~~~~~~~", sep='')
 
-            print(bold, brt_yellow, end='')
             bvn = input(">>> ").strip()  # Get the user's BVN input.
             print(end, end='')
 
@@ -126,11 +124,12 @@ def by_tier(auth: Authentication):
 
             if auth.account_type == 'savings':
                 if auth.account_tier == 'Tier 1':
-                    print('\n+~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+')
-                    print('|   1. to TIER 2   |   2. to TIER 3   |')
+                    print(bold, magenta, '\n+~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+')
+                    print(f'|   {brt_black_bg}{brt_yellow}1. to TIER 2{end}   {bold}{magenta}|   {brt_black_bg}{brt_yellow}2. to TIER 3{end}   {bold}{magenta}|')
                     print('+~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+')
 
                     user_input = input('>>> ')
+                    print(end, end='')
 
                     if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                         break
@@ -177,10 +176,11 @@ def by_tier(auth: Authentication):
                         continue
                 elif auth.account_tier == 'Tier 2':
                     print('\n+~~~~~~~~~~~~~~~~~~+')
-                    print('|   1. to TIER 3   |')
+                    print(f'|   {brt_black_bg}{brt_yellow}1. to TIER 3{end}   {bold}{magenta}|')
                     print('+~~~~~~~~~~~~~~~~~~+')
 
                     user_input = input('>>> ')
+                    print(end, end='')
 
                     if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                         break
@@ -214,10 +214,11 @@ def by_tier(auth: Authentication):
             elif auth.account_tier == 'current':
                 if auth.account_tier == 'Tier 1':
                     print('\n+~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+')
-                    print('|   1. to TIER 2   |   2. to TIER 3   |')
+                    print(f'|   {brt_black_bg}{brt_yellow}1. to TIER 2{end}   {bold}{magenta}|   {brt_black_bg}{brt_yellow}2. to TIER 3{end}   {bold}{magenta}|')
                     print('+~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+')
 
                     user_input = input('>>> ')
+                    print(end, end='')
 
                     if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                         break
@@ -264,10 +265,11 @@ def by_tier(auth: Authentication):
                         continue
                 elif auth.account_tier == 'Tier 2':
                     print('\n+~~~~~~~~~~~~~~~~~~+')
-                    print('|   1. to TIER 3   |')
+                    print(f'|   {brt_black_bg}{brt_yellow}1. to TIER 3{end}   {bold}{magenta}|')
                     print('+~~~~~~~~~~~~~~~~~~+')
 
                     user_input = input('>>> ')
+                    print(end, end='')
 
                     if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                         break
@@ -325,11 +327,14 @@ def upgrade(auth: Authentication):
         while True:
             header()
 
+            print(bold, brt_yellow, '\nChoose a Criteria:')
+            print(magenta, '~~~~~~~~~~~~~~~~~~', sep='')
             print('\n+~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print('|   1. by ACCOUNT TYPE   |       2. by TIER       |')
+            print(f'|   {brt_black_bg}{brt_yellow}1. by ACCOUNT TYPE{end}   {bold}{magenta}|       {brt_black_bg}{brt_yellow}2. by TIER{end}       {bold}{magenta}|')
             print('+~~~~~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~~~~+')
 
             user_input = input('>>> ')
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                 break
@@ -340,7 +345,7 @@ def upgrade(auth: Authentication):
                 by_tier(auth)
                 continue
             else:
-                print(red, '\nInvalid input. Try again', end, sep='')
+                print(red, '\nInvalid input. Try again', end)
                 time.sleep(2)
                 continue
     except Exception as e:

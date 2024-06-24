@@ -111,8 +111,8 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
     try:
         while True:
             header()  # Call the function to print the header.
-            print("\nChoose Payback Date")
-            print("~~~~~~~~~~~~~~~~~~~\n")
+            print(bold, brt_yellow, "\nChoose Payback Date")
+            print(f"{magenta}~~~~~~~~~~~~~~~~~~~{end}\n")
 
             dates: dict = {}  # Dictionary to store the payback date options.
             start = start_day  # Initialize the start day for calculating dates.
@@ -155,7 +155,7 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
                 _month, _days = get_month(current_month)  # Get the updated month and the number of days in it.
 
                 # Print the payback date option with the interest rate.
-                print(f'[{day}] -> {current_day}/{_month}/{current_year} - {rate_of_interest:.2f}%', end='\t\t\t\t\t')
+                print(f'{bold}{green}[{day}]{green} {magenta}-> {brt_yellow}{current_day}/{_month}/{current_year} {magenta}- {brt_yellow}{rate_of_interest:.2f}%{end}', end='\t\t\t\t\t')
 
                 # Store the date information in the dictionary.
                 dates[f'{day}'] = [
@@ -172,7 +172,9 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
                     print()
 
             while True:
+                print(bold, magenta, end='')
                 _input = input("\n>>> ")  # Get user input.
+                print(end, end='')
 
                 # Check if the user wants to go back.
                 if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
@@ -183,14 +185,14 @@ def payback_date(current_year: int, current_month: int, current_day: int, start_
                 else:
                     # Validate the user input.
                     if not _input.isdigit():
-                        print("\n:: Numbers Only")
+                        print(red, "\n:: Numbers Only", end)
                         del _input
                         time.sleep(3)
                         continue
                     elif start_day <= int(_input) <= end_day:
                         return dates[_input], f'{int(_input)} days', 'Beta Account Balance'
                     else:
-                        print("\n:: Wrong Input")
+                        print(red, "\n:: Wrong Input", end)
                         del _input
                         time.sleep(3)
                         continue
@@ -217,9 +219,11 @@ def safelock(auth: Authentication) -> tuple[float, str]:
     try:
         while True:
             header()  # Display the header.
-            print("\nAmount to Deposit: (must be Greater than N1000)")
-            print("~~~~~~~~~~~~~~~~~~")
+            print(bold, brt_yellow, "\nAmount to Deposit: (must be Greater than N1000)")
+            print(magenta, "~~~~~~~~~~~~~~~~~~", sep='')
+
             deposit_amount = input(">>> ").strip()
+            print(end, end='')
 
             # Check if the user wants to go back.
             if re.search('^.*(back|return).*$', deposit_amount, re.IGNORECASE):
@@ -230,12 +234,12 @@ def safelock(auth: Authentication) -> tuple[float, str]:
             else:
                 # Validate the deposit amount input.
                 if re.search("^[0-9]{0,30}[.]?[0-9]{0,2}$", deposit_amount, re.IGNORECASE) is None:
-                    print("\n:: Digits Only")
+                    print(red, "\n:: Digits Only", end)
                     del deposit_amount
                     time.sleep(2)
                     continue
                 elif float(deposit_amount) < 1000:
-                    print("\n:: Amount MUST be above N1000")
+                    print(red, "\n:: Amount MUST be above N1000", end)
                     del deposit_amount
                     time.sleep(3)
                     continue
@@ -247,12 +251,12 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                         if auth.transaction_validation(amount=True)[0]:
                             auth.initial_deposit = float(deposit_amount)
                         else:
-                            print(f"\n:: {auth.transaction_validation(amount=True)[1]}")
+                            print(red, f"\n:: {auth.transaction_validation(amount=True)[1]}", end)
                             del deposit_amount
                             time.sleep(2)
                             continue
                     else:
-                        print(f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}")
+                        print(red, f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}", end)
                         del deposit_amount
                         time.sleep(3)
                         go_back('signed_in', auth=auth)
@@ -261,9 +265,11 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                     # Prompt for the title of the deposit.
                     while True:
                         header()
-                        print("\nTitle of Deposit")
-                        print("~~~~~~~~~~~~~~~~")
+                        print(bold, brt_yellow, "\nTitle of Deposit")
+                        print(magenta, "~~~~~~~~~~~~~~~~", sep='')
+
                         deposit_title = input(">>> ").strip()
+                        print(end, end='')
 
                         # Check if the user wants to go back.
                         if re.search('^.*(back|return).*$', deposit_title, re.IGNORECASE):
@@ -274,7 +280,7 @@ def safelock(auth: Authentication) -> tuple[float, str]:
                         else:
                             # Validate the length of the deposit title.
                             if len(deposit_title) > 29:
-                                print("\n:: Title can't be more than 30 characters")
+                                print(red, "\n:: Title can't be more than 30 characters", end)
                                 del deposit_title
                                 time.sleep(3)
                                 continue
@@ -318,18 +324,18 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
         _time = datetime.datetime.today().now().time()
         while True:
             header()  # Display the header
-            print("\nPreview your Fixed Deposit slip")
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+            print(bold, brt_yellow, "\nPreview your Fixed Deposit slip")
+            print(f"{magenta}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{end}\n")
 
             # Displaying details for the user to review
-            print('Fixed Deposit Title')
-            print(safelock_title, '\n')
-            print('Initial Deposit                             Interest')
-            print(f'N{amount_to_lock}{' ' * (43 - len(str(amount_to_lock)))}{interest}\n')
-            print('Interest To Earn                            Maturity Date')
-            print(f'N{interest_to_earn}{' ' * (43 - len(str(interest_to_earn)))}{maturity_date}\n')
-            print('Lock Duration                               Matures Into Your')
-            print(f'{lock_duration}{' ' * (44 - len(lock_duration))}{maturity_location}\n')
+            print(bold, brt_yellow, 'Fixed Deposit Title', sep='')
+            print(green, safelock_title, sep='')
+            print(bold, brt_yellow, '\nInitial Deposit                             Interest')
+            print(green, f'N{amount_to_lock}{' ' * (43 - len(str(amount_to_lock)))}{interest}', sep='')
+            print(bold, brt_yellow, '\nInterest To Earn                            Maturity Date')
+            print(green, f'N{interest_to_earn}{' ' * (43 - len(str(interest_to_earn)))}{maturity_date}', sep='')
+            print(bold, brt_yellow, '\nLock Duration                               Matures Into Your')
+            print(green, f'{lock_duration}{' ' * (44 - len(lock_duration))}{maturity_location}', sep='', end='\n\n')
 
             # Calculate and display the payback time
             if _time.hour > 12:
@@ -338,12 +344,14 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
                 payback_time = f'{_time.hour}:{_time.minute} AM'
 
             # Display an authorization message
-            print(f'I authorize Console Beta Banking to SafeLock {amount_to_lock} immediately and return it in full on'
+            print(bold, brt_yellow, f'I authorize Console Beta Banking to SafeLock {amount_to_lock} immediately and return it in full on'
                   f'\nthe {maturity_date} by {payback_time} to my Beta Account Balance. \n'
-                  f'I confirm and approve this transaction.')
-            print('1. Yes  |  2. No')
-            print('~~~~~~     ~~~~~')
+                  f'I confirm and approve this transaction.', sep='')
+            print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')
+            print(f'{bold}{magenta}~~~~~~     ~~~~~')
+
             _input = input(">>> ").strip()
+            print(end, end='')
 
             # Check if the user wants to go back
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
@@ -353,11 +361,14 @@ def preview_safelock(safelock_title: str, amount_to_lock: float, interest: str, 
             else:
                 if re.search('^(1|yes)$', _input, re.IGNORECASE):
                     print()
-                    print(f'I hereby acknowledge that this Fixed Deposit Account CANNOT be broken once it has been '
-                          f'created')
-                    print('1. Yes  |  2. No')
-                    print('~~~~~~     ~~~~~')
+                    print(bold, brt_yellow, f'I hereby acknowledge that this Fixed Deposit Account CANNOT be broken once it has been '
+                          f'created', sep='')
+                    print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')
+                    print(f'{bold}{magenta}~~~~~~     ~~~~~')
+
                     _input = input(">>> ").strip()
+                    print(end, end='')
+                    
                     if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                         del _input
                         time.sleep(1.5)
@@ -445,7 +456,7 @@ Balance :: {auth.account_balance}
 
                             header()
 
-                            print(f'\n:: Congrats. \n:: Fixed Deposit Successfully Created.')
+                            print(green, f'\n:: Congrats. \n:: Fixed Deposit Successfully Created.', end)
 
                             notify.fixed_deposit_creation_notification(
                                 title='Console Beta Banking',
@@ -463,7 +474,7 @@ Balance :: {auth.account_balance}
                             time.sleep(1.5)
                             break
                         else:
-                            print("\n:: Wrong Input")
+                            print(red, "\n:: Wrong Input", end)
                             del _input
                             time.sleep(3)
                             continue
@@ -472,7 +483,7 @@ Balance :: {auth.account_balance}
                     time.sleep(1.5)
                     break
                 else:
-                    print("\n:: Wrong Input")
+                    print(red, "\n:: Wrong Input", end)
                     del _input
                     time.sleep(3)
                     continue
@@ -493,9 +504,9 @@ def create_safelock(auth: Authentication):
     try:
         time.sleep(1)
         header()
-        print('\nMessage from the CUSTOMER SERVICE OFFICER:::')
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        print("'You want a new Fixed Deposit Account. Let's Create one for You.'")
+        print(bold, brt_yellow, '\nMessage from the CUSTOMER SERVICE OFFICER:::')
+        print(magenta, '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', end, sep='')
+        print(bold, brt_yellow, "'You want a new Fixed Deposit Account. Let's Create one for You.'", end, sep='')
         time.sleep(3)
 
         duration_options = {
@@ -511,17 +522,20 @@ def create_safelock(auth: Authentication):
 
         while True:
             header()
-            print("\nHow long do you want to lock funds?")
-            print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            print("[1] -: 10 - 30 days\t\t\t\t\tat ~ 8% p.a")
-            print("[2] -: 31 - 60 days\t\t\t\t\tat ~ 9% p.a")
-            print("[3] -: 61 - 90 days\t\t\t\t\tat ~ 11% p.a")
-            print("[4] -: 91 - 180 days\t\t\t\t\tat ~ 11.5% p.a")
-            print("[5] -: 181 - 270 days\t\t\t\t\tat ~ 13.5% p.a")
-            print("[6] -: 271 - 365 days\t\t\t\t\tat ~ 14% p.a")
-            print("[7] -: Above 1 - 2 years\t\t\t\tat ~ 14.5% p.a")
-            print("[8] -: Above 2 years\t\t\t\t\tat ~ 15% p.a")
+            print(bold, brt_yellow, "\nHow long do you want to lock funds?")
+            print(magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
+            print(f"{green}[1]{green} {magenta}-: {brt_yellow}10 - 30 days\t\t\t\t\tat {magenta}~ {brt_yellow}8% p.a")
+            print(f"{green}[2]{green} {magenta}-: {brt_yellow}31 - 60 days\t\t\t\t\tat {magenta}~ {brt_yellow}9% p.a")
+            print(f"{green}[3]{green} {magenta}-: {brt_yellow}61 - 90 days\t\t\t\t\tat {magenta}~ {brt_yellow}11% p.a")
+            print(f"{green}[4]{green} {magenta}-: {brt_yellow}91 - 180 days\t\t\t\t\tat {magenta}~ {brt_yellow}11.5% p.a")
+            print(f"{green}[5]{green} {magenta}-: {brt_yellow}181 - 270 days\t\t\t\t\tat {magenta}~ {brt_yellow}13.5% p.a")
+            print(f"{green}[6]{green} {magenta}-: {brt_yellow}271 - 365 days\t\t\t\t\tat {magenta}~ {brt_yellow}14% p.a")
+            print(f"{green}[7]{green} {magenta}-: {brt_yellow}Above 1 - 2 years\t\t\t\tat {magenta}~ {brt_yellow}14.5% p.a")
+            print(f"{green}[8]{green} {magenta}-: {brt_yellow}Above 2 years\t\t\t\t\tat {magenta}~ {brt_yellow}15% p.a")
+
+            print(bold, magenta, end='')
             _input = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                 del _input
@@ -549,7 +563,7 @@ def create_safelock(auth: Authentication):
                 access_safelock(auth)
                 break
             else:
-                print("\n:: Wrong Input")
+                print(red, "\n:: Wrong Input", end)
                 time.sleep(2)
     except Exception as e:
         log_error(error=e)
@@ -600,9 +614,11 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
 
             header()
 
-            print("\nAmount to Deposit: (must be Greater than N1000)")
-            print("~~~~~~~~~~~~~~~~~~")
+            print(bold, brt_yellow, "\nAmount to Deposit: (must be Greater than N1000)")
+            print(magenta, "~~~~~~~~~~~~~~~~~~", sep='')
+
             deposit_amount = input(">>> ").strip()
+            print(end, end='')
 
             # Check for back or return commands
             if re.search('^.*(back|return).*$', deposit_amount, re.IGNORECASE):
@@ -612,19 +628,19 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
             else:
                 # Check for invalid input
                 if not deposit_amount.isdigit() or float(deposit_amount) < 1000:
-                    print("\n:: Amount MUST be above N1000 and should be a valid number")
+                    print(red, "\n:: Amount MUST be above N1000 and should be a valid number", end)
                     time.sleep(3)
                     continue
                 else:
                     auth.amount = float(deposit_amount)
                     # Validate transaction limits and amounts
                     if not auth.transaction_validation(transfer_limit=True)[0]:
-                        print(f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}")
+                        print(red, f"\n:: {auth.transaction_validation(transfer_limit=True)[1]}", end)
                         time.sleep(3)
                         break
 
                     if not auth.transaction_validation(amount=True)[0]:
-                        print(f"\n:: {auth.transaction_validation(amount=True)[1]}")
+                        print(red, f"\n:: {auth.transaction_validation(amount=True)[1]}", end)
                         time.sleep(2)
                         continue
 
@@ -633,7 +649,7 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
                     interest, rate_of_interest = calculate_interest(auth.initial_deposit, upfront_interest, days_left)
 
                     # Display calculated interest and confirmation prompt
-                    print(f"\nYou will earn an upfront interest of {rate_of_interest:.2f}% on any amount you add into "
+                    print(bold, brt_yellow, f"\nYou will earn an upfront interest of {rate_of_interest:.2f}% on any amount you add into "
                           f"\nthis Fixed Deposit, because it has {days_left} days left. Safelock can't be broken, and "
                           f"\nfunds in this particular Safelock can't be accessed until {pay_back_date} "
                           f"by {pay_back_time}.\n")
@@ -641,9 +657,11 @@ def top_up_deposit(auth: Authentication, pay_back_date: str, pay_back_time: time
                     print(f"You will earn N {interest:,.2f} upfront interest on your {auth.initial_deposit:,} naira "
                           f"addition to this Safelock")
 
-                    print('1. Yes  |  2. No')
-                    print('~~~~~~     ~~~~~')
+                    print(f'1. Yes{end}  {bold}{magenta}|{end}  {bold}{brt_yellow}2. No{end}')
+                    print(f'{bold}{magenta}~~~~~~     ~~~~~')
+
                     _input = input(">>> ").strip()
+                    print(end, end='')
 
                     if re.search('^.*(back|return).*$', _input, re.IGNORECASE):
                         del _input
@@ -717,7 +735,7 @@ Balance :: {auth.account_balance}
                         countdown_timer(_register='Top Up deposit', _duty='', countdown=5)
 
                         header()
-                        print("\n:: Deposit Successfully Topped Up.")
+                        print(green, "\n:: Deposit Successfully Topped Up.", end)
 
                         notify.fixed_deposit_top_up_notification(
                             title='Console Beta Banking',
@@ -732,7 +750,7 @@ Balance :: {auth.account_balance}
                         time.sleep(1)
                         break
                     else:
-                        print("\n:: Wrong Input")
+                        print(red, "\n:: Wrong Input", end)
                         del _input
                         time.sleep(3)
                         continue
@@ -775,25 +793,26 @@ def ongoing_display_deposits(auth: Authentication, data: list, _details: list, _
             # Display the details in a structured format
             print('\n', _details[_key], sep='')
 
-            print(f"\n                 FIXED DEPOSIT DETAILS                    ")
-            print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print(f'| Initial Deposit                  Total Interest Earned |')
+            print(bold, brt_yellow, f"\n                 FIXED DEPOSIT DETAILS                    ", end, sep='')
+            print(bold, magenta, f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+", sep='')
+            print(f'| {brt_yellow}Initial Deposit                  Total Interest Earned {magenta}|')
             print(
-                f'| N{data[_key][3]}{" " * (32 - len(str(data[_key][3])))}N{data[_key][5]}'
-                f'{" " * (21 - len(str(data[_key][5])))}|')
+                f'| {green}N{data[_key][3]}{" " * (32 - len(str(data[_key][3])))}N{data[_key][5]}'
+                f'{" " * (21 - len(str(data[_key][5])))}{magenta}|')
             print(f"|                                                        |")
-            print(f'| Start Date                       Payback Date          |')
-            print(f'| {start_date}{" " * (33 - len(start_date))}{payback_date}{" " * (22 - len(payback_date))}|')
+            print(f'| {brt_yellow}Start Date                       Payback Date          {magenta}|')
+            print(f'| {green}{start_date}{" " * (33 - len(start_date))}{payback_date}{" " * (22 - len(payback_date))}{magenta}|')
             print(f"|                                                        |")
-            print(f'| Payback Time                     Safelock ID           |')
-            print(f'| {payback_time}{" " * (33 - 8)}{data[_key][0]}{" " * (22 - len(data[_key][0]))}|')
+            print(f'| {brt_yellow}Payback Time                     Safelock ID           {magenta}|')
+            print(f'| {green}{payback_time}{" " * (33 - 8)}{data[_key][0]}{" " * (22 - len(data[_key][0]))}{magenta}|')
             print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n')
 
             print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print(f'|      1. TOP UP DEPOSIT      |        2. RETURN         |')
+            print(f'|      {brt_black_bg}{brt_yellow}1. TOP UP DEPOSIT{end}      {bold}{magenta}|        {brt_black_bg}{brt_yellow}2. RETURN{end}         {bold}{magenta}|')
             print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
 
             user_input = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', user_input.strip().lower()):
                 pass
@@ -803,7 +822,7 @@ def ongoing_display_deposits(auth: Authentication, data: list, _details: list, _
             elif re.search('^2$', user_input):
                 break
             else:
-                print(":: Digits only.")
+                print(red, "\n:: Digits only.", end)
                 time.sleep(2)
                 continue
 
@@ -844,32 +863,33 @@ def paid_display_deposits(data: list, _details: list, _key: int):
             # Display the details in a structured format
             print('\n', _details[_key], sep='')
 
-            print(f"\n                 FIXED DEPOSIT DETAILS                    ")
-            print(f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
-            print(f'| Initial Deposit                  Total Interest Earned |')
+            print(bold, brt_yellow, f"\n                 FIXED DEPOSIT DETAILS                    ", end, sep='')
+            print(bold, magenta, f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+", sep='')
+            print(f'| {brt_yellow}Initial Deposit                  Total Interest Earned {magenta}|')
             print(
-                f'| N{data[_key][3]}{" " * (32 - len(str(data[_key][3])))}N{data[_key][5]}'
-                f'{" " * (21 - len(str(data[_key][5])))}|')
+                f'| {green}N{data[_key][3]}{" " * (32 - len(str(data[_key][3])))}N{data[_key][5]}'
+                f'{" " * (21 - len(str(data[_key][5])))}{magenta}|')
             print(f"|                                                        |")
-            print(f'| Start Date                       Payback Date          |')
-            print(f'| {start_date}{" " * (33 - len(start_date))}{payback_date}{" " * (22 - len(payback_date))}|')
+            print(f'| {brt_yellow}Start Date                       Payback Date          {magenta}|')
+            print(f'| {green}{start_date}{" " * (33 - len(start_date))}{payback_date}{" " * (22 - len(payback_date))}{magenta}|')
             print(f"|                                                        |")
-            print(f'| Payback Time                     Safelock ID           |')
-            print(f'| {payback_time}{" " * (33 - 8)}{data[_key][0]}{" " * (22 - len(data[_key][0]))}|')
+            print(f'| {brt_yellow}Payback Time                     Safelock ID           {magenta}|')
+            print(f'| {green}{payback_time}{" " * (33 - 8)}{data[_key][0]}{" " * (22 - len(data[_key][0]))}{magenta}|')
             print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n')
 
             print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
-            print(f'|                       1. RETURN                        |')
+            print(f'|                       {brt_black_bg}{brt_yellow}1. RETURN{end}                        {bold}{magenta}|')
             print(f'+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+')
 
             user_input = input(">>> ").strip()
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', user_input.strip().lower()):
                 break
             elif re.search('^(1|return)$', user_input):
                 break
             else:
-                print(":: Digits only.")
+                print(red, "\n:: Digits only.", end)
                 time.sleep(2)
                 continue
     except Exception as e:
@@ -895,8 +915,8 @@ def ongoing_deposits(auth: Authentication):
 
             header()
 
-            print("\nONGOING DEPOSITS")
-            print("~~~~~~~~~~~~~~~~\n")
+            print(bold, brt_yellow, "\nONGOING DEPOSITS")
+            print(f"{magenta}~~~~~~~~~~~~~~~~{end}\n")
 
             if data:
                 for key, value in enumerate(data):
@@ -913,28 +933,30 @@ def ongoing_deposits(auth: Authentication):
                         progress, remaining = 46, 0
 
                     # Format each deposit detail for display
-                    detail = (f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"
+                    detail = (f"{bold}{magenta}+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+\n"
                               f"|                                                              |\n"
-                              f"|   {key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}         |\n"
-                              f"|      N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))}      |\n"
-                              f"|      Locked{' ' * (50 - len('locked'))}      |\n"
+                              f"|   {brt_yellow}{key + 1}. {data[key][2]}{' ' * (47 - len(str(data[key][2])))}         {magenta}|\n"
+                              f"|      {green}N{data[key][3]:,}{' ' * (48 - len(str(data[key][3])))}      {magenta}|\n"
+                              f"|      {brt_yellow}Locked{' ' * (50 - len('locked'))}      {magenta}|\n"
                               f"|                                                              |\n"
                               f"| {brt_blue_bg}{' ' * progress}{brt_white_bg}{' ' * remaining}{end} "
-                              f"{days_remaining[key]} days left{space}|\n"
-                              f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+                              f"{bold}{brt_yellow}{days_remaining[key]} days left{space}{magenta}|\n"
+                              f"+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+{end}")
 
                     details.append(detail)
                     print(detail, '\n')
 
                 # Get user input
+                print(bold, magenta, end='')
                 user_input = input(">>> ").strip()
+                print(end, end='')
 
                 if re.search('^.*(back|return).*$', user_input.strip().lower()):
                     break  # Go back to the previous menu
                 elif user_input.isdigit():
                     user_selection = int(user_input)
                     if user_selection > len(data):
-                        print("\n:: Digits within the list only")
+                        print(red, "\n:: Digits within the list only", end)
                         time.sleep(2)
                     else:
                         days_left = days_remaining[user_selection - 1]
@@ -943,10 +965,10 @@ def ongoing_deposits(auth: Authentication):
                         ongoing_display_deposits(auth, data, details, user_selection - 1)
                         continue
                 else:
-                    print("\n:: Digits only.")
+                    print(red, "\n:: Digits only.", end)
                     time.sleep(2)
             else:
-                print("You don't have any Ongoing Deposit")
+                print(green, "\n:: You don't have any Ongoing Deposit", end)
                 time.sleep(5)
                 break
     except Exception as e:

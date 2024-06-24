@@ -94,14 +94,14 @@ def block_account(auth: Authentication):
             if fetch_user_loan_data(auth):
                 # Checking if user has any outstanding loan or not. If any, user is prompted to pay before proceeding
                 if fetch_user_loan_data(auth) == 1:
-                    print('\n:: You have an outstanding loan!!! \n'
-                          ':: Pay back before attempting to block your account!!!')
+                    print(red, '\n:: You have an outstanding loan!!! \n'
+                          ':: Pay back before attempting to block your account!!!', end)
                     time.sleep(3)
                     break
 
                 elif fetch_user_loan_data(auth) == 3:
                     pass
-            top_borders =  f'{bold}{magenta}+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+{end}'
+            top_borders = f'{bold}{magenta}+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+{end}'
             # Printing blocking confirmation and instructions
             print(f'\n {bold}{brt_black_bg}{brt_yellow}{auth.account_holder}{end}')
             print(top_borders)
@@ -115,20 +115,20 @@ def block_account(auth: Authentication):
             print(top_borders)
 
             # Prompting user to confirm account blocking
-            block = input(f'{red}BLOCK ACCOUNT? y/n \n>>> {end}').lower()
+            block = input(f'{red}BLOCK ACCOUNT? y/n \n>>> {end}').lower().strip()
 
             # Handling user input for cancelling the process
-            if re.search('^.*(back|return|n).*$', block.strip(), re.IGNORECASE):
+            if re.search('^.*(back|return|n|no).*$', block, re.IGNORECASE):
                 time.sleep(1)
                 break
 
             elif block == 'y' or block == 'yes':
                 # Asking user for reason and proceeding with blocking
                 question = input(
-                    f'\nDear {auth.first_name}, please share with us why you want to block your account \n>>> ')
+                    f'{bold}{brt_yellow}\nDear {auth.first_name}, please share with us why you want to block your account{bold}{brt_yellow} \n{magenta}>>> ')
 
-                print(f'\n{auth.account_holder}, '
-                      f'Console Banking wishes you all the best and we hope you patronize us again')
+                print(f'{end}{bold}{brt_yellow}\n{auth.account_holder}, '
+                      f'Console Banking wishes you all the best and we hope you patronize us again{end}')
                 time.sleep(5)
 
                 header()
@@ -146,14 +146,14 @@ def block_account(auth: Authentication):
 
                 header()
 
-                print("\n:: Account blocked successfully, You will be taken to the signup/login page")
+                print(green, "\n:: Account blocked successfully, You will be taken to the signup/login page", end)
                 time.sleep(2)
 
                 # Go back to the signup/login page
                 go_back('script', auth=auth)
 
             else:
-                print(f"\n:: Wrong Input")
+                print(red, f"\n:: Wrong Input", end)
                 time.sleep(1.5)
                 continue
 

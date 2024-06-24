@@ -6,6 +6,7 @@ from bank_processes.notification import Notification
 from banking.register_panel import countdown_timer
 from banking.main_menu import header, log_error, go_back, findDate
 from banking.trans_history import by_date, by_month
+from animation.colors import *
 
 
 notify = Notification()
@@ -51,7 +52,7 @@ def process_generate_statement(*, auth: Authentication, criteria: str = 'all', s
 
             if trans is True:
                 # If no transactions are found within the specified date range, notify the user and exit the loop.
-                print(":: You don't have any transaction within this time frame.")
+                print(green, ":: You don't have any transaction within this time frame.", end, sep='')
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
 
@@ -61,7 +62,7 @@ def process_generate_statement(*, auth: Authentication, criteria: str = 'all', s
 
             if trans is True:
                 # If no transactions are found for the specified month, notify the user and exit the loop.
-                print(f":: You don't have any transaction in the month of {month.title()}, {year}")
+                print(green, f":: You don't have any transaction in the month of {month.title()}, {year}", end, sep='')
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
 
@@ -70,12 +71,12 @@ def process_generate_statement(*, auth: Authentication, criteria: str = 'all', s
             trans = auth.transaction_statement()
             if trans is True:
                 # If no transactions are found, notify the user and exit the loop.
-                print(":: You don't have any transaction on your account.")
+                print(green, ":: You don't have any transaction on your account.", end, sep='')
                 time.sleep(5)  # Wait for 5 seconds before continuing.
                 break
 
         # Display a countdown timer while the statement is being generated.
-        countdown_timer(_register='\rGenerating', _duty='Statement', countdown=5)
+        countdown_timer(_register='\rGetting your', _duty='Statement', countdown=5)
 
         # Get the current date and time.
         today_date = findDate(f'{datetime.today().year}-{datetime.today().month}-{datetime.today().day}')
@@ -105,13 +106,17 @@ def generate_statement(auth: Authentication):
         while True:
             header()  # Call the header function to display the header.
 
-            print('\nChoose a Criteria:\n~~~~~~~~~~~~~~~~~~\n')
+            print(bold, brt_yellow, '\nChoose a Criteria:')
+            print(magenta, '~~~~~~~~~~~~~~~~~~', sep='')
+            print("\n+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
+            print(
+                f"|     {brt_black_bg}{brt_yellow}1. BY DATE{end}     {bold}{magenta}|     {brt_black_bg}{brt_yellow}2. BY MONTH{end}     {bold}{magenta}|")
             print("+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
-            print("|     1. BY DATE     |     2. BY MONTH     |")
-            print("+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
-            print("|         3. ALL TRANSACTION HISTORY       |")
+            print(f"|         {brt_black_bg}{brt_yellow}3. ALL TRANSACTION HISTORY{end}       {bold}{magenta}|")
             print("+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+")
+
             user_input = input(">>> ").strip()  # Prompt user input and strip whitespace.
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                 time.sleep(1)  # Wait for 1 second before breaking.
@@ -147,7 +152,7 @@ def generate_statement(auth: Authentication):
                 break
 
             else:
-                print("\n:: Invalid input, please try again.")
+                print(red, "\n:: Invalid input, please try again.", end)
                 time.sleep(2)  # Wait for 2 seconds before retrying.
 
     except Exception as e:

@@ -146,8 +146,8 @@ def close_account(auth: Authentication):
             if fetch_user_loan_data(auth):
                 # Checking if user has any outstanding loan or not. If any, user is prompted to pay before proceeding
                 if fetch_user_loan_data(auth) == 1:
-                    print('\n:: You have an outstanding loan!!! \n'
-                          ':: Pay back before attempting to close your account!!!')
+                    print(red, '\n:: You have an outstanding loan!!! \n'
+                          ':: Pay back before attempting to close your account!!!', end)
                     time.sleep(3)
                     break
 
@@ -165,20 +165,20 @@ def close_account(auth: Authentication):
             print(f'| {bold}{brt_black_bg}{brt_yellow}Once your account is closed, you will not be able to access it{end}     {bold}{magenta}|')
             print(f'| {bold}{brt_black_bg}{brt_yellow}again, as all your records will be permanently deleted.{end}            {bold}{magenta}|')
             print(top_borders)
-            close = input(f'{red}{bold}CLOSE ACCOUNT? y/n \n>>> {end}').lower()
+            close = input(f'{red}{bold}CLOSE ACCOUNT? y/n \n>>> {end}').lower().strip()
 
             # Handling user input for cancelling the process
-            if re.search('^.*(back|return|n).*$', close.strip(), re.IGNORECASE):
+            if re.search('^.*(back|return|n|no).*$', close, re.IGNORECASE):
                 time.sleep(1)
                 break
 
-            elif close == 'y' or 'yes':
+            elif close == 'y' or close == 'yes':
                 # Asking user for reason and proceeding with closing of account
                 question = input(
-                    f'\nDear {auth.first_name}, please share with us why you want to close your account \n>>> ')
+                    f'{bold}{brt_yellow}\nDear {auth.first_name}, please share with us why you want to close your account{bold}{brt_yellow} \n{magenta}>>> ')
 
-                print(f'\n{auth.account_holder}, '
-                      f'Console Banking wishes you all the best and we hope you open an account with us again')
+                print(f'{end}{bold}{brt_yellow}\n{auth.account_holder}, '
+                      f'Console Banking wishes you all the best and we hope you open an account with us again{end}')
 
                 time.sleep(5)
 
@@ -197,11 +197,16 @@ def close_account(auth: Authentication):
 
                 header()
 
-                print("\n:: Account closed successfully, You will be taken to the signup/login page")
+                print(green, "\n:: Account closed successfully, You will be taken to the signup/login page", end)
                 time.sleep(2)
 
                 # Go back to the signup/login page
                 go_back('script', auth=auth)
+
+            else:
+                print(red, f"\n:: Wrong Input", end)
+                time.sleep(1.5)
+                continue
 
         except Exception as e:
             # Log the error to a file and notify the user

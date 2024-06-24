@@ -18,10 +18,10 @@ def change_transaction_pin(auth: Authentication):
             print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "~", end, sep="")
             print(bold, brt_yellow, "\nEnter old Transaction Pin:", end, sep='')
 
-            print(bold, brt_yellow, end='')
-
+            print(bold, magenta, end='')
             user_input = input(">>> ").strip()
-            time.sleep(1)
+            print(end, end='')
+
             if re.search('^.*(back|return|n).*$', user_input, re.IGNORECASE):
                 time.sleep(1)
                 break
@@ -30,12 +30,13 @@ def change_transaction_pin(auth: Authentication):
                     while True:
                         header()
                         print(bold, brt_yellow, "\nEnter your new Transaction Pin: ", end, sep='')
-                        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "~", end, sep="")
+                        print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "~", end, sep='')
                         print(bold, brt_yellow, "\nEnter new Transaction Pin:", end, sep='')
 
-                        print(bold, brt_yellow, end='')
+                        print(bold, magenta, end='')
                         new_pin = input(">>> ").strip()
-                        time.sleep(1)
+                        print(end, end='')
+
                         if re.search('^.*(back|return|n).*$', new_pin, re.IGNORECASE):
                             time.sleep(1)
                             break
@@ -43,12 +44,14 @@ def change_transaction_pin(auth: Authentication):
                         if re.search(r"^\d{4}$", new_pin):
 
                             print(bold, brt_yellow, "\nConfirm new Transaction Pin:", end, sep='')
-                            print(bold, brt_yellow, end='')
+
+                            print(bold, magenta, end='')
                             confirm_pin = input(">>> ")
-                            time.sleep(1)
                             print(end, end='')
+
                             if confirm_pin == new_pin:
                                 header()
+
                                 countdown_timer(_register='\rChanging Transaction Pin', _duty='')
                                 query = f""" UPDATE   {auth.database.db_tables[3]}
                                         SET transaction_pin = '{confirm_pin}'
@@ -63,12 +66,14 @@ def change_transaction_pin(auth: Authentication):
                                 )
 
                                 header()
-                                print("\n:: Transaction Pin changed successfully")
+
+                                print(green, "\n:: Transaction Pin changed successfully", end)
                                 time.sleep(2)
+
                                 go_back('signed_in', auth=auth)
 
                             else:
-                                print("\n:: Transaction Pin does not match!!!")
+                                print(red, "\n:: Transaction Pin does not match!!!", end)
                                 time.sleep(2)
                                 continue
                         else:
@@ -76,7 +81,7 @@ def change_transaction_pin(auth: Authentication):
                             time.sleep(2)
                             continue
                 else:
-                    print(f'\n:: Wrong Transaction Pin!!! Try again!!!')
+                    print(red, f'\n:: Wrong Transaction Pin!!! Try again!!!', end)
                     time.sleep(2)
                     continue
 

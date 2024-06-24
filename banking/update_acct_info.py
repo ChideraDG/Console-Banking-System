@@ -6,6 +6,7 @@ from bank_processes.user import User
 from banking.update_bvn import first_name, last_name, middle_name, address, phone_number, email, date_of_birth
 from banking.main_menu import go_back, header, log_error
 from banking.register_panel import countdown_timer
+from animation.colors import *
 
 
 notify = Notification()
@@ -27,19 +28,20 @@ def update_acct_info(auth: Authentication):
 
             header()  # Display the header.
 
-            print('\nWhat do you want to Update?')
-            print('~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            print(bold, brt_yellow, '\nWhat do you want to Update?')
+            print(magenta, '~~~~~~~~~~~~~~~~~~~~~~~~~~~', sep='')
 
             print(end='\n')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
-            print('|   1. FIRST NAME   |  2. MIDDLE NAME    |   3. LAST NAME   |')
+            print(f'|   {brt_black_bg}{brt_yellow}1. FIRST NAME{end}   {bold}{magenta}|  {brt_black_bg}{brt_yellow}2. MIDDLE NAME{end}    {bold}{magenta}|   {brt_black_bg}{brt_yellow}3. LAST NAME{end}   {bold}{magenta}|')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
-            print('|   4. PHONE NUMBER |  5. DATE OF BIRTH  |   6. ADDRESS     |')
+            print(f'|   {brt_black_bg}{brt_yellow}4. PHONE NUMBER{end} {bold}{magenta}|  {brt_black_bg}{brt_yellow}5. DATE OF BIRTH{end}  {bold}{magenta}|   {brt_black_bg}{brt_yellow}6. ADDRESS{end}     {bold}{magenta}|')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
-            print('|                         7. EMAIL                          |')
+            print(f'|                         {brt_black_bg}{brt_yellow}7. EMAIL{end}                          {bold}{magenta}|')
             print("+~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~+")
 
             user_input = input(">>> ").strip()  # Get the user's input for the field to update.
+            print(end, end='')
 
             if re.search('^.*(back|return).*$', user_input, re.IGNORECASE):
                 # If the user types 'back' or 'return', exit the function.

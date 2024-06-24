@@ -458,6 +458,8 @@ Balance :: {auth.account_balance}
 
                             print(green, f'\n:: Congrats. \n:: Fixed Deposit Successfully Created.', end)
 
+                            time.sleep(3)
+
                             notify.fixed_deposit_creation_notification(
                                 title='Console Beta Banking',
                                 message=f'Fixed Deposit Successfully Created.\nDeposit ID :: {auth.deposit_id}\n'
@@ -465,8 +467,6 @@ Balance :: {auth.account_balance}
                                         f'Deposit Amount :: {auth.initial_deposit:,.2f}',
                                 channel='ConsoleBeta'
                             )
-
-                            time.sleep(3)
 
                             break
                         elif re.search('^(2|no)$', _input, re.IGNORECASE):
@@ -737,6 +737,7 @@ Balance :: {auth.account_balance}
                         header()
                         print(green, "\n:: Deposit Successfully Topped Up.", end)
 
+                        time.sleep(3)
                         notify.fixed_deposit_top_up_notification(
                             title='Console Beta Banking',
                             message=f'Deposit Successfully Topped Up.\nDeposit ID :: {auth.deposit_id}\n'
@@ -744,7 +745,6 @@ Balance :: {auth.account_balance}
                             channel='ConsoleBeta'
                         )
 
-                        time.sleep(2)
                         break
                     elif re.search('^(2|no)$', _input, re.IGNORECASE):
                         time.sleep(1)

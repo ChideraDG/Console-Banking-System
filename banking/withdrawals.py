@@ -88,21 +88,16 @@ Time :: {datetime.today().now().time()}
 Balance :: {auth.account_balance}
                         """
 
-                        # Trigger a withdraw notification with the formatted note
+                        # Trigger a withdrawal notification with the formatted note
                         notify.withdraw_notification(
                             title='Console Beta Banking',
                             message=note,
                             channel='ConsoleBeta'
                         )
-                        # TODO: Add receipt generation and notification sending
 
                         header()
                         print(green, "\n:: Withdraw Successfully")
                         print(f":: You withdrew N{auth.amount}", end, sep='')
-
-                        time.sleep(1.5)
-
-                        receipt(auth)
 
                         time.sleep(1.5)
                         break

@@ -111,10 +111,9 @@ def recipient_account_number(auth: Authentication):
         while True:
             header()
 
-            print(bold, brt_yellow, "\nENTER YOUR RECIPIENT ACCOUNT NUMBER:", end, sep='')
-            print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+            print(bold, brt_yellow, "\nENTER YOUR RECIPIENT ACCOUNT NUMBER:")
+            print(magenta, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", sep='')
 
-            print(bold, magenta, end='')
             _input = input(">>> ").strip()
             print(end, end='')
 
@@ -201,10 +200,9 @@ def amount_to_be_transferred(auth: Authentication):
         while True:
             header()
 
-            print(bold, brt_yellow, "\nENTER AMOUNT:", end, sep='')
-            print(bold, magenta, "~~~~~~~~~~~~~", end, sep='')
+            print(bold, brt_yellow, "\nENTER AMOUNT:")
+            print(magenta, "~~~~~~~~~~~~~", sep='')
 
-            print(bold, magenta, end='')
             _input = input(">>> ").strip()
             print(end, end='')
 
@@ -284,10 +282,9 @@ def description(auth):
     try:
         header()
 
-        print(bold, brt_yellow, "\nENTER NARRATION:", end, sep='')
-        print(bold, magenta, "~~~~~~~~~~~~~~~~", end, sep='')
+        print(bold, brt_yellow, "\nENTER NARRATION:")
+        print(magenta, "~~~~~~~~~~~~~~~~", sep='')
 
-        print(bold, magenta, end='')
         _input = input(">>> ").strip()
         print(end, end='')
 
@@ -328,10 +325,9 @@ def transaction_pin(auth: Authentication):
         while auth.login_attempts < 3:
             header()
 
-            print(bold, brt_yellow, "\nENTER TRANSACTION PIN:", end, sep='')
-            print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~~~", end, sep='')
+            print(bold, brt_yellow, "\nENTER TRANSACTION PIN:")
+            print(magenta, "~~~~~~~~~~~~~~~~~~~~~~", sep='')
 
-            print(bold, magenta, end='')
             _input = input(">>> ").strip()
             print(end, end='')
 
@@ -393,10 +389,9 @@ def session_token(auth: Authentication):
         while auth.login_attempts < 3:
             header()
 
-            print(bold, brt_yellow, "\nENTER SESSION TOKEN:", end, sep='')
-            print(bold, magenta, "~~~~~~~~~~~~~~~~~~~~", end, sep='')
+            print(bold, brt_yellow, "\nENTER SESSION TOKEN:")
+            print(magenta, "~~~~~~~~~~~~~~~~~~~~", sep='')
 
-            print(bold, magenta, end='')
             _input = input(">>> ").strip()
             print(end, end='')
 
@@ -417,14 +412,14 @@ def session_token(auth: Authentication):
                 else:
                     auth.login_attempts = auth.login_attempts + 1
                     if auth.login_attempts == 3:
-                        print(red, "\n:: incorrect PIN.")
-                        print("Account has being BLOCKED. Reset your pin.", end)
+                        print(red, "\n:: incorrect SESSION TOKEN.")
+                        print("Account has being BLOCKED. Meet Customer Service to Unblock your Account.", end)
                         time.sleep(3)
                         del _input
                         auth.block_account()
                         go_back('script')
                     else:
-                        print(red, "\n:: incorrect PIN.")
+                        print(red, "\n:: incorrect SESSION TOKEN.")
                         print(3 - auth.login_attempts,
                               'attempts remaining.\nAccount will be BLOCKED after exhausting attempts', end)
                         time.sleep(3)
@@ -498,9 +493,8 @@ def process_transfer(auth: Authentication):
                 print(end='\n')
                 print(bold, magenta, "+~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+", sep='')
                 print(f"|{end}  {bold}{brt_black_bg}{brt_yellow}1. to BANK{end}  {bold}{magenta}|  {bold}{brt_black_bg}{brt_yellow}2. to BENEFICIARY{end}  {bold}{magenta}|")
-                print("+~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+", end)
+                print("+~~~~~~~~~~~~~~+~~~~~~~~~~~~~~~~~~~~~+")
 
-                print(bold, magenta, end='')
                 user_input = input(">>> ").strip()
                 print(end, end='')
 

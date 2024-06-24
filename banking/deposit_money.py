@@ -30,8 +30,8 @@ def deposit(auth: Authentication):
             header()
 
             # Prompt the user to enter the amount to be deposited
-            print(bold, brt_yellow, '\nAMOUNT TO BE DEPOSITED: (more than N10.0)', end, sep='')
-            print(bold, magenta, '~~~~~~~~~~~~~~~~~~~~~~~')
+            print(bold, brt_yellow, '\nAMOUNT TO BE DEPOSITED: (more than N10.0)', end)
+            print(magenta, '~~~~~~~~~~~~~~~~~~~~~~~', sep='')
 
             amount = input('>>> ').strip()
             print(end, end='')
@@ -92,10 +92,6 @@ Balance :: {auth.account_balance}
                 header()
                 print(green, "\n:: Deposit Successfully")
                 print(f":: You deposited N{auth.amount} into your Beta Account", end, sep='')
-
-                time.sleep(1.5)
-
-                receipt(auth)
 
                 time.sleep(1.5)
                 break

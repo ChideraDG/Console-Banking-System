@@ -138,7 +138,7 @@ for query in queries:
 queries2 = [
     """
     INSERT INTO `Account` (`account_id`, `account_number`, `account_type`, `account_holder`, `account_balance`, `minimum_balance`, `maximum_balance`, `account_fee`, `transaction_pin`, `account_status`, `account_tier`, `overdraft_protection`, `transaction_limit`, `transfer_limit`, `beneficiaries`, `fixed_account`) VALUES
-    (1, '4773494548', 'savings', 'Ohanenye-Ohiaekpete Chidera Divine-Gift', 191272.388, 50.000, 300000.000, 100.000, '1234', 'active', 'Tier 1', 'no', 8, 39000.000, '{"1": ["1513500889", "Oboh Victory Akhere"], "2": ["5409484424", "Ezenwa Chiedozie Emmanuel"]}', 'yes');
+    (1, '4773494548', 'savings', 'Ohanenye-Ohiaekpete Chidera Divine-Gift', 191272.388, 50.000, 300000.000, 100.000, '1234', 'active', 'Tier 1', 'no', 8, 39000.000, '{}', 'yes');
     """,
     """
     INSERT INTO `Bank_Verification_Number` (`id`, `first_name`, `middle_name`, `last_name`, `gender`, `address`, `phone_number`, `date_of_birth`, `nationality`, `email`, `bvn_number`, `created_date`, `last_updated`, `bvn_status`) VALUES
